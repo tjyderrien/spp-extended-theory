@@ -1,0 +1,51 @@
+POOL
+800 50 230 1e-009 1e-009 1e-009
+
+COMP
+100
+
+VERBOSE
+1
+
+THREADS
+-1
+
+GPU
+0
+
+UGPU
+1
+
+SOURCE_TSF
+10 10 10 790 40 220 0 0 0 2 7.9904e-007 1000 1
+
+BOUNDARY_ALL
+liao
+
+MBOUNDARY_X0
+periodic 20
+
+MBOUNDARY_XN
+periodic 780
+
+MBOUNDARY_Y0
+periodic 20
+
+MBOUNDARY_YN
+periodic 40
+
+MEDIUM_VECTOR
+Bulk.txt
+
+OUT_FILE
+out.gwy
+
+OUT_POINT
+Ey 10 400 25 138 Field.dat
+
+OUT_IMAGE
+Ey 10 -1 -1 138 ey_xy
+
+OUT_IMAGE
+Ex 10 -1 25 -1 Ex_xz
+

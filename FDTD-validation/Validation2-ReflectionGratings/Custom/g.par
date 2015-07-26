@@ -1,5 +1,5 @@
 POOL
-340 340 100 3e-08 3e-08 3e-08
+340 340 100 3e-008 3e-008 3e-008
 
 COMP
 4096
@@ -16,29 +16,8 @@ GPU
 UGPU
 0
 
-OUT_IMAGE
-Ex 1000  170 -1 -1 ex nlogscale
-
-OUT_IMAGE
-Ex 1000  -1 170 -1 ey nlogscale
-
-OUT_IMAGE
-Ex 1000  -1 -1 50 ez nlogscale
-
-MEDIUM_VECTOR
-g_material.txt
-
-BOUNDARY_ALL
-none
-
-BOUNDARY_Z0
-liao
-
-BOUNDARY_ZN
-liao
-
 SOURCE_TSF
-10 10 40 330 330 41 0 0 1.57079632679 0 g_source.txt
+10 10 40 330 330 41 0 0 1.5708 0 g_source.txt
 
 TSF_SKIP
 i0
@@ -55,6 +34,24 @@ jn
 TSF_SKIP
 kn
 
+BOUNDARY_X0
+none
+
+BOUNDARY_XN
+none
+
+BOUNDARY_Y0
+none
+
+BOUNDARY_YN
+none
+
+BOUNDARY_Z0
+liao
+
+BOUNDARY_ZN
+liao
+
 MBOUNDARY_X0
 periodic 15
 
@@ -67,6 +64,21 @@ periodic 15
 MBOUNDARY_YN
 periodic 325
 
+MEDIUM_VECTOR
+g_material.txt
+
+OUT_FILE
+out.gwy
+
+OUT_IMAGE
+Ex 1000 170 -1 -1 ex nlogscale
+
+OUT_IMAGE
+Ex 1000 -1 170 -1 ey nlogscale
+
+OUT_IMAGE
+Ex 1000 -1 -1 50 ez nlogscale
+
 PERIODIC_NFFF
 15 15 15 325 325 60 -2 -2 3 3
 
@@ -74,4 +86,5 @@ PERIODIC_NFFF_SKIP
 kn 15 15 325 325
 
 PERIODIC_NFFF_SPHERICAL_AREA
-180 1 1000000 2.967 1.5707 3.141592653 1.588 1
+90 90 100000 0 1.5708 3.14159 1.5708 1
+

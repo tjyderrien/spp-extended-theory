@@ -64,6 +64,9 @@ Ex 10 170 -1 -1 ex_yz
 OUT_IMAGE
 Ex 10 -1 170 -1 Ex_xz
 
+OUT_IMAGE
+Ex 10 -1 -1 50 Ex_xy
+
 PERIODIC_NFFF
 15 15 15 325 325 60 -2 -2 3 3
 

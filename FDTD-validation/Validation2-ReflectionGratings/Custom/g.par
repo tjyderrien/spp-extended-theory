@@ -71,13 +71,13 @@ OUT_FILE
 out.gwy
 
 OUT_IMAGE
-Ex 100 170 -1 -1 ex nlogscale
+Ex 100 170 -1 -1 ex_yz nlogscale
 
 OUT_IMAGE
-Ex 100 -1 170 -1 ey nlogscale
+Ex 100 -1 170 -1 ex_xz nlogscale
 
 OUT_IMAGE
-Ex 100 -1 -1 50 ez nlogscale
+Ex 100 -1 -1 20 ex_xy nlogscale
 
 PERIODIC_NFFF
 15 15 15 325 325 60 -2 -2 3 3

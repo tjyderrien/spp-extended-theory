@@ -9,7 +9,7 @@ do
 #	echo theta=$theta, phi=$phi
 	
 	# calculate the total field for each coordinate
-	value=`awk -f '../../sumLines.awk' $i`
+	value=`awk -f '../sumLines.awk' $i`
 #	echo $value
 	
 	#export to a file

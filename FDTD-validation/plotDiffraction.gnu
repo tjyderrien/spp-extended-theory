@@ -62,12 +62,12 @@ set format "%g"
 set zrange [:]
 set palette rgb 34,35,36;
 set view map 
-set xrange [:90]
+set xrange [:]
 set size square
 # set pm3d interpolate 4,4
 set log z
-set log cb
-splot "< awk -f '../../pm3d.awk' Diffraction.dat" u 1:2:4 w pm3d t 'Ey'
+unset log cb
+splot "< awk -f '../pm3d.awk' Diffraction.dat" u 1:2:4 w pm3d t 'Ey^2'
 # splot "Diffraction.dat" u 1:2:5 w p t 'Ez'
 # splot "Diffraction.dat" u 1:2:3 w p t 'Ex'
 

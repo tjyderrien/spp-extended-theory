@@ -14,7 +14,7 @@ c = 2.997e8
 
 sim_param, model_param = meep_utils.process_param(sys.argv[1:])
 class SphereWire_model(meep_utils.AbstractMeepModel): #{{{
-    def __init__(self, comment="", simtime=100e-12, resolution=100e-9, cells=1, monzc=0e-6, padding=2e-6,
+    def __init__(self, comment="", simtime=100e-12, resolution=1000e-9, cells=1, monzc=0e-6, padding=2e-6,
             radius=500e-9, spacing=1e-6, wlth=0.8e-6, wtth=1e-6, Kx=0, Ky=0, dist=2e-6):
         meep_utils.AbstractMeepModel.__init__(self)        ## Base class initialisation
         self.simulation_name = "SphereWire"    

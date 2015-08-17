@@ -14,7 +14,7 @@ c = 2.997e8
 
 sim_param, model_param = meep_utils.process_param(sys.argv[1:])
 class SphereWire_model(meep_utils.AbstractMeepModel): #{{{
-    def __init__(self, comment="", simtime=100e-15, resolution=3e-9, cells=1, monzc=0e-6, padding=200e-9,
+    def __init__(self, comment="", simtime=20e-15, picnumber=100, resolution=5e-9, cells=1, monzc=0e-6, padding=000e-9,
             radius=10e-9, spacing=67e-9, wlth=10e-6, wtth=10e-6, Kx=0, Ky=0, dist=25e-6):
         meep_utils.AbstractMeepModel.__init__(self)        ## Base class initialisation
         self.simulation_name = "SphereWire"    
@@ -27,14 +27,14 @@ class SphereWire_model(meep_utils.AbstractMeepModel): #{{{
         self.simtime = simtime      # [s]
         self.srcFreq, self.srcWidth = 5.6548e15, 3.7699e15     # [Hz] (note: gaussian source ends at t=10/srcWidth)
         self.interesting_frequencies = (2.356e15, 4.71e15)     # Which frequencies will be saved to disk as HF5 files
-        self.pml_thickness = 10. * 2. * np.pi / (self.srcFreq+0.5*self.srcWidth) # 10 times the maximum wavelength
+        self.pml_thickness = 2. * 2. * np.pi * c/ (self.srcFreq+0.5*self.srcWidth) # 10 times the maximum wavelength
 
         self.size_x = spacing 
         self.size_y = spacing
         self.size_z = cells*monzd + 2*self.pml_thickness + 2*self.padding
 
         ## Define materials
-        self.materials = [meep_materials.material_TiO2_THz(where = self.where_TiO2)]  
+        self.materials = [meep_materials.material_Ag(where = self.where_TiO2)]  
         #if not 'NoMetal' in comment:
             #self.materials += [meep_materials.material_Metal_THz(where = self.where_metal) ]
         self.TestMaterials()
@@ -91,9 +91,9 @@ monitor2_Hy = meep_utils.AmplitudeMonitorPlane(comp=meep.Hy, z_position=model.mo
 slice_makers =  [meep_utils.Slice(model=model, field=f, 
 		components=(meep.Dielectric), at_t=0, name='EPS')]
 slice_makers += [meep_utils.Slice(model=model, field=f, 
-		components=meep.Ex, at_x=0, min_timestep=.05e-12, outputgif=True)]
+		components=meep.Ex, at_x=0, min_timestep=model.simtime/model.picnumber, outputgif=True)]
 slice_makers += [meep_utils.Slice(model=model, field=f, 
-		components=meep.Ex, at_t=2.5e-12)]
+		components=meep.Ex, at_t=model.simtime)]
 
 if not sim_param['frequency_domain']:       ## time-domain computation
     f.step()

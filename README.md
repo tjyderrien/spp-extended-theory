@@ -6,7 +6,7 @@
 
 * T.J.-Y. Derrien : scientist
 
-* R. Garai, Hilase Centre FZU, AV CR : technical support, LIPSS databasing
+* R. Garai, Hilase Centre FZU, AV CR : helped for some LIPSS databasing
 
 ## BAM Federal Institute of Materials Research and Testing, Berlin
 
@@ -36,4 +36,4 @@ To reach this purpose, it is planned to collect and develop database for many ma
 
 * laser induced damage thresholds (LIDT), 
 
-* SPP theory for single and multilayer systems, 
+* SPP theory for single and multilayer systems,

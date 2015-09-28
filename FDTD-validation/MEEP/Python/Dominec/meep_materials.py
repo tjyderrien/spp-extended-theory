@@ -11,20 +11,33 @@ spectrum from microwave to optical range, so the number of Lorentzian oscillator
 would have to be manually reduced to make the simulation run effectively.
 
 About this script:
- * Written in 2012-2013 by Filip Dominec (dominecf at the server of fzu.cz)
+ * Written in 2012-2015 by Filip Dominec (dominecf at the server of fzu.cz)
  * Being distributed under the GPL license, this script is free as speech after five beers. 
  * You are encouraged to use and modify it as you need. Feel free to write me if needed.
  * Hereby I thank to the MEEP/python_meep authors and people of meep mailing list who helped me a lot.
  
 See also:
-    http://fzu.cz/~dominecf/misc/meep/index.html    -- my MEEP page
-    http://fzu.cz/~dominecf/misc/eps/               -- permittivity spectra plot into graphs
+    http://f.dominec.eu/meep/              -- my MEEP page
+    http://f.dominec.eu/eps/               -- permittivity spectra plot into graphs
 
-Last edited: 2013-05-28
+TODO:
+    * implement material self-adjustment for stability 
+       1) wipe out all oscillators above f_c (sum Δε into ε_infty)
+       2) adjust the Drude term to be stable when f_c < omega_p/2π
+       3) re-express all oscillators above FRoI as one oscillator (is it possible? what are the summing rules
+                for lorentzians with different frequency and losses?)
+       4) do something with that Debye term can be unstable
+    * make a manifest of materials and their source files; 
+    * add the plot_eps.py file and its directory into the project??
+
+Last edited: 2015-02-19
 """
 
 import numpy as np
 from scipy.constants import epsilon_0, c, pi
+percm = c/1e-2
+
+
 
 ## -- Generic --
 class material_dielectric():#{{{
@@ -35,20 +48,19 @@ class material_dielectric():#{{{
     """
     def __init__(self, where=None, eps=2., loss=0, chi2=0, chi3=0):
         self.eps = eps*(1-loss)
-        ## TODO: make the loss effect well defined (for some frequency)
+        ## TODO: make the loss effect well defined (for some frequency), and write 
         if loss != 0:
             self.pol = [
-                    {'omega':5.67e12, 'gamma':4.05e12, 'sigma':eps*loss},            ## XXX test
-                    {'omega':2e12, 'gamma':2e13, 'sigma':10*loss},            ## XXX test
-                    #{'omega':6e12, 'gamma':6e13, 'sigma':100*loss},            ## XXX test
+                    {'omega':5e12, 'gamma':10e12, 'sigma':100*loss},            ## TODO make clearer
                     ]
         else:
             self.pol = []
         self.name = "Lossy dielectric"
-        self.chi2 = chi2
-        self.chi3 = chi3
+        #self.chi2 = chi2
+        #self.chi3 = chi3
         self.where = where
 #}}}
+# TODO def MakeDrudian() 
 class material_DrudeMetal():#{{{
     """ Defines a generic metal with a Drude model
 
@@ -68,7 +80,7 @@ class material_DrudeMetal():#{{{
     """
 
     #def __init__(self, where=None, lfconductivity=15e6, f_c=1e14): XXX
-    def __init__(self, where=None, lfconductivity=15e3, f_c=1e14, gamma_factor = .5):
+    def __init__(self, where=None, lfconductivity=15e3, f_c=1e14, gamma_factor = .5, epsplus=0):
         """
         At microwave frequencies (where omega << gamma), the most interesting property of the metal 
         is its conductivity sigma(omega), which may be approximated by a nearly constant real value:
@@ -86,35 +98,36 @@ class material_DrudeMetal():#{{{
         The gamma_factor is required for numerical stability. It has always to be lower than the timestepping frequency f_c, 
         but sometimes the simulation is unstable even though and then it has to be reduced e.g. to 1e-2 or to even smaller value.
         """
+
         ## Design a new metallic model. We use 'omega_p' and 'gamma' in angular units, as is common in textbooks
-        # We need to put the scattering frequency below fc, so that Re(eps) is not constant at f_c
+        ## We need to put the scattering frequency below fc, so that Re(eps) is not constant at f_c (it would hinder
+        ## our trick that ensures FDTD stability)
         self.gamma      = f_c * gamma_factor * 2*np.pi
         ## TODO: test when unstable -> reduce self.gamma by 100 -> test again -> finally write automatic selection of value
 
-        # The virtual plasma frequency is now determined by lfconductivity
-        omega_p = np.sqrt(self.gamma * lfconductivity  / epsilon_0)
+        ## Knowing the scattering frequency gamma, the virtual plasma frequency is now determined by lfconductivity
+        omega_p = np.sqrt(self.gamma * lfconductivity / epsilon_0)
 
         ## The following step is required for FDTD stability: 
         ## Add such an high-frequency-epsilon value that shifts the permittivity to be positive at f_c
         ## If self.eps>1, the frequency where permittivity goes positive will generally be less than f_p
-        self.eps = max((omega_p/2/np.pi / f_c)**2,   1.)
-        print 'self.eps', self.eps
-
-        print "gamma =", self.gamma
-        print 'omega_p = ', omega_p
-        print 'LFC = %.3e' % (omega_p**2 * epsilon_0 / self.gamma)
+        self.eps = max((omega_p/2/np.pi / f_c)**2,   1.) + epsplus
+        #print 'self.eps', self.eps
+        #print "gamma =", self.gamma
+        #print 'omega_p = ', omega_p
+        #print 'LFC = %.3e' % (omega_p**2 * epsilon_0 / self.gamma)
 
         ## Feed MEEP with a Lorentz oscillator of arbitrarily low frequency f_0 so that it behaves as the Drude model
-        omega_0 = 1e7           
+        omega_0 = .1           
         self.pol = [
                 {'omega': omega_0/(2*np.pi), 'gamma': self.gamma/(2*np.pi), 'sigma': (omega_p/omega_0)**2}, # (Lorentz) model
                 ## Note: meep also uses keywords 'omega' and 'gamma', but they are non-angular units
                 ]
-        self.name = "Drude metal for <%.2g Hz" % f_c
+        self.name = "Drude metal for up to %.2g Hz" % f_c
         self.where = where
 #}}}
 
-## -- Prepared for FDTD simulations in the terahertz range --
+## -- Prepared for FDTD simulations in the terahertz range (obsoleted) --
 class material_Metal_THz():#{{{ ## Obsoleted
     """
     This model, by default, defines a metal similar to aluminium. Its parameters are roughly: 
@@ -195,10 +208,10 @@ class material_TiO2_THz():#{{{  ## for THz application only
 
     """
     def __init__(self, where=None):
-        self.eps = 22.
+        self.eps = 12.
         self.pol = [
                 #{'omega':5.67e12, 'gamma':1.05e12, 'sigma':70.},            ## strongest optical phonon resonance in THz range
-                {'omega':5.67e12, 'gamma':.5e12, 'sigma':70.},            ## strongest optical phonon resonance in THz range
+                {'omega':5.67e12, 'gamma':1.05e12, 'sigma':50+30.},            ## strongest optical phonon resonance in THz range
                 ]
         self.name = "polycrystalline TiO2 (rutile)"
         self.where = where
@@ -296,7 +309,7 @@ class material_STO_HTChen():#{{{
 #}}}
 
 
-## -- Realistic (not suitable directly for simulations) --
+## -- Realistic (simulations may require to make a copy and optimize) --
 class material_STO():#{{{  
     """
     Strontium titanate
@@ -382,17 +395,15 @@ class material_TiO2():#{{{
         eps=7 or something.
         The magnitude of the first resonance is more importand, one has to fine tune it.
     Additionally, the width of the resonance at omega=5.6 THz can be changed from gamma=810 GHz to higher values 
-        to account for higher losses due to impurities etc.
-        We used 1.05e12 to match our experimental data for losses in bulk TiO2.
+        to account for higher losses due to impurities etc. (For example, 1.05e12 better matched THz experimental data.)
     The ultraviolet absorption could not be exactly modelled using finite number of lorentzian oscillators. Two 
         of them are used, but note they introduce unrealistic high damping in the optical region.
     """
     def __init__(self, where=None, extraordinary=.33):
-        #self.eps = 5.8 + .9*extraordinary
         self.eps = 1
         self.pol = [
                 # Optical phonon resonance in THz range from Baumard1977, manually tuned to better fit experiment
-                {'omega':5.67e12, 'gamma':1.05e12, 'sigma':50+90*extraordinary},      
+                {'omega':5.67e12, 'gamma':.85e12, 'sigma':50+90*extraordinary},      
                 {'omega':11.43e12, 'gamma':.495e12, 'sigma':0.9*extraordinary},            
                 {'omega':15.24e12, 'gamma':.72e12, 'sigma':2.6*extraordinary},            
                 {'omega':1.0e15, 'gamma':.15e15, 'sigma':2.8 + .5*extraordinary},     ## imprecise two-Lorentzian approximation in UV
@@ -402,6 +413,7 @@ class material_TiO2():#{{{
         self.shortname = "TiO2 (rutile)"
         self.where = where
 #}}}
+
 class material_SiO2():#{{{
     """ Amorphous SiO2 
     Optical resonances fitted manually to experimental spectra
@@ -414,7 +426,6 @@ class material_SiO2():#{{{
     def __init__(self, where=None, sigmafactor=1):
         #self.eps = 2.4          ## used if no VIS/UV oscillators defined; may range from 2.3-2.5 [Huber]
         self.eps = 1
-        percm = 3e8/1e-2
         self.pol = [
                 {'omega': 447*percm, 'gamma': 49*percm, 'sigma':.923},
                 {'omega': 811*percm, 'gamma': 69*percm, 'sigma':.082},
@@ -429,9 +440,6 @@ class material_SiO2():#{{{
         self.where = where
 #}}}
 
-
-
-
 class material_SiC():#{{{
     """ Silicon carbide, or SiC
     THz and optical resonances fitted manually to spectra from databases/experiment
@@ -442,7 +450,6 @@ class material_SiC():#{{{
     def __init__(self, where=None, sigmafactor=1):
         #self.eps = 2.4          ## used if no VIS/UV oscillators defined; may range from 2.3-2.5 [Huber]
         self.eps = 1
-        percm = 3e8/1e-2
         self.pol = [
                 {'omega': 23.75e12, 'gamma': .20e12, 'sigma': 3.4},     # optical phonon
                 {'omega': 1.75e15, 'gamma': .4e15, 'sigma': 5.4},
@@ -459,7 +466,6 @@ class material_Si_NIR():#{{{
     """
     def __init__(self, where=None, sigmafactor=1):
         self.eps = 1          ## flat permittivity for MIR-NIR
-        percm = 3e8/1e-2
         self.pol = [
                 {'omega': 1.e15, 'gamma': .15e15, 'sigma': 7.5},
                 {'omega': 0.83e15, 'gamma': .05e15, 'sigma': 3.0},
@@ -475,7 +481,6 @@ class material_Si_MIR():#{{{
     """
     def __init__(self, where=None, sigmafactor=1):
         self.eps = 11.4          ## flat permittivity for MIR-NIR
-        percm = 3e8/1e-2
         self.pol = [
                 {'omega': 1.8e13, 'gamma': .5e13, 'sigma': .3e-3},
                 ]
@@ -508,7 +513,6 @@ class material_InP():#{{{
     """
     def __init__(self, where=None, sigmafactor=1):
         self.eps = 1
-        percm = 3e8/1e-2
         self.pol = [
                 {'omega': 9.15e12, 'gamma': .5e12, 'sigma': 2.6},     # optical phonon
                 {'omega': 1.14e15, 'gamma': .25e15, 'sigma': 6.},
@@ -539,7 +543,6 @@ class material_GaAs():#{{{
     """
     def __init__(self, where=None, sigmafactor=1):
         self.eps = 1
-        percm = 3e8/1e-2
         self.pol = [
                 {'omega': 8.13e12, 'gamma': 1e12, 'sigma': ((8.79e12/8.13e12)**2-1)*10.89},     # optical phonon damping unknown!
                 {'omega': 0.725e15, 'gamma': .06e15, 'sigma': 1.89}, ## manual fit
@@ -579,41 +582,47 @@ class material_Al():#{{{
         self.shortname = "Al"
         self.where = where
 #}}}
+
 class material_Au():#{{{
-    """ Drude-Lorentz model for Gold """
+    """ Drude-Lorentz model for gold """
     def __init__(self, where=None, resistivity=0., eps=0.):
         #self.eps = 1. 
-        self.eps = 3. 
+        self.eps = 1. 
         omega0 = 1e6*c*1e-20           ## arbitrary low frequency that makes Lorentz model behave as Drude model
         self.pol = [
-
-                {'omega': omega0,	'gamma': 1e6*c*0.042747, 'sigma': 4.0314e+41 * 1e-20**2 * (1e6*c)**2 / omega0**2},
-                #{'omega':1e6*c*0.33472, 'gamma':1e6*c*0.19438, 'sigma':11.363},
-                #{'omega':1e6*c*0.66944, 'gamma':1e6*c*0.27826, 'sigma':1.1836},
-                {'omega':1e6*c*2.3947 , 'gamma':1e6*c*0.7017 , 'sigma': 0.65677},
-                {'omega':1e6*c*3.4714 , 'gamma':1e6*c*2.0115 , 'sigma': 2.6455},
-                #{'omega':1e6*c*10.743 , 'gamma':1e6*c*1.7857 , 'sigma': 2.0148},
+                {'omega': omega0, 'gamma': 1e6*c*0.042747, 'sigma': 4.0314e+41 * 1e-20**2 * (1e6*c)**2 / omega0**2},
+                {'omega':1e6*c*0.33472, 'gamma':1e6*c*0.19438, 'sigma':11.363}, ## sum of Lorentzians = 17.86
+                {'omega':1e6*c*0.66944, 'gamma':1e6*c*0.27826, 'sigma':1.1836},
+                {'omega':1e6*c*2.3947 , 'gamma':1e6*c*0.7017 , 'sigma':0.65677},
+                {'omega':1e6*c*3.4714 , 'gamma':1e6*c*2.0115 , 'sigma':2.6455},
+                {'omega':1e6*c*10.743 , 'gamma':1e6*c*1.7857 , 'sigma':2.0148},
                 ]
-        self.name = "Gold"
+        self.name = "Gold (Drude-Lorentz)"
         self.shortname = "Au"
         self.where = where
-#}}}
-class material_NbN_03K():#{{{  
-    """
-    Niobium nitride -- low-temperature type-II superconductor (Tk ~ 15 K ?)
-    """
-    def __init__(self, where=None):
-        #self.eps = 100.
-        self.eps = 3.
+class material_Ag():#{{{
+    """ Drude-Lorentz model for silver """
+    def __init__(self, where=None, resistivity=0., eps=0.):
+        #self.eps = 1. 
+        self.eps = 1. 
+        omega0 = 1e6*c*1e-20           ## arbitrary low frequency that makes Lorentz model behave as Drude model
+
+        #Drude_sigma = 
         self.pol = [
-                {'omega':2.3e12, 'gamma':.4e12*1.000, 'sigma':5},
+                {'omega': omega0, 'gamma': 1e6*c* 0.038715 , 'sigma': 4.4625e+41 * 1e-20**2 * (1e6*c)**2 / omega0**2},  ## Drude term
+                {'omega': 1e6*c*0.6581, 'gamma': 1e6*c*3.1343  , 'sigma':7.9247},
+                {'omega': 1e6*c*3.6142, 'gamma': 1e6*c*0.36456 , 'sigma':0.50133},
+                {'omega': 1e6*c*6.6017, 'gamma': 1e6*c*0.052426, 'sigma':0.013329},
+                {'omega': 1e6*c*7.3259, 'gamma': 1e6*c*0.7388  , 'sigma':0.82655},
+                {'omega': 1e6*c*16.365, 'gamma': 1e6*c*1.9511  , 'sigma':1.1133},
                 ]
-        self.name = "Niobium nitride (T = 3 K)"
+        self.name = "Silver (Drude-Lorentz)"
+        self.shortname = "Ag"
         self.where = where
 #}}}
 
 
-## -- Obsoleted -- 
+## -- Obsoleted or experimental -- 
 class material_DrudeMetal_old():#{{{
     """ Defines a generic metal with a Drude model
 
@@ -688,226 +697,131 @@ class material_testsnom():#{{{
         self.name = ""
         self.where = where
 #}}}
-
-class material_Ag():#{{{
-    """ Drude-Lorentz model for Silver """
-    def __init__(self, where=None, resistivity=0., eps=0.):
-        #self.eps = 1. 
-        self.eps = 3. 
-        omega0 = 1e6*c*1e-20           ## arbitrary low frequency that makes Lorentz model behave as Drude model
+class material_NbN_03K():#{{{  
+    """
+    Niobium nitride -- low-temperature type-II superconductor (Tk ~ 15 K ?)
+    """
+    def __init__(self, where=None):
+        #self.eps = 100.
+        self.eps = 3.
         self.pol = [
-
-                {'omega': omega0, 'gamma': 1e6*c*0.038715, 'sigma': 4.4625e+41 * 1e-20**2 * (1e6*c)**2 / omega0**2},
-                {'omega':1e6*c*0.65815, 'gamma':1e6*c*3.1343, 'sigma':7.9247},
-                {'omega':1e6*c*3.6142, 'gamma':1e6*c*0.36456, 'sigma':0.50133},
-                {'omega':1e6*c*6.6017, 'gamma':1e6*c*0.052426 , 'sigma': 0.013329},
-                #{'omega':1e6*c*7.3259 , 'gamma':1e6*c*0.7388 , 'sigma': 0.82655},
-                {'omega':1e6*c*16.365 , 'gamma':1e6*c*1.9511 , 'sigma': 1.1133},
+                {'omega':2.3e12, 'gamma':.4e12*1.000, 'sigma':5},
                 ]
-        self.name = "Silver"
-        self.shortname = "Ag"
+        self.name = "Niobium nitride (T = 3 K)"
         self.where = where
 #}}}
 
-#Materials from Aaron Webster (in Scheme language)
+class material_AuL():#{{{
+    """ Drude-Lorentz model for Gold """
+    def __init__(self, where=None, resistivity=0., eps=0.):
+        #self.eps = 1. 
+        self.eps = 1. 
+        omega0 = 1e6*c*1e-20           ## arbitrary low frequency that makes Lorentz model behave as Drude model
+        self.pol = [
+                {'omega': omega0,	'gamma': 1e6*c*0.042747, 'sigma': 4.0314e+39 * 1e-20**2 * (1e6*c)**2 / omega0**2},
+                {'omega':1e6*c*0.33472, 'gamma':1e6*c*0.19438, 'sigma':11.363}, ## sum of Lorentzians = 17.86
+                {'omega':1e6*c*0.66944, 'gamma':1e6*c*0.27826, 'sigma':1.1836},
+                {'omega':1e6*c*2.3947 , 'gamma':1e6*c*0.7017 , 'sigma': 0.65677},
+                {'omega':1e6*c*3.4714 , 'gamma':1e6*c*2.0115 , 'sigma': 2.6455},
+                {'omega':1e6*c*10.743 , 'gamma':1e6*c*1.7857 , 'sigma': 2.0148},
+                ]
+        self.name = "Gold (Drude-Lorentz)"
+        self.shortname = "Au"
+        self.where = where
+#}}}
+class material_Au2():#{{{
+    """ Drude-Lorentz model for Gold """
+    def __init__(self, where=None, resistivity=0., eps=0.):
+        #self.eps = 1. 
+        self.eps = 18.86 
+        omega0 = 1e6*c*1e-20           ## arbitrary low frequency that makes Lorentz model behave as Drude model
+        self.pol = [
+                {'omega': omega0,	'gamma': 1e6*c*0.042747, 'sigma': 4.0314e+41 * 1e-20**2 * (1e6*c)**2 / omega0**2},
+                ]
+        self.name = "Gold (Drude-Lorentz)"
+        self.shortname = "Au"
+        self.where = where
+#}}}
+class material_Au3():#{{{
+    """ Drude-Lorentz model for Gold """
+    def __init__(self, where=None, resistivity=0., eps=0.):
+        #self.eps = 1. 
+        self.eps = 18.86 
+        omega0 = 1e6*c*1e-20           ## arbitrary low frequency that makes Lorentz model behave as Drude model
+        self.pol = [
+                {'omega': omega0,	'gamma': 0, 'sigma': 4.0314e+41 * 1e-20**2 * (1e6*c)**2 / omega0**2},
+                ]
+        self.name = "Gold (lossy Drude)"
+        self.shortname = "Au"
+        self.where = where
+#}}}
 
-#(define myAg (make dielectric (epsilon 1)
-#(polarizations
- #(make polarizability
-#(omega 1e-20) (gamma 0.038715) (sigma 4.4625e+41))
-#(make polarizability
-#(omega 0.65815) (gamma 3.1343) (sigma 7.9247))
-#(make polarizability
-#(omega 3.6142) (gamma 0.36456) (sigma 0.50133))
-#(make polarizability
-#(omega 6.6017) (gamma 0.052426) (sigma 0.013329))
-#(make polarizability
-#(omega 7.3259) (gamma 0.7388) (sigma 0.82655))
-#(make polarizability
-#(omega 16.365) (gamma 1.9511) (sigma 1.1133))
-#)))
-#;Additional Information
-#;Normalization length=1e-06 in meter
-#;Material_used_is_Agfrom Rakic et al.,Applied Optics (1998)
-#;Plasma Angular Frequency (and plasma wave vector,kp) in normalized units=6.6802
-#(define myAl (make dielectric (epsilon 1)
-#(polarizations
- #(make polarizability
-#(omega 1e-20) (gamma 0.037908) (sigma 7.6347e+41))
-#(make polarizability
-#(omega 0.13066) (gamma 0.26858) (sigma 1941))
-#(make polarizability
-#(omega 1.2453) (gamma 0.25165) (sigma 4.7065))
-#(make polarizability
-#(omega 1.4583) (gamma 1.0897) (sigma 11.396))
-#(make polarizability
-#(omega 2.8012) (gamma 2.7278) (sigma 0.55813))
-#)))
-#;Additional Information
-#;Normalization length=1e-06 in meter
-#;Material_used_is_Alfrom Rakic et al.,Applied Optics (1998)
-#;Plasma Angular Frequency (and plasma wave vector,kp) in normalized units=8.7377
-#(define myAu (make dielectric (epsilon 1)
-#(polarizations
- #(make polarizability
-#(omega 1e-20) (gamma 0.042747) (sigma 4.0314e+41))
-#(make polarizability
-#(omega 0.33472) (gamma 0.19438) (sigma 11.363))
-#(make polarizability
-#(omega 0.66944) (gamma 0.27826) (sigma 1.1836))
-#(make polarizability
-#(omega 2.3947) (gamma 0.7017) (sigma 0.65677))
-#(make polarizability
-#(omega 3.4714) (gamma 2.0115) (sigma 2.6455))
-#(make polarizability
-#(omega 10.743) (gamma 1.7857) (sigma 2.0148))
-#)))
-#;Additional Information
-#;Normalization length=1e-06 in meter
-#;Material_used_is_Aufrom Rakic et al.,Applied Optics (1998)
-#;Plasma Angular Frequency (and plasma wave vector,kp) in normalized units=6.3493
-#(define myBe (make dielectric (epsilon 1)
-#(polarizations
- #(make polarizability
-#(omega 1e-20) (gamma 0.028229) (sigma 1.8722e+41))
-#(make polarizability
-#(omega 0.080655) (gamma 1.3421) (sigma 1062.1))
-#(make polarizability
-#(omega 0.83236) (gamma 2.7383) (sigma 45.038))
-#(make polarizability
-#(omega 2.5673) (gamma 3.5924) (sigma 17.923))
-#(make polarizability
-#(omega 3.7134) (gamma 1.4534) (sigma 2.1013))
-#)))
-#;Additional Information
-#;Normalization length=1e-06 in meter
-#;Material_used_is_Befrom Rakic et al.,Applied Optics (1998)
-#;Plasma Angular Frequency (and plasma wave vector,kp) in normalized units=4.3269
-#(define myCr (make dielectric (epsilon 1)
-#(polarizations
- #(make polarizability
-#(omega 1e-20) (gamma 0.037908) (sigma 1.263e+41))
-#(make polarizability
-#(omega 0.097593) (gamma 2.5608) (sigma 1191.9))
-#(make polarizability
-#(omega 0.43796) (gamma 1.0526) (sigma 58.791))
-#(make polarizability
-#(omega 1.5889) (gamma 2.1583) (sigma 34.214))
-#(make polarizability
-#(omega 7.0775) (gamma 1.0768) (sigma 1.2382))
-#)))
-#;Additional Information
-#;Normalization length=1e-06 in meter
-#;Material_used_is_Crfrom Rakic et al.,Applied Optics (1998)
-#;Plasma Angular Frequency (and plasma wave vector,kp) in normalized units=3.5538
-#(define myCu (make dielectric (epsilon 1)
-#(polarizations
- #(make polarizability
-#(omega 1e-20) (gamma 0.024197) (sigma 4.3873e+41))
-#(make polarizability
-#(omega 0.23471) (gamma 0.30488) (sigma 84.489))
-#(make polarizability
-#(omega 2.385) (gamma 0.85172) (sigma 1.395))
-#(make polarizability
-#(omega 4.2747) (gamma 2.5915) (sigma 3.0189))
-#(make polarizability
-#(omega 9.0173) (gamma 3.4722) (sigma 0.59868))
-#)))
-#;Additional Information
-#;Normalization length=1e-06 in meter
-#;Material_used_is_Cufrom Rakic et al.,Applied Optics (1998)
-#;Plasma Angular Frequency (and plasma wave vector,kp) in normalized units=6.6236
-#(define myNi (make dielectric (epsilon 1)
-#(polarizations
- #(make polarizability
-#(omega 1e-20) (gamma 0.038715) (sigma 1.5828e+41))
-#(make polarizability
-#(omega 0.14034) (gamma 3.6384) (sigma 837.12))
-#(make polarizability
-#(omega 0.46941) (gamma 1.0759) (sigma 101.01))
-#(make polarizability
-#(omega 1.2881) (gamma 1.7567) (sigma 10.534))
-#(make polarizability
-#(omega 4.9111) (gamma 5.0748) (sigma 4.9834))
-#)))
-#;Additional Information
-#;Normalization length=1e-06 in meter
-#;Material_used_is_Nifrom Rakic et al.,Applied Optics (1998)
-#;Plasma Angular Frequency (and plasma wave vector,kp) in normalized units=3.9784
-#(define myPd (make dielectric (epsilon 1)
-#(polarizations
- #(make polarizability
-#(omega 1e-20) (gamma 0.0064524) (sigma 2.0282e+41))
-#(make polarizability
-#(omega 0.271) (gamma 2.3793) (sigma 543.12))
-#(make polarizability
-#(omega 0.40408) (gamma 0.44764) (sigma 45.545))
-#(make polarizability
-#(omega 1.3381) (gamma 3.7271) (sigma 21.901))
-#(make polarizability
-#(omega 4.6095) (gamma 2.61) (sigma 1.3104))
-#)))
-#;Additional Information
-#;Normalization length=1e-06 in meter
-#;Material_used_is_Pdfrom Rakic et al.,Applied Optics (1998)
-#;Plasma Angular Frequency (and plasma wave vector,kp) in normalized units=4.5036
-#(define myPt (make dielectric (epsilon 1)
-#(polarizations
- #(make polarizability
-#(omega 1e-20) (gamma 0.064524) (sigma 1.9923e+41))
-#(make polarizability
-#(omega 0.62911) (gamma 0.41699) (sigma 28.872))
-#(make polarizability
-#(omega 1.0598) (gamma 1.4824) (sigma 35.102))
-#(make polarizability
-#(omega 2.5334) (gamma 2.9584) (sigma 5.099))
-#(make polarizability
-#(omega 7.4598) (gamma 6.8694) (sigma 3.8445))
-#)))
-#;Additional Information
-#;Normalization length=1e-06 in meter
-#;Material_used_is_Ptfrom Rakic et al.,Applied Optics (1998)
-#;Plasma Angular Frequency (and plasma wave vector,kp) in normalized units=4.4635
-#(define myTi (make dielectric (epsilon 1)
-#(polarizations
- #(make polarizability
-#(omega 1e-20) (gamma 0.066137) (sigma 5.1166e+40))
-#(make polarizability
-#(omega 0.62669) (gamma 1.8357) (sigma 79.136))
-#(make polarizability
-#(omega 1.2461) (gamma 2.0309) (sigma 8.7496))
-#(make polarizability
-#(omega 2.0236) (gamma 1.3413) (sigma 1.5787))
-#(make polarizability
-#(omega 1.5671) (gamma 1.4211) (sigma 0.014077))
-#)))
-#;Additional Information
-#;Normalization length=1e-06 in meter
-#;Material_used_is_Tifrom Rakic et al.,Applied Optics (1998)
-#;Plasma Angular Frequency (and plasma wave vector,kp) in normalized units=2.262
-#(define myW (make dielectric (epsilon 1)
-#(polarizations
- #(make polarizability
-#(omega 1e-20) (gamma 0.05162) (sigma 2.3421e+41))
-#(make polarizability
-#(omega 0.80978) (gamma 0.42747) (sigma 9.3624))
-#(make polarizability
-#(omega 1.5462) (gamma 1.0332) (sigma 7.8945))
-#(make polarizability
-#(omega 2.8875) (gamma 2.6874) (sigma 9.6272))
-#(make polarizability
-#(omega 6.0475) (gamma 4.7071) (sigma 8.0514))
-#)))
-#;Additional Information
-#;Normalization length=1e-06 in meter
-#;Material_used_is_Wfrom Rakic et al.,Applied Optics (1998)
-#;Plasma Angular Frequency (and plasma wave vector,kp) in normalized units=4.8395
-#(define mySilica (make dielectric (epsilon 1)
-#(polarizations 
-        #(make polarizability 
-                #(omega 14.61896) (gamma 0) (sigma 0.69617))
-  #(make polarizability
-        #(omega  8.60279) (gamma 0) (sigma 0.40794))
-  #(make polarizability
-                #(omega  0.10105) (gamma 0) (sigma 0.89748))
-#)))
+class material_AuL():#{{{
+    """ Drude-Lorentz model for Gold - new prototype
+    
+    
+    """
+    def __init__(self, where=None, resistivity=0., eps=0.):
+        #self.eps = 1. 
+        self.eps = 1. 
+        self.pol = [
+                #{'omega': omega0,	    'gamma': 1e6*c*0.042747, 'sigma': 4.0314e+39 * 1e-20**2 * (1e6*c)**2 / omega0**2},
+                {'omega':1e6*c*0.33472, 'gamma':1e6*c*0.19438, 'sigma':11.363}, ## sum of Lorentzians = 17.86
+                {'omega':1e6*c*0.66944, 'gamma':1e6*c*0.27826, 'sigma':1.1836},
+                {'omega':1e6*c*2.3947 , 'gamma':1e6*c*0.7017 , 'sigma': 0.65677},
+                {'omega':1e6*c*3.4714 , 'gamma':1e6*c*2.0115 , 'sigma': 2.6455},
+                {'omega':1e6*c*10.743 , 'gamma':1e6*c*1.7857 , 'sigma': 2.0148},
+                ]
+
+        #self.Drude_omegap = 4.0314e+39 * 1e-20**2 * (1e6*c)**2)**.5, 
+        #self.Drude_gamma = 1e6*c*0.042747
+
+        self.name = "Gold (New Drude-Lorentz)"
+        self.shortname = "Au"
+        self.where = where
+#}}}
+
+class material_SiO2_stability_test():#{{{
+    """ Amorphous SiO2  for mid_infrared
+    Optical resonances fitted manually to experimental spectra
+    Note: Discrete Lorentzian oscillators used predict higher losses in the mid-IR region
+    Note2: crystalline SiO2 should be similar, but is slightly birefringent
+
+    From Gunde, M. K.: "Vibrational modes in amorphous silicon dioxide" 
+        Physica B: Physics of Condensed Matter, Volume 292, Issue 3-4, p. 286-295.
+    """
+    def __init__(self, where=None, sigmafactor=1):
+        #self.eps = 2.4          ## used if no VIS/UV oscillators defined; may range from 2.3-2.5 [Huber]
+        #self.eps = 1+.5+.55+ .082+ .663+ .058+ .017
+
+        ## S = 0.5783  eps(f_c)=1                   UNSTAB, ok
+        ## S = 0.5763  eps(f_c)=1                   stab      
+        ## S = 0.5763  eps(f_c)=.99                 stab, WEIRD!
+        ## S = 0.5783  eps(f_c)=.95                 UNSTAB, ok
+        ## S = 0.5763  eps(f_c)=.9989+0.015j        UNSTAB, WEIRD!
+        #M S = 0.5763  eps(f_c)=.9989+0.015j        UNSTAB, WEIRD!
+
+        omega0 = 3.0e-10
+        omega = 3.0e13
+        self.eps = 1.42
+
+        self.pol = [
+                #{'omega': 447*percm, 'gamma': 49*percm, 'sigma':.923},
+                {'omega': omega0, 'gamma': 9e12, 'sigma':.523 * (omega/omega0)**2},
+                ]
+        self.name = "Amorphous silica glass (SiO2) for IR range"
+        self.shortname = "SiO2 (IR)"
+        self.where = where
+#}}}
+
+class material():#{{{
+    """ Base class for materials """
+    def __init__(self, where=None):
+        self.eps = 1
+        self.pol = [
+                ]
+        self.name = "default material"
+        self.shortname = "default"
+        self.where = where
+
+#}}}

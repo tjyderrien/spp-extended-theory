@@ -640,20 +640,20 @@ def get_s_parameters(monitor1_Ex, monitor1_Hy, monitor2_Ex, monitor2_Hy, #{{{
         #matplotlib.rc('font', size=8)
         #matplotlib.rc('text.latex', preamble = \
                 #'\usepackage{amsmath}, \usepackage{yfonts}, \usepackage{txfonts}, \usepackage{lmodern},')
-        plt.plot(t, abs(Ex1), label="Ex1")
-        plt.plot(t, abs(Hy1), label="Hy1")
-        plt.plot(t, abs(Ex2), label="Ex2")
-        plt.plot(t, abs(Hy2), label="Hy2")
+        plt.plot(t, Ex1.real, label="Ex1")
+        plt.plot(t, Hy1.real, label="Hy1")
+        plt.plot(t, Ex2.real, label="Ex2")
+        plt.plot(t, Hy2.real, label="Hy2")
 
         np.savetxt("timedomain_Ex1_Kx%f.dat"%Kx, zip(t, Ex1), fmt="%.8e")
         np.savetxt("timedomain_Ex2_Kx%f.dat"%Kx, zip(t, Ex2), fmt="%.8e")
 
         #plt.ylim(1, 1e6)
-        plt.gca().set_ylim(ymin=1e-10)
+        #plt.gca().set_ylim(ymin=1e-10)
         plt.legend(prop={'size':10}, loc='upper right')
         plt.xlabel('Time'); plt.ylabel('Field amplitudes, $|E|$, $|H|$')
         #plt.title('Time-domain field amplitudes')
-        plt.yscale("log")
+        #plt.yscale("log")
         plt.savefig("amplitudes_time_domain.png", bbox_inches='tight')
     except:
         print "Timedomain plot failed"

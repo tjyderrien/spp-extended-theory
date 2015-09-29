@@ -2,145 +2,7 @@
 #-*- coding: utf-8 -*-
 
 # IMPORT LIBRARIES
-import numpy as np
-from numpy import genfromtxt, loadtxt
-from scipy.optimize import fsolve, root
-import cmath
-import matplotlib as mp
-# from pylab import *
-from scipy.constants import c, epsilon_0, mu_0, pi, e, m_e
-
-# basic wave function
-def omega(wavelength):
-  return 2*pi*c/wavelength
-
-# SPP BASIC FUNCTIONS
-def betaSPP(wavelength, eps1, eps2):
-  """calculate the SPP wave number on a flat interface
-    input: wavelength (float), eps1 (complex), eps2(complex)
-  """
-  omega=2.0*pi*c/wavelength
-  return omega/c * cmath.sqrt(eps1 * eps2 / (eps1 + eps2))
-  
-def SPPconditionValue(eps1, eps2):
-  """SPPconditionValue() returns the value of condition for SPP. If its negative, then SPP can be excited at a flat interface. 
-    Input: eps1, eps2: complex-valued quantities
-    Output: float
-  """
-  condition=eps1.real*eps2.real+eps1.imag*eps2.imag
-  return condition
-
-def SPPcondition(eps1, eps2):
-  """ Returns a boolean claiming if SPP are excitable on an interface
-  """
-  if (SPPconditionValue(eps1, eps2) < 0.0):
-           output=True
-  else:
-    output=False
-  return output
-
-def OldSPPcondition(eps1, eps2):
-  """SPPconditionValue() returns the value of condition for SPP IN PERFECT MATERIALS (Im(eps)<<|Re(eps)). If its negative, then SPP can be excited at a flat interface. 
-    Input: eps1, eps2: complex-valued quantities
-    Output: float
-    TODO This function is weird, because the condition is not symmetric by exchange of medium1 and medium2. 
-  """
-  condition1=(eps1.real*eps2.real<0.0)
-  condition2= eps2.real < abs(eps1.real)
-  return (condition1 and condition2)
-
-def period(betaSPP):
-  """ Returns the period of the light-SPP field at a given interface
-  """
-  return 2.0*pi/betaSPP.real
-
-### SPP decay depth
-def DecayDepth(kzSPP):
-  return 2e0*pi/kzSPP.real
-
-def kzSPP(wavelength,eps1,eps2):
-  return cmath.sqrt(betaSPP(wavelength,eps1,eps2)**2-eps1*(omega(wavelength)**2/c**2))
-  
-# OPTICAL FUNCTIONS
-def Drude(wavelength, ne, epsilon, nu):
-  """Return the value of dielectric function based on simplified Drude model
-  Input:
-    wavelength (float)
-    ne (float)
-    epsilon (complex): dielectric permittivity under wavelength, without excitation
-    nu (float): collision frequency
-  Output: complex-valued dielectric permittivity
-  """
-  omegap2=ne * e**2 / (m_e * meffe * epsilon_0)
-  omega=2.0*pi*c/wavelength
-  return epsilon - omegap2/(omega*omega) * 1/(1+1j*nu/omega)
-
-def reflectivity(eps1, eps2):
-  """Return Fresnel reflectivity 
-  Input:
-    eps1: complex-valued permittivity 1+j0
-    eps2: idem, for medium2
-  Output: 
-    interface reflectivity (float) R
-  """
-  R=abs(((eps1**0.5e0-eps2**0.5e0)/(eps1**0.5e0+eps2**0.5e0))**2)
-  return R
-  
-## More elaborated functions
-
-def SPPactiveInterfaces(dbarray, comment):
-  """Print all the SPP-active interfaces available in database
-  If comment=="new", old SPP-active interfaces are removed from the table
-  """
-  counter=0
-  
-  # double loop to test all configurations (brute-forcing...)
-  for i in dbarray:
-    for k in dbarray:
-      #extracting info on medium1 and medium2 in array; building eps1 and eps2
-      name1=i[0]; name2=k[0]; wavelength1=1e-9*float(i[2]); wavelength2=1e-9*float(k[2])
-      eps1=float(i[3])+1j*float(i[4]); eps2=float(k[3])+1j*float(k[4]) 
-      try:
-        gap1=float(i[1]); 
-      except:
-        gap1=10; 
-      try: 
-        gap2=float(k[1]); 
-      except: 
-        gap2=10;
-      #calculate SPP condition
-      if ((wavelength1 == wavelength2) and gap1<0.1): #we must consider same wavelength, otherwise there is no meaning, but we also select only metallic substrates
-        #if (gap2<0.1): #we select only metallic materials for interface 2 = substrate
-        #print wavelength1, wavelength2
-        if (SPPcondition(eps1, eps2)): #the interface is SPP active
-          
-          # Build the table of SPP active interfaces
-          Material1=name1
-          Material2=name2
-          Wavelength=(wavelength1/lengthunit)
-          OldSPPactiveBool=''; 
-          if (OldSPPcondition(eps1, eps2)): 
-            OldSPPactiveBool='Yes'
-          else: 
-            OldSPPactiveBool='No'
-          NewSPPactiveBool='Yes'
-          SPPperiod=(period(betaSPP(wavelength1,eps1, eps2))/lengthunit)
-          SPPdecayDepth1=(DecayDepth(kzSPP(wavelength1, eps1, eps2))/lengthunit)
-          SPPdecayDepth2=(DecayDepth(kzSPP(wavelength2, eps2, eps1))/lengthunit)
-          Reflectivity=(reflectivity(eps1, eps2))
-          
-          # Print the table of active SPP interfaces for all cases or only new SPP interfaces
-                    
-          if( not (comment=="new" and OldSPPactiveBool=='Yes')): 
-            if (np.mod(counter, 20) == 0): 
-              #show the table line each 20 lines
-              print '{0:12s} {1:12s} {2:15s} {3:12s} {4:12s} {5:11s} {6:16s} {7:16s} {8:12s}'.format("# Substrate", "Layer", "Wavelength (nm)", "OldSPPactive", "NewSPPactive", "Period (nm)", "DecayDepth1 (nm)", "DecayDepth2 (nm)", "Reflectivity")
-              
-            counter=counter+1
-            print '{0:12s} {1:12s} {2:15f} {3:12s} {4:12s} {5:11f} {6:16f} {7:16f} {8:12f}'.format(Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity)
-  return 0
-
-"""======================================"""
+from SimpleSPProutines import *
 
 # PHYSICAL INPUT
 wavelength = 800e-9
@@ -148,8 +10,8 @@ epsAir=1e0
 epsSi0=13.64+0.048j
 meffe=0.18
 nuSi=(1.1e-15)**-1
-lengthunit=1e-9
-example=period(betaSPP(wavelength, epsAir, Drude(wavelength, 1e28, epsSi0, nuSi)))
+
+#example=period(betaSPP(wavelength, epsAir, Drude(wavelength, 1e28, epsSi0, nuSi)))
 
 #print example
 
@@ -167,6 +29,29 @@ we will :
 # Select database
 database="MaterialOpticalDatabaseForPlasmonics.csv"
 
-# Build database array 
+# Build database array for choosing which material can be of interest to irradiate
 dbarray = loadtxt(database, dtype='str', delimiter='\t')
-SPPactiveInterfaces(dbarray, '')
+#SPPactiveInterfaces(dbarray, 'new')
+
+""" TODO: interface this with HTML for publication on the web. 
+1. Put results into a NP.array.
+2. Use a converter to HTML, CSV and PDF maybe. 
+"""
+
+# Now, we shall construct database for SPP lifetimes. Actually, SPP lifetime require the knowledge of all spectrum of response to be known. 
+MaterialFolder="/usr/local/share/gsvit/data/spectra"
+MaterialFile="Ag"
+
+MaterialArray = loadtxt(MaterialFolder+'/'+MaterialFile, delimiter=' ', skiprows=4)
+
+wavelengths=MaterialArray[:,0];
+wavelengths=np.multiply(wavelengths,1e-6) #converting wavelength to emters
+
+n=MaterialArray[:,1]; k=MaterialArray[:,2]
+
+# Let's build epsilon
+eps=np.add(n,np.multiply(1j, k))
+
+plt.plot(wavelengths, eps)
+#print MaterialArray
+#print LifeTimeSpectrum(Material)

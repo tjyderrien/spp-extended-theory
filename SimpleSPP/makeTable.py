@@ -41,7 +41,7 @@ dbarray = loadtxt(database, dtype='str', delimiter='\t')
 # Now, we shall construct database for SPP lifetimes. Actually, SPP lifetime require the knowledge of all spectrum of response to be known. 
 MaterialFolder="/usr/local/share/gsvit/data/spectra"
 MaterialFile1="SiO2"
-MaterialFile2="Ag"
+MaterialFile2="Ti"
 
 # Loading Material dielectric complex permittivity into arrays
 MaterialArray2 = loadtxt(MaterialFolder+'/'+MaterialFile2, delimiter=' ', skiprows=4)
@@ -68,26 +68,27 @@ eps1=np.power(np.add(n,np.multiply(1j, k)),2)
 #print eps1
 
 wavelengths2=MaterialArray2[:,0]
-wavelengths2=np.multiply(wavelengths2,1e-6) #converting wavelength to emters
+wavelengths2=np.multiply(wavelengths2,1e-6) #converting wavelength to meters
 n=MaterialArray2[:,1]; k=MaterialArray2[:,2]
 eps2=np.power(np.add(n,np.multiply(1j, k)),2)
 #print eps2
 
 # Before doing calculations, we shall interpolate the most dense mesh on the second, and take their intersection. 
-print eps1.size, eps2.size
+print "Wavelength mesh size 1="+str(eps1.size)
+print "Wavelength mesh size 2="+str(eps2.size)
 
-xnew = np.arange(100e-9,2e-6,10e-9)
+# dense mesh generation
+xnew = np.arange(100e-9,1e-6,1e-9)
 order=1
-feps1=InterpolatedUnivariateSpline(wavelengths1, eps1, k=order)
-feps2=InterpolatedUnivariateSpline(wavelengths2, eps2, k=order)
-eps1new=feps1(xnew)
-eps2new=feps2(xnew)
-# TODO: careful this does not work for complex-valued functions
+feps1r=InterpolatedUnivariateSpline(wavelengths1, eps1.real, k=order)
+feps1i=InterpolatedUnivariateSpline(wavelengths1, eps1.imag, k=order)
+feps2r=InterpolatedUnivariateSpline(wavelengths2, eps2.real, k=order)
+feps2i=InterpolatedUnivariateSpline(wavelengths2, eps2.imag, k=order)
 
-def RealDerivativeByComplex(f,z):
-  """Complex derivative a real-valued function f: z->f(z)
-  """
-  return 0.5*(np.diff(f,z.real) - 1j*np.diff(z.imag))
+print "Interpolating on Wavelength mesh size = "+str(xnew.size)
+
+eps1new=np.add(feps1r(xnew),np.multiply(1.0j, feps1i(xnew)))
+eps2new=np.add(feps2r(xnew),np.multiply(1.0j, feps2i(xnew)))
 
 #def NewLifeTime():
   #"""
@@ -104,16 +105,29 @@ def RealDerivativeByComplex(f,z):
   #LifeTime=0.5/betaSPP.real * (SPPgroupVelocity)**(-1)
   #return LifeTime
 
-## Show dielectric function
+### Checking interpolation of the dielectric function
 plt.figure()
 plt.xlabel('Wavelength (nm)')
-plt.ylabel('\varepsilon')
-plt.plot(1e9*wavelengths1, eps1.real, '-', label='Re('+MaterialFile1+')')
-plt.plot(1e9*wavelengths1, eps1.imag, '--', label='Im('+MaterialFile1+')')
-plt.plot(1e9*wavelengths2, eps2.real, '-', label='Re('+MaterialFile2+')')
-plt.plot(1e9*wavelengths2, eps2.imag, '--', label='Im('+MaterialFile2+')')
-plt.savefig('epsilon.png')
-plt.show()
+plt.ylabel('epsilon')
+#plt.plot(1e9*wavelengths1, eps1.real, '-', label='Re('+MaterialFile1+')')
+#plt.plot(1e9*xnew, eps1new.real, '--', label='interp Re('+MaterialFile1+')')
+#plt.plot(1e9*wavelengths1, eps1.imag, '-', label='Im('+MaterialFile1+')')
+#plt.plot(1e9*xnew, eps1new.imag, '--', label='interp Im('+MaterialFile1+')')
+#plt.plot(1e9*wavelengths2, eps2.real, '-', label='Re('+MaterialFile2+')')
+#plt.plot(1e9*xnew, eps2new.real, '--', label='interp Re('+MaterialFile2+')')
+plt.plot(1e9*wavelengths2, eps2.imag, '-', label='Im('+MaterialFile2+')')
+plt.plot(1e9*xnew, eps2new.imag, '--', label='interp Im('+MaterialFile2+')')
 
+plt.savefig('epsilon.png')
+
+## plot SPP dispersion relation
+#kspp = betaSPP(wavelengths2, eps1, eps2)
+#omegaspp=omega(wavelengths2)
+#plt.figure()
+#plt.xlabel('k (m^{-1})')
+#plt.ylabel('\omega (s^{-1})')
+#plt.plot(kspp.real, omegaspp)
+
+## plot the lifetime with wavelength
 #print MaterialArray
 #print LifeTimeSpectrum(Material)

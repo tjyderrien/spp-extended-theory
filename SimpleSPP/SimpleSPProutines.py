@@ -65,6 +65,7 @@ def DecayDepth(kzSPP):
 
 def kzSPP(wavelength,eps1,eps2):
   return cmath.sqrt(betaSPP(wavelength,eps1,eps2)**2-eps1*(omega(wavelength)**2/c**2))
+
   
 # OPTICAL FUNCTIONS
 def Drude(wavelength, ne, epsilon, nu):
@@ -148,3 +149,9 @@ def SPPactiveInterfaces(dbarray, comment):
             counter=counter+1
             print '{0:12s} {1:12s} {2:15f} {3:12s} {4:12s} {5:11f} {6:16f} {7:16f} {8:12f}'.format(Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity)
   return 0
+
+
+def RealDerivativeByComplex(f,z):
+  """Complex derivative a real-valued function f: z->f(z)
+  """
+  return 0.5*(np.diff(f,z.real) - 1j*np.diff(z.imag))

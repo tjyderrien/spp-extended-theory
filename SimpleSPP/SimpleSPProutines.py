@@ -9,11 +9,17 @@ import cmath
 import matplotlib as mp
 import matplotlib.pyplot as plt
 from scipy.interpolate import InterpolatedUnivariateSpline
-
+from matplotlib import rc
 # from pylab import *
 from scipy.constants import c, epsilon_0, mu_0, pi, e, m_e
 
 lengthunit=1e-9
+
+# Settings for matplotlib
+rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
+## for Palatino and other serif fonts use:
+#rc('font',**{'family':'serif','serif':['Palatino']})
+rc('text', usetex=True)
 
 # basic wave function
 def omega(wavelength):
@@ -152,6 +158,25 @@ def SPPactiveInterfaces(dbarray, comment):
 
 
 def RealDerivativeByComplex(f,z):
-  """Complex derivative a real-valued function f: z->f(z)
+  """Complex derivative a real-valued function by a complex-number
+  Input:
+    f: z->f(z)
+    z: z complex-valued numbers
+  Output:
+    df/dz according to complex derivatives formula
   """
-  return 0.5*(np.diff(f,z.real) - 1j*np.diff(z.imag))
+  return (0.5e0+0j) * (np.diff(f)/np.diff(z.real) - 1j*(np.diff(f)/np.diff(z.imag))) #original
+  #return 0.5 * np.add(np.divide(np.diff(f),np.diff(z.real)), - 1j*np.divide(np.diff(f),np.diff(z.imag))) #original
+
+def LifeTimeRaether(beta, eps2, eps1):
+	omegasppimag=beta.real * c * eps1.imag/(2.*eps1.real**2) * (eps1.real * eps2)/(eps1.real + eps2)
+	lifetime=1e0/(2e0*omegasppimag)
+	return lifetime
+
+def SPPlength(beta):
+	return 1e0/(2e0 * beta.imag)
+
+def LifeTimeDerrien(beta, vg):
+	length = SPPlength(beta)
+	lifetime = 0.5 * length * (vg)**(-1e0)
+	return lifetime

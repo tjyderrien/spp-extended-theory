@@ -31,7 +31,10 @@ database="MaterialOpticalDatabaseForPlasmonics.csv"
 
 # Build database array for choosing which material can be of interest to irradiate
 dbarray = loadtxt(database, dtype='str', delimiter='\t')
-#SPPactiveInterfaces(dbarray, 'new')
+
+#f = open('SPPactiveInterfaces.dat', 'w+')
+#SPPactiveInterfacesArray = SPPactiveInterfaces(dbarray, '')
+#f.write(SPPactiveInterfacesArray)
 
 """ TODO: interface this with HTML for publication on the web. 
 1. Put results into a NP.array.
@@ -40,11 +43,11 @@ dbarray = loadtxt(database, dtype='str', delimiter='\t')
 
 # Now, we shall construct database for SPP lifetimes. Actually, SPP lifetime require the knowledge of all spectrum of response to be known. 
 
-#MaterialFolder="/usr/local/share/gsvit/data/spectra"
-MaterialFolder="Database"
+MaterialFolder="/usr/local/share/gsvit/data/spectra"
+#MaterialFolder="Database"
 
 MaterialFile1="Air"
-MaterialFile2='Si-Aspnes'
+MaterialFile2='Au'
 
 # Loading Material dielectric complex permittivity into arrays
 MaterialArray2 = loadtxt(MaterialFolder+'/'+MaterialFile2, delimiter=' ', skiprows=4)
@@ -133,6 +136,16 @@ plt.title('Dispersion relation at $'+MaterialFile1+'$/$'+MaterialFile2+'$ interf
 plt.legend(loc=2)
 plt.savefig('Dispersion.png')
 
+## plot the period with wavelength
+
+plt.figure()
+plt.xlabel('Wavelength $\lambda$ $(nm)$')
+plt.ylabel('$\Lambda$ ($nm$)')
+plt.plot(1e9*wavelengths, 1e9 * (2e0*pi/kspp.real), label='Near-field period')
+plt.title('Period of field at $'+MaterialFile1+'$/$'+MaterialFile2+'$ interface')
+plt.legend(loc=2)
+plt.savefig('Period.png')
+
 ## plot the lifetime with wavelength
 #RealDerivativeByComplex = np.vectorize(RealDerivativeByComplex)
 SPPgroupVelocity = RealDerivativeByComplex(omegaspp, kspp)
@@ -145,7 +158,7 @@ print np.shape(SPPgroupVelocity)
 #SPPgroupVelocityRe = SPPgroupVelocity.real
 SPPgroupVelocityPlot = np.clip(SPPgroupVelocity.real, 0, 1000E8)
 
-print SPPgroupVelocity.real
+#print SPPgroupVelocity.real
 
 plt.figure()
 plt.xlabel('Wavelength $(nm)$')

@@ -2,17 +2,22 @@
 # 1	2	3	4	5	6	7	8	9	10
 # Material	Bandgap(eV)/EF	wavelength	Real(eps)	Imag(eps)	MainProperty	SPPdecayDeptAir	SPPdecayLength	Lifetime	AtomicMass(uma)
 Air	10?	800	1.000	0.000	-	?	?	?	?
+Air	10?	400	1.000	0.000	-	?	?	?	?
 Ag	-5.51	800	-31.0213	0.4095	SPP-friendly	?	?	?	107.8682
 Ag	-5.51	400	-4.4222	0.2103	SPP-friendly	?	?	?	107.8682
 Au	-5.52	800	-24.0620	1.5069	SPP-friendly	?	?	?	196.96657
 Au	-5.52	400	-1.6580	5.7356	?	?	?	?	196.96657
 SiC	3	800	6.8707	0.0000	Anisotropic	?	?	?	40.0962
+SiC	3	400	7.637194690976	0.55518674268	Anisotropic	?	?	?	40.0962
+
 Al	-11.7	800	-61.0838	44.7890895	?	?	?	?	26.981538
 Al	-11.7	400	-21.988	4.3875	?	?	?	?	26.981538
 Ni	-1000	400	-3.7755	8.8988	SPP-friendly	?	?	?	58.6934
 Ni	-1000	800	-19.0170	21.7031	SPP-friendly	?	?	?	58.6934
 Ti	-8.84	800	-6.2067	25.2004	Anisotropic	?	?	?	47.867
 Ti	-8.84	400	-4.3620	12.3621	Anisotropic	?	?	?	47.867
+TiO2	10	800	6.348888	0	Anisotropic	?	?	?	?
+TiO2	10	400	8.24666089	0	Anisotropic	?	?	?	?
 Be	-14.3	800	0.28153	23.201	?	?	?	?	9.012182
 Be	-14.3	400	-1.5540	18.074	?	?	?	?	9.012182
 Cr	-1000	800	-1.9825	21.880	?	?	?	?	51.9961

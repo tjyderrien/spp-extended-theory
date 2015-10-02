@@ -57,7 +57,9 @@ def OldSPPcondition(eps1, eps2):
     TODO This function is weird, because the condition is not symmetric by exchange of medium1 and medium2. 
   """
   condition1=(eps1.real*eps2.real<0.0)
-  condition2= eps2.real < abs(eps1.real)
+  #condition2= eps2.real < abs(eps1.real) #this version is not symmetric, hence strange
+  # Let's use its generalization. 
+  condition2 = (eps1.real * eps2.real / (eps1.real + eps2.real) > 0e0)
   return (condition1 and condition2)
 
 def period(betaSPP):
@@ -128,32 +130,56 @@ def SPPactiveInterfaces(dbarray, comment):
       if ((wavelength1 == wavelength2) and ConditionOnGap): #we must consider same wavelength, otherwise there is no meaning, but we also select only metallic substrates
         #if (gap2<0.1): #we select only metallic materials for interface 2 = substrate
         #print wavelength1, wavelength2
-        if (SPPcondition(eps1, eps2)): #the interface is SPP active
+        #if (SPPcondition(eps1, eps2)): #the interface is SPP active
           
-          # Build the table of SPP active interfaces
-          Material1=name1
-          Material2=name2
-          Wavelength=(wavelength1/lengthunit)
-          OldSPPactiveBool=''; 
-          if (OldSPPcondition(eps1, eps2)): 
-            OldSPPactiveBool='Yes'
-          else: 
-            OldSPPactiveBool='No'
-          NewSPPactiveBool='Yes'
-          SPPperiod=(period(betaSPP(wavelength1,eps1, eps2))/lengthunit)
-          SPPdecayDepth1=(DecayDepth(kzSPP(wavelength1, eps1, eps2))/lengthunit)
-          SPPdecayDepth2=(DecayDepth(kzSPP(wavelength2, eps2, eps1))/lengthunit)
-          Reflectivity=(reflectivity(eps1, eps2))
-          
-          # Print the table of active SPP interfaces for all cases or only new SPP interfaces
-                    
-          if( not (comment=="new" and OldSPPactiveBool=='Yes')): 
-            if (np.mod(counter, 20) == 0): 
-              #show the table line each 20 lines
-              print '{0:12s} {1:12s} {2:15s} {3:12s} {4:12s} {5:11s} {6:16s} {7:16s} {8:12s}'.format("# Substrate", "Layer", "Wavelength (nm)", "OldSPPactive", "NewSPPactive", "Period (nm)", "DecayDepth1 (nm)", "DecayDepth2 (nm)", "Reflectivity")
-              
-            counter=counter+1
-            print '{0:12s} {1:12s} {2:15f} {3:12s} {4:12s} {5:11f} {6:16f} {7:16f} {8:12f}'.format(Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity)
+				# Build the table of SPP active interfaces
+				Material1=name1
+				Material2=name2
+				Wavelength=(wavelength1/lengthunit)
+				
+				Absorption1 = (2e0*omega(wavelength1) / c) * (eps1)**0.5
+				Absorption2 = (2e0*omega(wavelength2) / c) * (eps2)**0.5
+							
+				if (Absorption1.imag == 0e0): 
+					OpticalPenetration1 = -1
+				else: 
+					OpticalPenetration1 = 1e9 * 1e0/Absorption1.imag
+					
+				if (Absorption2.imag == 0e0): 
+					OpticalPenetration2 = -1
+				else:
+					OpticalPenetration2 = 1e9 * 1e0/Absorption2.imag
+				
+				OldSPPactiveBool=''; 
+				if (OldSPPcondition(eps1, eps2)): 
+					OldSPPactiveBool='Yes'
+				else: 
+					OldSPPactiveBool='No'
+				if (SPPcondition(eps1, eps2)): 
+					NewSPPactiveBool='Yes'
+				else: 
+					NewSPPactiveBool='No'
+				if (SPPcondition(eps1,eps2) or (OldSPPcondition(eps1,eps2))):
+					SPPperiod=(period(betaSPP(wavelength1,eps1, eps2))/lengthunit)
+					SPPdecayDepth1=(DecayDepth(kzSPP(wavelength1, eps1, eps2))/lengthunit)
+					SPPdecayDepth2=(DecayDepth(kzSPP(wavelength2, eps2, eps1))/lengthunit)
+				else: 
+					SPPperiod=0
+					SPPdecayDepth1=0
+					SPPdecayDepth2=0
+				
+				Reflectivity=(reflectivity(eps1, eps2))
+				
+				# Print the table of active SPP interfaces for all cases or only new SPP interfaces
+									
+				#if( not (comment=="new")): 
+				if (np.mod(counter, 20) == 0): 
+					#show the table line each 20 lines
+					print '{0:12s} {1:12s} {2:15s} {3:12s} {4:12s} {5:11s} {6:16s} {7:16s} {8:12s} {9:19s} {10:19s}'.format("# Substrate", "Layer", "Wavelength (nm)", "OldSPPactive", "NewSPPactive", "Period (nm)", "DecayDepth1 (nm)", "DecayDepth2 (nm)", "Reflectivity", "OpticalPenetration1", "OpticalPenetration2")
+					
+				counter=counter+1
+				print '{0:12s} {1:12s} {2:15f} {3:12s} {4:12s} {5:11f} {6:16f} {7:16f} {8:12f}  {9:19f} {10:19f}'.format(Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2)
+				
   return 0
 
 

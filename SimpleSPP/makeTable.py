@@ -33,7 +33,7 @@ database="MaterialOpticalDatabaseForPlasmonics.csv"
 dbarray = loadtxt(database, dtype='str', delimiter='\t')
 
 #f = open('SPPactiveInterfaces.dat', 'w+')
-#SPPactiveInterfacesArray = SPPactiveInterfaces(dbarray, '')
+SPPactiveInterfacesArray = SPPactiveInterfaces(dbarray, '')
 #f.write(SPPactiveInterfacesArray)
 
 """ TODO: interface this with HTML for publication on the web. 

@@ -33,8 +33,16 @@ def betaSPP(wavelength, eps1, eps2):
   omega=2.0*pi*c/wavelength
   return omega/c * cmath.sqrt(eps1 * eps2 / (eps1 + eps2))
   
+#def SymmetricSPPrigorousCondition(eps1, eps2):
+	#""" Assume that Re(k1).Re(k2) > 0 and verify the subsequent consequences alltogether.
+	#"""
+	##condition = ... 
+	# TODO: to calculate thorouly
+	#return condition
+
 def SPPconditionValue(eps1, eps2):
   """SPPconditionValue() returns the value of condition for SPP. If its negative, then SPP can be excited at a flat interface. 
+  /!\ This condition is restricted to checking the real part of the dispersion relation for symmetric SPP only. 
     Input: eps1, eps2: complex-valued quantities
     Output: float
   """
@@ -173,7 +181,7 @@ def SPPactiveInterfaces(dbarray, comment):
 				else: 
 					NewSPPactiveBool='No'
 				# If new or old SPP active condition is true, then show	
-				if (SPPcondition(eps1,eps2)): # or (OldSPPcondition(eps1,eps2))):
+				if ((SPPcondition(eps1,eps2)) or (OldSPPcondition(eps1,eps2))):
 					SPPperiod=(period(betaSPP(wavelength1,eps1, eps2))/lengthunit)
 					SPPdecayDepth1=(DecayDepth(kzSPP(wavelength1, eps1, eps2))/lengthunit)
 					SPPdecayDepth2=(DecayDepth(kzSPP(wavelength2, eps2, eps1))/lengthunit)
@@ -186,7 +194,7 @@ def SPPactiveInterfaces(dbarray, comment):
 				
 				# Print only the experimentally possible cases: SPP active depth must be smaller than absorption depth. 
 				# ensure that SPPdecayDepth is smaller than layer thickness, to avoid shift of dispersion relation
-				ExperimentalAchievable = ExperimentallyAchievable(OpticalPenetration1, SPPdecayDepth1)
+				ExperimentalAchievable = True #ExperimentallyAchievable(OpticalPenetration1, SPPdecayDepth1)
 				
 				# Print the table of active SPP interfaces for all cases or only new SPP interfaces					
 				#if( not (comment=="new")): 

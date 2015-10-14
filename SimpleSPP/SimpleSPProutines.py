@@ -62,11 +62,10 @@ def OldSPPcondition(eps1, eps2):
   """SPPconditionValue() returns the value of condition for SPP IN PERFECT MATERIALS (Im(eps)<<|Re(eps)). If its negative, then SPP can be excited at a flat interface. 
     Input: eps1, eps2: complex-valued quantities
     Output: float
-    TODO This function is weird, because the condition is not symmetric by exchange of medium1 and medium2. 
   """
   condition1=(eps1.real*eps2.real<0.0)
   #condition2= eps2.real < abs(eps1.real) #this version is not symmetric, hence strange
-  # Let's use its generalization. 
+  # Let's use its generalization which is actually symmetric. 
   condition2 = (eps1.real * eps2.real / (eps1.real + eps2.real) > 0e0)
   return (condition1 and condition2)
 

@@ -33,7 +33,16 @@ database="MaterialOpticalDatabaseForPlasmonics.csv"
 dbarray = loadtxt(database, dtype='str', delimiter='\t')
 
 #f = open('SPPactiveInterfaces.dat', 'w+')
-SPPactiveInterfacesArray = SPPactiveInterfaces(dbarray, '')
+
+# To calculate symmetric SPP compatible interfaces, use the following line
+#SPPactiveInterfacesArray = SPPactiveInterfaces(dbarray, '')
+
+# To calculate asymmetric POSITIVE SPP compatible interfaces, use the following line
+#SPPactiveInterfacesArray = AsymmetricSPPposActiveInterfaces(dbarray, '')
+
+# To calculate asymmetric NEGATIVE SPP compatible interfaces, use the following line
+SPPactiveInterfacesArray = AsymmetricSPPnegActiveInterfaces(dbarray, '')
+
 #f.write(SPPactiveInterfacesArray)
 
 """ TODO: interface this with HTML for publication on the web. 
@@ -47,7 +56,7 @@ MaterialFolder="/usr/local/share/gsvit/data/spectra"
 #MaterialFolder="Database"
 
 MaterialFile1="Air"
-MaterialFile2='Au'
+MaterialFile2='Al'
 
 # Loading Material dielectric complex permittivity into arrays
 MaterialArray2 = loadtxt(MaterialFolder+'/'+MaterialFile2, delimiter=' ', skiprows=4)

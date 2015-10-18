@@ -33,12 +33,23 @@ def betaSPP(wavelength, eps1, eps2):
   omega=2.0*pi*c/wavelength
   return omega/c * cmath.sqrt(eps1 * eps2 / (eps1 + eps2))
   
-#def SymmetricSPPrigorousCondition(eps1, eps2):
-	#""" Assume that Re(k1).Re(k2) > 0 and verify the subsequent consequences alltogether.
-	#"""
-	##condition = ... 
-	# TODO: to calculate thorouly
-	#return condition
+def AsymmetricSPPconditionPos(eps1, eps2):
+	""" Assume that Re(k1).Re(k2) < 0 and verify the subsequent consequences alltogether.
+	It exists then two sub-modes, let's say a positive one (k1<0, k2>0), and a negative one (k1>0, k2<0)
+	"""
+	value = eps1/eps2
+	condition = (value.imag < 0e0)
+	#condition = (eps1.imag / eps2.imag * eps2.real < eps1.real)
+	return condition
+
+def AsymmetricSPPconditionNeg(eps1, eps2):
+	""" Assume that Re(k1).Re(k2) < 0 and verify the subsequent consequences alltogether.
+	It exists then two sub-modes, let's say a positive one (k1<0, k2>0), and a negative one (k1>0, k2<0)
+	"""
+	value = eps1/eps2
+	condition = (value.imag > 0e0)
+	#condition = (eps1.imag / eps2.imag * eps2.real < eps1.real)
+	return condition
 
 def SPPconditionValue(eps1, eps2):
   """SPPconditionValue() returns the value of condition for SPP. If its negative, then SPP can be excited at a flat interface. 
@@ -152,61 +163,231 @@ def SPPactiveInterfaces(dbarray, comment):
         #print wavelength1, wavelength2
         #if (SPPcondition(eps1, eps2)): #the interface is SPP active
           
-				# Build the table of SPP active interfaces
-				Material1=name1
-				Material2=name2
-				Wavelength=(wavelength1/lengthunit)
-				
-				Absorption1 = (2e0*omega(wavelength1) / c) * (eps1)**0.5
-				Absorption2 = (2e0*omega(wavelength2) / c) * (eps2)**0.5
-				# Calculate optical penetration depth. -1 means infinite. 			
-				if (Absorption1.imag == 0e0): 
-					OpticalPenetration1 = -1
-				else: 
-					OpticalPenetration1 = 1e9 * 1e0/Absorption1.imag
-					
-				if (Absorption2.imag == 0e0): 
-					OpticalPenetration2 = -1
-				else:
-					OpticalPenetration2 = 1e9 * 1e0/Absorption2.imag
-				# SPP activitivity condition with Perfect Medium Approximation ? 
-				OldSPPactiveBool=''; 
-				if (OldSPPcondition(eps1, eps2)): 
-					OldSPPactiveBool='Yes'
-				else: 
-					OldSPPactiveBool='No'
-				if (SPPcondition(eps1, eps2)): 
-					NewSPPactiveBool='Yes'
-				else: 
-					NewSPPactiveBool='No'
-				# If new or old SPP active condition is true, then show	
-				if ((SPPcondition(eps1,eps2)) or (OldSPPcondition(eps1,eps2))):
-					SPPperiod=(period(betaSPP(wavelength1,eps1, eps2))/lengthunit)
-					SPPdecayDepth1=(DecayDepth(kzSPP(wavelength1, eps1, eps2))/lengthunit)
-					SPPdecayDepth2=(DecayDepth(kzSPP(wavelength2, eps2, eps1))/lengthunit)
-				else: 
-					SPPperiod=0
-					SPPdecayDepth1=0
-					SPPdecayDepth2=0
-				
-				Reflectivity=(reflectivity(eps1, eps2))
-				
-				# Print only the experimentally possible cases: SPP active depth must be smaller than absorption depth. 
-				# ensure that SPPdecayDepth is smaller than layer thickness, to avoid shift of dispersion relation
-				ExperimentalAchievable = True #ExperimentallyAchievable(OpticalPenetration1, SPPdecayDepth1)
-				
-				# Print the table of active SPP interfaces for all cases or only new SPP interfaces					
-				#if( not (comment=="new")): 
-				if(ExperimentalAchievable and (SPPperiod!=0)):
-				  if (np.mod(counter, 20) == 0): 
-				    #show the table line each 20 lines
-				    print '{0:12s} {1:12s} {2:15s} {3:12s} {4:12s} {5:11s} {6:16s} {7:16s} {8:12s} {9:19s} {10:19s}'.format("# Substrate", "Layer", "Wavelength (nm)", "OldSPPactive", "NewSPPactive", "Period (nm)", "DecayDepth1 (nm)", "DecayDepth2 (nm)", "Reflectivity", "OpticalPenetration1", "OpticalPenetration2")
-				  
-				  counter=counter+1
-				  print '{0:12s} {1:12s} {2:15f} {3:12s} {4:12s} {5:11f} {6:16f} {7:16f} {8:12f}  {9:19f} {10:19f}'.format(Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2)
-				
+        # Build the table of SPP active interfaces
+        Material1=name1
+        Material2=name2
+        Wavelength=(wavelength1/lengthunit)
+        
+        Absorption1 = (2e0*omega(wavelength1) / c) * (eps1)**0.5
+        Absorption2 = (2e0*omega(wavelength2) / c) * (eps2)**0.5
+        # Calculate optical penetration depth. -1 means infinite. 			
+        if (Absorption1.imag == 0e0): 
+	        OpticalPenetration1 = -1
+        else: 
+	        OpticalPenetration1 = 1e9 * 1e0/Absorption1.imag
+	        
+        if (Absorption2.imag == 0e0): 
+	        OpticalPenetration2 = -1
+        else:
+	        OpticalPenetration2 = 1e9 * 1e0/Absorption2.imag
+        # SPP activitivity condition with Perfect Medium Approximation ? 
+        OldSPPactiveBool=''; 
+        if (OldSPPcondition(eps1, eps2)): 
+	        OldSPPactiveBool='Yes'
+        else: 
+	        OldSPPactiveBool='No'
+        if (SPPcondition(eps1, eps2)): 
+	        NewSPPactiveBool='Yes'
+        else: 
+	        NewSPPactiveBool='No'
+        # If new or old SPP active condition is true, then show	
+        if ((SPPcondition(eps1,eps2)) or (OldSPPcondition(eps1,eps2))):
+	        SPPperiod=(period(betaSPP(wavelength1,eps1, eps2))/lengthunit)
+	        SPPdecayDepth1=(DecayDepth(kzSPP(wavelength1, eps1, eps2))/lengthunit)
+	        SPPdecayDepth2=(DecayDepth(kzSPP(wavelength2, eps2, eps1))/lengthunit)
+        else: 
+	        SPPperiod=0
+	        SPPdecayDepth1=0
+	        SPPdecayDepth2=0
+        
+        Reflectivity=(reflectivity(eps1, eps2))
+        
+        # Print only the experimentally possible cases: SPP active depth must be smaller than absorption depth. 
+        # ensure that SPPdecayDepth is smaller than layer thickness, to avoid shift of dispersion relation
+        ExperimentalAchievable = True #ExperimentallyAchievable(OpticalPenetration1, SPPdecayDepth1)
+        
+        # Print the table of active SPP interfaces for all cases or only new SPP interfaces					
+        #if( not (comment=="new")): 
+        if(ExperimentalAchievable and (SPPperiod!=0)):
+          if (np.mod(counter, 20) == 0): 
+            #show the table line each 20 lines
+            print '{0:12s} {1:12s} {2:15s} {3:12s} {4:12s} {5:11s} {6:16s} {7:16s} {8:12s} {9:19s} {10:19s}'.format("# Substrate", "Layer", "Wavelength (nm)", "OldSPPactive", "NewSPPactive", "Period (nm)", "DecayDepth1 (nm)", "DecayDepth2 (nm)", "Reflectivity", "OpticalPenetration1", "OpticalPenetration2")
+          
+          counter=counter+1
+          print '{0:12s} {1:12s} {2:15f} {3:12s} {4:12s} {5:11f} {6:16f} {7:16f} {8:12f}  {9:19f} {10:19f}'.format(Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2)
+        
   return 0
 
+def AsymmetricSPPposActiveInterfaces(dbarray, comment):
+  """Print all the SPP-active interfaces available in database
+  If comment=="new", old SPP-active interfaces are removed from the table
+  """
+  counter=0
+  
+  # double loop to test all configurations (brute-forcing...)
+  for i in dbarray:
+    for k in dbarray:
+      #extracting info on medium1 and medium2 in array; building eps1 and eps2
+      name1=i[0]; name2=k[0]; wavelength1=1e-9*float(i[2]); wavelength2=1e-9*float(k[2])
+      eps1=float(i[3])+1j*float(i[4]); eps2=float(k[3])+1j*float(k[4]) 
+      try:
+        gap1=float(i[1]); 
+      except:
+        gap1=10; 
+      try: 
+        gap2=float(k[1]); 
+      except: 
+        gap2=10;
+        
+      #ConditionOnGap=(gap1<0.1)
+      ConditionOnGap=True #always true to avoid selection
+      
+      #calculate SPP condition
+      if ((wavelength1 == wavelength2) and ConditionOnGap): #we must consider same wavelength, otherwise there is no meaning, but we also select only metallic substrates
+        #if (gap2<0.1): #we select only metallic materials for interface 2 = substrate
+        #print wavelength1, wavelength2
+        #if (SPPcondition(eps1, eps2)): #the interface is SPP active
+          
+        # Build the table of SPP active interfaces
+        Material1=name1
+        Material2=name2
+        Wavelength=(wavelength1/lengthunit)
+        
+        Absorption1 = (2e0*omega(wavelength1) / c) * (eps1)**0.5
+        Absorption2 = (2e0*omega(wavelength2) / c) * (eps2)**0.5
+        # Calculate optical penetration depth. -1 means infinite. 			
+        if (Absorption1.imag == 0e0): 
+	        OpticalPenetration1 = -1
+        else: 
+	        OpticalPenetration1 = 1e9 * 1e0/Absorption1.imag
+	        
+        if (Absorption2.imag == 0e0): 
+	        OpticalPenetration2 = -1
+        else:
+	        OpticalPenetration2 = 1e9 * 1e0/Absorption2.imag
+        # SPP activitivity condition with Perfect Medium Approximation ? 
+        OldSPPactiveBool=''; 
+        if (OldSPPcondition(eps1, eps2)): 
+	        OldSPPactiveBool='Yes'
+        else: 
+	        OldSPPactiveBool='No'
+        if (AsymmetricSPPconditionPos(eps1, eps2)): 
+	        NewSPPactiveBool='Yes'
+        else: 
+	        NewSPPactiveBool='No'
+        # If new or old SPP active condition is true, then show	
+        if ((AsymmetricSPPconditionPos(eps1,eps2)) or (OldSPPcondition(eps1,eps2))):
+	        SPPperiod=(period(betaSPP(wavelength1,eps1, eps2))/lengthunit)
+	        SPPdecayDepth1=(DecayDepth(kzSPP(wavelength1, eps1, eps2))/lengthunit)
+	        SPPdecayDepth2=(DecayDepth(kzSPP(wavelength2, eps2, eps1))/lengthunit)
+        else: 
+	        SPPperiod=0
+	        SPPdecayDepth1=0
+	        SPPdecayDepth2=0
+        
+        Reflectivity=(reflectivity(eps1, eps2))
+        
+        # Print only the experimentally possible cases: SPP active depth must be smaller than absorption depth. 
+        # ensure that SPPdecayDepth is smaller than layer thickness, to avoid shift of dispersion relation
+        ExperimentalAchievable = True #ExperimentallyAchievable(OpticalPenetration1, SPPdecayDepth1)
+        
+        # Print the table of active SPP interfaces for all cases or only new SPP interfaces					
+        #if( not (comment=="new")): 
+        if(ExperimentalAchievable and (SPPperiod!=0)):
+          if (np.mod(counter, 20) == 0): 
+            #show the table line each 20 lines
+            print '{0:12s} {1:12s} {2:15s} {3:12s} {4:12s} {5:11s} {6:16s} {7:16s} {8:12s} {9:19s} {10:19s}'.format("# Substrate", "Layer", "Wavelength (nm)", "OldSPPactive", "NewSPPactive", "Period (nm)", "DecayDepth1 (nm)", "DecayDepth2 (nm)", "Reflectivity", "OpticalPenetration1", "OpticalPenetration2")
+          
+          counter=counter+1
+          print '{0:12s} {1:12s} {2:15f} {3:12s} {4:12s} {5:11f} {6:16f} {7:16f} {8:12f}  {9:19f} {10:19f}'.format(Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2)
+        
+  return 0
+
+
+def AsymmetricSPPnegActiveInterfaces(dbarray, comment):
+  """Print all the SPP-active interfaces available in database
+  If comment=="new", old SPP-active interfaces are removed from the table
+  """
+  counter=0
+  
+  # double loop to test all configurations (brute-forcing...)
+  for i in dbarray:
+    for k in dbarray:
+      #extracting info on medium1 and medium2 in array; building eps1 and eps2
+      name1=i[0]; name2=k[0]; wavelength1=1e-9*float(i[2]); wavelength2=1e-9*float(k[2])
+      eps1=float(i[3])+1j*float(i[4]); eps2=float(k[3])+1j*float(k[4]) 
+      try:
+        gap1=float(i[1]); 
+      except:
+        gap1=10; 
+      try: 
+        gap2=float(k[1]); 
+      except: 
+        gap2=10;
+        
+      #ConditionOnGap=(gap1<0.1)
+      ConditionOnGap=True #always true to avoid selection
+      
+      #calculate SPP condition
+      if ((wavelength1 == wavelength2) and ConditionOnGap): #we must consider same wavelength, otherwise there is no meaning, but we also select only metallic substrates
+        #if (gap2<0.1): #we select only metallic materials for interface 2 = substrate
+        #print wavelength1, wavelength2
+        #if (SPPcondition(eps1, eps2)): #the interface is SPP active
+          
+        # Build the table of SPP active interfaces
+        Material1=name1
+        Material2=name2
+        Wavelength=(wavelength1/lengthunit)
+        
+        Absorption1 = (2e0*omega(wavelength1) / c) * (eps1)**0.5
+        Absorption2 = (2e0*omega(wavelength2) / c) * (eps2)**0.5
+        # Calculate optical penetration depth. -1 means infinite. 			
+        if (Absorption1.imag == 0e0): 
+	        OpticalPenetration1 = -1
+        else: 
+	        OpticalPenetration1 = 1e9 * 1e0/Absorption1.imag
+	        
+        if (Absorption2.imag == 0e0): 
+	        OpticalPenetration2 = -1
+        else:
+	        OpticalPenetration2 = 1e9 * 1e0/Absorption2.imag
+        # SPP activitivity condition with Perfect Medium Approximation ? 
+        OldSPPactiveBool=''; 
+        if (OldSPPcondition(eps1, eps2)): 
+	        OldSPPactiveBool='Yes'
+        else: 
+	        OldSPPactiveBool='No'
+        if (AsymmetricSPPconditionNeg(eps1, eps2)): 
+	        NewSPPactiveBool='Yes'
+        else: 
+	        NewSPPactiveBool='No'
+        # If new or old SPP active condition is true, then show	
+        if ((AsymmetricSPPconditionNeg(eps1,eps2)) or (OldSPPcondition(eps1,eps2))):
+	        SPPperiod=(period(betaSPP(wavelength1,eps1, eps2))/lengthunit)
+	        SPPdecayDepth1=(DecayDepth(kzSPP(wavelength1, eps1, eps2))/lengthunit)
+	        SPPdecayDepth2=(DecayDepth(kzSPP(wavelength2, eps2, eps1))/lengthunit)
+        else: 
+	        SPPperiod=0
+	        SPPdecayDepth1=0
+	        SPPdecayDepth2=0
+        
+        Reflectivity=(reflectivity(eps1, eps2))
+        
+        # Print only the experimentally possible cases: SPP active depth must be smaller than absorption depth. 
+        # ensure that SPPdecayDepth is smaller than layer thickness, to avoid shift of dispersion relation
+        ExperimentalAchievable = True #ExperimentallyAchievable(OpticalPenetration1, SPPdecayDepth1)
+        
+        # Print the table of active SPP interfaces for all cases or only new SPP interfaces					
+        #if( not (comment=="new")): 
+        if(ExperimentalAchievable and (SPPperiod!=0)):
+          if (np.mod(counter, 20) == 0): 
+            #show the table line each 20 lines
+            print '{0:12s} {1:12s} {2:15s} {3:12s} {4:12s} {5:11s} {6:16s} {7:16s} {8:12s} {9:19s} {10:19s}'.format("# Substrate", "Layer", "Wavelength (nm)", "OldSPPactive", "NewSPPactive", "Period (nm)", "DecayDepth1 (nm)", "DecayDepth2 (nm)", "Reflectivity", "OpticalPenetration1", "OpticalPenetration2")
+          
+          counter=counter+1
+          print '{0:12s} {1:12s} {2:15f} {3:12s} {4:12s} {5:11f} {6:16f} {7:16f} {8:12f}  {9:19f} {10:19f}'.format(Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2)
+        
+  return 0
 
 def RealDerivativeByComplex(f,z):
   """Complex derivative a real-valued function by a complex-number

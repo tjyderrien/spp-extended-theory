@@ -1,6 +1,8 @@
 # Database of dielectric index for different materials for plasmonic applications						Make tables for these combinations		
 # 1	2	3	4	5	6	7	8	9	10
 # Material	Bandgap(eV)/EF	wavelength	Real(eps)	Imag(eps)	MainProperty	SPPdecayDeptAir	SPPdecayLength	Lifetime	AtomicMass(uma)
+Air	10?	1060	1.000	0.000	-	?	?	?	?
+Air	10?	1030	1.000	0.000	-	?	?	?	?
 Air	10?	800	1.000	0.000	-	?	?	?	?
 Air	10?	400	1.000	0.000	-	?	?	?	?
 Ag	-5.51	800	-31.0213	0.4095	SPP-friendly	?	?	?	107.8682
@@ -9,13 +11,13 @@ Au	-5.52	800	-24.0620	1.5069	SPP-friendly	?	?	?	196.96657
 Au	-5.52	400	-1.6580	5.7356	?	?	?	?	196.96657
 SiC	3	800	6.8707	0.0000	Anisotropic	?	?	?	40.0962
 SiC	3	400	7.637194690976	0.55518674268	Anisotropic	?	?	?	40.0962
-
 Al	-11.7	800	-61.0838	44.7890895	?	?	?	?	26.981538
 Al	-11.7	400	-21.988	4.3875	?	?	?	?	26.981538
 Ni	-1000	400	-3.7755	8.8988	SPP-friendly	?	?	?	58.6934
 Ni	-1000	800	-19.0170	21.7031	SPP-friendly	?	?	?	58.6934
 Ti	-8.84	800	-6.2067	25.2004	Anisotropic	?	?	?	47.867
 Ti	-8.84	400	-4.3620	12.3621	Anisotropic	?	?	?	47.867
+TiO2	10	1060	6.14692849	0	Anisotropic	?	?	?	?
 TiO2	10	800	6.348888	0	Anisotropic	?	?	?	?
 TiO2	10	400	8.24666089	0	Anisotropic	?	?	?	?
 Be	-14.3	800	0.28153	23.201	?	?	?	?	9.012182
@@ -73,4 +75,7 @@ W	-9.524	400	4.0653	16.453	?	?	?	?	183.84
 #GaInP	0?	800	11.055	0.0000	?	?	?	?	215.514761
 #GaInP	0?	400	19.898	8.3385          ?               ?	?               ?	215.514761
 Ethanol	10	800	1.8423	2.10e-7	?	?	?	?	?
-
+Mo	-10	1030	-11.728	20.297	?	?	?	?	?
+W	-9.524	1060	-5.3351	21.733	?	?	?	?	?
+SiO2	7.8	1060	2.10163009	0	?	?	?	?	?
+Ti	-8.84	1060	-4.0834	27.722	?	?	?	?	?

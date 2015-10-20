@@ -35,13 +35,13 @@ dbarray = loadtxt(database, dtype='str', delimiter='\t')
 #f = open('SPPactiveInterfaces.dat', 'w+')
 
 # To calculate symmetric SPP compatible interfaces, use the following line
-#SPPactiveInterfacesArray = SPPactiveInterfaces(dbarray, '')
+SPPactiveInterfacesArray = SPPactiveInterfaces(dbarray, '')
 
 # To calculate asymmetric POSITIVE SPP compatible interfaces, use the following line
 #SPPactiveInterfacesArray = AsymmetricSPPposActiveInterfaces(dbarray, '')
 
 # To calculate asymmetric NEGATIVE SPP compatible interfaces, use the following line
-SPPactiveInterfacesArray = AsymmetricSPPnegActiveInterfaces(dbarray, '')
+#SPPactiveInterfacesArray = AsymmetricSPPnegActiveInterfaces(dbarray, '')
 
 #f.write(SPPactiveInterfacesArray)
 
@@ -55,8 +55,8 @@ SPPactiveInterfacesArray = AsymmetricSPPnegActiveInterfaces(dbarray, '')
 MaterialFolder="/usr/local/share/gsvit/data/spectra"
 #MaterialFolder="Database"
 
-MaterialFile1="Air"
-MaterialFile2='Al'
+MaterialFile1="SiO2"
+MaterialFile2='W'
 
 # Loading Material dielectric complex permittivity into arrays
 MaterialArray2 = loadtxt(MaterialFolder+'/'+MaterialFile2, delimiter=' ', skiprows=4)
@@ -153,6 +153,7 @@ plt.ylabel('$\Lambda$ ($nm$)')
 plt.plot(1e9*wavelengths, 1e9 * (2e0*pi/kspp.real), label='Near-field period')
 plt.title('Period of field at $'+MaterialFile1+'$/$'+MaterialFile2+'$ interface')
 plt.legend(loc=2)
+plt.grid(True)
 plt.savefig('Period.png')
 
 ## plot the lifetime with wavelength

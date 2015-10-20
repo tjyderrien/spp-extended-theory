@@ -92,6 +92,10 @@ def DecayDepth(kzSPP):
 def kzSPP(wavelength,eps1,eps2):
   return cmath.sqrt(betaSPP(wavelength,eps1,eps2)**2-eps1*(omega(wavelength)**2/c**2))
 
+def DecayLengthSPP(beta):
+	"""Return the coherent length of SPPs
+	"""
+	return 2e0/beta.imag
   
 # OPTICAL FUNCTIONS
 def Drude(wavelength, ne, epsilon, nu):
@@ -195,10 +199,12 @@ def SPPactiveInterfaces(dbarray, comment):
 	        SPPperiod=(period(betaSPP(wavelength1,eps1, eps2))/lengthunit)
 	        SPPdecayDepth1=(DecayDepth(kzSPP(wavelength1, eps1, eps2))/lengthunit)
 	        SPPdecayDepth2=(DecayDepth(kzSPP(wavelength2, eps2, eps1))/lengthunit)
+	        SPPdecayLength=DecayLengthSPP(betaSPP(wavelength1,eps1, eps2))/lengthunit
         else: 
 	        SPPperiod=0
 	        SPPdecayDepth1=0
 	        SPPdecayDepth2=0
+	        SPPdecayLength=0
         
         Reflectivity=(reflectivity(eps1, eps2))
         
@@ -211,10 +217,10 @@ def SPPactiveInterfaces(dbarray, comment):
         if(ExperimentalAchievable and (SPPperiod!=0)):
           if (np.mod(counter, 20) == 0): 
             #show the table line each 20 lines
-            print '{0:12s} {1:12s} {2:15s} {3:12s} {4:12s} {5:11s} {6:16s} {7:16s} {8:12s} {9:19s} {10:19s}'.format("# Substrate", "Layer", "Wavelength (nm)", "OldSPPactive", "NewSPPactive", "Period (nm)", "DecayDepth1 (nm)", "DecayDepth2 (nm)", "Reflectivity", "OpticalPenetration1", "OpticalPenetration2")
+            print '{0:12s} {1:12s} {2:15s} {3:12s} {4:12s} {5:11s} {6:16s} {7:16s} {8:12s} {9:19s} {10:19s} {11:15s}'.format("# Substrate", "Layer", "Wavelength (nm)", "OldSPPactive", "NewSPPactive", "Period (nm)", "DecayDepth1 (nm)", "DecayDepth2 (nm)", "Reflectivity", "OpticalPenetration1", "OpticalPenetration2", "DecayLength")
           
           counter=counter+1
-          print '{0:12s} {1:12s} {2:15f} {3:12s} {4:12s} {5:11f} {6:16f} {7:16f} {8:12f}  {9:19f} {10:19f}'.format(Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2)
+          print '{0:12s} {1:12s} {2:15f} {3:12s} {4:12s} {5:11f} {6:16f} {7:16f} {8:12f}  {9:19f} {10:19f} {11:15f}'.format(Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength)
         
   return 0
 

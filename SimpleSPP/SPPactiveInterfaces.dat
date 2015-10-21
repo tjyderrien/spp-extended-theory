@@ -1,4 +1,3 @@
-# Substrate  Layer        Wavelength (nm) OldSPPactive NewSPPactive Period (nm) DecayDepth1 (nm) DecayDepth2 (nm) Reflectivity OpticalPenetration1 OpticalPenetration2 DecayLength    
 Air          Ti               1060.000000 Yes          Yes          1057.739274      7512.771620       260.020929     0.614961            -1.000000           21.053673    18979.184582
 Air          W                1060.000000 Yes          Yes          1055.098801      6453.880230       278.651164     0.600340            -1.000000           22.660339    15320.165750
 Air          Ti               1030.000000 Yes          Yes          1027.612501      7217.813020       253.507586     0.614421            -1.000000           20.531624    18184.538798
@@ -19,7 +18,6 @@ Air          Ta                800.000000 Yes          Yes           775.803610 
 Air          V                 800.000000 No           Yes           800.341572      5204.108480       241.713666     0.544624            -1.000000           19.686380    10456.020313
 Air          Ag                400.000000 Yes          Yes           352.020444       741.014049       167.322574     0.963824            -1.000000           15.132416    16174.864942
 Air          Au                400.000000 Yes          Yes           394.716374      1287.794071       190.130253     0.407138            -1.000000           16.298493     1499.589360
-# Substrate  Layer        Wavelength (nm) OldSPPactive NewSPPactive Period (nm) DecayDepth1 (nm) DecayDepth2 (nm) Reflectivity OpticalPenetration1 OpticalPenetration2 DecayLength    
 Air          Al                400.000000 Yes          Yes           391.166844      1862.083509        82.974280     0.923532            -1.000000            6.755031    27285.956540
 Air          Ni                400.000000 Yes          Yes           393.278001      1516.088428       146.885162     0.513087            -1.000000           12.278114     2529.001040
 Air          Ti                400.000000 Yes          Yes           395.695994      1802.042361       130.477728     0.542677            -1.000000           10.769734     3417.588545
@@ -40,7 +38,6 @@ Ag           Be                800.000000 Yes          No            409.432895 
 Ag           Ge                800.000000 Yes          Yes            97.108710        81.009692       117.104025     0.862508            11.429854          197.595968      123.379793
 Ag           Si                800.000000 Yes          Yes           162.167525       107.524760       244.596166     0.984717            11.429854         9796.630740     6206.170149
 Ag           ZnO               800.000000 Yes          Yes           382.259286       134.454103      1086.828319     0.991771            11.429854           -1.000000   130591.611756
-# Substrate  Layer        Wavelength (nm) OldSPPactive NewSPPactive Period (nm) DecayDepth1 (nm) DecayDepth2 (nm) Reflectivity OpticalPenetration1 OpticalPenetration2 DecayLength    
 Ag           a-C               800.000000 Yes          Yes           397.764547       136.748536      1416.839952     0.591289            11.429854           78.977175      264.054092
 Ag           Graphite(o)       800.000000 Yes          Yes           286.997744       137.335670      1119.038669     0.371655            11.429854           36.151649      102.309097
 Ag           SiO2              800.000000 Yes          Yes           531.402636       138.656459      2036.696051     0.993572            11.429854           -1.000000   350842.997369
@@ -61,7 +58,6 @@ Ag           a-C               400.000000 Yes          Yes           265.907327 
 Ag           Graphite(o)       400.000000 No           Yes           583.889545       344.945243       760.702089     0.410473            15.132416           26.013888       56.437021
 Ag           Graphite(e)       400.000000 Yes          Yes           179.646583       130.678677       247.270231     0.935238            15.132416         1820.880461     1122.443451
 Ag           SiO2              400.000000 Yes          Yes           194.914719       136.149767       279.201465     0.956357            15.132416           -1.000000     2743.269164
-# Substrate  Layer        Wavelength (nm) OldSPPactive NewSPPactive Period (nm) DecayDepth1 (nm) DecayDepth2 (nm) Reflectivity OpticalPenetration1 OpticalPenetration2 DecayLength    
 Ag           Al2O3             400.000000 Yes          Yes           119.118763       101.021547       140.537571     0.954188            15.132416           -1.000000      622.155721
 Ag           Diamond           400.000000 No           Yes          1128.446049      1039.495577      1321.801418     0.954136            15.132416           -1.000000       31.657344
 Ag           GaAs              400.000000 No           Yes          1671.291273       755.107346       215.488686     0.497081            15.132416           14.843138       57.934157
@@ -82,7 +78,6 @@ Au           Al2O3             800.000000 Yes          Yes           424.384628 
 Au           Diamond           800.000000 Yes          Yes           290.168522       142.140658       592.935013     0.951787            12.971842           -1.000000     9372.288785
 Au           H2O               800.000000 Yes          Yes           579.721697       156.929474      2143.677140     0.968957            12.971842           -1.000000    74753.665989
 Au           GaAs              800.000000 Yes          Yes           145.378497       108.703864       195.010562     0.900557            12.971842          743.206783      499.372707
-# Substrate  Layer        Wavelength (nm) OldSPPactive NewSPPactive Period (nm) DecayDepth1 (nm) DecayDepth2 (nm) Reflectivity OpticalPenetration1 OpticalPenetration2 DecayLength    
 Au           InP               800.000000 Yes          Yes           167.838999       117.419653       242.000093     0.840522            12.971842          302.116660      354.715317
 Au           GaP               800.000000 Yes          Yes           190.530436       123.907213       293.262911     0.944423            12.971842           -1.000000     2651.048985
 Au           W                 800.000000 Yes          Yes           396.553031       190.468766      1095.191382     0.214487            12.971842           22.554299       70.970142
@@ -103,7 +98,6 @@ SiC          Ni                800.000000 Yes          Yes           284.904040 
 SiC          Ti                800.000000 No           Yes           303.512502       837.875178       179.451888     0.331695            -1.000000           15.875809      717.117601
 SiC          Cr                800.000000 No           Yes           312.056641       881.702494       206.824698     0.270137            -1.000000           18.395985      635.367261
 SiC          Cu                800.000000 Yes          Yes           260.672168       500.293943       136.167578     0.920406            -1.000000           12.699099     4397.247267
-# Substrate  Layer        Wavelength (nm) OldSPPactive NewSPPactive Period (nm) DecayDepth1 (nm) DecayDepth2 (nm) Reflectivity OpticalPenetration1 OpticalPenetration2 DecayLength    
 SiC          Li                800.000000 Yes          Yes           223.104647       325.140522       153.972365     0.867970            -1.000000           16.847964     1043.314389
 SiC          Mg                800.000000 Yes          Yes           287.433233       850.350127        98.056992     0.889691            -1.000000            8.295455     7361.991098
 SiC          Na                800.000000 Yes          Yes           203.504180       273.020193       151.711474     0.976558            -1.000000           18.109561     4184.878517
@@ -124,7 +118,6 @@ SiC          Mg                400.000000 Yes          Yes            93.767516 
 SiC          Na                400.000000 No           Yes          2510.295877    265635.821100      2327.466546     0.861030           317.098570           21.220639       71.808822
 SiC          Bi                400.000000 No           Yes           186.954479       404.715015       170.010462     0.242472           317.098570           14.631683      104.869827
 SiC          Pt                400.000000 No           Yes           153.787400       305.306381       120.025311     0.298410           317.098570           11.179796      117.467591
-# Substrate  Layer        Wavelength (nm) OldSPPactive NewSPPactive Period (nm) DecayDepth1 (nm) DecayDepth2 (nm) Reflectivity OpticalPenetration1 OpticalPenetration2 DecayLength    
 SiC          Ta                400.000000 No           Yes           177.978088       352.054035       154.979573     0.283586           317.098570           13.657705       96.263023
 SiC          V                 400.000000 No           Yes           151.129810       443.758133       103.340208     0.243754           317.098570            9.141931      229.057385
 Al           Air               800.000000 Yes          Yes           795.748463        96.081920      7296.539157     0.868184             7.696734           -1.000000    64202.045221
@@ -145,7 +138,6 @@ Al           InP               800.000000 Yes          Yes           219.360786 
 Al           GaP               800.000000 Yes          Yes           237.190476        90.272025       690.144527     0.664959             7.696734           -1.000000     1693.566115
 Al           W                 800.000000 Yes          No            266.664075       100.060089      1784.079174     0.187475             7.696734           22.554299       85.009624
 Al           Ethanol           800.000000 Yes          Yes           583.637616        95.545090      3947.180089     0.826934             7.696734    822945358.199692    25328.799885
-# Substrate  Layer        Wavelength (nm) OldSPPactive NewSPPactive Period (nm) DecayDepth1 (nm) DecayDepth2 (nm) Reflectivity OpticalPenetration1 OpticalPenetration2 DecayLength    
 Al           Air               400.000000 Yes          Yes           391.166844        82.974280      1862.083509     0.923532             6.755031           -1.000000    27285.956540
 Al           SiC               400.000000 Yes          Yes           119.573574        69.536891       209.436572     0.790423             6.755031          317.098570      365.881694
 Al           TiO2              400.000000 Yes          Yes           111.899014        67.817471       186.441574     0.839612             6.755031           -1.000000      634.774426
@@ -166,7 +158,6 @@ Ni           SiC               400.000000 No           Yes           163.515230 
 Ni           TiO2              400.000000 No           Yes           155.785971       132.094683       291.616131     0.290096            12.278114           -1.000000      107.153855
 Ni           Si                400.000000 No           Yes           187.146035       230.587716       799.018167     0.318123            12.278114           82.437541       54.649376
 Ni           a-C               400.000000 Yes          No            266.775904       153.733940      4043.052025     0.161684            12.278114           46.901858      148.654146
-# Substrate  Layer        Wavelength (nm) OldSPPactive NewSPPactive Period (nm) DecayDepth1 (nm) DecayDepth2 (nm) Reflectivity OpticalPenetration1 OpticalPenetration2 DecayLength    
 Ni           Graphite(e)       400.000000 Yes          Yes           255.041141       139.267203       687.766196     0.383797            12.278114         1820.880461      607.040264
 Ni           SiO2              400.000000 Yes          Yes           264.809175       139.852923       725.099554     0.401900            12.278114           -1.000000      756.955551
 Ni           Al2O3             400.000000 Yes          Yes           218.121817       135.147518       512.775322     0.354178            12.278114           -1.000000      409.714498
@@ -187,7 +178,6 @@ Ni           Diamond           800.000000 Yes          Yes           313.388900 
 Ni           H2O               800.000000 Yes          Yes           590.379571       158.601176      2649.617423     0.677189            13.012167           -1.000000     7844.175822
 Ni           GaAs              800.000000 Yes          Yes           200.719989       135.257228       373.263817     0.423645            13.012167          743.206783      237.100872
 Ni           InP               800.000000 Yes          Yes           219.411953       139.627369       451.035612     0.402489            13.012167          302.116660      250.139954
-# Substrate  Layer        Wavelength (nm) OldSPPactive NewSPPactive Period (nm) DecayDepth1 (nm) DecayDepth2 (nm) Reflectivity OpticalPenetration1 OpticalPenetration2 DecayLength    
 Ni           GaP               800.000000 Yes          Yes           228.857897       138.804885       457.553162     0.467615            13.012167           -1.000000      432.572211
 Ni           W                 800.000000 Yes          No            338.135492       189.225428       674.191897     0.064802            13.012167           22.554299       91.431339
 Ni           Ethanol           800.000000 Yes          Yes           577.409781       158.390813      2537.873737     0.672051            13.012167    822945358.199692     7337.672430
@@ -208,7 +198,6 @@ Ti           SiO2              800.000000 Yes          Yes           546.410402 
 Ti           Al2O3             800.000000 Yes          Yes           450.361131       188.879588      1736.949572     0.448492            15.875809           -1.000000     2411.586759
 Ti           Diamond           800.000000 Yes          Yes           329.907687       181.777348       974.001071     0.354836            15.875809           -1.000000      930.842889
 Ti           H2O               800.000000 Yes          Yes           598.224504       193.131974      2992.824332     0.537016            15.875809           -1.000000     5679.377409
-# Substrate  Layer        Wavelength (nm) OldSPPactive NewSPPactive Period (nm) DecayDepth1 (nm) DecayDepth2 (nm) Reflectivity OpticalPenetration1 OpticalPenetration2 DecayLength    
 Ti           GaAs              800.000000 No           Yes           230.003989       173.823872       540.698184     0.247669            15.875809          743.206783      252.062227
 Ti           InP               800.000000 No           Yes           246.560800       177.742495       656.057162     0.236652            15.875809          302.116660      265.480643
 Ti           GaP               800.000000 No           Yes           253.369850       174.224654       609.999568     0.286037            15.875809           -1.000000      399.211420
@@ -229,7 +218,6 @@ TiO2         Ti               1060.000000 No           Yes           428.442075 
 TiO2         W                1060.000000 No           Yes           425.584480      1159.137362       255.426152     0.326747            -1.000000           22.660339      968.088383
 TiO2         Ag                800.000000 Yes          Yes           283.157830       625.954813       128.095267     0.990135            -1.000000           11.429854    53079.292185
 TiO2         Au                800.000000 Yes          Yes           272.651409       531.757758       139.935046     0.950456            -1.000000           12.971842     7774.888005
-# Substrate  Layer        Wavelength (nm) OldSPPactive NewSPPactive Period (nm) DecayDepth1 (nm) DecayDepth2 (nm) Reflectivity OpticalPenetration1 OpticalPenetration2 DecayLength    
 TiO2         Al                800.000000 Yes          Yes           306.904218      1125.190740        92.686960     0.714968            -1.000000            7.696734     3678.163488
 TiO2         Ni                800.000000 Yes          Yes           297.648929       728.386961       146.907357     0.518032            -1.000000           13.012167      988.134093
 TiO2         Ti                800.000000 No           Yes           315.264038       897.104738       180.528483     0.342097            -1.000000           15.875809      808.000429
@@ -250,7 +238,6 @@ TiO2         Ti                400.000000 No           Yes           145.981173 
 TiO2         Be                400.000000 No           Yes           147.125514       372.736336       111.694454     0.229397            -1.000000           10.143565      209.225686
 TiO2         Cr                400.000000 No           Yes           148.281711       295.842347       119.196949     0.276586            -1.000000           11.173797      131.415022
 TiO2         Cu                400.000000 No           Yes           190.694228       347.652444       178.671382     0.315958            -1.000000           14.937959       85.354568
-# Substrate  Layer        Wavelength (nm) OldSPPactive NewSPPactive Period (nm) DecayDepth1 (nm) DecayDepth2 (nm) Reflectivity OpticalPenetration1 OpticalPenetration2 DecayLength    
 TiO2         Li                400.000000 No           Yes           770.713187      1375.636397       810.712583     0.732224            -1.000000           19.480152       66.297985
 TiO2         Mg                400.000000 Yes          Yes            82.615613       102.228381        66.935839     0.906315            -1.000000            9.023966      274.030281
 TiO2         Na                400.000000 No           Yes          3128.541204      5995.776389      3468.776129     0.916776            -1.000000           21.220639       72.539490
@@ -271,7 +258,6 @@ Be           Na                800.000000 Yes          No            960.174418 
 Be           Bi                800.000000 Yes          No            362.375688       356.987481       284.524370     0.006428            18.805144           16.804806       99.233759
 Be           Pt                800.000000 Yes          No            338.835707       435.394116       195.725838     0.025721            18.805144           12.830829       87.326031
 Be           Ta                800.000000 Yes          No            562.931865       344.976900       342.864551     0.079315            18.805144           18.295927       93.305585
-# Substrate  Layer        Wavelength (nm) OldSPPactive NewSPPactive Period (nm) DecayDepth1 (nm) DecayDepth2 (nm) Reflectivity OpticalPenetration1 OpticalPenetration2 DecayLength    
 Be           V                 800.000000 Yes          No            343.561526       326.817549       358.174783     0.001000            18.805144           19.686380      108.879319
 Be           Air               400.000000 Yes          Yes           399.509642       124.169844      2369.469618     0.537385            10.143565           -1.000000     4612.484920
 Be           SiC               400.000000 No           Yes           154.561846       113.929953       438.836248     0.218165            10.143565          317.098570      203.704736
@@ -292,7 +278,6 @@ Cr           Diamond           800.000000 No           Yes           337.362257 
 Cr           H2O               800.000000 Yes          Yes           601.405346       222.705376      2983.318296     0.477196            18.395985           -1.000000     4757.678887
 Cr           GaAs              800.000000 No           Yes           244.417847       204.211989       616.884685     0.196261            18.395985          743.206783      246.298480
 Cr           GaP               800.000000 No           Yes           265.021754       202.324781       665.892561     0.228728            18.395985           -1.000000      368.858321
-# Substrate  Layer        Wavelength (nm) OldSPPactive NewSPPactive Period (nm) DecayDepth1 (nm) DecayDepth2 (nm) Reflectivity OpticalPenetration1 OpticalPenetration2 DecayLength    
 Cr           Ethanol           800.000000 Yes          Yes           588.720666       222.372534      2863.425302     0.470164            18.395985    822945358.199692     4461.641548
 Cr           Air               400.000000 Yes          Yes           395.426521       135.012770      1738.909061     0.531547            11.173797           -1.000000     3166.615201
 Cr           SiC               400.000000 No           Yes           156.314136       121.907791       343.995923     0.257270            11.173797          317.098570      136.011519
@@ -313,7 +298,6 @@ Cu           Si                800.000000 Yes          Yes           148.005381 
 Cu           ZnO               800.000000 Yes          Yes           376.181141       146.943069       965.504407     0.933838            12.699099           -1.000000    13222.876715
 Cu           a-C               800.000000 Yes          Yes           400.059926       150.998730      1372.793053     0.531777            12.699099           78.977175      252.615893
 Cu           Graphite(o)       800.000000 Yes          Yes           307.606553       155.909696      1475.186933     0.322691            12.699099           36.151649       98.992495
-# Substrate  Layer        Wavelength (nm) OldSPPactive NewSPPactive Period (nm) DecayDepth1 (nm) DecayDepth2 (nm) Reflectivity OpticalPenetration1 OpticalPenetration2 DecayLength    
 Cu           SiO2              800.000000 Yes          Yes           527.031267       152.751365      1823.043040     0.947450            12.699099           -1.000000    36366.103932
 Cu           Al2O3             800.000000 Yes          Yes           425.840727       149.460185      1216.404903     0.938845            12.699099           -1.000000    19182.461194
 Cu           Diamond           800.000000 Yes          Yes           292.323832       140.122549       611.406289     0.924262            12.699099           -1.000000     6203.022474
@@ -334,7 +318,6 @@ Cu           Al2O3             400.000000 No           Yes           219.620666 
 Cu           Diamond           400.000000 No           Yes           187.715336       162.598714       336.311959     0.311787            14.937959           -1.000000      110.644578
 Cu           GaP               400.000000 No           Yes           231.991740       267.269568       800.651910     0.325204            14.937959          115.911863       66.553046
 Li           Air               800.000000 Yes          Yes           772.008212       204.222668      2935.114659     0.928136            16.847964           -1.000000    43625.725003
-# Substrate  Layer        Wavelength (nm) OldSPPactive NewSPPactive Period (nm) DecayDepth1 (nm) DecayDepth2 (nm) Reflectivity OpticalPenetration1 OpticalPenetration2 DecayLength    
 Li           SiC               800.000000 Yes          Yes           223.104647       153.972365       325.140522     0.867970            16.847964           -1.000000     1043.314389
 Li           TiO2              800.000000 Yes          Yes           239.456469       158.967199       362.776702     0.869760            16.847964           -1.000000     1292.917070
 Li           Be                800.000000 Yes          No            722.092212       323.096003       371.681352     0.153852            16.847964           18.805144       79.385667
@@ -355,7 +338,6 @@ Li           Ethanol           800.000000 Yes          Yes           550.856827 
 Li           Air               400.000000 Yes          Yes           329.542426       198.244851       565.966366     0.727653            19.480152           -1.000000     1098.677154
 Li           SiC               400.000000 No           Yes           700.917194       688.893560      1628.590547     0.682394            19.480152          317.098570       66.424251
 Li           TiO2              400.000000 No           Yes           770.713187       810.712583      1375.636397     0.732224            19.480152           -1.000000       66.297985
-# Substrate  Layer        Wavelength (nm) OldSPPactive NewSPPactive Period (nm) DecayDepth1 (nm) DecayDepth2 (nm) Reflectivity OpticalPenetration1 OpticalPenetration2 DecayLength    
 Li           Ge                400.000000 No           Yes           995.886914       852.208226       202.746573     0.438208            19.480152           14.373918       78.136341
 Li           Si                400.000000 No           Yes          1152.416449      1785.260019      1485.844979     0.762895            19.480152           82.437541       75.197701
 Li           a-C               400.000000 Yes          Yes           419.918437       290.657978      4784.652737     0.315959            19.480152           46.901858       90.384974
@@ -376,7 +358,6 @@ Mg           Ge                800.000000 Yes          Yes           139.097449 
 Mg           Si                800.000000 Yes          Yes           190.924331        91.623929       401.668422     0.858746             8.295455         9796.630740     1993.877984
 Mg           ZnO               800.000000 Yes          Yes           395.221246       100.828657      1563.502294     0.912558             8.295455           -1.000000    19142.639671
 Mg           a-C               800.000000 Yes          Yes           405.059013       101.838037      2183.211411     0.614451             8.295455           78.977175      286.826475
-# Substrate  Layer        Wavelength (nm) OldSPPactive NewSPPactive Period (nm) DecayDepth1 (nm) DecayDepth2 (nm) Reflectivity OpticalPenetration1 OpticalPenetration2 DecayLength    
 Mg           Graphite(o)       800.000000 Yes          Yes           275.863448       101.357192      1564.976867     0.389633             8.295455           36.151649      120.500820
 Mg           SiO2              800.000000 Yes          Yes           540.793109       102.376867      2883.117107     0.932615             8.295455           -1.000000    49045.733829
 Mg           Al2O3             800.000000 Yes          Yes           442.754380       101.495060      1949.318064     0.920192             8.295455           -1.000000    26914.311399
@@ -397,7 +378,6 @@ Mg           Graphite(o)       400.000000 Yes          Yes           179.957992 
 Mg           Graphite(e)       400.000000 Yes          Yes           235.519117       102.217106       544.728895     0.913916             9.023966         1820.880461     2923.828563
 Mg           SiO2              400.000000 Yes          Yes           247.570248       103.125060       595.838603     0.931211             9.023966           -1.000000     7508.866049
 Mg           Al2O3             400.000000 Yes          Yes           193.397583        97.864954       383.151947     0.922266             9.023966           -1.000000     3578.250519
-# Substrate  Layer        Wavelength (nm) OldSPPactive NewSPPactive Period (nm) DecayDepth1 (nm) DecayDepth2 (nm) Reflectivity OpticalPenetration1 OpticalPenetration2 DecayLength    
 Mg           Diamond           400.000000 Yes          Yes           117.321069        81.632659       169.038771     0.910059             9.023966           -1.000000      795.778036
 Mg           GaAs              400.000000 No           Yes           324.736669       194.399263       424.420251     0.369195             9.023966           14.843138       35.054113
 Mg           InP               400.000000 No           Yes           294.831534       191.137535       884.804252     0.434584             9.023966           18.385249       33.291393
@@ -418,7 +398,6 @@ Na           Diamond           800.000000 Yes          Yes           242.741061 
 Na           H2O               800.000000 Yes          Yes           557.498105       210.696375      1475.354007     0.983764            18.109561           -1.000000    86079.043440
 Na           GaAs              800.000000 No           Yes           242.877060       229.939567       259.883030     0.931287            18.109561          743.206783       25.582966
 Na           InP               800.000000 Yes          Yes           117.299075       109.043925       127.379040     0.863759            18.109561          302.116660       42.759955
-# Substrate  Layer        Wavelength (nm) OldSPPactive NewSPPactive Period (nm) DecayDepth1 (nm) DecayDepth2 (nm) Reflectivity OpticalPenetration1 OpticalPenetration2 DecayLength    
 Na           GaP               800.000000 Yes          Yes           105.289842        95.592318       115.988970     0.975663            18.109561           -1.000000      575.962620
 Na           W                 800.000000 Yes          Yes           772.114481       359.156733       494.194925     0.238278            18.109561           22.554299       78.408848
 Na           Ethanol           800.000000 Yes          Yes           543.719633       209.928465      1408.462255     0.983505            18.109561    822945358.199692    79850.654921
@@ -439,7 +418,6 @@ Na           GaP               400.000000 No           Yes          3566.747144 
 Na           W                 400.000000 No           Yes          2220.566549       978.333872       171.902812     0.405210            21.220639           12.541950       84.976646
 Bi           Air               800.000000 Yes          Yes           795.129880       206.570633      4711.870301     0.611670            16.804806           -1.000000    11565.506166
 Bi           SiC               800.000000 No           Yes           301.897190       186.992628       760.611256     0.330194            16.804806           -1.000000      602.602549
-# Substrate  Layer        Wavelength (nm) OldSPPactive NewSPPactive Period (nm) DecayDepth1 (nm) DecayDepth2 (nm) Reflectivity OpticalPenetration1 OpticalPenetration2 DecayLength    
 Bi           TiO2              800.000000 Yes          Yes           313.464661       188.206290       813.002609     0.339653            16.804806           -1.000000      679.692667
 Bi           Be                800.000000 Yes          No            362.375688       284.524370       356.987481     0.006428            16.804806           18.805144       99.233759
 Bi           Ge                800.000000 No           Yes           220.562656       197.621546       540.147201     0.215457            16.804806          197.595968      126.854826
@@ -460,7 +438,6 @@ Bi           Air               400.000000 Yes          Yes           393.592861 
 Bi           SiC               400.000000 No           Yes           186.954479       170.010462       404.715015     0.242472            14.631683          317.098570      104.869827
 Bi           TiO2              400.000000 No           Yes           180.588600       168.600590       352.302709     0.266286            14.631683           -1.000000       99.121727
 Bi           Si                400.000000 No           Yes           221.072465       313.055413      1532.224203     0.337434            14.631683           82.437541       63.672264
-# Substrate  Layer        Wavelength (nm) OldSPPactive NewSPPactive Period (nm) DecayDepth1 (nm) DecayDepth2 (nm) Reflectivity OpticalPenetration1 OpticalPenetration2 DecayLength    
 Bi           Graphite(e)       400.000000 No           Yes           258.983675       162.463689       644.743134     0.325111            14.631683         1820.880461      456.089588
 Bi           SiO2              400.000000 Yes          Yes           267.789950       162.951951       672.445663     0.341722            14.631683           -1.000000      550.444183
 Bi           Al2O3             400.000000 No           Yes           224.521475       158.023927       495.259524     0.301428            14.631683           -1.000000      305.852666
@@ -481,7 +458,6 @@ Pt           Diamond           800.000000 Yes          Yes           320.911628 
 Pt           H2O               800.000000 Yes          Yes           594.456021       157.017554      2997.930982     0.639608            12.830829           -1.000000     7910.849050
 Pt           GaAs              800.000000 Yes          Yes           210.536612       138.276691       448.438400     0.358240            12.830829          743.206783      278.198843
 Pt           InP               800.000000 Yes          Yes           228.252609       141.882728       542.399850     0.343895            12.830829          302.116660      286.299441
-# Substrate  Layer        Wavelength (nm) OldSPPactive NewSPPactive Period (nm) DecayDepth1 (nm) DecayDepth2 (nm) Reflectivity OpticalPenetration1 OpticalPenetration2 DecayLength    
 Pt           GaP               800.000000 Yes          Yes           238.576555       140.942953       542.204791     0.403799            12.830829           -1.000000      488.050162
 Pt           W                 800.000000 Yes          No            318.449514       185.402520       645.132430     0.049545            12.830829           22.554299       95.314142
 Pt           Ethanol           800.000000 Yes          Yes           581.577059       156.839003      2872.753990     0.633916            12.830829    822945358.199692     7406.944592
@@ -502,7 +478,6 @@ Ge           Li                400.000000 No           Yes           995.886914 
 Ge           Mg                400.000000 Yes          Yes           312.315653       419.740524       182.621049     0.337731            14.373918            9.023966       36.159236
 Ge           Na                400.000000 No           Yes          2600.826902       194.111298      1355.611370     0.537997            14.373918           21.220639       83.331483
 Ge           Ag                800.000000 Yes          Yes            97.108710       117.104025        81.009692     0.862508           197.595968           11.429854      123.379793
-# Substrate  Layer        Wavelength (nm) OldSPPactive NewSPPactive Period (nm) DecayDepth1 (nm) DecayDepth2 (nm) Reflectivity OpticalPenetration1 OpticalPenetration2 DecayLength    
 Ge           Au                800.000000 Yes          Yes            94.169704       105.935279        84.972034     0.819283           197.595968           12.971842       42.312350
 Ge           Al                800.000000 Yes          Yes           155.934064       337.142658        84.482422     0.521466           197.595968            7.696734      250.971699
 Ge           Ni                800.000000 No           Yes           178.474544       323.478879       138.415943     0.360391           197.595968           13.012167      106.612461
@@ -523,7 +498,6 @@ Si           Cr                800.000000 No           Yes           240.426002 
 Si           Cu                800.000000 Yes          Yes           148.005381       202.093962       108.691160     0.904951          9796.630740           12.699099      750.769267
 Si           Li                800.000000 Yes          Yes           103.761431       112.607966        96.442505     0.856552          9796.630740           16.847964       49.502084
 Si           Mg                800.000000 Yes          Yes           190.924331       401.668422        91.623929     0.858746          9796.630740            8.295455     1993.877984
-# Substrate  Layer        Wavelength (nm) OldSPPactive NewSPPactive Period (nm) DecayDepth1 (nm) DecayDepth2 (nm) Reflectivity OpticalPenetration1 OpticalPenetration2 DecayLength    
 Si           Na                800.000000 No           Yes           491.836777       518.385341       471.151234     0.972159          9796.630740           18.109561       22.874119
 Si           Bi                800.000000 No           Yes           228.660386       475.372748       180.063733     0.268683          9796.630740           16.804806      223.852832
 Si           Pt                800.000000 Yes          Yes           206.902045       424.219188       136.858357     0.373518          9796.630740           12.830829      301.207496
@@ -544,7 +518,6 @@ Si           Pt                400.000000 No           Yes           175.282606 
 Si           Ta                400.000000 No           Yes           226.889708      1333.891349       300.031824     0.366680            82.437541           13.657705       58.112680
 ZnO          Ag                800.000000 Yes          Yes           382.259286      1086.828319       134.454103     0.991771            -1.000000           11.429854   130591.611756
 ZnO          Au                800.000000 Yes          Yes           374.526164       939.307146       149.479452     0.957859            -1.000000           12.971842    20155.576513
-# Substrate  Layer        Wavelength (nm) OldSPPactive NewSPPactive Period (nm) DecayDepth1 (nm) DecayDepth2 (nm) Reflectivity OpticalPenetration1 OpticalPenetration2 DecayLength    
 ZnO          Al                800.000000 Yes          Yes           400.065323      1879.655673        94.275993     0.764755            -1.000000            7.696734     8154.848585
 ZnO          Ni                800.000000 Yes          Yes           391.792773      1209.489293       153.092276     0.580010            -1.000000           13.012167     2281.548365
 ZnO          Ti                800.000000 Yes          Yes           404.370260      1418.150946       186.726784     0.415164            -1.000000           15.875809     1738.903817
@@ -565,7 +538,6 @@ a-C          Ti                800.000000 Yes          No            440.805776 
 a-C          Cu                800.000000 Yes          Yes           400.059926      1372.793053       150.998730     0.531777            78.977175           12.699099      252.615893
 a-C          Li                800.000000 Yes          Yes           405.604888      1160.044316       195.279414     0.446568            78.977175           16.847964      215.504188
 a-C          Mg                800.000000 Yes          Yes           405.059013      2183.211411       101.838037     0.614451            78.977175            8.295455      286.826475
-# Substrate  Layer        Wavelength (nm) OldSPPactive NewSPPactive Period (nm) DecayDepth1 (nm) DecayDepth2 (nm) Reflectivity OpticalPenetration1 OpticalPenetration2 DecayLength    
 a-C          Na                800.000000 Yes          Yes           395.897127       971.410044       205.042107     0.485547            78.977175           18.109561      201.660982
 a-C          Bi                800.000000 Yes          No            445.790753     11638.810188       210.348793     0.219360            78.977175           16.804806      278.025838
 a-C          Pt                800.000000 Yes          No            428.572001      5118.128728       159.142233     0.319872            78.977175           12.830829      279.764478
@@ -586,7 +558,6 @@ Graphite(o)  Au                800.000000 Yes          Yes           308.665089 
 Graphite(o)  Al                800.000000 Yes          No            281.775729      4683.332752        96.050108     0.318100            36.151649            7.696734      129.749315
 Graphite(o)  Ni                800.000000 Yes          No            326.963331      4975.053442       169.208518     0.145743            36.151649           13.012167      124.538841
 Graphite(o)  Ti                800.000000 Yes          No            335.919577      1485.545706       215.983346     0.071012            36.151649           15.875809      142.001461
-# Substrate  Layer        Wavelength (nm) OldSPPactive NewSPPactive Period (nm) DecayDepth1 (nm) DecayDepth2 (nm) Reflectivity OpticalPenetration1 OpticalPenetration2 DecayLength    
 Graphite(o)  Cu                800.000000 Yes          Yes           307.606553      1475.186933       155.909696     0.322691            36.151649           12.699099       98.992495
 Graphite(o)  Li                800.000000 Yes          Yes           405.994064     17588.414178       231.306472     0.278297            36.151649           16.847964       91.567220
 Graphite(o)  Mg                800.000000 Yes          Yes           275.863448      1564.976867       101.357192     0.389633            36.151649            8.295455      120.500820
@@ -607,7 +578,6 @@ Graphite(e)  Ti                400.000000 Yes          Yes           256.993129 
 Graphite(e)  Be                400.000000 No           Yes           261.825783      1075.317172       120.574904     0.392671          1820.880461           10.143565     1092.105194
 Graphite(e)  Cr                400.000000 Yes          Yes           256.934556       783.902084       129.219195     0.396625          1820.880461           11.173797      756.509553
 Graphite(e)  Cu                400.000000 Yes          Yes           253.538795       563.354103       162.471988     0.355082          1820.880461           14.937959      391.860044
-# Substrate  Layer        Wavelength (nm) OldSPPactive NewSPPactive Period (nm) DecayDepth1 (nm) DecayDepth2 (nm) Reflectivity OpticalPenetration1 OpticalPenetration2 DecayLength    
 Graphite(e)  Li                400.000000 Yes          Yes           183.835012       227.119181       156.121087     0.682145          1820.880461           19.480152      105.970798
 Graphite(e)  Mg                400.000000 Yes          Yes           235.519117       544.728895       102.217106     0.913916          1820.880461            9.023966     2923.828563
 Graphite(e)  Na                400.000000 No           Yes           158.554779       169.963024       149.571876     0.879284          1820.880461           21.220639       38.845261
@@ -628,7 +598,6 @@ SiO2         Li                800.000000 Yes          Yes           509.005348 
 SiO2         Mg                800.000000 Yes          Yes           540.793109      2883.117107       102.376867     0.932615            -1.000000            8.295455    49045.733829
 SiO2         Na                800.000000 Yes          Yes           501.254310      1212.699818       207.218937     0.982675            -1.000000           18.109561    62566.181286
 SiO2         Bi                800.000000 Yes          Yes           544.320083      2261.634678       201.871154     0.499160            -1.000000           16.804806     3697.637665
-# Substrate  Layer        Wavelength (nm) OldSPPactive NewSPPactive Period (nm) DecayDepth1 (nm) DecayDepth2 (nm) Reflectivity OpticalPenetration1 OpticalPenetration2 DecayLength    
 SiO2         Pt                800.000000 Yes          Yes           542.173131      2506.754015       156.218145     0.615451            -1.000000           12.830829     5998.685095
 SiO2         Ta                800.000000 Yes          Yes           515.863413      1384.242069       211.906134     0.654304            -1.000000           18.295927     3126.484204
 SiO2         V                 800.000000 No           Yes           552.113347      2539.283225       236.211042     0.421055            -1.000000           19.686380     3418.598035
@@ -649,7 +618,6 @@ SiO2         Ta                400.000000 Yes          Yes           262.240788 
 SiO2         V                 400.000000 Yes          Yes           271.593226      1211.903755       109.796448     0.447379            -1.000000            9.141931     1742.018487
 Al2O3        Ag                800.000000 Yes          Yes           431.228247      1364.667870       136.271913     0.992444            -1.000000           11.429854   187483.494591
 Al2O3        Au                800.000000 Yes          Yes           424.384628      1184.635567       152.180607     0.961046            -1.000000           12.971842    29325.108342
-# Substrate  Layer        Wavelength (nm) OldSPPactive NewSPPactive Period (nm) DecayDepth1 (nm) DecayDepth2 (nm) Reflectivity OpticalPenetration1 OpticalPenetration2 DecayLength    
 Al2O3        Al                800.000000 Yes          Yes           447.062244      2335.545086        94.746081     0.784303            -1.000000            7.696734    11381.596029
 Al2O3        Ni                800.000000 Yes          Yes           439.379109      1501.855463       155.022330     0.607269            -1.000000           13.012167     3225.061374
 Al2O3        Ti                800.000000 Yes          Yes           450.361131      1736.949572       188.879588     0.448492            -1.000000           15.875809     2411.586759
@@ -670,7 +638,6 @@ Al2O3        Ti                400.000000 Yes          Yes           219.556450 
 Al2O3        Be                400.000000 No           Yes           224.817422       791.620247       118.396358     0.349210            -1.000000           10.143565      810.509694
 Al2O3        Cr                400.000000 Yes          Yes           219.639250       580.020040       125.896852     0.361930            -1.000000           11.173797      525.612741
 Al2O3        Cu                400.000000 No           Yes           219.620666       434.634918       157.601574     0.336700            -1.000000           14.937959      256.016543
-# Substrate  Layer        Wavelength (nm) OldSPPactive NewSPPactive Period (nm) DecayDepth1 (nm) DecayDepth2 (nm) Reflectivity OpticalPenetration1 OpticalPenetration2 DecayLength    
 Al2O3        Li                400.000000 No           Yes           228.244056       277.296244       204.139881     0.697964            -1.000000           19.480152       59.210156
 Al2O3        Mg                400.000000 Yes          Yes           193.397583       383.151947        97.864954     0.922266            -1.000000            9.023966     3578.250519
 Al2O3        Na                400.000000 No           Yes           841.712774      1009.090317       772.519843     0.901006            -1.000000           21.220639       47.642684
@@ -691,7 +658,6 @@ Diamond      Na                800.000000 Yes          Yes           242.741061 
 Diamond      Bi                800.000000 Yes          Yes           327.939160       881.260792       189.637868     0.351354            -1.000000           16.804806      784.129627
 Diamond      Pt                800.000000 Yes          Yes           320.911628       926.161577       148.432441     0.474486            -1.000000           12.830829     1228.957511
 Diamond      Ta                800.000000 Yes          Yes           281.920891       478.113376       183.842140     0.563221            -1.000000           18.295927      478.908012
-# Substrate  Layer        Wavelength (nm) OldSPPactive NewSPPactive Period (nm) DecayDepth1 (nm) DecayDepth2 (nm) Reflectivity OpticalPenetration1 OpticalPenetration2 DecayLength    
 Diamond      V                 800.000000 No           Yes           341.483311      1043.451478       223.488560     0.265767            -1.000000           19.686380      782.654211
 Diamond      Ag                400.000000 No           Yes          1128.446049      1321.801418      1039.495577     0.954136            -1.000000           15.132416       31.657344
 Diamond      Au                400.000000 No           Yes           200.373830       401.363299       182.951455     0.249264            -1.000000           16.298493      126.316734
@@ -712,7 +678,6 @@ H2O          Ag                800.000000 Yes          Yes           584.754581 
 H2O          Au                800.000000 Yes          Yes           579.721697      2143.677140       156.929474     0.968957            -1.000000           12.971842    74753.665989
 H2O          Al                800.000000 Yes          Yes           596.492936      4120.857524        95.594202     0.830129            -1.000000            7.696734    27040.084622
 H2O          Ni                800.000000 Yes          Yes           590.379571      2649.617423       158.601176     0.677189            -1.000000           13.012167     7844.175822
-# Substrate  Layer        Wavelength (nm) OldSPPactive NewSPPactive Period (nm) DecayDepth1 (nm) DecayDepth2 (nm) Reflectivity OpticalPenetration1 OpticalPenetration2 DecayLength    
 H2O          Ti                800.000000 Yes          Yes           598.224504      2992.824332       193.131974     0.537016            -1.000000           15.875809     5679.377409
 H2O          Cr                800.000000 Yes          Yes           601.405346      2983.318296       222.705376     0.477196            -1.000000           18.395985     4757.678887
 H2O          Cu                800.000000 Yes          Yes           580.782247      2197.436136       153.893279     0.951246            -1.000000           12.699099    48666.888472
@@ -733,7 +698,6 @@ GaAs         Cu                800.000000 Yes          Yes           150.303735 
 GaAs         Li                800.000000 Yes          Yes           119.283752       132.705077       108.823188     0.820401           743.206783           16.847964       53.037751
 GaAs         Mg                800.000000 Yes          Yes           192.072114       407.602930        91.810918     0.830655           743.206783            8.295455     1055.753172
 GaAs         Na                800.000000 No           Yes           242.877060       259.883030       229.939567     0.931287           743.206783           18.109561       25.582966
-# Substrate  Layer        Wavelength (nm) OldSPPactive NewSPPactive Period (nm) DecayDepth1 (nm) DecayDepth2 (nm) Reflectivity OpticalPenetration1 OpticalPenetration2 DecayLength    
 GaAs         Bi                800.000000 No           Yes           233.141028       510.209294       182.541319     0.255667           743.206783           16.804806      216.536854
 GaAs         Pt                800.000000 Yes          Yes           210.536612       448.438400       138.276691     0.358240           743.206783           12.830829      278.198843
 GaAs         Ta                800.000000 No           Yes           222.167169       317.055634       187.392490     0.508038           743.206783           18.295927       92.052345
@@ -754,7 +718,6 @@ InP          Na                800.000000 Yes          Yes           117.299075 
 InP          Bi                800.000000 No           Yes           249.547313       614.545654       186.586832     0.241251           302.116660           16.804806      232.761290
 InP          Pt                800.000000 Yes          Yes           228.252609       542.399850       141.882728     0.343895           302.116660           12.830829      286.299441
 InP          Ta                800.000000 No           Yes           231.935180       355.164236       187.106203     0.469500           302.116660           18.295927      109.112766
-# Substrate  Layer        Wavelength (nm) OldSPPactive NewSPPactive Period (nm) DecayDepth1 (nm) DecayDepth2 (nm) Reflectivity OpticalPenetration1 OpticalPenetration2 DecayLength    
 InP          Ag                400.000000 No           Yes          1702.477020       273.004495       832.139846     0.553983            18.385249           15.132416       56.866757
 InP          Al                400.000000 Yes          Yes           133.684589       464.080976        89.644108     0.374707            18.385249            6.755031       32.102586
 InP          Li                400.000000 No           Yes          1000.411173       264.751662       944.357341     0.506354            18.385249           19.480152       76.935781
@@ -775,7 +738,6 @@ GaP          Pt                800.000000 Yes          Yes           238.576555 
 GaP          Ta                800.000000 Yes          Yes           210.459852       296.408267       168.336082     0.536741            -1.000000           18.295927      144.930509
 GaP          V                 800.000000 No           Yes           270.970955       701.419263       217.175209     0.205084            -1.000000           19.686380      364.289731
 GaP          Ag                400.000000 No           Yes          3106.181586      2301.152469      2326.561733     0.866982           115.911863           15.132416       52.647205
-# Substrate  Layer        Wavelength (nm) OldSPPactive NewSPPactive Period (nm) DecayDepth1 (nm) DecayDepth2 (nm) Reflectivity OpticalPenetration1 OpticalPenetration2 DecayLength    
 GaP          Au                400.000000 No           Yes           225.910156       921.390907       282.865224     0.276800           115.911863           16.298493       76.120512
 GaP          Al                400.000000 Yes          Yes            63.540498        78.975781        52.870633     0.721223           115.911863            6.755031       41.014884
 GaP          Ni                400.000000 No           Yes           169.866189       454.776546       174.568975     0.266825           115.911863           12.278114       62.966891
@@ -796,7 +758,6 @@ Ta           Ge                800.000000 No           Yes           313.218138 
 Ta           Si                800.000000 No           Yes           213.887136       182.644033       293.766190     0.531591            18.295927         9796.630740       89.755313
 Ta           ZnO               800.000000 Yes          Yes           363.539963       197.884160       736.835284     0.595667            18.295927           -1.000000     1075.222664
 Ta           a-C               800.000000 Yes          Yes           444.751626       221.040152      2111.618093     0.283048            18.295927           78.977175      226.132094
-# Substrate  Layer        Wavelength (nm) OldSPPactive NewSPPactive Period (nm) DecayDepth1 (nm) DecayDepth2 (nm) Reflectivity OpticalPenetration1 OpticalPenetration2 DecayLength    
 Ta           Graphite(o)       800.000000 Yes          No            425.349181       261.700740      2033.883544     0.148776            18.295927           36.151649      112.975546
 Ta           SiO2              800.000000 Yes          Yes           515.863413       211.906134      1384.242069     0.654304            18.295927           -1.000000     3126.484204
 Ta           Al2O3             800.000000 Yes          Yes           413.444915       203.774873       925.016666     0.615633            18.295927           -1.000000     1596.675709
@@ -817,7 +778,6 @@ Ta           SiO2              400.000000 Yes          Yes           262.240788 
 Ta           Al2O3             400.000000 Yes          Yes           217.199875       146.279773       455.661589     0.348997            13.657705           -1.000000      310.843241
 Ta           Diamond           400.000000 No           Yes           175.117934       144.632336       318.481308     0.311851            13.657705           -1.000000      124.526794
 Ta           GaP               400.000000 No           Yes           203.424017       221.369266       608.292748     0.304810            13.657705          115.911863       63.352088
-# Substrate  Layer        Wavelength (nm) OldSPPactive NewSPPactive Period (nm) DecayDepth1 (nm) DecayDepth2 (nm) Reflectivity OpticalPenetration1 OpticalPenetration2 DecayLength    
 V            Air               800.000000 No           Yes           800.341572       241.713666      5204.108480     0.544624            19.686380           -1.000000    10456.020313
 V            SiC               800.000000 No           Yes           316.684743       221.132984       913.749914     0.244427            19.686380           -1.000000      615.054486
 V            TiO2              800.000000 No           Yes           327.678300       222.190587       970.021720     0.253929            19.686380           -1.000000      686.387971
@@ -838,7 +798,6 @@ V            SiO2              400.000000 Yes          Yes           271.593226 
 V            Al2O3             400.000000 No           Yes           223.881634       107.787207       840.835850     0.384205             9.141931           -1.000000      970.092598
 V            Diamond           400.000000 No           Yes           164.791382       103.524826       479.726719     0.290521             9.141931           -1.000000      376.286766
 W            Air              1060.000000 Yes          Yes          1055.098801       278.651164      6453.880230     0.600340            22.660339           -1.000000    15320.165750
-# Substrate  Layer        Wavelength (nm) OldSPPactive NewSPPactive Period (nm) DecayDepth1 (nm) DecayDepth2 (nm) Reflectivity OpticalPenetration1 OpticalPenetration2 DecayLength    
 W            TiO2             1060.000000 No           Yes           425.584480       255.426152      1159.137362     0.326747            22.660339           -1.000000      968.088383
 W            SiO2             1060.000000 Yes          Yes           725.306411       272.520972      3121.686393     0.486163            22.660339           -1.000000     4960.050838
 W            Ag                800.000000 Yes          Yes           337.678426      2146.856890       156.734863     0.237253            22.554299           11.429854       69.783351
@@ -859,7 +818,6 @@ W            Ti                400.000000 Yes          No            213.165565 
 W            Mg                400.000000 Yes          Yes           318.892241       329.050688       158.695090     0.213871            12.541950            9.023966       41.914103
 W            Na                400.000000 No           Yes          2220.566549       171.902812       978.333872     0.405210            12.541950           21.220639       84.976646
 W            Pt                400.000000 Yes          No            236.012636       242.345147       195.232687     0.044389            12.541950           11.179796       61.599850
-# Substrate  Layer        Wavelength (nm) OldSPPactive NewSPPactive Period (nm) DecayDepth1 (nm) DecayDepth2 (nm) Reflectivity OpticalPenetration1 OpticalPenetration2 DecayLength    
 Ethanol      Ag                800.000000 Yes          Yes           571.633297      2345.832020       139.301901     0.993946     822945358.199692           11.429854   436647.675033
 Ethanol      Au                800.000000 Yes          Yes           566.484100      2050.434579       156.658628     0.968389     822945358.199692           12.971842    69747.095641
 Ethanol      Al                800.000000 Yes          Yes           583.637616      3947.180089        95.545090     0.826934     822945358.199692            7.696734    25328.799885

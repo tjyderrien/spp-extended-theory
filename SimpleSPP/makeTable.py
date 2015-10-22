@@ -54,17 +54,17 @@ SPPactiveInterfacesArray = SPPactiveInterfaces(dbarray, '')
 
 # SPPactiveInterfacesArray contains all data we need, just remove lines starting with #. 
 
-MaterialToSelect="Air"
+#MaterialToSelect="Air"
 
-plt.figure()
-plt.xlabel('SPP decay length')
-plt.ylabel('SPP period (nm)')
+#plt.figure()
+#plt.xlabel('SPP decay length')
+#plt.ylabel('SPP period (nm)')
 
-for i in SPPactiveInterfacesArray:
-	if (SPPactiveInterfacesArray[i,0]==MaterialToSelect): #select only entries which corresponds to interface of interest
-		# Construct the interesting data point with x: decay length, y: period, txt: name of interface
-		#TODO x = append()
+#for i in SPPactiveInterfacesArray:
+	#if (SPPactiveInterfacesArray[i,0]==MaterialToSelect): #select only entries which corresponds to interface of interest
+		## Construct the interesting data point with x: decay length, y: period, txt: name of interface
+		##TODO x = append()
 		
-plt.plot(,y,label='')
+##plt.plot(,y,label='')
 		
 

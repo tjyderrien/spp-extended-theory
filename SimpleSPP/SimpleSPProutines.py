@@ -217,7 +217,7 @@ def SPPactiveInterfaces(dbarray, comment):
         if(ExperimentalAchievable and (SPPperiod!=0)):
           if (np.mod(counter, 20) == 0): 
             #show the table line each 20 lines
-            if (comment):
+            #if (comment):
 							print '{0:12s} {1:12s} {2:15s} {3:12s} {4:12s} {5:11s} {6:16s} {7:16s} {8:12s} {9:19s} {10:19s} {11:15s}'.format("# Substrate", "Layer", "Wavelength (nm)", "OldSPPactive", "NewSPPactive", "Period (nm)", "DecayDepth1 (nm)", "DecayDepth2 (nm)", "Reflectivity", "OpticalPenetration1", "OpticalPenetration2", "DecayLength")
 
           counter=counter+1

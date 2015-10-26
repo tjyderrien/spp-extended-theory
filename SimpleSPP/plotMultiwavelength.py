@@ -6,11 +6,11 @@ from SimpleSPProutines import *
 
 # Now, we shall construct database for SPP lifetimes. Actually, SPP lifetime require the knowledge of all spectrum of response to be known. 
 
-MaterialFolder="/usr/local/share/gsvit/data/spectra"
-#MaterialFolder="Database"
+#MaterialFolder="/usr/local/share/gsvit/data/spectra"
+MaterialFolder="Database"
 
-MaterialFile1="SiO2"
-MaterialFile2='W'
+MaterialFile1="Air"
+MaterialFile2='Au-Johnson'
 
 # Loading Material dielectric complex permittivity into arrays
 MaterialArray2 = loadtxt(MaterialFolder+'/'+MaterialFile2, delimiter=' ', skiprows=4)
@@ -68,14 +68,14 @@ eps2new=np.add(feps2r(wavelengths),np.multiply(1.0j, feps2i(wavelengths)))
 plt.figure()
 plt.xlabel('Wavelength (nm)')
 plt.ylabel('epsilon')
-#plt.plot(1e9*wavelengths1, eps1.real, '-', label='Re('+MaterialFile1+')')
+plt.plot(1e9*wavelengths1, eps1.real, '+', label='Re('+MaterialFile1+')')
 plt.plot(1e9*wavelengths, eps1new.real, '-', label='interp $Re('+MaterialFile1+')$')
-#plt.plot(1e9*wavelengths1, eps1.imag, '-', label='Im('+MaterialFile1+')')
-plt.plot(1e9*wavelengths, eps1new.imag, '--', label='interp $Im('+MaterialFile1+')$')
-#plt.plot(1e9*wavelengths2, eps2.real, '-', label='Re('+MaterialFile2+')')
+plt.plot(1e9*wavelengths1, eps1.imag, '+', label='Im('+MaterialFile1+')')
+plt.plot(1e9*wavelengths, eps1new.imag, '-', label='interp $Im('+MaterialFile1+')$')
+plt.plot(1e9*wavelengths2, eps2.real, '+', label='Re('+MaterialFile2+')')
 plt.plot(1e9*wavelengths, eps2new.real, '-', label='interp $Re('+MaterialFile2+')$')
-#plt.plot(1e9*wavelengths2, eps2.imag, '-', label='Im('+MaterialFile2+')')
-plt.plot(1e9*wavelengths, eps2new.imag, '--', label='interp $Im('+MaterialFile2+')$')
+plt.plot(1e9*wavelengths2, eps2.imag, '+', label='Im('+MaterialFile2+')')
+plt.plot(1e9*wavelengths, eps2new.imag, '-', label='interp $Im('+MaterialFile2+')$')
 plt.legend(loc=2)
 plt.title('Dielectric permittivity')
 plt.savefig('epsilon.png')

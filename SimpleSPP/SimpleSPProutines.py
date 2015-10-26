@@ -95,7 +95,7 @@ def kzSPP(wavelength,eps1,eps2):
 def DecayLengthSPP(beta):
 	"""Return the coherent length of SPPs
 	"""
-	return 2e0/beta.imag
+	return 1e0/(2e0*beta.imag)
   
 # OPTICAL FUNCTIONS
 def Drude(wavelength, ne, epsilon, nu):
@@ -409,7 +409,7 @@ def RealDerivativeByComplex(f,z):
 
 def LifeTimeRaether(beta, eps2, eps1):
 	omegasppimag=beta.real * c * eps1.imag/(2.*eps1.real**2) * (eps1.real * eps2)/(eps1.real + eps2)
-	lifetime=1e0/(2e0*omegasppimag)
+	lifetime=1e0/(omegasppimag)
 	return lifetime
 
 def SPPlength(beta):
@@ -417,5 +417,5 @@ def SPPlength(beta):
 
 def LifeTimeDerrien(beta, vg):
 	length = SPPlength(beta)
-	lifetime = 0.5 * length * (vg)**(-1e0)
+	lifetime = length * (vg)**(-1e0)
 	return lifetime

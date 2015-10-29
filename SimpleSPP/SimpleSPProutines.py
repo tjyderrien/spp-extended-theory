@@ -214,7 +214,7 @@ def SPPactiveInterfaces(dbarray, comment):
         
         # Print the table of active SPP interfaces for all cases or only new SPP interfaces					
         #if( not (comment=="new")): 
-        if(ExperimentalAchievable and (SPPperiod!=0)):
+        if(ExperimentalAchievable or (SPPperiod!=0)):
           if (np.mod(counter, 20) == 0): 
             #show the table line each 20 lines
             #if (comment):

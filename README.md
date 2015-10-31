@@ -1,16 +1,14 @@
 # README #
 
-# Contributors: 
+# Main contributors
 
-## Hilase Centre FZU, AV CR
+* T.J.-Y. Derrien : scientist, Hilase Centre FZU, AV CR
 
-* T.J.-Y. Derrien : scientist
+* J. Bonse, BAM Berlin: scientist, BAM Federal Institute of Materials Research and Testing, Berlin
+
+# Technical support
 
 * R. Garai, Hilase Centre FZU, AV CR : helped for some LIPSS databasing
-
-## BAM Federal Institute of Materials Research and Testing, Berlin
-
-* J. Bonse, BAM Berlin: scientist
 
 #Financial supports
 
@@ -44,4 +42,3 @@ git pull
 git add [File1 [File2 [...]]] 
 git commit -m 'LIPSS database: update of Aug 7th 2015'
 git push
-

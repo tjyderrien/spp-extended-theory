@@ -1,6 +1,6 @@
 # README #
 
-#Contributors: 
+# Contributors: 
 
 ## Hilase Centre FZU, AV CR
 
@@ -12,13 +12,11 @@
 
 * J. Bonse, BAM Berlin: scientist
 
-
 #Financial supports
 
 * Adolf Martens Fellowship
 
 * HiLASE project
-
 
 # Purpose of this project
 
@@ -37,3 +35,13 @@ To reach this purpose, it is planned to collect and develop database for many ma
 * laser induced damage thresholds (LIDT), 
 
 * SPP theory for single and multilayer systems,
+
+# How to contribute ?
+
+## List of Git commands 
+
+git pull
+git add [File1 [File2 [...]]] 
+git commit -m 'LIPSS database: update of Aug 7th 2015'
+git push
+

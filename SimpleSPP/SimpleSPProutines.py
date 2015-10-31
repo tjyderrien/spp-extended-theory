@@ -3,7 +3,7 @@
 
 # IMPORT LIBRARIES
 import numpy as np
-from numpy import genfromtxt, loadtxt
+from numpy import genfromtxt, loadtxt, chararray
 from scipy.optimize import fsolve, root
 import cmath
 import matplotlib as mp
@@ -142,6 +142,11 @@ def SPPactiveInterfaces(dbarray, comment):
   If comment=="new", old SPP-active interfaces are removed from the table
   """
   counter=0
+  #print len(dbarray)
+  sizeDatabase = len(dbarray)
+  sizeOfArray = sizeDatabase**2
+  #print sizeOfArray	
+  SPParray = np.empty((sizeOfArray,12), dtype='|S30')
   
   # double loop to test all configurations (brute-forcing...)
   for i in dbarray:
@@ -215,15 +220,9 @@ def SPPactiveInterfaces(dbarray, comment):
         # Print the table of active SPP interfaces for all cases or only new SPP interfaces					
         #if( not (comment=="new")): 
         if(ExperimentalAchievable or (SPPperiod!=0)):
-          if (np.mod(counter, 20) == 0): 
-            #show the table line each 20 lines
-            #if (comment):
-							print '{0:30s} {1:30s} {2:15s} {3:12s} {4:12s} {5:11s} {6:16s} {7:16s} {8:12s} {9:19s} {10:19s} {11:15s}'.format("# Substrate", "Layer", "Wavelength (nm)", "OldSPPactive", "NewSPPactive", "Period (nm)", "DecayDepth1 (nm)", "DecayDepth2 (nm)", "Reflectivity", "OpticalPenetration1", "OpticalPenetration2", "DecayLength")
-
           counter=counter+1
-          print '{0:30s} {1:30s} {2:15f} {3:12s} {4:12s} {5:11f} {6:16f} {7:16f} {8:12f}  {9:19f} {10:19f} {11:15f}'.format(Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength)
-        
-  return 0
+          SPParray[counter,:]=Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength
+  return SPParray
 
 def AsymmetricSPPposActiveInterfaces(dbarray, comment):
   """Print all the SPP-active interfaces available in database
@@ -310,7 +309,6 @@ def AsymmetricSPPposActiveInterfaces(dbarray, comment):
         
   return 0
 
-
 def AsymmetricSPPnegActiveInterfaces(dbarray, comment):
   """Print all the SPP-active interfaces available in database
   If comment=="new", old SPP-active interfaces are removed from the table
@@ -395,6 +393,62 @@ def AsymmetricSPPnegActiveInterfaces(dbarray, comment):
           print '{0:30s} {1:30s} {2:15f} {3:12s} {4:12s} {5:11f} {6:16f} {7:16f} {8:12f}  {9:19f} {10:19f}'.format(Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2)
         
   return 0
+
+def GenerateDatabase():
+  """
+  We would like now to construct a database using available materials description with all possible interfaces
+  we will : 
+
+  1. For each material in database, select each material and verify, for each available wavelength, 
+  1.1: If SPP condition is verified, 
+  1.2. yes, then period can be calculated and shown;
+  1.4. SPP decay depth in medium 1
+  1.5. SPP decay depth in medium 2
+  2. Then extract a table which contains all possible scenarios
+  """
+  # Select database
+  database="MaterialOpticalDatabaseForPlasmonics.csv"
+
+  # Build database array for choosing which material can be of interest to irradiate
+  dbarray = loadtxt(database, dtype='str', delimiter='\t')
+
+  # To calculate symmetric SPP compatible interfaces, use the following line
+  SPPactiveInterfacesArray = SPPactiveInterfaces(dbarray, '')
+
+  # To calculate asymmetric POSITIVE SPP compatible interfaces, use the following line
+  #SPPactiveInterfacesArray = AsymmetricSPPposActiveInterfaces(dbarray, '')
+
+  # To calculate asymmetric NEGATIVE SPP compatible interfaces, use the following line
+  #SPPactiveInterfacesArray = AsymmetricSPPnegActiveInterfaces(dbarray, '')
+  return SPPactiveInterfacesArray
+
+
+def ExportToTxt(dbarray, filename):
+  """
+  Export an SPP array to a CSV file
+  SPP array must be produced with one of the SPPactiveInterfaces functions
+  """
+  try: 
+    np.savetxt(filename, dbarray, fmt="%s", delimiter='\t', newline='\n',comments='#')
+    out = 0
+  except: 
+    print "Could not output SPP database into a file"
+    out = 1
+  
+  #counter=0
+  
+  #for i in dbarray:
+    #for k in dbarray:
+      #if (np.mod(counter, 20) == 0):
+	#show the table line each 20 lines, but also put it in a table
+	#if (comment):
+	#print '{0:30s} {1:30s} {2:15s} {3:12s} {4:12s} {5:11s} {6:16s} {7:16s} {8:12s} {9:19s} {10:19s} {11:15s}'.format("# Substrate", "Layer", "Wavelength (nm)", "OldSPPactive", "NewSPPactive", "Period (nm)", "DecayDepth1 (nm)", "DecayDepth2 (nm)", "Reflectivity", "OpticalPenetration1", "OpticalPenetration2", "DecayLength")
+      #print dbarray[counter,:]
+      #Material1 = i
+      #counter=counter+1
+  #print Material1
+      #print '{0:30s} {1:30s} {2:15f} {3:12s} {4:12s} {5:11f} {6:16f} {7:16f} {8:12f}  {9:19f} {10:19f} {11:15f}'.format(Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength)
+  return out
 
 def RealDerivativeByComplex(f,z):
   """Complex derivative a real-valued function by a complex-number

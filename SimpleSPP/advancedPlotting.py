@@ -3,6 +3,10 @@ import matplotlib.pyplot as plt
 from numpy.random import *
 
 def get_text_positions(x_data, y_data, txt_width, txt_height):
+  """ define text positions for plotting
+  Original author and descriptinons are given here:
+  http://stackoverflow.com/questions/8850142/matplotlib-overlapping-annotations
+  """
     a = zip(y_data, x_data)
     text_positions = y_data.copy()
     for index, (y, x) in enumerate(a):
@@ -29,3 +33,28 @@ def text_plotter(x_data, y_data, text_content, text_positions, axis,txt_width,tx
             axis.arrow(x, t,0,y-t, color='red',alpha=0.3, width=txt_width*0.1, 
                        head_width=txt_width, head_length=txt_height*0.5, 
                        zorder=0,length_includes_head=True)
+
+def makePlot(void):
+  #random test data:
+  x_data = random_sample(100)
+  y_data = random_integers(10,50,(100))
+
+  #GOOD PLOT:
+  fig2 = plt.figure()
+  ax2 = fig2.add_subplot(111)
+  ax2.bar(x_data, y_data,width=0.00001)
+  #set the bbox for the text. Increase txt_width for wider text.
+  txt_height = 0.04*(plt.ylim()[1] - plt.ylim()[0])
+  txt_width = 0.02*(plt.xlim()[1] - plt.xlim()[0])
+  #Get the corrected text positions, then write the text.
+  text_positions = get_text_positions(x_data, y_data, txt_width, txt_height)
+  text_plotter(x_data, y_data, text_positions, ax2, txt_width, txt_height)
+
+  plt.ylim(0,max(text_positions)+2*txt_height)
+  plt.xlim(-0.1,1.1)
+  
+  plt.show()
+  
+# Main Program
+
+makePlot()

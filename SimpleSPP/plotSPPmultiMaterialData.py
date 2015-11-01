@@ -3,67 +3,103 @@
 
 # IMPORT LIBRARIES
 from SimpleSPProutines import *
+from advancedPlotting import *
+
 #from makeTable import *
+
+def FilterDatabase(SPPdb, query, FieldIndex):
+  """ Filter SPP database using query and returns a smaller database
+  """
+  SPPdbFiltered = np.array(SPPdb[SPPdb[:,FieldIndex]==query,:]) #uses a table of booleans to select
+  return SPPdbFiltered
+
+
+def CleanStrArray(Material2): 
+  Material2clean = np.empty(Material2.shape, dtype='|S15')
+  linenum=0
+  for line in Material2: #for each line, replace Material2[line] with first word of Material2[line]
+    fields = line.strip().split() #here is the first word, to replace the whole line. How to access id of line ?
+    Material2clean[linenum] = fields[0]
+    linenum = linenum + 1
+  return(Material2clean)
+#print Material2clean
+
+def ExtractDataDb(SPPdbFiltered):
+  # Extract data from database
+  Material1 = SPPdbFiltered[:, 0]; Material2 = SPPdbFiltered[:,1]; 
+  Wavelength = SPPdbFiltered[:, 2]; 
+  OldSPPactiveBool = SPPdbFiltered[:,3]; NewSPPactiveBool = SPPdbFiltered[:,4]; 
+  SPPperiod = SPPdbFiltered[:,5]; SPPdecayDepth1 = SPPdbFiltered[:,6]; SPPdecayDepth2 = SPPdbFiltered[:,7]; 
+  Reflectivity = SPPdbFiltered[:, 8]; OpticalPenetration1 = SPPdbFiltered[:,9]; OpticalPenetration2 = SPPdbFiltered[:,10]; SPPdecayLength = SPPdbFiltered[:,11]
+  eps1r = SPPdbFiltered[:, 12]; eps1c = SPPdbFiltered[:,13]; eps2r = SPPdbFiltered[:,14]; eps2c = SPPdbFiltered[:,15]
+  
+  #Converts floats to floats
+  Wavelength = np.asfarray(Wavelength)
+  SPPperiod = np.asfarray(SPPperiod)
+  SPPdecayDepth1 = np.asfarray(SPPdecayDepth1)
+  SPPdecayDepth2 = np.asfarray(SPPdecayDepth2)
+  Reflectivity = np.asfarray(Reflectivity)
+  OpticalPenetration1 = np.asfarray(OpticalPenetration1)
+  OpticalPenetration2 = np.asfarray(OpticalPenetration2)
+  SPPdecayLength = np.asfarray(SPPdecayLength)
+  eps1r = np.asfarray(eps1r)
+  eps1c = np.asfarray(eps1c)
+  eps1r = np.asfarray(eps2r)
+  eps2c = np.asfarray(eps2c)
+
+  return Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c
+
 
 # Make the database
 SPPdb = GenerateDatabase()
 print "SPP database has "+str(len(SPPdb))+" entries."
 
 # How to filter database ? 
-## Remove lines from SPPdb where some word is found ? 
-query = 'Air'
-filtermap = np.char.count(SPPdb, query) #generate (int) matrix of identified pattern iterations
-#print occurences[lines,cols]
-#filtervector = np.sum(filtermap, axis=1, keepdims=False)
-#TODO how to copy the highest value of filtermap to the whole row ? 
-np.array(filtermap.shape, np.max(filtermap))
 
-#exit()
-# building mask
-#mask = np.array(filtermap, dtype=np.int) #matching cells are not null
-#print mask
-SPPdbFiltered = np.ma.masked_where(filtermap == 0, SPPdb) #matching cells are true
-print SPPdbFiltered
-SPPdbFiltered2 = np.ma.mask_rowcols(SPPdbFiltered, axis=0)
-print SPPdbFiltered2
-exit()
-# identify line number where value is not 1
-#print "Filtered data using '"+query+"' returned "+str(len(SPPdbFiltered))+" entries."
+
+## Choosing for which material 
+#query = 'Au (Johnson 1972)'
+query = 'Au (Palik)'
+#query = 'Ti (Palik)'
+#query='SiC (Palik?)'
+#query = 'TiO2 (Devore 1951, e)'
+SPPdb = FilterDatabase(SPPdb, query, 0)
+SPPdb800 = FilterDatabase(SPPdb, '800.0', 2)
+SPPdb400 = FilterDatabase(SPPdb, '400.0', 2)
+
+print SPPdb800
+
 
 # Extract the data to plot
-Material1 = SPPdbFiltered[:, 0]; Material2 = SPPdbFiltered[:,1]; 
-Wavelength = SPPdbFiltered[:, 2]; 
-OldSPPactiveBool = SPPdbFiltered[:,3]; NewSPPactiveBool = SPPdbFiltered[:,4]; 
-SPPperiod = SPPdbFiltered[:,5]; SPPdecayDepth1 = SPPdbFiltered[:,6]; SPPdecayDepth2 = SPPdbFiltered[:,7]; 
-Reflectivity = SPPdbFiltered[:, 8]; OpticalPenetration1 = SPPdbFiltered[:,9]; OpticalPenetration2 = SPPdbFiltered[:,10]; SPPdecayLength = SPPdbFiltered[:,11]
-eps1r = SPPdbFiltered[:, 12]; eps1c = SPPdbFiltered[:,13]; eps2r = SPPdbFiltered[:,14]; eps2c = SPPdbFiltered[:,15]
+Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c = ExtractDataDb(SPPdb800)
 
-#print Material1.size
-Wavelength = np.asfarray(Wavelength)
-SPPperiod = np.asfarray(SPPperiod)
-SPPdecayDepth1 = np.asfarray(SPPdecayDepth1)
-SPPdecayDepth2 = np.asfarray(SPPdecayDepth2)
-Reflectivity = np.asfarray(Reflectivity)
-OpticalPenetration1 = np.asfarray(OpticalPenetration1)
-OpticalPenetration2 = np.asfarray(OpticalPenetration2)
-SPPdecayLength = np.asfarray(SPPdecayLength)
-eps1r = np.asfarray(eps1r)
-eps1c = np.asfarray(eps1c)
-eps1r = np.asfarray(eps2r)
-eps2c = np.asfarray(eps2c)
+Material2clean = CleanStrArray(Material2)
+
+# Prepare plot with arrows and text (but single wavelength)
+makePlot(eps1r, SPPperiod, Material2clean, 'SPPperiodEnhanced800nm.eps', query, r'$Re(\varepsilon)$', 'Period (nm)', '800 nm', 'r')
 
 
-#print type(SPPdecayLength[4])
-
-
-##Plot period as function of materials
+##Plot period as function of materials for 800 nm
 plt.figure()
-plt.xlabel('Material 1')
+plt.xlabel(r'$Re(\varepsilon)$')
 plt.ylabel('Period (nm)')
-plt.plot(eps1r, SPPperiod, '+', label='')
-plt.legend(loc=2)
-plt.title('SPP period')
-plt.savefig('MultiMaterial_PeriodSPP.png')
+plt.plot(eps1r, SPPperiod, 'or', label='800 nm', markersize=8)
+
+Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c = ExtractDataDb(SPPdb400)
+
+Material2clean = CleanStrArray(Material2)
+makePlot(eps1r, SPPperiod, Material2clean, 'SPPperiodEnhanced400nm.eps', query, r'$Re(\varepsilon)$', 'Period (nm)', '400 nm', 'b')
+
+plt.figure()
+plt.plot(eps1r, SPPperiod, 'bs', label='400 nm', markersize=8)
+
+#print eps1r
+
+plt.axis([-10,40,0,1000])
+plt.legend(loc=1)
+plt.title('SPP period ['+query+']')
+plt.grid()
+plt.savefig('MultiMaterial_PeriodSPP.eps')
 plt.show()
 
 ### This was another possibility

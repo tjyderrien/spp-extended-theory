@@ -143,10 +143,10 @@ def SPPactiveInterfaces(dbarray, comment):
   """
   counter=0
   #print len(dbarray)
-  sizeDatabase = len(dbarray)
-  sizeOfArray = sizeDatabase**2
+  #sizeDatabase = len(dbarray)
+  #sizeOfArray = sizeDatabase**2
   #print sizeOfArray	
-  SPParray = np.empty((sizeOfArray,12), dtype='|S30')
+  SPParray = np.empty((0,16)) #, dtype='|S30')
   
   # double loop to test all configurations (brute-forcing...)
   for i in dbarray:
@@ -219,9 +219,9 @@ def SPPactiveInterfaces(dbarray, comment):
         
         # Print the table of active SPP interfaces for all cases or only new SPP interfaces					
         #if( not (comment=="new")): 
-        if(ExperimentalAchievable or (SPPperiod!=0)):
+        if(ExperimentalAchievable and (SPPperiod!=0)):
           counter=counter+1
-          SPParray[counter,:]=Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength
+          SPParray = np.vstack((SPParray, [Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1.real, eps1.imag, eps2.real, eps2.imag]))
   return SPParray
 
 def AsymmetricSPPposActiveInterfaces(dbarray, comment):

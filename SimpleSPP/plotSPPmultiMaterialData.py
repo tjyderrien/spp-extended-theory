@@ -5,53 +5,66 @@
 from SimpleSPProutines import *
 #from makeTable import *
 
-def ConvertToFloat(ndarray):
-  """ As our program is badly written, 
-  we must make our own function for casting to float
-  """
-  ndarray2 = ndarray
-  for i in range(0,ndarray.size):
-    #print i
-    try: 
-      ndarray2[i] = float(ndarray[i])
-    except: 
-      ndarray2[i] = 0.
-  return ndarray2
-
-
-# Get the database
+# Make the database
 SPPdb = GenerateDatabase()
-# TODO: Remove empty lines. Difficult in ndarrays. 
+print "SPP database has "+str(len(SPPdb))+" entries."
+
+# How to filter database ? 
+## Remove lines from SPPdb where some word is found ? 
+query = 'Air'
+filtermap = np.char.count(SPPdb, query) #generate (int) matrix of identified pattern iterations
+#print occurences[lines,cols]
+#filtervector = np.sum(filtermap, axis=1, keepdims=False)
+#TODO how to copy the highest value of filtermap to the whole row ? 
+np.array(filtermap.shape, np.max(filtermap))
+
+#exit()
+# building mask
+#mask = np.array(filtermap, dtype=np.int) #matching cells are not null
+#print mask
+SPPdbFiltered = np.ma.masked_where(filtermap == 0, SPPdb) #matching cells are true
+print SPPdbFiltered
+SPPdbFiltered2 = np.ma.mask_rowcols(SPPdbFiltered, axis=0)
+print SPPdbFiltered2
+exit()
+# identify line number where value is not 1
+#print "Filtered data using '"+query+"' returned "+str(len(SPPdbFiltered))+" entries."
 
 # Extract the data to plot
-Material1 = SPPdb[:, 0]; Material2 = SPPdb[:,1]; 
-Wavelength = SPPdb[:, 2]; 
-OldSPPactiveBool = SPPdb[:,3]; NewSPPactiveBool = SPPdb[:,4]; 
-SPPperiod = SPPdb[:,5]; SPPdecayDepth1 = SPPdb[:,6]; SPPdecayDepth2 = SPPdb[:,7]; 
-Reflectivity = SPPdb[:, 8]; OpticalPenetration1 = SPPdb[:,9]; OpticalPenetration2 = SPPdb[:,10]; SPPdecayLength = SPPdb[:,11]
+Material1 = SPPdbFiltered[:, 0]; Material2 = SPPdbFiltered[:,1]; 
+Wavelength = SPPdbFiltered[:, 2]; 
+OldSPPactiveBool = SPPdbFiltered[:,3]; NewSPPactiveBool = SPPdbFiltered[:,4]; 
+SPPperiod = SPPdbFiltered[:,5]; SPPdecayDepth1 = SPPdbFiltered[:,6]; SPPdecayDepth2 = SPPdbFiltered[:,7]; 
+Reflectivity = SPPdbFiltered[:, 8]; OpticalPenetration1 = SPPdbFiltered[:,9]; OpticalPenetration2 = SPPdbFiltered[:,10]; SPPdecayLength = SPPdbFiltered[:,11]
+eps1r = SPPdbFiltered[:, 12]; eps1c = SPPdbFiltered[:,13]; eps2r = SPPdbFiltered[:,14]; eps2c = SPPdbFiltered[:,15]
 
-# TODO: Casting numbers to float
-# No method is properly working... 
+#print Material1.size
+Wavelength = np.asfarray(Wavelength)
+SPPperiod = np.asfarray(SPPperiod)
+SPPdecayDepth1 = np.asfarray(SPPdecayDepth1)
+SPPdecayDepth2 = np.asfarray(SPPdecayDepth2)
+Reflectivity = np.asfarray(Reflectivity)
+OpticalPenetration1 = np.asfarray(OpticalPenetration1)
+OpticalPenetration2 = np.asfarray(OpticalPenetration2)
+SPPdecayLength = np.asfarray(SPPdecayLength)
+eps1r = np.asfarray(eps1r)
+eps1c = np.asfarray(eps1c)
+eps1r = np.asfarray(eps2r)
+eps2c = np.asfarray(eps2c)
 
-#Wavelength[:]=float(Wavelength[:])
+
+#print type(SPPdecayLength[4])
 
 
-#Wavelength = ConvertToFloat(Wavelength); SPPperiod = ConvertToFloat(SPPperiod); 
-#SPPdecayDepth1 = ConvertToFloat(SPPdecayDepth1); SPPdecayDepth2 = ConvertToFloat(SPPdecayDepth2)
-#Reflectivity = ConvertToFloat(Reflectivity); OpticalPenetration1 = ConvertToFloat(OpticalPenetration1); OpticalPenetration2 = ConvertToFloat(OpticalPenetration2)
-#SPPdecayLength = ConvertToFloat(SPPdecayLength)
-
-#print type(float(Wavelength))
-
-
-# Plot period as function of materials
-#plt.figure()
-#plt.xlabel('Material 1')
-#plt.ylabel('Period (nm)')
-#plt.plot(Material1, SPPperiod, '-')
-#plt.legend(loc=2)
-#plt.title('SPP period')
-#plt.savefig('MultiMaterial_PeriodSPP.png')
+##Plot period as function of materials
+plt.figure()
+plt.xlabel('Material 1')
+plt.ylabel('Period (nm)')
+plt.plot(eps1r, SPPperiod, '+', label='')
+plt.legend(loc=2)
+plt.title('SPP period')
+plt.savefig('MultiMaterial_PeriodSPP.png')
+plt.show()
 
 ### This was another possibility
 # Load the data file

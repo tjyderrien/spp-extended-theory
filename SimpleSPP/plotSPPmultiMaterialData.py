@@ -59,43 +59,58 @@ print "SPP database has "+str(len(SPPdb))+" entries."
 
 ## Choosing for which material 
 #query = 'Au (Johnson 1972)'
-query = 'Au (Palik)'
+#query = 'Au (Palik)'
 #query = 'Ti (Palik)'
 #query='SiC (Palik?)'
 #query = 'TiO2 (Devore 1951, e)'
+query = 'SiO2 (Malitson 1965)'
 SPPdb = FilterDatabase(SPPdb, query, 0)
 SPPdb800 = FilterDatabase(SPPdb, '800.0', 2)
 SPPdb400 = FilterDatabase(SPPdb, '400.0', 2)
 
 print SPPdb800
 
-
-# Extract the data to plot
+# PLOT 1: 
+# Extract the data for 800 nm
 Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c = ExtractDataDb(SPPdb800)
 
+# CLean the first field
 Material2clean = CleanStrArray(Material2)
 
 # Prepare plot with arrows and text (but single wavelength)
 makePlot(eps1r, SPPperiod, Material2clean, 'SPPperiodEnhanced800nm.eps', query, r'$Re(\varepsilon)$', 'Period (nm)', '800 nm', 'r')
 
+# PLOT 2: 
+# Extract data for 400 nm
 
-##Plot period as function of materials for 800 nm
-plt.figure()
+# Prepare plot with arrow and text (for 400 nm wavelength)
+Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c = ExtractDataDb(SPPdb400)
+# Clean the first field
+Material2clean = CleanStrArray(Material2)
+# make the plot2
+makePlot(eps1r, SPPperiod, Material2clean, 'SPPperiodEnhanced400nm.eps', query, r'$Re(\varepsilon)$', 'Period (nm)', '400 nm', 'b')
+
+
+###========================================================
+##Plot period as function of materials for two wavelengths
+
+# Extract (again) for 800 nm
+Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c = ExtractDataDb(SPPdb800)
+
+fig1=plt.figure()
 plt.xlabel(r'$Re(\varepsilon)$')
 plt.ylabel('Period (nm)')
 plt.plot(eps1r, SPPperiod, 'or', label='800 nm', markersize=8)
 
+# Extract (again) for 400 nm
 Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c = ExtractDataDb(SPPdb400)
 
-Material2clean = CleanStrArray(Material2)
-makePlot(eps1r, SPPperiod, Material2clean, 'SPPperiodEnhanced400nm.eps', query, r'$Re(\varepsilon)$', 'Period (nm)', '400 nm', 'b')
-
-plt.figure()
+#plt.figure()
 plt.plot(eps1r, SPPperiod, 'bs', label='400 nm', markersize=8)
 
 #print eps1r
 
-plt.axis([-10,40,0,1000])
+plt.axis([-70,0,0,1000])
 plt.legend(loc=1)
 plt.title('SPP period ['+query+']')
 plt.grid()

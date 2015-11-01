@@ -38,7 +38,10 @@ To reach this purpose, it is planned to collect and develop database for many ma
 
 ## List of Git commands 
 
-git pull
-git add [File1 [File2 [...]]] 
-git commit -m 'LIPSS database: update of Aug 7th 2015'
-git push
+* git pull
+
+* git add [File1 [File2 [...]]] 
+
+* git commit -m 'LIPSS database: update of Aug 7th 2015'
+
+* git push

@@ -58,12 +58,13 @@ print "SPP database has "+str(len(SPPdb))+" entries."
 
 
 ## Choosing for which material 
+query = 'Air'
 #query = 'Au (Johnson 1972)'
 #query = 'Au (Palik)'
 #query = 'Ti (Palik)'
 #query='SiC (Palik?)'
 #query = 'TiO2 (Devore 1951, e)'
-query = 'SiO2 (Malitson 1965)'
+#query = 'SiO2 (Malitson 1965)'
 SPPdb = FilterDatabase(SPPdb, query, 0)
 SPPdb800 = FilterDatabase(SPPdb, '800.0', 2)
 SPPdb400 = FilterDatabase(SPPdb, '400.0', 2)
@@ -111,7 +112,7 @@ plt.plot(eps1r, SPPperiod, 'bs', label='400 nm', markersize=8)
 #print eps1r
 
 plt.axis([-70,0,0,1000])
-plt.legend(loc=1)
+plt.legend(loc=3)
 plt.title('SPP period ['+query+']')
 plt.grid()
 plt.savefig('MultiMaterial_PeriodSPP.eps')

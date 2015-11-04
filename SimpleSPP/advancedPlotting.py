@@ -45,7 +45,7 @@ def makePlot(x_data, y_data, tags, filename, plottitle, labelx, labely, function
   #GOOD PLOT:
   fig2 = plt.figure()
   ax2 = fig2.add_subplot(111)
-  ax2.plot(x_data, y_data, 'o'+textcolor, markersize=8, label=functionlabel)
+  ax2.plot(x_data, y_data, 's'+textcolor, markersize=8, label=functionlabel)
   plt.xlabel(labelx)
   plt.ylabel(labely)
   ax2.grid()

@@ -473,3 +473,12 @@ def LifeTimeDerrien(beta, vg):
 	length = SPPlength(beta)
 	lifetime = length * (vg)**(-1e0)
 	return lifetime
+              
+def EpsilonToIndex(eps):
+  #returns the complex refractive index
+  return cmath.sqrt(eps)
+
+def EffectiveIndex(eps1, eps2): 
+  #returns effective optical index of SPP
+  #neff = 
+  return cmath.sqrt( eps1*eps2 / (eps1+eps2) )

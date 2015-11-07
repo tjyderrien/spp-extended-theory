@@ -1,0 +1,213 @@
+	Paper / Author					Automatic		Measure with FFT	Laser fluence		SUMMARY		MEASURE on PICTURE				LASER PARAMETERS						Orientation	Calculations						Modeling		Multilayer structure				DETAILS on MATERIAL					ENVIRONMENT DETAILS														
+Material	Author	Journal	Year	Path for more details	Wavelength (nm)	Normalized period	Type of structures	Regularity angle (deg)	Peak Fluence (J/cm²)	Pulse Fluence (J/cm²)	Period (nm)	Error (nm)	Min period (nm)	Max	N oscillations (-1)		tau (ps) - pusle duration	Pulse energy (J)		Laser Intensity (W/cm²)	N - number of pulses	Scanning velocity (m/s)	Scanning direction (vs. Pollarisation of E)	Total power	Total (J/cm²)	Erreur abs /2	Erreur	Erreur /2		Calculated NeMax	SPP period	Layer type	Substrate	Thickness (µm)	Thickness of each layer (nm)	Structure atomic	Gap (eV)	Orientation of crystal	Melting threshold (Intensity) (W/m²)	Ablation threshold (W/m²)	Environment (water, gas ... )	Atmosphere type	Pressure atmosphere	Rep. Rate (Hz)	Doping (#/m3) (+p, -n)	Spot diameter X (µm)	Spot diameter Y (µm)	SpotFWHM (µm)	Regularity	Angle of incidence	Polarisation	Polarisation  Type	Orientation (0: perpendicular, 90: paralel, 45:circular)	Focalisation	Lens focal (m)
+FeCuNbSiB	Jia	ASS 253	2006		775	0.86			3.18		665.00		600	730	1		0.15			2.12E+13	10			212000000000000	31.80		19.5%	9.8%								Amorphous								1000										Focal plane	
+Si	Birnbaum				694	2.88					2000.00		2000.00	2000.00	1		15000000			1.00E+04	?			#VALUE!	#VALUE!		0.0%	0.0%								C.F.C.	1.12	111												75				Focal plane	0.1
+FeCuNbSiB	Jia	ASS 253	2006		775	0.79			3.18		610.00		580	640	1		0.15			2.12E+13	20			424000000000000	63.60		9.8%	4.9%								Amorphous																			
+FeCuNbSiB	Jia	ASS 253	2006		775	0.74			6.36		574.00		5.58E+03	5.90E+03	10		0.15			4.24E+13	50			2120000000000000	318.00		5.6%	2.8%								Amorphous																			
+Si	Bonse	JAP 108 034903	2010		800	0.96			3.80		770.00		730	810	1		0.13			2.92E+13	1			2.92E+13	3.80	20.00	10.4%	5.2%		2.28E+28	Possible with nu_coll=1e15.					C.F.C.	1.12	111	1500000000000000	5000000000000000		Air	1.00E+04	10	-1.00E+15			25.00		0	0	Linear	0		
+Si	Bonse	JAP 108 034903	2010		800	0.88			0.42		700.00		650	750	1		0.13			3.23E+12	5			1.62E+13	2.10	25.00	14.3%	7.1%								C.F.C.	1.12	111	1500000000000000	5000000000000000		Air	1.00E+04	10	-1.00E+15			25.00		0	0	Linear	0		
+Si	Bonse	APA 74 19	2001		780	0.88			2.50		685.78		21630	22260	32		5.00E-03			5.00E+14	5			2.50E+15	12.50	4.92	2.9%	1.4%								C.F.C.	1.12	111	1500000000000000	5000000000000000		Air	1.00E+04		-1.00E+15					0	0	Linear	0		
+Si	Bonse	JAP 108 034903	2010		800	0.89			0.42		714.76		14680	15340	21		0.13			3.23E+12	5			1.62E+13	2.10	7.86	4.4%	2.2%								C.F.C.	1.12	111	1500000000000000	5000000000000000		Air	1.00E+04	10	-1.00E+15			25.00		0	0	Linear	0		
+Si	Bonse	JAP 106 104910	2009		800	0.93			0.42		745.53		1.40E+04	1.44E+04	19		0.13			3.23E+12	5			1.62E+13	2.10	5.39	2.9%	1.4%								C.F.C.	1.12	111	1500000000000000	5000000000000000		Air	1.00E+04		-1.00E+15			25.80		0	0	Linear	0		
+Si	Bonse	APA 74 19	2001		800	0.93			0.42		747.11		14050	14340	19		0.13			3.23E+12	5			1.62E+13	2.10	3.82	2.0%	1.0%								C.F.C.	1.12	111	1500000000000000	5000000000000000		Air	1.00E+04		-1.00E+15					0	0	Linear	0		
+Si	Bonse	JAP 108 034903	2010		800	0.85			0.42		681.00		631	731	1		0.13			3.23E+12	10			3.23E+13	4.20	25.00	14.7%	7.3%								C.F.C.	1.12	111	1500000000000000	5000000000000000		Air	1.00E+04	10	-1.00E+15			25.00		0	0	Linear	0		
+Si	Borowiec	APL 82 25	2003		2100	0.76					1600.00						0.09	3.80E-06		0.00E+00	20			0.00E+00	0.00	#DIV/0!		0.0%																											
+InP	Borowiec	APL 82 25	2003		2100	0.20			0.58		430.00						0.2			2.91E+12	20			5.83E+13	11.66			0.0%								C.F.C.						Air	1.00E+04							0	0	Linear	0		
+Si	Borowiec	APL 82 25	2003		1300	0.81					1050.00						0.09			0.00E+00	20			0.00E+00	0.00	#DIV/0!		0.0%									1.12																		
+Si	Borowiec	APL 82 25	2003		800	0.81					650.00						0.09			0.00E+00	20			0.00E+00	0.00	#DIV/0!		0.0%									1.12																		
+Si	Borowiec	APL 82 25	2003		2100	0.83			0.58		1738.75		6650	7260	4		0.2			2.91E+12	20			5.83E+13	11.66	38.13	8.8%	4.4%								C.F.C.		100	1500000000000000	5000000000000000		Air	1.00E+04					8.20		0	0	Linear	0		
+Si	Hommes	ASS 252	2006		795	0.69			6.50		550.83		3.11E+03	3.50E+03	6		0.19			3.42E+13	25			8.55E+14	325.00	16.25	11.8%	5.9%								C.F.C.	1.12	100	1500000000000000	5000000000000000		Air	1.00E+04	100				26.00				Linear			
+Si	Hommes	ASS 252	2006		795	0.74			6.50		585.91		6.38E+03	6.51E+03	11		0.19				50			0.00E+00		2.95	2.0%	1.0%								C.F.C.	1.12	100	1500000000000000	5000000000000000		Air	1.00E+04	100				26.00				Linear			
+Si	Bonse	JAP 108 034903	2010		800	0.74			0.42		595.50		540	651	1		0.13			3.23E+12	100			3.23E+14	42.00	27.75	18.6%	9.3%								C.F.C.	1.12	111	1500000000000000	5000000000000000		Air	1.00E+04	10	-1.00E+15			25.00		0	0	Linear	0		
+Si	Daminelli	TSFilms 467 334	2004		800	0.20			1.60		157.07		4.50E+03	4.61E+03	29		0.13			1.23E+13	100			1.23E+15	160.00		2.4%	1.2%								C.F.C.	1.12		1500000000000000	5000000000000000		Water								0	90	Linear	90		
+Si	Daminelli	TSFilms 467 334	2004		800	0.17			1.50		136.33		4.05E+03	4.13E+03	30		0.13			1.15E+13	1000			1.15E+16	1500.00		2.0%	1.0%								C.F.C.	1.12					Water								0	90	Linear	90		
+Si	Daminelli	TSFilms 467 334	2004		800	0.74			0.20		590.77		7.42E+03	7.94E+03	13		0.13			1.54E+12	100			1.54E+14	20.00	10.00	6.8%	3.4%								C.F.C.	1.12	111	1500000000000000	5000000000000000		Air	1.00E+04					19.00		0	90	Linear	0		
+Si	Hommes	ASS 252	2006		795	0.88			6.50		700.00		6.13E+03	6.47E+03	9		0.19				100			0.00E+00		9.44	5.4%	2.7%								C.F.C.	1.12	100	1500000000000000	5000000000000000		Air	1.00E+04	100				26.00				Linear			
+Si	Crawford	ASS 253 4970	2007		1300	0.64			0.20		829.44		1.48E+04	1.51E+04	18		0.09	3.20E-06		2.22E+12	200			4.44E+14	40.00	5.00	2.4%	1.2%								C.F.C.	1.12		1500000000000000	5000000000000000		Vacuum	1.00E+00	1000				25.00				Linear	90		
+Fused Si	Ihlemann	APA 54	1992		248	3.11			8.20		772.50		765	780	1		0.5			1.64E+13	70			1148000000000000	574.00		1.9%	1.0%								tetrahedric		-																	
+Si	Martsinovkii	Optics and Spectro 105 (10	2008		1250	0.25			1.00		307.63		4789	5055	16		0.08			1.25E+13	300			3750000000000000	300.00	4.16	5.4%	2.7%								C.F.C.	1.12	100				Air	1.00E+04	10						0	0	Linear	0	Focal plane	
+Si	Bonse	JAP 108 034903	2010		800	0.72			0.42		575.56		520.8	630.32	1		0.13			3.23E+12	500			1.62E+15	210.00	27.38	19.0%	9.5%								C.F.C.	1.12	111	1500000000000000	5000000000000000		Air	1.00E+04	10	-1.00E+15			25.00		0	0	Linear	0		
+Si	Matsumura	APA 81 1393	2005		780	0.72					561.11		9.94E+03	1.03E+04	18		0.1	0.00		1.00E+07	500			5.00E+09	0.00	4.44	3.2%	1.6%								C.F.C.	1.12		1500000000000000	5000000000000000		Air	1.00E+04					45.00		0	0	Linear	0		
+Si	Bonse	JAP 108 034903	2010		800	0.70			0.42		560.60		511.7	609.5	1		0.13			3.23E+12	1000			3.23E+15	420.00	24.45	17.4%	8.7%								C.F.C.	1.12	111	1500000000000000	5000000000000000		Air	1.00E+04	10	-1.00E+15			25.00		0	0	Linear	0		
+Si	Daminelli	TSFilms 467 334	2004		800	0.77			0.45		613.50		6.00E+03	6.27E+03	10		0.13			3.46E+12	1000			3.46E+15	450.00	6.75	4.4%	2.2%								C.F.C.	1.12	111	1500000000000000	5000000000000000		Air	1.00E+04							0	90	Linear	0		
+Si	Reif	MSE B 134 114	2006		800	0.26			0.40		205.00		1.90E+02	2.20E+02	1		0.1			4.00E+12	1000			4.00E+15		7.50	14.6%	7.3%								C.F.C.	1.12	001	1500000000000000	5000000000000000		Vacuum			1.00E+21			100.00				Linear			
+Si	Tan	JMM 16 1	2006		775	0.88			0.00		680.00		660	700	1		0.15	8.00E-08		3.02E+09	1000			3.02E+12	0.45	10.00	5.9%	2.9%								C.F.C.	1.12	111	1500000000000000	5000000000000000		Air	1.00E+04					150.00		0	0	Linear	0		
+Si	Tan	JMM 16 1	2006		775	0.88			0.00		685.00		6.50E+02	7.20E+02	1		0.15	1.00E-07		3.02E+09	1000			3.02E+12	0.45	17.50	10.2%	5.1%								C.F.C.	1.12	111	1500000000000000	5000000000000000		Air	1.00E+04					150.00		0	0	Linear	0		
+DLC	Miyaji	Optics Express 16	2008		800	0.17			0.10		136.00		7.58E+02	8.74E+02	6		0.1			1.00E+12	500			500000000000000	50.00		14.2%	7.1%								cubic						Air		10				190.00		0	0	Linear	0	Focal plane	1.00E+00
+Si	Tan	JMM 16 1	2006		775	0.94			0.00		725.00		6.90E+02	7.60E+02	1		0.15	1.00E-07		3.02E+09	1000			3.02E+12	0.45	17.50	9.7%	4.8%								C.F.C.	1.12	111	1500000000000000	5000000000000000		Air	1.00E+04					150.00		0	90	Linear	0		
+Diamond	Ozkan	APL 75 23	1999		248	0.29			1.50		71.00		757	805	11		0.38			3.95E+12	100			3.95E+14	150.00		6.1%	3.1%								C.F.C.						Air	1.00E+04							0	0	Linear	0		
+Diamond PC	Ozkan	APL 75 23	1999		248	0.78			1.50		194.58		1114	1221	6		0.38			3.95E+12	100			3.95E+14	150.00		9.2%	4.6%								C.F.C.						Air	1.00E+04							0	0	Linear	0		
+Si	Tan	JMM 16 1	2006		775	0.94			0.00		725.00		6.70E+02	7.80E+02	1		0.15	1.00E-07		3.02E+09	1000			3.02E+12	0.45	27.50	15.2%	7.6%								C.F.C.	1.12	111	1500000000000000	5000000000000000		Air	1.00E+04					150.00		0	45	Circular	0		
+DLC	Miyaji	Optics Express 16	2008		800	0.15			0.15		121.00		570	640	5		0.1			1.50E+12	1000			1500000000000000	150.00		11.6%	5.8%								cubic						Air		10								Linear	0	Focal plane	
+DLC	Miyaji	Optics Express 16	2008		800	0.22			0.10		178.50		846	939	5		0.1			1.00E+12	1000			1000000000000000	100.00		10.4%	5.2%								cubic						Air		10								Linear	0	Focal plane	
+Si	Martsinovkii	Optics and Spectro 105 (10	2008		1250	0.81			1.00		1011.79		6632	7533	7		0.08			1.25E+13	1200			15000000000000000	1200.00	32.18	12.7%	6.4%								C.F.C.	1.12	100				Air	1.00E+04	10						0	0	Linear	0	Focal plane	
+Si	Martsinovkii	Semiconductors  43, 10	2009		1250	0.83			1.00		1033.89		9050	9560	9		1.00E-01			1.00E+13	1200			12000000000000000	1200.00	14.17	5.5%	2.7%								C.F.C.	1.12	100				Air	1.00E+04	10				123.00							
+CaF2	Varlamova	ASS 252	2006		800	0.25			80.00		200.00						0.1			8.00E+14	5000			4000000000000000000	400000.00			0.0%								cubic	12	111		300000000000000000		Vacuum	1.5E-011	1000						0	Right	Circular	45		
+CaF2	Varlamova	ASS 252	2006		800	0.29			80.00		230.00						0.1			8.00E+14	5000			4000000000000000000	400000.00			0.0%								cubic	12	111		300000000000000000		Vacuum	1.5E-011	1000						0	Left	Circular	45	Focal plane	
+BaF2	Reif	ASS 197	2002		800	0.41					326.43		1.13E+04	1.15E+04	35		0.12			9.00E+12	45000			4.05E+17			1.5%	0.7%								cubic	11.3			5000000000000000		Vacuum	1.00E-07	1000						3		Linear			
+Si	Reif	MSE B 134 114	2006		800	0.25					200.00						0.1							0.00E+00				0.0%								C.F.C.	1.12	001	1500000000000000	5000000000000000		Vacuum			1.00E+21			100.00				Linear			
+Si	Reif	MSE B 134 114	2006		800	0.63					500.00						0.1							0.00E+00				0.0%								C.F.C.	1.12	001	1500000000000000	5000000000000000		Vacuum			1.00E+21			100.00				Linear			
+GaP	Chakravarty	JAP 109 084347	2011		800	0.00			1.00		0.00				1		0.045				?							0.0%									2.3															Circular			
+GaP	Chakravarty	JAP 109 084347	2011		800	0.28			0.10		225.00		2.10E-07	2.40E-07	1		4.50E-02				?							0.0%									2.3													0		Linear			
+GaP	Chakravarty	JAP 109 084347	2011		800	0.76			1.00		610.00		5.70E-07	6.50E-07	1		4.50E-02				?							0.0%									2.3																		
+GaAs	Chakravarty	JAP 109 084347	2011		800	0.73					585.00		4.60E-07	7.10E-07	1		4.50E-02				?							0.0%									1.42																		
+InP	Chakravarty	JAP 109 084347	2011		800	0.58					465.00		4.00E-07	5.30E-07	1		4.50E-02				?							0.0%									1.35																		
+GaN	Chakravarty	JAP 109 084347	2011		800	0.33					265.00		2.50E-07	2.80E-07	1		4.50E-02				?							0.0%									3.4																		
+SiC	Chakravarty	JAP 109 084347	2011		800	0.21					170.00		1.60E-07	1.80E-07	1		4.50E-02				?							0.0%									3.37																		
+SiC	Chakravarty	JAP 109 084347	2011		800	0.11					88.50		8.30E-08	9.40E-08	1		4.50E-02				?							0.0%									3.37																		
+InP	Chakravarty	JAP 109 084347	2011		800	0.88					705.00		6.10E-07	8.00E-07	1		4.50E-02				?							0.0%									1.35																		
+GaP	Chakravarty	JAP 109 084347	2011		800	0.24					190.00		1.90E-07	1.90E-07	1		4.50E-02				?							0.0%									2.3																		
+SiO2	Seifert	APA 81 4	2004		400	1.59			1.00		635.00		6.20E-07	6.50E-07	1		1.50E-01				50							0.0%									9							1000								Linear	90		
+SiO2	Seifert	APA 81 4	2004		400	1.59					635.00		5.70E-07	7.00E-07	1		1.50E-01				100							0.0%									9															Linear	90		
+Si	Costache	APA 79 1429	2004		800	0.93			0.19		745.00		6.90E+02	8.00E+02	1		1.20E-01			1.60E+12	10000			1.60E+16		27.50	7.4%	3.7%								cubic	1.12	100				Vacuum		1000								Linear	0		
+Si	Costache	APA 79 1429	2004		800	0.83					660.00		6.10E+02	7.10E+02	1		1.20E-01			1.60E+12	20000			3.20E+16		25.00	7.6%	3.8%								cubic	1.12	100				Vacuum		1000								Linear	0		
+Si	Costache	APA 79 1429	2004		800	0.26			0.48		205.00		1.90E+02	2.20E+02	1		1.20E-01			4.00E+12	60000			2.40E+17		7.50	7.3%	3.7%								cubic	1.12	100				Vacuum		1000								Linear	90		
+c-SiO2	Budiman	APA 98 849	2010		800	0.00											1.70E-01											0.0%									8																90		
+c-SiO2	Ihlemann	APA 54 363	1992		248	3.06			8.20		760.00		710	810	1		0.5			1.64E+13	70			1.15E+15	574.00		13.2%	6.6%									8					Air								0	-	-	-		
+InP	Bonse	JAP 97 013538	2005		800	0.20			0.24		159.00		1.55E-07	1.63E-07	10		0.13			1.85E+12	5			9230769230769.25			0.5%	0.3%								cubic						Air										Linear	0		
+Al/Ti thin layers	Kovacevic	ASS 326  91	2015		390	0.82					317.86		2150	2300	7		0.15			1.06E+06	760000000			805600000000000									Si	0.13	13			100			?					?	?	?							
+Al/Ti thin layers	Kovacevic	ASS 326  91	2015		390	0.79			0.169	0.14	310.00		290	330	1		0.15				152000000	0		0	25638554.22								Si	0.13	13			100			?					?	?	?		0		Linear	0		
+Al/Ti thin layers	Kovacevic	ASS 326  91	2015		390	0.81			0.164	0.136	314.00		294	334	1		0.15				760000000	0		0	124530120.48								Si	0.13	13			100			?					?	?	?		0		Linear	0		
+Al/Ti thin layers	Kovacevic	ASS 326  91	2015		390	0.82			0.169	0.14	320.00		300	340	1		0.15				23000000000	0.000005		0	3879518072.29								Si	0.13	13			100			?					?	?	?		0		Linear	0		
+Al	Kovacevic	ASS 326  91	2015		390	0.90			0.104	0.086	350.00		330	370	1		0.15					0.000005		0	0.00								Si	0.13				100			?					?	?	?		0		Linear	0		
+Al	Kovacevic	ASS 326  91	2015		390	0.67			0.104	0.086	260.00		240	280	1		0.15				76000000	0		0	7874698.80								Si	0.13				100			?					?	?	?		0		Linear	0		
+Al	Kovacevic	ASS 326  91	2015		390	0.67			0.104	0.086	262.00		242	282	1		0.15				304000000	0		0	31498795.18								Si	0.13				100			?					?	?	?		0		Linear	0		
+Al	Kovacevic	ASS 326  91	2015		390	0.81			0.104	0.086	314.00		294	334	1		0.15				760000000	0		0	78746987.95								Si	0.13				100			?					?	?	?		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	#VALUE!			1.410	1.17	no data provided		no data provided	no data provided			0.25				2			0	2.82		#VALUE!							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.24			1.410	1.17	122.43		109.125	135.741	1		0.25				3			0	4.23		21.7%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.22			1.410	1.17	115.11		106.464	123.764	1		0.25				4			0	5.64		15.0%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.25			1.410	1.17	127.09		117.11	137.072	1		0.25				5			0	7.05		15.7%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.26			1.410	1.17	135.08		117.11	153.042	1		0.25				6			0	8.46		26.6%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.27			1.410	1.17	139.07		127.757	150.38	1		0.25				7			0	9.87		16.3%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.25			1.410	1.17	127.09		101.141	153.042	1		0.25				8			0	11.28		40.8%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.28			1.410	1.17	141.73		123.764	159.696	1		0.25				9			0	12.69		25.4%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.28			1.410	1.17	143.06		133.08	153.042	1		0.25				10			0	14.10		14.0%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.29			1.410	1.17	149.72		131.749	167.681	1		0.25				11			0	15.51		24.0%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.29			1.410	1.17	149.72		139.734	159.696	1		0.25				12			0	16.92		13.3%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.20			1.410	1.17	103.80		83.8403	123.764	1		0.25				15			0	21.14		38.5%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.27			1.410	1.17	141.06		115.779	166.35	1		0.25				5			0	7.05		35.8%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.26			1.410	1.17	135.08		118.441	151.711	1		0.25				6			0	8.46		24.6%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.27			1.410	1.17	141.06		118.441	163.688	1		0.25				7			0	9.87		32.1%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.28			1.410	1.17	144.39		130.418	158.365	1		0.25				8			0	11.28		19.4%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.27			1.410	1.17	139.73		115.779	163.688	1		0.25				9			0	12.69		34.3%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.29			1.410	1.17	151.71		126.426	176.996	1		0.25				10			0	14.10		33.3%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.29			1.410	1.17	147.05		126.426	167.681	1		0.25				11			0	15.51		28.1%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.23			1.410	1.17	119.77		107.795	131.749	1		0.25				12			0	16.92		20.0%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.26			1.410	1.17	136.41		105.133	167.681	1		0.25				13			0	18.33		45.9%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.35			1.410	1.17	178.99		151.711	206.274	1		0.25				14			0	19.73		30.5%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.30			1.410	1.17	156.37		145.057	167.681	1		0.25				15			0	21.14		14.5%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.28			1.410	1.17	143.73		130.418	157.034	1		0.25				16			0	22.55		18.5%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.32			1.410	1.17	166.35		147.719	184.981	1		0.25				17			0	23.96		22.4%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.32			1.410	1.17	165.68		155.703	175.665	1		0.25				18			0	25.37		12.0%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.79			1.410	1.17	406.56		383.27	429.848	1		0.25				11			0	15.51		11.5%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.85			1.410	1.17	435.84		400.57	471.103	1		0.25				12			0	16.92		16.2%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.84			1.410	1.17	431.18		392.586	469.772	1		0.25				13			0	18.33		17.9%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	1.03			1.410	1.17	532.32		481.749	582.89	1		0.25				14			0	19.73		19.0%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.95			1.410	1.17	487.74		449.81	525.665	1		0.25				15			0	21.14		15.6%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.95			1.410	1.17	490.40		457.795	523.004	1		0.25				16			0	22.55		13.3%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.91			1.410	1.17	470.44		443.156	497.719	1		0.25				17			0	23.96		11.6%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	1.02			1.410	1.17	524.33		460.456	588.213	1		0.25				18			0	25.37		24.4%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.93			1.410	1.17	479.75		417.871	541.635	1		0.25				19			0	26.78		25.8%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.88			1.410	1.17	451.14		417.871	484.411	1		0.25				13			0	18.33		14.7%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.86			1.410	1.17	443.82		373.954	513.688	1		0.25				14			0	19.73		31.5%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.85			1.410	1.17	437.83		393.916	481.749	1		0.25				16			0	22.55		20.1%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.93			1.410	1.17	481.08		436.502	525.665	1		0.25				17			0	23.96		18.5%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.82			1.410	1.17	420.53		384.601	456.464	1		0.25				19			0	26.78		17.1%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.81			1.410	1.17	415.00		390	440	1		0.25				20			0	28.19		12.0%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.82			1.614	1.34	420.00		400	440	1		0.25				20			0	32.29		9.5%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.83			1.831	1.52	430.00		410	450	1		0.25				20			0	36.63		9.3%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.74			2.157	1.79	380.00		360	400	1		0.25				20			0	43.13		10.5%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.65			2.699	2.24	335.00		320	350	1		0.25				20			0	53.98		9.0%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.83			2.699	2.24	430.00		390	470	1		0.25				20			0	53.98		18.6%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.21			1.084	0.90	110.00		80	140	1		0.25				20			0	21.69		54.5%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.22			1.084	0.90	112.50		220	230	2		0.25				50			0	54.22		4.4%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.21			1.084	0.90	110.00		100	120	1		0.25				100			0	108.43		18.2%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.29			1.084	0.90	151.76		2470	2690	17		0.25				200			0	216.87		8.5%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.77	LIPSS		1.084	0.90	395.00		1090	1280	3		0.25				500			0	542.17		16.0%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+6H-SiC	Kim	APB 113 395	2013		515	0.64			1.084	0.90	328.33		920	1050	3		0.25				1000			0	1084.34		13.2%							270.5						4280000000000000	normal atmospheric pressure and room temperature	Air				8.40	8.40	8.40		0		Linear	0		
+4H-SiC	Tomita	APL 90 153115	2007		800	0.51					405.28		7120	7470	18			0.000003			50			0	0.00		4.8%																			14.20	9.50								
+4H-SiC	Tomita	APL 90 153115	2007		800	#VALUE!					#VALUE!		not able to measure too much pixellated picture	not able to measure too much pixellated picture				0.000003			50				0.00		#VALUE!																			11.80	8.50								
+4H-SiC	Tomita	APL 90 153115	2007		800	0.31					250.00				paper value			0.000003			50				0.00		#VALUE!																			11.80	8.50								
+4H-SiC	Tomita	APL 90 153115	2007		800	0.65					519.44		4620	4730	9			0.000003			50				0.00		2.4%																			21.20	15.90								
+4H-SiC	Tomita	APL 90 153115	2007		800	0.63					500.00				paper value			0.000003			50				0.00		#VALUE!																			21.20	15.90								
+6H-SiC	Khuat	Optical Letters 40 2	2015		800	0.63					500.00				paper value		0.15					0.002		15mW	0.00		#VALUE!							350																			0		
+6H-SiC	Khuat	Optical Letters 40 2	2015		800	0.60					483.00		2180	2650	5		0.15					0.002		15mW	0.00		19.5%							350																			0		
+6H-SiC	Khuat	Optical Letters 40 2	2015		800	0.61					486.67		2650	3190	6		0.15					0.002		15mW	0.00		18.5%							350																			0		
+6H-SiC	Khuat	Optical Letters 40 2	2015		800	0.63					505.00		2320	2730	5		0.15					0.002		15mW	0.00		16.2%							350																			0		
+InAs	Chakravarty	JAP 109 084347	2011		800	1.00				0,1 - 1,0	800				paper value		0.045	0.008							0.00		#VALUE!										0.36															linear	0		
+InP	Chakravarty	JAP 109 084347	2011		800	0.81				0,1 - 1,0	650				paper value		0.045	0.008							0.00		#VALUE!										1.35															linear	0		
+GaAs	Chakravarty	JAP 109 084347	2011		800	0.75				0,1 - 1,0	600				paper value		0.045	0.008							0.00		#VALUE!										1.42															linear	0		
+GaP	Chakravarty	JAP 109 084347	2011		800	0.25				0,1 - 1,0	200				paper value		0.045	0.008							0.00		#VALUE!										2.3															linear	0		
+ZnSe	Chakravarty	JAP 109 084347	2011		800	0.25				0,1 - 1,0	200				paper value		0.045	0.008							0.00		#VALUE!										2.82															linear	0		
+GaN	Chakravarty	JAP 109 084347	2011		800	0.25				0,1 - 1,0	200				paper value		0.045	0.008							0.00		#VALUE!										3.4															linear	0		
+SiC	Chakravarty	JAP 109 084347	2011		800	0.19				0,1 - 1,0	150				paper value		0.045	0.008							0.00		#VALUE!										3.37															linear	0		
+3H-SiC	Barmina	PhysWavePhenom vol22 no1 page15	2014		800	0.19	LIPSS (first scanning)		1.687	1.40	150				paper value		0.21						0		0.00		#VALUE!							500			3.2																0		
+3H-SiC	Barmina	PhysWavePhenom vol22 no1 page15	2014		800	#VALUE!	Grooves (second scanning)		1.687	1.40	110 x 130				paper value		0.21						90		0.00		#VALUE!							500			3.2																0		
+6H-SiC	Zhao	APL 91 121107	2007		800	0.19	LIPSS		14.458	12.00	155.00				paper value		0.033	0.001				0.0006			0.00		#VALUE!							250			3.1																0		
+6H-SiC	Zhao	APL 91 121107	2007		800	0.24	LIPSS (first scanning)		14.458	12.00	190.00		890	1010	5		0.033	0.001				0.0004			0.00		12.6%							250			3.1																0		
+6H-SiC	Zhao	APL 91 121107	2007		800	0.23	LIPSS (first scanning)		14.458	12.00	185.00		1040	1180	6		0.033	0.001				0.0001			0.00		12.6%							250			3.1							1000									0		
+4H-SiC	Okada	Appl Phys A 92: 665	2008		800	0.22	coarse			2.10	172.75		994	1079	6		0.013	0.000006			50													0.2										50											
+4H-SiC	Okada	Appl Phys A 92: 665	2008		800	0.63	coarse			2.10	500.00						0.013	0.000006			50													0.07										50											
+4H-SiC	Okada	Appl Phys A 92: 665	2008		800	0.31	fine			2.10	250.00						0.013	0.000006			50													0.2										50											
+4H-SiC	Okada	Appl Phys A 92: 665	2008		800	0.31	fine			2.10	250.00						0.013	0.000006			50													0.07										50											
+V	FÜLE	JLMN-Journal of Laser Micro/Nanoengineering Vol. 9, No. 1	2014		800	0.70446125					563.569						0.03	0.000044			35.6347																				air			200								linear	0		
+V	FÜLE	JLMN-Journal of Laser Micro/Nanoengineering Vol. 9, No. 1	2014		800	0.044543375					563.5						0.03	0.000044			71.998																				air			200								linear	0		
+V	FÜLE	JLMN-Journal of Laser Micro/Nanoengineering Vol. 9, No. 1	2014		800	0.0899975					505.789						0.03	0.000044			143.327																				air			200								linear	0		
+V	FÜLE	JLMN-Journal of Laser Micro/Nanoengineering Vol. 9, No. 1	2014		800	0.17915875					506.275						0.03	0.000044			287.024																				air			200								linear	0		
+V	FÜLE	JLMN-Journal of Laser Micro/Nanoengineering Vol. 9, No. 1	2014		800	0.35878					482.652						0.03	0.000044			359.658																				air			200								linear	0		
+V	FÜLE	JLMN-Journal of Laser Micro/Nanoengineering Vol. 9, No. 1	2014		800	0.4495725					359.838						0.03	0.000044			71.0142																				ethanol											linear	0		
+V	FÜLE	JLMN-Journal of Laser Micro/Nanoengineering Vol. 9, No. 1	2014		800	0.17842875					348.037						0.03	0.000044			142.743																				ethanol											linear	0		
+V	FÜLE	JLMN-Journal of Laser Micro/Nanoengineering Vol. 9, No. 1	2014		800	0.35920125					326.773						0.03	0.000044			287.361																				ethanol														
+V	FÜLE	JLMN-Journal of Laser Micro/Nanoengineering Vol. 9, No. 1	2014		800	0.4482225					302.107						0.03	0.000044			358.578																				ethanol											linear	0		
+Cu	Tan et al	Trans. Nonferrous Mat. Soc. China 19, 1645 (2009)	2009		800	0.7875					630.00		610	650	1		6.00E-002	8.00E-004			17																				air											linear			
+Ag	Tan et al	Trans. Nonferrous Mat. Soc. China 19, 1645 (2009)	2009		800	1.4125					1130.00		1840	2680	2		6.00E-002	8.00E-004			17																				air											linear			
+Ag	HW Chang et al	Journal of Colloids and Interface Science 360 305 (2011)	2011		800	0.79375			0,34		635.00		610	660	1		1.20E-001	8.00E-004			?	1.50E-004																			air			1000								linear			
+Ag/Au	Yadavali et al	Nanotechnology 25 465301	2014		266	1.0526315789			0.06		280		280	280	1																		SiO2 on Si	0.4																					
+Ti	Nathala et al	Optics Express 23, 5915 (2015)	2015		800	0.90164875					721.319										14.6352																																		
+Ti	Nathala et al	Optics Express 23, 5915 (2015)	2015		800	0.86868125					694.945										21.8244																																		
+Ti	Nathala et al	Optics Express 23, 5915 (2015)	2015		800	0.83846125					670.769										27.4208																																		
+Ti	Nathala et al	Optics Express 23, 5915 (2015)	2015		800	0.8277475					662.198										36.4942																																		
+Ti	Nathala et al	Optics Express 23, 5915 (2015)	2015		800	0.80522					644.176										54.96																																		
+Ti	Nathala et al	Optics Express 23, 5915 (2015)	2015		800	0.7928575					634.286										109.822																																		
+Ti	Nathala et al	Optics Express 23, 5915 (2015)	2015		800	0.775					620										220																																		
+Ti	Nathala et al	Optics Express 23, 5915 (2015)	2015		400	0.75					300										220																																		
+Si	FÜLE	JLMN-Journal of Laser Micro/Nanoengineering Vol. 10, No. 1	2015		800	0.9625			1		770		730	810			0.03	0.000044			3																	100			air			200								linear	0		
+Si	FÜLE	JLMN-Journal of Laser Micro/Nanoengineering Vol. 10, No. 1	2015		800	1.025			1		820		800	840			0.03	0.000044			6																	100			air			200								linear	0		
+Si	FÜLE	JLMN-Journal of Laser Micro/Nanoengineering Vol. 10, No. 1	2015		800	1.0125			1		810		820	800			0.03	0.000044			15																	100			air			200								linear	0		
+Si	FÜLE	JLMN-Journal of Laser Micro/Nanoengineering Vol. 10, No. 1	2015		800	0.8			1		640		550	720			0.03	0.000044			50																	100			air			200								linear	0		
+Si	FÜLE	JLMN-Journal of Laser Micro/Nanoengineering Vol. 10, No. 1	2015		800	0.8125			1		650		540	740			0.03	0.000044			100																	100			air			200								linear	0		
+Si	FÜLE	JLMN-Journal of Laser Micro/Nanoengineering Vol. 10, No. 1	2015		800	0.7125			1		570		520	620			0.03	0.000044			200																	100			air			200								linear	0		
+Si	FÜLE	JLMN-Journal of Laser Micro/Nanoengineering Vol. 10, No. 1	2015		800	0.7375			1		590		540	640			0.03	0.000044			400																	100			air			200								linear	0		
+Si	FÜLE	JLMN-Journal of Laser Micro/Nanoengineering Vol. 10, No. 1	2015		800	0.7			1		560		560	560			0.03	0.000044			400																	100			air			200								linear	90		
+Si	FÜLE	JLMN-Journal of Laser Micro/Nanoengineering Vol. 10, No. 1	2015		800	0.725			0.9		580		580	580			0.03	0.000044			400																	100			air			200								linear	90		
+Si	FÜLE	JLMN-Journal of Laser Micro/Nanoengineering Vol. 10, No. 1	2015		800	0.6875			1		550		550	550			0.03	0.000044			400																	100			air			200								linear	90		
+GaAs	FÜLE	JLMN-Journal of Laser Micro/Nanoengineering Vol. 10, No. 1	2015		800	0.9375			1		750		740	755			0.03	0.000044			3																	111			air			200								linear	0		
+GaAs	FÜLE	JLMN-Journal of Laser Micro/Nanoengineering Vol. 10, No. 1	2015		800	0.8875			1		710		685	730			0.03	0.000044			6																	111			air			200								linear	0		
+GaAs	FÜLE	JLMN-Journal of Laser Micro/Nanoengineering Vol. 10, No. 1	2015		800	0.8625			1		690		690	690			0.03	0.000044			15																	111			air			200								linear	0		
+GaAs	FÜLE	JLMN-Journal of Laser Micro/Nanoengineering Vol. 10, No. 1	2015		800	0.83125			1		665		650	680			0.03	0.000044			25																	111			air			200								linear	0		
+GaAs	FÜLE	JLMN-Journal of Laser Micro/Nanoengineering Vol. 10, No. 1	2015		800	0.8375			1		670		640	700			0.03	0.000044			50																	111			air			200								linear	0		
+V	FÜLE	JLMN-Journal of Laser Micro/Nanoengineering Vol. 10, No. 1	2015		800	0.85625			1		685		665	700			0.03	0.000044			3																				air			200								linear	0		
+V	FÜLE	JLMN-Journal of Laser Micro/Nanoengineering Vol. 10, No. 1	2015		800	0.8			1		640		635	645			0.03	0.000044			6																				air			200								linear	0		
+V	FÜLE	JLMN-Journal of Laser Micro/Nanoengineering Vol. 10, No. 1	2015		800	0.7625			1		610		605	615			0.03	0.000044			15																				air			200								linear	0		
+V	FÜLE	JLMN-Journal of Laser Micro/Nanoengineering Vol. 10, No. 1	2015		800	0.75625			1		605		595	615			0.03	0.000044			25																				air			200								linear	0		
+V	FÜLE	JLMN-Journal of Laser Micro/Nanoengineering Vol. 10, No. 1	2015		800	0.725			1		580		575	585			0.03	0.000044			50																				air			200								linear	0		
+V	FÜLE	JLMN-Journal of Laser Micro/Nanoengineering Vol. 10, No. 1	2015		800	0.7			1		560		560	560			0.03	0.000044			100																				air			200								linear	0		
+V	FÜLE	JLMN-Journal of Laser Micro/Nanoengineering Vol. 10, No. 1	2015		800	0.7			1		560		560	560			0.03	0.000044			400																				air			200								linear	0		
+V	FÜLE	JLMN-Journal of Laser Micro/Nanoengineering Vol. 10, No. 1	2015		800	0.725			1		580		575	585			0.03	0.000044			1000																				air			200								linear	0		
+W	Oktem	Nature Photonics	2013		1060	0.6454009434	gratigns	1,27			684.125	42.875	641.25	727	1		0.1	1.00E-006														W	SiO2	?							air			1.00E+006								linear	0		
+Ti	Oktem	Nature Photonics	2013		1060	1.639586357	gratings	2,39			1737.9615384615	43.5	22028	23159	13		0.1															Ti	SiO2	?																		linear			
+Ti	Oktem	Nature Photonics	2013		1060	0.601159434	gratings	?			637.229	?					0.1															Ti	SiO2	5.00E-002																		linear			
+Ti	Oktem	Nature Photonics	2013		1060	0.6507820755	gratings	?			689.829	?					0.1															Ti	SiO2	1.00E-001																		linear			
+Ti	Oktem	Nature Photonics	2013		1060	0.720145283	gratings	?			763.354	?					0.1															Ti	SiO2	2.00E-001																		linear			
+Ti	Oktem	Nature Photonics	2013		1060	0.7697320755	gratings	?			815.916	?					0.1															Ti	SiO2	3.00E-001																		linear			
+Ti	Oktem	Nature Photonics	2013		1060	0.7999830189	gratings	?			847.982	?					0.1															Ti	SiO2	4.00E-001																		linear			
+Ti	Oktem	Nature Photonics	2013		1060	0.8108962264	gratings	?			859.55	?					0.1															Ti	SiO2	5.00E-001																		linear			
+CaF2	Reif	Applied Surface Science 253 7932	2007		800	0.22625	LIPSS	10,12			181	30	151	211	1																																					linear	0		
+CaF2	Reif	Applied Surface Science 253 7932	2007		800	0.23625	LIPSS	11,20			189	43	146	232	1																																					elliptic	20		
+CaF2	Reif	Applied Surface Science 253 7932	2007		800	0.246875	LIPSS	9,08			197.5	32.5	165	230	1																																					elliptic	30		
+CaF2	Reif	Applied Surface Science 253 7932	2007		800	-	nano dots	108			-	-																																								elliptic	40		
+CaF2	Reif	Applied Surface Science 253 7932	2007		800	0.25875	LIPSS	-			207	78	129	285	1																																					circular	45		
+CaF2	Reif	Applied Surface Science 253 7932	2007		800	0.213125	LIPSS	20,59			170.5	14.5	156	185	1																																					elliptic	50		
+CaF2	Reif	Applied Surface Science 253 7932	2007		800	0.411875	LIPSS	28,92			329.5	37.5	292	367	1																																					elliptic	60		
+CaF2	Reif	Applied Surface Science 253 7932	2007		800	0.255	LIPSS	13,92			204	78	126	282	1																																					elliptic	70		
+CaF2	Reif	Applied Surface Science 253 7932	2007		800	0.395	LIPSS	13,17			316	68	248	384	1																																					linear	90		

@@ -61,10 +61,10 @@ print "SPP database has "+str(len(SPPdb))+" entries."
 #query = 'Air'
 #query = 'Au (Johnson 1972)'
 #query = 'Au (Palik)'
-query = 'Ti (Palik)'
+#query = 'Ti (Palik)'
 #query='SiC (Palik?)'
 #query = 'TiO2 (Devore 1951, e)'
-#query = 'SiO2 (Malitson 1965)'
+query = 'SiO2 (Malitson 1965)'
 SPPdb = FilterDatabase(SPPdb, query, 0)
 SPPdb800 = FilterDatabase(SPPdb, '800.0', 2)
 SPPdb400 = FilterDatabase(SPPdb, '400.0', 2)
@@ -99,44 +99,56 @@ makePlot(eps1r, SPPperiod, Material2clean, 'SPPperiodEnhanced400nm.eps', query, 
 Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c = ExtractDataDb(SPPdb800)
 
 # Calculation of effective refractive index: use vectorized function
-epsilon1 = np.add(eps1r,np.multiply(1e0j, eps1c))
-EpsilonToIndex = np.vectorize(EpsilonToIndex)
-refractiveindex1 = EpsilonToIndex(epsilon1)
-Radiation1=Wavelength/refractiveindex1.real
-Radiation1=np.sort(Radiation1)
+#epsilon1 = np.add(eps1r,np.multiply(1e0j, eps1c))
+#EpsilonToIndex = np.vectorize(EpsilonToIndex)
+#refractiveindex1 = EpsilonToIndex(epsilon1)
+#Radiation1=Wavelength/refractiveindex1.real
+#Radiation1=np.sort(Radiation1)
 
 fig1=plt.figure()
 plt.xlabel(r'$Re(\varepsilon)$')
 plt.ylabel('Period (nm)')
 plt.plot(eps1r, SPPperiod, 'or', label='800 nm', markersize=8)
-plt.plot(np.sort(eps1r), Radiation1[::-1], 'r-', label=r'800 nm, $\lambda / n_1^{*}$')
+#plt.plot(np.sort(eps1r), Radiation1[::-1], 'r-', label=r'800 nm, $\lambda / n_1^{*}$')
 
 # Extract (again) for 400 nm
 Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c = ExtractDataDb(SPPdb400)
 
 # Calculation of effective refractive index: use vectorized function
-epsilon1 = np.add(eps1r,np.multiply(1e0j, eps1c))
-epsilon2 = np.add(eps2r,np.multiply(1e0j, eps2c))
+#epsilon1 = np.add(eps1r,np.multiply(1e0j, eps1c))
+#epsilon2 = np.add(eps2r,np.multiply(1e0j, eps2c))
 #epsiloneff=np.divide(np.multiply(epsilon1, epsilon2), np.add(epsilon1, epsilon2))
 
-EpsilonToIndex = np.vectorize(EpsilonToIndex)
+#EpsilonToIndex = np.vectorize(EpsilonToIndex)
 #EffectiveIndex = np.vectorize(EffectiveIndex)
 
-refractiveindex1 = EpsilonToIndex(epsilon1)
-Radiation1=Wavelength/refractiveindex1
-Radiation1=np.sort(Radiation1)
+#refractiveindex1 = EpsilonToIndex(epsilon1)
+#Radiation1=Wavelength/refractiveindex1
+#Radiation1=np.sort(Radiation1)
 
 #plt.figure()
 plt.plot(eps1r, SPPperiod, 'bs', label='400 nm', markersize=8)
-plt.plot(np.sort(eps1r), Radiation1[::-1], 'b-', label=r'400 nm, $\lambda / n_1^{*}$')
+#plt.plot(np.sort(eps1r), Radiation1[::-1], 'b-', label=r'400 nm, $\lambda / n_1^{*}$')
 
 #print eps1r
 
-#plt.axis([-70,0,0,1000])
-plt.axis([0,35,0,1000])
-plt.legend(loc=1)
-plt.title('SPP period ['+query+']')
+plt.axis([-70,0,0,600])
+#plt.axis([0,35,0,1000])
+plt.legend(loc=4)
+plt.title(query)
 plt.grid()
+
+#a = plt.axes([-70,300,-40,700], axisbg='g')
+a = plt.axes([0.2,0.2,0.35,0.35], axisbg='w')
+plt.axis([-6,0,250,290])
+plt.xticks([-6,-4,-2,0])
+plt.yticks([250,270,290])
+plt.grid()
+plt.plot(eps1r, SPPperiod, 'bs', markersize=8)
+#plt.title('Zoom')
+#plt.xticks([])
+#plt.yticks([])
+
 plt.savefig('MultiMaterial_PeriodSPP.eps')
 plt.show()
 

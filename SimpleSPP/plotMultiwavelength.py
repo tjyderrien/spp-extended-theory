@@ -10,7 +10,8 @@ from SimpleSPProutines import *
 MaterialFolder="Database"
 
 MaterialFile1="Air"
-MaterialFile2='Au-Johnson'
+#MaterialFile2="Ag-Johnson"
+MaterialFile2="Ti-Johnson"
 
 # Loading Material dielectric complex permittivity into arrays
 MaterialArray2 = loadtxt(MaterialFolder+'/'+MaterialFile2, delimiter=' ', skiprows=4)
@@ -125,15 +126,16 @@ SPPgroupVelocityPlot = np.clip(SPPgroupVelocity.real, 0, 1000E8)
 #print SPPgroupVelocity.real
 
 plt.figure()
-plt.xlabel('Wavelength $(nm)$')
-plt.ylabel('Velocity ($m/s$)')
-plt.plot(1e9*2*pi*c/omegaspp[1:], SPPgroupVelocityPlot, label='$v_g$')
-plt.plot(1e9*2*pi*c/omegaspp, SPPphaseVelocity, label='$v_{\phi}$')
+plt.xlabel(r'Wavelength $\lambda$ (nm)')
+plt.ylabel(r'Velocity $v$ ($\mu$m/ps)')
+plt.plot(1e9*2*pi*c/omegaspp[1:], 1E-6*SPPgroupVelocityPlot, label=r'$v_g$')
+plt.plot(1e9*2*pi*c/omegaspp, 1E-6*SPPphaseVelocity, label=r'$v_{\phi}$')
+#plt.plot(1e9*2*pi*c/omegaspp, c, label=r'$c$')
 #plt.plot(omega(wavelengths)/c, omega(wavelengths), label='Light line')
-#plt.plot(omega(wavelengths)/c, omega(np.add(np.multiply(wavelengths,0e0), 800e-9)), label='Laser 800 nm')
-plt.title('SPP velocities at $'+MaterialFile1+'$/$'+MaterialFile2+'$ interface')
-plt.legend(loc=1)
-#plt.axis([0,1000,0,4e8])
+#plt.plot(omega(wavelengths)/c, omega(np.add(np.multiply(wavelengths,0e0), 800e-9)), label=r'$c$')
+plt.title(MaterialFile1+'/'+MaterialFile2+' interface')
+plt.legend(loc=4)
+plt.axis([0,2000,0,400])
 plt.savefig('Velocities.eps')
 
 ## Now we can calculate SPP lifetime
@@ -141,10 +143,10 @@ LifeTimeOld = LifeTimeRaether(kspp[1:], eps1new[1:], eps2new[1:])
 LifeTimeNew = LifeTimeDerrien(kspp[1:], SPPgroupVelocity.real)
 
 plt.figure()
-plt.xlabel('Wavelength $(nm)$')
-plt.ylabel('Lifetime ($s$)')
-plt.semilogy(1e9*2*pi*c/omegaspp[1:], LifeTimeOld, label='Raether')
-plt.semilogy(1e9*2*pi*c/omegaspp[1:], LifeTimeNew, label='This work')
-plt.title('SPP velocities at $'+MaterialFile1+'$/$'+MaterialFile2+'$ interface')
+plt.xlabel('Wavelength $\lambda$ (nm)')
+plt.ylabel(r'SPP lifetime $\tau_{SPP}$ (ps)')
+plt.semilogy(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeOld, 'b-', label=r'complex $\omega$, real $k_{SPP}$')
+plt.semilogy(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeNew, 'r-', label=r'real $\omega$, complex $k_{SPP}$')
+plt.title(MaterialFile1+'/'+MaterialFile2+' interface')
 plt.legend(loc=4)
 plt.savefig('Lifetime.eps')

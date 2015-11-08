@@ -18,7 +18,7 @@ lengthunit=1e-9
 # Settings for matplotlib
 #rc('font',**{'family':'sans-serif','sans-serif':['Helvetica'], 'size':'16'})
 ## for Palatino and other serif fonts use:
-rc('font',**{'family':'serif','serif':['Palatino'], 'size':'16'})
+rc('font',**{'family':'serif','serif':['Palatino'], 'size':'20'})
 rc('text', usetex=True)
 
 # basic wave function

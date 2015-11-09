@@ -49,6 +49,15 @@ plt.plot(wavelengths, ki, 'r-', label='k interp')
 plt.grid()
 plt.legend(loc=1)
 plt.savefig('PalikData.eps')
-plt.show()
+#plt.show()
 
-#TODO: def InterpolateDielectricPermittivity()
+def InterpolateOpticalConstants(wavelength):
+  # Returns one particular point interpolated at wavelength
+  ni = fni(wavelength)
+  ki = fki(wavelength)
+  
+  nc = (ni+1e0j*ki)
+  return nc
+
+#print "n,k at 800 nm = "+str(n)+", "+str(k)
+print IndexToEpsilon(InterpolateOpticalConstants(0.800))

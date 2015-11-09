@@ -478,6 +478,10 @@ def EpsilonToIndex(eps):
   #returns the complex refractive index
   return cmath.sqrt(eps)
 
+def IndexToEpsilon(n):
+  #returns the complex permittivity from optical index
+  return n**2
+
 def EffectiveIndex(eps1, eps2): 
   #returns effective optical index of SPP
   #neff = 

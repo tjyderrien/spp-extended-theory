@@ -4,9 +4,73 @@
 
 This set of Python functions allow to predict possibilities of SPP on various materials, and for various wavelengths.
 
-The model is limited to two semi-infinite materials sharing one interface. 
+The content of the SimpleSPP folder is limited to two semi-infinite materials sharing one interface. For more advanced model, check other folders. 
 
 # List of executable files 
+
+## SimpleSPProutines.py: 
+
+This file contains many basic routines supporting the SPP theory: 
+
+### Basics for lasers
+
+* omega(wavelength): just gives laser frequency from laser wavelength
+
+* reflectivity(eps1, eps2): calculate the normal incidence reflectivity
+
+* EpsilonToIndex(eps): generate n and k value for one complex epsilon value
+
+### Basic routines of the SPP model
+
+* betaSPP(wavelength, eps1, eps2): calculate SPP wavenumber from dielectric permittivities
+
+* AsymmetricSPPconditionPos(eps1, eps2): + mode of asymmetric SPP condition
+
+* AsymmetricSPPconditionNeg(eps1, eps2): - mode of asymmetric SPP condition
+
+* SPPconditionValue(eps1, eps2): if <0, then symmetric SPP can be excited
+
+* SPPcondition(eps1, eps2): tests if SPPconditionValue < 0 for one material combination
+
+* OldSPPcondition(eps1, eps2): tests the SPP condition of non-absorbing materials (this theory is still widely used though not sufficient for most materials)
+
+### Properties of SPPs
+
+* period(beta): returns the period out of a (complex-valued) SPP wave number
+
+* DecayDepth(kzSPP): Calculate decay depth with kzSPP (complex)
+
+* kzSPP(wavelength, eps1, eps2): calculate wavenumber in direction of propagation
+
+* DecayLengthSPP(beta): gives the decay distance of SPPs on surface
+
+* SPPlength(beta): SAME FUNCTION. FIX THIS. 
+
+* LifeTimeRaether(beta, eps2, eps1): provides SPP lifetime using Raether formula
+
+* LifetimeDerrien(beta, vg): lifetime based on group velocity
+
+* EffectiveIndex(eps1, eps2): generates effective optical index of an SPP (complex-valued quantity)
+
+### SPP database generation
+
+* Drude(wavelength, ne, epsilon, nu): provides excitation of carriers - this function is incomplete for now
+
+* ExperimentallyAchievable(OPD, DecayDepth): some function which checks if SPP decay depth is larger than optical penetration depth - (high risk experimental criterion)
+
+* SPPactiveInterfaces(dbarray, comment): this produces a list of SPP active interfaces based on a database
+
+* AsymmetricSPPposActiveInterfaces(dbarray, comment): same but for Asymmetric (+) SPPs
+
+* AsymmetricSPPnegActiveInterfaces: same but for Asymmetric (-) SPPs. 
+
+* GenerateDatabase(): build SPP database array from MaterialOpticalDatabaseForPlasmonics.csv
+
+* ExportToTxt(dbarray, filename): exports an array to a textfile
+
+### Mathematical functions
+
+* RealDerivativeByComplex(f,z): complex derivative 
 
 ## plotSPPmultiMaterialData.py: 
 

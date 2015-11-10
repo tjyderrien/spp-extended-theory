@@ -10,7 +10,13 @@
 
 * R. Garai, Hilase Centre FZU, AV CR : helped for some LIPSS databasing
 
-#Financial supports
+# Users
+
+* Yoann Levy, FZU
+
+* Inam Mirza, FZU
+
+# Financial supports
 
 * Adolf Martens Fellowship
 

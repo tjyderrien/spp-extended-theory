@@ -106,7 +106,7 @@ Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod,
 #Radiation1=np.sort(Radiation1)
 
 fig1=plt.figure()
-plt.xlabel(r'$Re(\varepsilon)$')
+plt.xlabel(r'$\mathcal{R}e(\varepsilon)$')
 plt.ylabel('Period (nm)')
 plt.plot(eps1r, SPPperiod, 'or', label='800 nm', markersize=8)
 #plt.plot(np.sort(eps1r), Radiation1[::-1], 'r-', label=r'800 nm, $\lambda / n_1^{*}$')

@@ -5,7 +5,7 @@
 from SimpleSPProutines import *
 
 # Importing data from Palik book using graphs. 
-# Optical data are given in csv files. 
+# Optical data are given in csv files, created using Engauge-digitizer software. 
 
 folder = "Database/Palik/"
 filename = "Ag-Palik"

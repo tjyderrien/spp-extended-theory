@@ -44,113 +44,163 @@ def ExtractDataDb(SPPdbFiltered):
   SPPdecayLength = np.asfarray(SPPdecayLength)
   eps1r = np.asfarray(eps1r)
   eps1c = np.asfarray(eps1c)
-  eps1r = np.asfarray(eps2r)
+  eps2r = np.asfarray(eps2r)
   eps2c = np.asfarray(eps2c)
 
   return Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c
 
+def plotDatabasePeriod(database, legend, outputfile): 
+  """plot period of SPP at various interfaces contained in a database
+  """
+  # Extract the data for 800 nm
+  Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c = ExtractDataDb(database)
+  
+  # CLean the first field
+  Material2clean = CleanStrArray(Material2)
+  
+  # Prepare plot with arrows and text (but single wavelength)
+  makePlot(eps2r, SPPperiod, Material2clean, outputfile, query, r'$Re(\varepsilon)$', 'Period (nm)', legend, 'r')
+
+  return 0
+
+
+EpsilonToIndex = np.vectorize(EpsilonToIndex)
+EffectiveIndex = np.vectorize(EffectiveIndex)
+
+def Swap(eps1, eps2):
+  eps3 = eps1
+  eps1 = eps2
+  eps2 = eps3
+  del eps3
+  return(eps1, eps2) 
+
+Swap = np.vectorize(Swap)
+
+def plotSeveralWavelengths(database1, database2, reverse, metal):
+  """
+  Plot period as function of materials for two wavelengths
+  """
+  # Extract data for 800 nm
+  Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c = ExtractDataDb(database1)
+  
+  if(reverse): #swap eps1 and eps2
+    Material2, Material1, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth2, SPPdecayDepth1, Reflectivity, OpticalPenetration2, OpticalPenetration1, SPPdecayLength, eps2r, eps2c, eps1r, eps1c = ExtractDataDb(database1)
+  else: 
+    Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c = ExtractDataDb(database1)
+    
+  # Calculation of refractive index
+  eps1r=np.asfarray(eps1r)
+  eps1c=np.asfarray(eps1c)
+  eps2r=np.asfarray(eps2r)
+  eps2c=np.asfarray(eps2c)
+
+  epsilon1 = np.add(eps1r,np.multiply(1e0j, eps1c))
+  epsilon2 = np.add(eps2r,np.multiply(1e0j, eps2c))
+  
+  if(not metal): 
+    refractiveindex1 = EpsilonToIndex(epsilon1)
+  else: 
+    refractiveindex1 = EpsilonToIndex(epsilon2)
+    
+  Radiation1=Wavelength/refractiveindex1.real
+  Radiation1=np.sort(Radiation1)
+
+  fig1=plt.figure()
+  plt.xlabel(r'Dielectric permittivity: $\mathcal{R}e(\varepsilon_2)$')
+  plt.ylabel('SPP period $\Lambda$ (nm)')
+  plt.plot(eps2r, SPPperiod, 'or', label='800 nm', markersize=8)
+  plt.plot(np.sort(eps2r), Radiation1[::-1], 'r-')
+
+  # Extract (again) for 400 nm
+  
+  if(reverse): #swap eps1 and eps2
+    Material2, Material1, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth2, SPPdecayDepth1, Reflectivity, OpticalPenetration2, OpticalPenetration1, SPPdecayLength, eps2r, eps2c, eps1r, eps1c = ExtractDataDb(database2)
+  else: 
+    Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c = ExtractDataDb(database2)
+  
+  # Calculation of refractive index
+  eps1r=np.asfarray(eps1r)
+  eps1c=np.asfarray(eps1c)
+  eps2r=np.asfarray(eps2r)
+  eps2c=np.asfarray(eps2c)
+
+  epsilon1 = np.add(eps1r,np.multiply(1e0j, eps1c))
+  epsilon2 = np.add(eps2r,np.multiply(1e0j, eps2c))
+
+  if(not metal): 
+    refractiveindex1 = EpsilonToIndex(epsilon1)
+  else: 
+    refractiveindex1 = EpsilonToIndex(epsilon2)
+    
+  Radiation1=Wavelength/refractiveindex1
+  Radiation1=np.sort(Radiation1)
+
+  #plt.figure()
+  plt.plot(eps2r, SPPperiod, 'bs', label='400 nm', markersize=8)
+  plt.plot(np.sort(eps2r), Radiation1[::-1], 'b-')
+
+  #print eps1r
+  if(metal):
+    plt.axis([0,40,0,900]) ##KEEP 900 please
+  else:
+    plt.axis([-70,0,0,900]) ##KEEP 900 please
+  plt.axis()
+  plt.yticks([0,200,400,600,800])
+  #plt.axis([0,35,0,1000])
+  if(not metal): 
+    plt.legend(loc=4)
+  else: 
+    plt.legend(loc=1)
+  #plt.title(query)
+  plt.grid()
+  
+  if(not metal): 
+    #a = plt.axes([-70,300,-40,700], axisbg='g')
+    #a = plt.axes([0.2,0.17,0.35,0.35], axisbg='w') #Good for SiO2
+    a = plt.axes([0.2,0.2,0.35,0.35], axisbg='w') #Good for Air
+
+    plt.xticks([-6,-4,-2,0])
+    #plt.axis([-6,0,250,290]) #Good for SiO2
+    plt.axis([-6,0,380,410]) #Good for Air
+    #plt.yticks([250,270,290]) #Good for SiO2
+    plt.yticks([380,390,400,410]) #Good for Air
+    plt.grid()
+    plt.plot(eps2r, SPPperiod, 'bs', markersize=8)
+    plt.plot(np.sort(eps2r), Radiation1[::-1], 'b-')
+    #plt.title('Zoom')
+    #plt.xticks([])
+    #plt.yticks([])
+
+  plt.savefig('MultiMaterial_PeriodSPP.eps')
+  plt.show()
+  return 0
+
+# =======================================================
+
+## Choosing for which material 
+#query = 'Air'
+#query = 'Au (Johnson 1972)'
+query = 'Au (Palik)'
+#query = 'Ti (Palik)'
+#query= 'SiC (Palik?)'
+#query = 'TiO2 (Devore 1951, e)'
+#query = 'SiO2 (Malitson 1965)'
 
 # Make the database
 SPPdb = GenerateDatabase()
 print "SPP database has "+str(len(SPPdb))+" entries."
 
-# How to filter database ? 
-
-
-## Choosing for which material 
-#query = 'Air'
-#query = 'Au (Johnson 1972)'
-#query = 'Au (Palik)'
-#query = 'Ti (Palik)'
-#query='SiC (Palik?)'
-#query = 'TiO2 (Devore 1951, e)'
-query = 'SiO2 (Malitson 1965)'
 SPPdb = FilterDatabase(SPPdb, query, 0)
+
 SPPdb800 = FilterDatabase(SPPdb, '800.0', 2)
 SPPdb400 = FilterDatabase(SPPdb, '400.0', 2)
 
-print SPPdb800
+plotDatabasePeriod(SPPdb800, '800 nm', 'SPPperiodEnhanced800nm.eps')
+plotDatabasePeriod(SPPdb400, '400 nm', 'SPPperiodEnhanced400nm.eps')
 
-# PLOT 1: 
-# Extract the data for 800 nm
-Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c = ExtractDataDb(SPPdb800)
-
-# CLean the first field
-Material2clean = CleanStrArray(Material2)
-
-# Prepare plot with arrows and text (but single wavelength)
-makePlot(eps1r, SPPperiod, Material2clean, 'SPPperiodEnhanced800nm.eps', query, r'$Re(\varepsilon)$', 'Period (nm)', '800 nm', 'r')
-
-# PLOT 2: 
-# Extract data for 400 nm
-
-# Prepare plot with arrow and text (for 400 nm wavelength)
-Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c = ExtractDataDb(SPPdb400)
-# Clean the first field
-Material2clean = CleanStrArray(Material2)
-# make the plot2
-makePlot(eps1r, SPPperiod, Material2clean, 'SPPperiodEnhanced400nm.eps', query, r'$Re(\varepsilon)$', 'Period (nm)', '400 nm', 'b')
-
-
-###========================================================
-##Plot period as function of materials for two wavelengths
-
-# Extract (again) for 800 nm
-Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c = ExtractDataDb(SPPdb800)
-
-# Calculation of effective refractive index: use vectorized function
-#epsilon1 = np.add(eps1r,np.multiply(1e0j, eps1c))
-#EpsilonToIndex = np.vectorize(EpsilonToIndex)
-#refractiveindex1 = EpsilonToIndex(epsilon1)
-#Radiation1=Wavelength/refractiveindex1.real
-#Radiation1=np.sort(Radiation1)
-
-fig1=plt.figure()
-plt.xlabel(r'$\mathcal{R}e(\varepsilon)$')
-plt.ylabel('Period (nm)')
-plt.plot(eps1r, SPPperiod, 'or', label='800 nm', markersize=8)
-#plt.plot(np.sort(eps1r), Radiation1[::-1], 'r-', label=r'800 nm, $\lambda / n_1^{*}$')
-
-# Extract (again) for 400 nm
-Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c = ExtractDataDb(SPPdb400)
-
-# Calculation of effective refractive index: use vectorized function
-#epsilon1 = np.add(eps1r,np.multiply(1e0j, eps1c))
-#epsilon2 = np.add(eps2r,np.multiply(1e0j, eps2c))
-#epsiloneff=np.divide(np.multiply(epsilon1, epsilon2), np.add(epsilon1, epsilon2))
-
-#EpsilonToIndex = np.vectorize(EpsilonToIndex)
-#EffectiveIndex = np.vectorize(EffectiveIndex)
-
-#refractiveindex1 = EpsilonToIndex(epsilon1)
-#Radiation1=Wavelength/refractiveindex1
-#Radiation1=np.sort(Radiation1)
-
-#plt.figure()
-plt.plot(eps1r, SPPperiod, 'bs', label='400 nm', markersize=8)
-#plt.plot(np.sort(eps1r), Radiation1[::-1], 'b-', label=r'400 nm, $\lambda / n_1^{*}$')
-
-#print eps1r
-
-plt.axis([-70,0,0,600])
-#plt.axis([0,35,0,1000])
-plt.legend(loc=4)
-plt.title(query)
-plt.grid()
-
-#a = plt.axes([-70,300,-40,700], axisbg='g')
-a = plt.axes([0.2,0.2,0.35,0.35], axisbg='w')
-plt.axis([-6,0,250,290])
-plt.xticks([-6,-4,-2,0])
-plt.yticks([250,270,290])
-plt.grid()
-plt.plot(eps1r, SPPperiod, 'bs', markersize=8)
-#plt.title('Zoom')
-#plt.xticks([])
-#plt.yticks([])
-
-plt.savefig('MultiMaterial_PeriodSPP.eps')
-plt.show()
+reverse = False #reverse eps1 and eps2 for plotting
+metal = True
+plotSeveralWavelengths(SPPdb800, SPPdb400, reverse, metal)
 
 ### This was another possibility
 # Load the data file

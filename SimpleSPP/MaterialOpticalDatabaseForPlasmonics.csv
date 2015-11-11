@@ -77,8 +77,10 @@ Si (Aspnes 1983)	1.12	532	17.2364	0.43004	?	?	?	?	28.0855
 Si (Aspnes 1983)	1.12	343	18.8384	31.6251	?	?	?	?	?
 Si (Aspnes 1983)	1.12	400	30.8469	4.2994	?	?	?	?	?
 ZnO (Bond 1965, o)	3.37	800	3.83807	0.0000	Anisotropic	?	?	?	?
+ZnO (Bond 1965, o)	3.37	400	3.83807	0.0000	Anisotropic	?	?	?	?
 ZnO (Bond 1965, o)	3.37	1030	3.77019889	0.0000	Anisotropic	?	?	?	?
-ZnO (?)	3.37	400	3.83807	0.0000	Anisotropic	?	?	?	?
+ZnO (Postava 2000)	3.37	400	5.107344	0.07232	Anisotropic	?	?	?	?
+ZnO (Postava 2000)	3.37	800	3.8025	0.00000	Anisotropic	?	?	?	?
 a-C (Hagemann 1974)	3.5	800	3.1988	3.1627	?	?	?	?	?
 a-C (Hagemann 1974)	3.5	400	2.5727	2.3640	?	?	?	?	?
 Graphite (Djurisic 1999, o)	1000	800	6.0825	10.673	?	?	?	?	?

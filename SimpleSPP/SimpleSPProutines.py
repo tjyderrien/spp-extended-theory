@@ -219,7 +219,7 @@ def SPPactiveInterfaces(dbarray, comment):
         
         # Print the table of active SPP interfaces for all cases or only new SPP interfaces					
         #if( not (comment=="new")): 
-        if(ExperimentalAchievable and (SPPperiod!=0)):
+        if(ExperimentalAchievable or (SPPperiod!=0)):
           counter=counter+1
           SPParray = np.vstack((SPParray, [Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1.real, eps1.imag, eps2.real, eps2.imag]))
   return SPParray

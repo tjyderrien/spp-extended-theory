@@ -9,9 +9,14 @@ from SimpleSPProutines import *
 #MaterialFolder="/usr/local/share/gsvit/data/spectra"
 MaterialFolder="Database"
 
-MaterialFile1="Air"
+#MaterialFile1="Si-Aspnes"
+#MaterialFile1="Si-Aspnes"
+MaterialFile1="SiC-Palik"
 #MaterialFile2="Ag-Johnson"
 MaterialFile2="Ti-Johnson"
+
+UnitMat1=1e10
+UnitMat2=1e6
 
 # Loading Material dielectric complex permittivity into arrays
 MaterialArray2 = loadtxt(MaterialFolder+'/'+MaterialFile2, delimiter=' ', skiprows=4)
@@ -35,14 +40,14 @@ except:
 
 # Let's build eps1 and eps2
 wavelengths1=MaterialArray1[:,0]
-wavelengths1=np.multiply(wavelengths1,1e-6) #converting wavelength to emters
+wavelengths1=np.multiply(wavelengths1,UnitMat1**(-1)) #converting wavelength to emters
 n=MaterialArray1[:,1]; k=MaterialArray1[:,2]
 eps1=np.power(np.add(n,np.multiply(1j, k)),2) #conversion to epsilon
 del n, k
 #print wavelengths1
 
 wavelengths2=MaterialArray2[:,0]
-wavelengths2=np.multiply(wavelengths2,1e-6) #converting wavelength to meters
+wavelengths2=np.multiply(wavelengths2,UnitMat2**(-1)) #converting wavelength to meters
 n=MaterialArray2[:,1]; k=MaterialArray2[:,2]
 eps2=np.power(np.add(n,np.multiply(1j, k)),2)
 del n, k
@@ -54,7 +59,7 @@ print "Wavelength mesh size 2="+str(eps2.size)
 
 # dense mesh generation
 wavelengths = np.arange(np.amin(wavelengths2),np.amax(wavelengths2),1e-9)
-order=3
+order=1
 feps1r=InterpolatedUnivariateSpline(wavelengths1, eps1.real, k=order)
 feps1i=InterpolatedUnivariateSpline(wavelengths1, eps1.imag, k=order)
 feps2r=InterpolatedUnivariateSpline(wavelengths2, eps2.real, k=order)
@@ -69,15 +74,15 @@ eps2new=np.add(feps2r(wavelengths),np.multiply(1.0j, feps2i(wavelengths)))
 plt.figure()
 plt.xlabel('Wavelength (nm)')
 plt.ylabel('epsilon')
-plt.plot(1e9*wavelengths1, eps1.real, '+', label='Re('+MaterialFile1+')')
-plt.plot(1e9*wavelengths, eps1new.real, '-', label='interp $Re('+MaterialFile1+')$')
-plt.plot(1e9*wavelengths1, eps1.imag, '+', label='Im('+MaterialFile1+')')
-plt.plot(1e9*wavelengths, eps1new.imag, '-', label='interp $Im('+MaterialFile1+')$')
-plt.plot(1e9*wavelengths2, eps2.real, '+', label='Re('+MaterialFile2+')')
-plt.plot(1e9*wavelengths, eps2new.real, '-', label='interp $Re('+MaterialFile2+')$')
-plt.plot(1e9*wavelengths2, eps2.imag, '+', label='Im('+MaterialFile2+')')
-plt.plot(1e9*wavelengths, eps2new.imag, '-', label='interp $Im('+MaterialFile2+')$')
-plt.legend(loc=2)
+plt.semilogx(1e9*wavelengths1, eps1.real, '+', label='Re('+MaterialFile1+')')
+plt.semilogx(1e9*wavelengths, eps1new.real, '-', label='interp $Re('+MaterialFile1+')$')
+plt.semilogx(1e9*wavelengths1, eps1.imag, '+', label='Im('+MaterialFile1+')')
+plt.semilogx(1e9*wavelengths, eps1new.imag, '-', label='interp $Im('+MaterialFile1+')$')
+plt.semilogx(1e9*wavelengths2, eps2.real, '+', label='Re('+MaterialFile2+')')
+plt.semilogx(1e9*wavelengths, eps2new.real, '-', label='interp $Re('+MaterialFile2+')$')
+plt.semilogx(1e9*wavelengths2, eps2.imag, '+', label='Im('+MaterialFile2+')')
+plt.semilogx(1e9*wavelengths, eps2new.imag, '-', label='interp $Im('+MaterialFile2+')$')
+#plt.legend(loc=2)
 plt.title('Dielectric permittivity')
 plt.savefig('epsilon.png')
 
@@ -141,6 +146,12 @@ plt.savefig('Velocities.eps')
 ## Now we can calculate SPP lifetime
 LifeTimeOld = LifeTimeRaether(kspp[1:], eps1new[1:], eps2new[1:])
 LifeTimeNew = LifeTimeDerrien(kspp[1:], SPPgroupVelocity.real)
+
+# Let's clip Lifetime where they are negative. 
+LifeTimeOld = np.clip(LifeTimeOld, 0, 1)
+LifeTimeNew = np.clip(LifeTimeNew, 0, 1)
+
+# Plotting the graphs
 
 plt.figure()
 plt.xlabel('Wavelength $\lambda$ (nm)')

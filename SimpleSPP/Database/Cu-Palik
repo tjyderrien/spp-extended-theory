@@ -1,7 +1,7 @@
-; Optical constants for Cu
-; 'Handbook of Optical Constants of Solids', Ed. by Edward D. Palik,
-; Academic Press, Inc., 1985.
-; Lambda (A) n k
+# Optical constants for Cu
+# 'Handbook of Optical Constants of Solids', Ed. by Edward D. Palik,
+# Academic Press, Inc., 1985.
+# Lambda (A) n k
 1.37756	1.00100	3.65000e-07
 1.39303	1.00100	3.56000e-07
 1.54975	1.00100	5.38000e-07

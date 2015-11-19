@@ -63,7 +63,6 @@ def plotDatabasePeriod(database, legend, outputfile):
 
   return 0
 
-
 EpsilonToIndex = np.vectorize(EpsilonToIndex)
 EffectiveIndex = np.vectorize(EffectiveIndex)
 
@@ -178,9 +177,9 @@ def plotSeveralWavelengths(database1, database2, reverse, metal):
 # =======================================================
 
 ## Choosing for which material 
-#query = 'Air'
+query = 'Air'
 #query = 'Au (Johnson 1972)'
-query = 'Au (Palik)'
+#query = 'Au (Palik)'
 #query = 'Ti (Palik)'
 #query= 'SiC (Palik?)'
 #query = 'TiO2 (Devore 1951, e)'
@@ -190,23 +189,41 @@ query = 'Au (Palik)'
 SPPdb = GenerateDatabase()
 print "SPP database has "+str(len(SPPdb))+" entries."
 
+print "Full Database:"
+print SPPdb
+
+# Select the material of interface 1
 SPPdb = FilterDatabase(SPPdb, query, 0)
+print "Filter on materials: SPP database has now "+str(len(SPPdb))+" entries."
+#print "Filtering Material 1"
+#print SPPdb
+
+SPPdb1030 = FilterDatabase(SPPdb, '1030.0', 2)
+print "Filter on wavelength: SPP database 1030 nm has "+str(len(SPPdb1030))+" entries."
 
 SPPdb800 = FilterDatabase(SPPdb, '800.0', 2)
-SPPdb400 = FilterDatabase(SPPdb, '400.0', 2)
+print "Filter on wavelength: SPP database 800 nm has "+str(len(SPPdb800))+" entries."
 
+SPPdb400 = FilterDatabase(SPPdb, '400.0', 2)
+print "Filter on wavelength: SPP database 400 nm has "+str(len(SPPdb400))+" entries."
+
+plotDatabasePeriod(SPPdb1030, '1030 nm', 'SPPperiodEnhanced1030nm.eps')
 plotDatabasePeriod(SPPdb800, '800 nm', 'SPPperiodEnhanced800nm.eps')
 plotDatabasePeriod(SPPdb400, '400 nm', 'SPPperiodEnhanced400nm.eps')
 
 reverse = False #reverse eps1 and eps2 for plotting
-metal = True
+metal = False
 plotSeveralWavelengths(SPPdb800, SPPdb400, reverse, metal)
 
-### This was another possibility
-# Load the data file
-#datafile = "SPPactiveInterfaces.dat"
+## Plot the database materials of 800 nm
+Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c = ExtractDataDb(SPPdb800)
 
-# Build vectors from this datafile
-#SPParray = loadtxt(datafile, delimiter='\t', skiprows=1)
+#print eps2r.shape, eps2c.shape
 
-# 
+plt.figure()
+plt.title('Materials of database at 800 nm')
+plt.xlabel(r'$Re (\epsilon)$')
+plt.ylabel(r'$Im (\epsilon)$')
+plt.plot(eps2r, eps2c, 'rs')
+plt.show()
+plt.savefig('Database.eps')

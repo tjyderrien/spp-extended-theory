@@ -34,19 +34,23 @@ def betaSPP(wavelength, eps1, eps2):
   return omega/c * cmath.sqrt(eps1 * eps2 / (eps1 + eps2))
   
 def AsymmetricSPPconditionPos(eps1, eps2):
-	""" Assume that Re(k1).Re(k2) < 0 and verify the subsequent consequences alltogether.
-	It exists then two sub-modes, let's say a positive one (k1<0, k2>0), and a negative one (k1>0, k2<0)
+	""" Assume that Re(k1).Re(k2) > 0 and verify the subsequent consequences alltogether.
+	It exists then two sub-modes, let's say a positive one (Im k1<0, Im k2>0), and a negative one (Im k1>0, Im k2<0)
+	This routine is about: Im(k1)>0, Im(k2)<0
 	"""
-	value = eps1/eps2
+	#value = eps1/eps2
+	value = eps1.imag * eps2.real - eps1.real * eps2.imag
 	condition = (value.imag < 0e0)
 	#condition = (eps1.imag / eps2.imag * eps2.real < eps1.real)
 	return condition
 
 def AsymmetricSPPconditionNeg(eps1, eps2):
-	""" Assume that Re(k1).Re(k2) < 0 and verify the subsequent consequences alltogether.
-	It exists then two sub-modes, let's say a positive one (k1<0, k2>0), and a negative one (k1>0, k2<0)
+	""" Assume that Re(k1).Re(k2) > 0 and verify the subsequent consequences alltogether.
+	It exists then two sub-modes, let's say a positive one (Im k1<0, Im k2>0), and a negative one (Im k1>0, Im k2<0)
+	This routine is about: Im(k1)<0, Im(k2)>0
 	"""
-	value = eps1/eps2
+	#value = eps1/eps2
+	value = eps1.imag * eps2.real - eps1.real * eps2.imag
 	condition = (value.imag > 0e0)
 	#condition = (eps1.imag / eps2.imag * eps2.real < eps1.real)
 	return condition
@@ -139,6 +143,7 @@ def ExperimentallyAchievable(OpticalPenetrationDepth, DecayDepth):
 
 def SPPactiveInterfaces(dbarray, comment):
   """Print all the SPP-active interfaces available in database
+  CONSIDERS ONLY SYMMETRIC CASES
   If comment=="new", old SPP-active interfaces are removed from the table
   """
   counter=0
@@ -146,7 +151,7 @@ def SPPactiveInterfaces(dbarray, comment):
   #sizeDatabase = len(dbarray)
   #sizeOfArray = sizeDatabase**2
   #print sizeOfArray	
-  SPParray = np.empty((0,16)) #, dtype='|S30')
+  SPParray = np.empty((0,18)) #, dtype='|S30')
   
   # double loop to test all configurations (brute-forcing...)
   for i in dbarray:
@@ -205,23 +210,27 @@ def SPPactiveInterfaces(dbarray, comment):
 	        SPPdecayDepth1=(DecayDepth(kzSPP(wavelength1, eps1, eps2))/lengthunit)
 	        SPPdecayDepth2=(DecayDepth(kzSPP(wavelength2, eps2, eps1))/lengthunit)
 	        SPPdecayLength=DecayLengthSPP(betaSPP(wavelength1,eps1, eps2))/lengthunit
+	        SPPdepthImagk1 = kzSPP(wavelength1, eps1, eps2).imag
+	        SPPdepthImagk2 = kzSPP(wavelength2, eps2, eps1).imag
         else: 
 	        SPPperiod=0
 	        SPPdecayDepth1=0
 	        SPPdecayDepth2=0
 	        SPPdecayLength=0
+	        SPPdepthImagk1=0
+	        SPPdepthImagk2=0
         
         Reflectivity=(reflectivity(eps1, eps2))
         
         # Print only the experimentally possible cases: SPP active depth must be smaller than absorption depth. 
         # ensure that SPPdecayDepth is smaller than layer thickness, to avoid shift of dispersion relation
-        ExperimentalAchievable = ExperimentallyAchievable(OpticalPenetration1, SPPdecayDepth1)
+        ExperimentalAchievable = True; #ExperimentallyAchievable(OpticalPenetration1, SPPdecayDepth1)
         
         # Print the table of active SPP interfaces for all cases or only new SPP interfaces					
         #if( not (comment=="new")): 
         if(ExperimentalAchievable and (SPPperiod!=0)):
           counter=counter+1
-          SPParray = np.vstack((SPParray, [Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1.real, eps1.imag, eps2.real, eps2.imag]))
+          SPParray = np.vstack((SPParray, [Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1.real, eps1.imag, eps2.real, eps2.imag, SPPdepthImagk1, SPPdepthImagk2]))
   return SPParray
 
 def AsymmetricSPPposActiveInterfaces(dbarray, comment):

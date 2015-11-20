@@ -31,7 +31,8 @@ def ExtractDataDb(SPPdbFiltered):
   OldSPPactiveBool = SPPdbFiltered[:,3]; NewSPPactiveBool = SPPdbFiltered[:,4]; 
   SPPperiod = SPPdbFiltered[:,5]; SPPdecayDepth1 = SPPdbFiltered[:,6]; SPPdecayDepth2 = SPPdbFiltered[:,7]; 
   Reflectivity = SPPdbFiltered[:, 8]; OpticalPenetration1 = SPPdbFiltered[:,9]; OpticalPenetration2 = SPPdbFiltered[:,10]; SPPdecayLength = SPPdbFiltered[:,11]
-  eps1r = SPPdbFiltered[:, 12]; eps1c = SPPdbFiltered[:,13]; eps2r = SPPdbFiltered[:,14]; eps2c = SPPdbFiltered[:,15]
+  eps1r = SPPdbFiltered[:, 12]; eps1c = SPPdbFiltered[:,13]; eps2r = SPPdbFiltered[:,14]; eps2c = SPPdbFiltered[:,15]; k1imag = SPPdbFiltered[:,16]; 
+  k2imag = SPPdbFiltered[:,17]
   
   #Converts strings to floats
   Wavelength = np.asfarray(Wavelength)
@@ -46,14 +47,16 @@ def ExtractDataDb(SPPdbFiltered):
   eps1c = np.asfarray(eps1c)
   eps2r = np.asfarray(eps2r)
   eps2c = np.asfarray(eps2c)
+  k1imag = np.asfarray(k1imag)
+  k2imag = np.asfarray(k2imag)
 
-  return Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c
+  return Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, k1imag, k2imag
 
 def plotDatabasePeriod(database, legend, outputfile): 
   """plot period of SPP at various interfaces contained in a database
   """
   # Extract the data for 800 nm
-  Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c = ExtractDataDb(database)
+  Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, k1imag, k2imag = ExtractDataDb(database)
   
   # CLean the first field
   Material2clean = CleanStrArray(Material2)
@@ -81,12 +84,12 @@ def plotSeveralWavelengths(database1, database2, reverse, metal):
   Plot period as function of materials for two wavelengths
   """
   # Extract data for 800 nm
-  Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c = ExtractDataDb(database1)
+  Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, k1imag, k2imag = ExtractDataDb(database1)
   
   if(reverse): #swap eps1 and eps2
-    Material2, Material1, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth2, SPPdecayDepth1, Reflectivity, OpticalPenetration2, OpticalPenetration1, SPPdecayLength, eps2r, eps2c, eps1r, eps1c = ExtractDataDb(database1)
+    Material2, Material1, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth2, SPPdecayDepth1, Reflectivity, OpticalPenetration2, OpticalPenetration1, SPPdecayLength, eps2r, eps2c, eps1r, eps1c, k2imag, k1imag = ExtractDataDb(database1)
   else: 
-    Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c = ExtractDataDb(database1)
+    Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, k1imag, k2imag = ExtractDataDb(database1)
     
   # Calculation of refractive index
   eps1r=np.asfarray(eps1r)
@@ -114,9 +117,9 @@ def plotSeveralWavelengths(database1, database2, reverse, metal):
   # Extract (again) for 400 nm
   
   if(reverse): #swap eps1 and eps2
-    Material2, Material1, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth2, SPPdecayDepth1, Reflectivity, OpticalPenetration2, OpticalPenetration1, SPPdecayLength, eps2r, eps2c, eps1r, eps1c = ExtractDataDb(database2)
+    Material2, Material1, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth2, SPPdecayDepth1, Reflectivity, OpticalPenetration2, OpticalPenetration1, SPPdecayLength, eps2r, eps2c, eps1r, eps1c, k2imag, k1imag = ExtractDataDb(database2)
   else: 
-    Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c = ExtractDataDb(database2)
+    Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, k1imag, k2imag = ExtractDataDb(database2)
   
   # Calculation of refractive index
   eps1r=np.asfarray(eps1r)
@@ -178,9 +181,9 @@ def plotSeveralWavelengths(database1, database2, reverse, metal):
 # =======================================================
 
 ## Choosing for which material 
-#query = 'Air'
+query = 'Air'
 #query = 'Au (Johnson 1972)'
-query = 'Au (Palik)'
+#query = 'Au (Palik)'
 #query = 'Ti (Palik)'
 #query= 'SiC (Palik?)'
 #query = 'TiO2 (Devore 1951, e)'
@@ -199,14 +202,10 @@ plotDatabasePeriod(SPPdb800, '800 nm', 'SPPperiodEnhanced800nm.eps')
 plotDatabasePeriod(SPPdb400, '400 nm', 'SPPperiodEnhanced400nm.eps')
 
 reverse = False #reverse eps1 and eps2 for plotting
-metal = True
+metal = False
 plotSeveralWavelengths(SPPdb800, SPPdb400, reverse, metal)
 
-### This was another possibility
-# Load the data file
-#datafile = "SPPactiveInterfaces.dat"
+# ================== Check the k1imag, k2imag signs...
+Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, k1imag, k2imag = ExtractDataDb(SPPdb800)
 
-# Build vectors from this datafile
-#SPParray = loadtxt(datafile, delimiter='\t', skiprows=1)
-
-# 
+print k1imag, k2imag

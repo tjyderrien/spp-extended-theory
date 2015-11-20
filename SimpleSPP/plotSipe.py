@@ -17,7 +17,7 @@ def R(eps):
 
 
 def gammaz(epsilon, f, s):
-	return 0.25*(epsilon-1e0)/pi/(epsilon-(1-f)*(epsilon-1)*(F(s)+R*G(s)))
+	return 0.25*(epsilon-1e0)/pi/(epsilon-(1-f)*(epsilon-1)*(F(s)+R(epsilon)*G(s)))
 
 def gammat(epsilon, f, s):
 	return 0.25*(epsilon-1e0)/pi/(1e0+0.5e0*(1e0-f)*(epsilon-1)*(F(s)+R(epsilon)*G(s)))
@@ -99,14 +99,8 @@ epsilon = 12.80259+0.00109j
 #kappax = np.arange(0, 4, 0.1)
 #kappay = np.arange(0, 4, 0.1)
 #kappa = np.array([wavelength * 1, wavelength * 0]); #test values
-kappax = 4 ; kappay = 0; #test values
+kappax = 4 ; kappay = 0*kappax; #test values
 
-## Defining simple quantities for Sipe model
-kappa = np.array([kappax, kappay, 0])
-kappai = np.array([-cmath.sin(theta), 0, 0])
-kappap = kappai + kappa; kappam = kappai - kappa
-
-print "kappax = "+str(kappax)
 
 #G = np.vectorize(G)
 #F = np.vectorize(F)
@@ -136,10 +130,22 @@ print "kappax = "+str(kappax)
 #etas = np.vectorize(etas)
 #etap = np.vectorize(etap)
 
-for kappax in meshkappa:
-	etaresult = etas(theta, f, s, epsilon, kappa, kappap, kappam)
+#for kappax in meshkappa:
 
-print "eta = "+str(etaresult)
+ftab = np.arange(0, 1, 0.1)
+kapparange = np.arange(0.1,4,0.1)
+#for wavelength in wavelengths
+#for f in ftab:
+for kappax in kapparange:
+  
+  ## Defining simple quantities for Sipe model
+  kappa = np.array([kappax, kappay])
+  kappai = np.array([-cmath.sin(theta), 0])
+  kappap = kappai + kappa; kappam = kappai - kappa
+
+  print "kappax = "+str(kappax)
+  etaresult = etas(theta, f, s, epsilon, kappa, kappap, kappam)
+  print "eta = "+str(etaresult)
 
 
 

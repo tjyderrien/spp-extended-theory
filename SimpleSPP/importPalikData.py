@@ -60,7 +60,7 @@ def importFromPalikGraph(folder, filename):
   return 0
   #plt.show()
 
-def importFromTables(folder, filename):
+def importFromTables(wavelength, folder, filename):
   # interpolate palik data from tables of Palik
 
   # Fetch data
@@ -74,7 +74,7 @@ def importFromTables(folder, filename):
   fki = InterpolatedUnivariateSpline(wavelengths, kk, k=order)
 
   #Interpolated one optical constants
-  wavelength = 1030e-9
+  #wavelength = 1030e-9
   ni = fni(wavelength); ki = fki(wavelength)
   epsilon = (ni+1j*ki)**2
   print "Interpolated permittivity at "+str(wavelength*1e9)+" nm = "+str(epsilon)
@@ -83,7 +83,7 @@ def importFromTables(folder, filename):
   nimesh = fni(wavelengths); kimesh = fki(wavelengths)
 
   plt.figure()
-  plt.xlabel(r'$\mathcal{R}e(\varepsilon)$ (nm)')
+  plt.xlabel(r'$\lambda$ (nm)')
   plt.ylabel('n, k')
   plt.semilogx(1e9*wavelengths, n, 'bs', label='n Palik')
   plt.semilogx(1e9*wavelengths, kk, 'rs', label='k Palik')
@@ -96,10 +96,14 @@ def importFromTables(folder, filename):
 
 
 folder = "Database/"
-filename = "Cu-Palik"
+filename = "Pt-Palik"
 
 #folder = "Database/PalikGraph/"
 #filename = "Ti-Palik"
-
-importFromTables(folder, filename)
+#print "Lambda = 1064 nm"
+#print "Lambda = 1030 nm"
+print "Lambda = 800 nm"
+importFromTables(800e-9, folder, filename)
+print "Lambda = 400 nm"
+importFromTables(400e-9, folder, filename)
 #importFromPalikGraph(folder, filename)

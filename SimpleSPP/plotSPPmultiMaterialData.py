@@ -5,6 +5,8 @@
 from SimpleSPProutines import *
 from advancedPlotting import *
 
+from matplotlib.ticker import MaxNLocator
+
 #from makeTable import *
 
 def FilterDatabase(SPPdb, query, FieldIndex):
@@ -212,28 +214,69 @@ print "Filter on wavelength: SPP database 800 nm has "+str(len(SPPdb800))+" entr
 SPPdb400 = FilterDatabase(SPPdb, '400.0', 2)
 print "Filter on wavelength: SPP database 400 nm has "+str(len(SPPdb400))+" entries."
 
-plotDatabasePeriod(SPPdb1030, '1030 nm', 'SPPperiodEnhanced1030nm.eps')
-plotDatabasePeriod(SPPdb800, '800 nm', 'SPPperiodEnhanced800nm.eps')
-plotDatabasePeriod(SPPdb400, '400 nm', 'SPPperiodEnhanced400nm.eps')
+#plotDatabasePeriod(SPPdb1030, '1030 nm', 'SPPperiodEnhanced1030nm.eps')
+#plotDatabasePeriod(SPPdb800, '800 nm', 'SPPperiodEnhanced800nm.eps')
+#plotDatabasePeriod(SPPdb400, '400 nm', 'SPPperiodEnhanced400nm.eps')
 
 reverse = False #reverse eps1 and eps2 for plotting
 metal = False
 plotSeveralWavelengths(SPPdb800, SPPdb400, reverse, metal)
 
 
-# ================== Check the k1imag, k2imag signs...
-Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, k1imag, k2imag = ExtractDataDb(SPPdb800)
+## ================== Check the k1imag, k2imag signs...
+#Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, k1imag, k2imag = ExtractDataDb(SPPdb800)
 
-print k1imag, k2imag
+#print k1imag, k2imag
 
-## Plot the database materials of 800 nm
+### Plot the database materials of 800 nm
 
-#print eps2r.shape, eps2c.shape
+##print eps2r.shape, eps2c.shape
+
+#plt.figure()
+#plt.title('Materials of database at 800 nm')
+#plt.xlabel(r'$Re (\epsilon)$')
+#plt.ylabel(r'$Im (\epsilon)$')
+#plt.plot(eps2r, eps2c, 'rs')
+#plt.show()
+#plt.savefig('Database.eps')
+
+# =============== Output 2D plot delta(periodSPP) [Re(eps), Im(eps)]
+print "Plot the uncertainty on period as function of dielectric permittivity"
+
+noise = 1E-2
+
+#Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, k1imag, k2imag = ExtractDataDb(SPPdb800)
+
+deltaBetaSPP = np.vectorize(deltaBetaSPP)
+deltaPeriodSPP = np.vectorize(deltaPeriodSPP)
+
+print deltaBetaSPP(800e-9, 1e0+0e0j, 1.1e0+1.1e0j, noise, noise, noise, noise)
+print deltaPeriodSPP(800e-9, 1e0+0e0j, 1.1e0+1.1e0j, noise, noise, noise, noise)
+
+precision = 1e-2
+
+print "Mesh generation..."
+epsr = np.arange(-2e0,1e0, precision)
+epsc = np.arange(0e0,1.5e0, precision)
+
+eps2r, eps2c = np.meshgrid(epsr, epsc)
+
+print "Calculating uncertainty on SPP period..."
+deltaPeriod = 1e9*(deltaPeriodSPP(800e-9, 1e0, eps2r+eps2c*1e0j, 0e0, 0e0, noise, noise))
+print "delta Period min = "+str(deltaPeriod.min())+", max = "+str(deltaPeriod.max())+"."
+#levels = MaxNLocator(nbins=15).tick_values(0e0, deltaPeriod.max())
+levels = [5, 10, 50, 100, 200, 300, 400, 500]
 
 plt.figure()
-plt.title('Materials of database at 800 nm')
-plt.xlabel(r'$Re (\epsilon)$')
-plt.ylabel(r'$Im (\epsilon)$')
-plt.plot(eps2r, eps2c, 'rs')
+CS = plt.contourf(eps2r, eps2c, deltaPeriod, levels=levels, cmap=plt.cm.Blues)
+plt.xlabel(r'$Re(\varepsilon)$')
+plt.ylabel(r'$Im(\varepsilon)$')
+
+#plt.clabel(CS, levels=levels, inline=False, fontsize=20)
+
+#plt.clabel(CS, inline=1, fontsize=20)
+#plt.legend(pos=1)
+plt.colorbar(CS)
 plt.show()
-plt.savefig('Database.eps')
+plt.savefig('deltaPeriod.eps')
+plt.savefig('deltaPeriod.png')

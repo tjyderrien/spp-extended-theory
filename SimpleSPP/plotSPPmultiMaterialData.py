@@ -214,9 +214,9 @@ print "Filter on wavelength: SPP database 800 nm has "+str(len(SPPdb800))+" entr
 SPPdb400 = FilterDatabase(SPPdb, '400.0', 2)
 print "Filter on wavelength: SPP database 400 nm has "+str(len(SPPdb400))+" entries."
 
-#plotDatabasePeriod(SPPdb1030, '1030 nm', 'SPPperiodEnhanced1030nm.eps')
-#plotDatabasePeriod(SPPdb800, '800 nm', 'SPPperiodEnhanced800nm.eps')
-#plotDatabasePeriod(SPPdb400, '400 nm', 'SPPperiodEnhanced400nm.eps')
+plotDatabasePeriod(SPPdb1030, '1030 nm', 'SPPperiodEnhanced1030nm.eps')
+plotDatabasePeriod(SPPdb800, '800 nm', 'SPPperiodEnhanced800nm.eps')
+plotDatabasePeriod(SPPdb400, '400 nm', 'SPPperiodEnhanced400nm.eps')
 
 reverse = False #reverse eps1 and eps2 for plotting
 metal = False
@@ -243,7 +243,7 @@ plotSeveralWavelengths(SPPdb800, SPPdb400, reverse, metal)
 # =============== Output 2D plot delta(periodSPP) [Re(eps), Im(eps)]
 print "Plot the uncertainty on period as function of dielectric permittivity"
 
-noise = 1E-2
+noise = 1e0
 
 #Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, k1imag, k2imag = ExtractDataDb(SPPdb800)
 
@@ -256,8 +256,8 @@ print deltaPeriodSPP(800e-9, 1e0+0e0j, 1.1e0+1.1e0j, noise, noise, noise, noise)
 precision = 1e-2
 
 print "Mesh generation..."
-epsr = np.arange(-2e0,1e0, precision)
-epsc = np.arange(0e0,1.5e0, precision)
+epsr = np.arange(-5e0,5e0, precision)
+epsc = np.arange(0e0,5e0, precision)
 
 eps2r, eps2c = np.meshgrid(epsr, epsc)
 

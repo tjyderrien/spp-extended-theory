@@ -96,7 +96,7 @@ def importFromTables(wavelength, folder, filename):
 
 
 folder = "Database/"
-filename = "Pt-Palik"
+filename = "TiO2-Palik"
 
 #folder = "Database/PalikGraph/"
 #filename = "Ti-Palik"

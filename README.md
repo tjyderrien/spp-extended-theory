@@ -12,11 +12,11 @@
 
 # Current users
 
-* Yoann Levy, FZU
+* Yoann Levy, Hilase/FZU, Prague, Czech Republic
 
-* Inam Mirza, FZU
+* Inam Mirza, Hilase/FZU, Prague, Czech Republic
 
-* Iaroslav Gnilitskyi
+* Iaroslav Gnilitskyi, UNIMORE, University of Modena, Italy
 
 # Financial supports
 

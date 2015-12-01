@@ -460,7 +460,7 @@ def SPPactiveInterfaces(dbarray, comment):
         
         # Print the table of active SPP interfaces for all cases or only new SPP interfaces					
         #if( not (comment=="new")): 
-        if(ExperimentalAchievable and (SPPperiod!=0)):
+        if(ExperimentalAchievable or (SPPperiod!=0)):
           counter=counter+1
           #print SPParray.shape
           SPParray = np.vstack((SPParray, [Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, 
@@ -541,7 +541,7 @@ def AsymmetricSPPposActiveInterfaces(dbarray, comment):
         
         # Print only the experimentally possible cases: SPP active depth must be smaller than absorption depth. 
         # ensure that SPPdecayDepth is smaller than layer thickness, to avoid shift of dispersion relation
-        ExperimentalAchievable = True #ExperimentallyAchievable(OpticalPenetration1, SPPdecayDepth1)
+        ExperimentalAchievable = ExperimentallyAchievable(OpticalPenetration1, SPPdecayDepth1)
         
         # Print the table of active SPP interfaces for all cases or only new SPP interfaces					
         #if( not (comment=="new")): 

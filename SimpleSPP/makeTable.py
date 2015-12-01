@@ -16,9 +16,13 @@ from SimpleSPProutines import *
 
 #print example
 
+print "Generating SPP database..."
 SPPdb = GenerateDatabase()
+
 SppOutput = 'SPPactiveInterfaces.dat'
+print "Exporting to "+SppOutput+"..."
 ExportToTxt(SPPdb, SppOutput)
+print "Exported. Please open file "+SppOutput+"."
 
 deltaBetaSPP = np.vectorize(deltaBetaSPP)
 deltaPeriodSPP = np.vectorize(deltaPeriodSPP)
@@ -27,23 +31,23 @@ deltaPeriodSPP = np.vectorize(deltaPeriodSPP)
 
 #eta = np.arange(1e-3, 1e0, 1e-3)
 
-wavelength = 1030e-9
-epsAir = 1+0j
-epsAu = -26.154188586+1.8503881331j
-epsTi = -4.2656+27.277j
-epsMo = -11.728+20.297j
-epsAl = -90.19+27.70j
+#wavelength = 1030e-9
+#epsAir = 1+0j
+#epsAu = -26.154188586+1.8503881331j
+#epsTi = -4.2656+27.277j
+#epsMo = -11.728+20.297j
+#epsAl = -90.19+27.70j
 
-eps1 = epsAir
-eps2 = epsAl
+#eps1 = epsAir
+#eps2 = epsAl
 
-DeltaPeriod = deltaPeriodSPP(wavelength, eps1, eps2, eta, eta, eta, eta)
-SPPperiod = period(betaSPP(wavelength, eps1, eps2))
-DeltaPeriodRel = DeltaPeriod / SPPperiod
+#DeltaPeriod = deltaPeriodSPP(wavelength, eps1, eps2, eta, eta, eta, eta)
+#SPPperiod = period(betaSPP(wavelength, eps1, eps2))
+#DeltaPeriodRel = DeltaPeriod / SPPperiod
 
-print "Wavelength (nm)"
-print "Precision on period: "+str(1e9*DeltaPeriod)+" nm"
-print "Relative precision on period "+str(100*DeltaPeriodRel)+"%"
+#print "Wavelength (nm)"
+#print "Precision on period: "+str(1e9*DeltaPeriod)+" nm"
+#print "Relative precision on period "+str(100*DeltaPeriodRel)+"%"
 
 #fig = plt.figure()
 #plt.title(r'Period uncertainty at $\lambda=$'+str(wavelength*1E9)+' nm')

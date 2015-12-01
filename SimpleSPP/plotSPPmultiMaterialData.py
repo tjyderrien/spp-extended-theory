@@ -183,7 +183,7 @@ def plotSeveralWavelengths(database1, database2, reverse, metal):
 
 # =======================================================
 
-## Choosing for which material 
+## Choose which material to select
 query = 'Air'
 #query = 'Au (Johnson 1972)'
 #query = 'Au (Palik)'
@@ -192,7 +192,7 @@ query = 'Air'
 #query = 'TiO2 (Devore 1951, e)'
 #query = 'SiO2 (Malitson 1965)'
 
-# Make the database
+## Generate the database
 SPPdb = GenerateDatabase()
 print "SPP database has "+str(len(SPPdb))+" entries."
 

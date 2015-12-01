@@ -9,9 +9,9 @@ from SimpleSPProutines import *
 #MaterialFolder="/usr/local/share/gsvit/data/spectra"
 MaterialFolder="Database"
 
-#MaterialFile1="Si-Aspnes"
-#MaterialFile1="Si-Aspnes"
-MaterialFile1="SiC-Palik"
+MaterialFile1="Air"
+MaterialFile1="Si-Aspnes"
+#MaterialFile1="Ti-Palik"
 #MaterialFile2="Ag-Johnson"
 MaterialFile2="Ti-Johnson"
 
@@ -153,11 +153,11 @@ LifeTimeNew = np.clip(LifeTimeNew, 0, 1)
 
 # Plotting the graphs
 
-plt.figure()
-plt.xlabel('Wavelength $\lambda$ (nm)')
-plt.ylabel(r'SPP lifetime $\tau_{SPP}$ (ps)')
-plt.semilogy(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeOld, 'b-', label=r'complex $\omega$, real $k_{SPP}$')
-plt.semilogy(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeNew, 'r-', label=r'real $\omega$, complex $k_{SPP}$')
-plt.title(MaterialFile1+'/'+MaterialFile2+' interface')
-plt.legend(loc=4)
-plt.savefig('Lifetime.eps')
+#plt.figure()
+#plt.xlabel('Wavelength $\lambda$ (nm)')
+#plt.ylabel(r'SPP lifetime $\tau_{SPP}$ (ps)')
+#plt.semilogy(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeOld, 'b-', label=r'complex $\omega$, real $k_{SPP}$')
+#plt.semilogy(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeNew, 'r-', label=r'real $\omega$, complex $k_{SPP}$')
+#plt.title(MaterialFile1+'/'+MaterialFile2+' interface')
+#plt.legend(loc=4)
+#plt.savefig('Lifetime.eps')

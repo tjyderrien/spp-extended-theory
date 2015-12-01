@@ -10,7 +10,7 @@
 
 * R. Garai, Hilase Centre FZU, AV CR : helped for some LIPSS databasing
 
-# Current users
+# Current collaborators
 
 * Yoann Levy, Hilase/FZU, Prague, Czech Republic
 

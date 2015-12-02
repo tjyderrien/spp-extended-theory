@@ -50,6 +50,7 @@ def makePlot(x_data, y_data, tags, filename, plottitle, labelx, labely, function
   plt.ylabel(labely)
   ax2.grid()
   plt.title(plottitle)
+  plt.legend()
   #set the bbox for the text. Increase txt_width for wider text.
   txt_height = 0.08*(plt.ylim()[1] - plt.ylim()[0])
   txt_width = 0.01*(plt.xlim()[1] - plt.xlim()[0])

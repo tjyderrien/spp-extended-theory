@@ -55,17 +55,18 @@ def ExtractDataDb(SPPdbFiltered):
 
   return Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, k1imag, k2imag
 
-def plotDatabasePeriod(database, legend, outputfile): 
+def plotDatabasePeriod(database, legend, outputfile, query): 
   """plot period of SPP at various interfaces contained in a database
   """
   # Extract the data for 800 nm
   Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, k1imag, k2imag = ExtractDataDb(database)
   
-  # CLean the first field
+  # CLean the first field	
   Material2clean = CleanStrArray(Material2)
   
   # Prepare plot with arrows and text (but single wavelength)
   makePlot(eps2r, SPPperiod, Material2clean, outputfile, query, r'$Re(\varepsilon)$', 'Period (nm)', legend, 'r')
+  makePlot(eps2r, SPPdecayLength*1e-3, Material2clean, outputfile, query, r'$Re(\varepsilon)$', 'SPP decay length (um)', legend, 'r')
 
   return 0
 
@@ -170,7 +171,7 @@ def plotSeveralWavelengths(database1, database2, reverse, metal):
   
   if(not metal): 
     #a = plt.axes([-70,300,-40,700], axisbg='g')
-    a = plt.axes([0.2,0.17,0.35,0.35], axisbg='w') #Good for SiO2
+    #a = plt.axes([0.2,0.17,0.35,0.35], axisbg='w') #Good for SiO2
     #a = plt.axes([0.2,0.2,0.35,0.35], axisbg='w') #Good for Air
 
     plt.xticks([-6,-4,-2,0])
@@ -192,10 +193,10 @@ def plotSeveralWavelengths(database1, database2, reverse, metal):
 # =======================================================
 
 ## Choose which material to select
-#query = 'Air'
+query = 'Air'
 #query = 'Au (Johnson 1972)'
 #query = 'Au (Palik)'
-query = 'Ti (Palik)'
+#query = 'Ti (Palik)'
 #query= 'SiC (Palik?)'
 #query = 'TiO2 (Devore 1951, e)'
 #query = 'SiO2 (Palik)'
@@ -213,32 +214,53 @@ print "Filter on materials: SPP database has now "+str(len(SPPdb))+" entries."
 #print "Filtering Material 1"
 #print SPPdb
 
-try: 
-  SPPdb1030 = FilterDatabase(SPPdb, '1030.0', 2)
-  print "Filter on wavelength: SPP database 1030 nm has "+str(len(SPPdb1030))+" entries."
-  plotDatabasePeriod(SPPdb1030, '1030 nm', 'SPPperiodEnhanced1030nm.eps')
-except:
-  print "Exception: no optical data is available for "+query+"."
 
 try: 
+  title = '1064 nm'
+  SPPdb1064 = FilterDatabase(SPPdb, '1064.0', 2)
+  print "Filter on wavelength: SPP database "+title+" has "+str(len(SPPdb1064))+" entries."
+  plotDatabasePeriod(SPPdb1064, title, 'SPPperiodEnhanced1064nm.eps', title)
+except:
+  print "Exception: no optical data is available for "+query+" at "+title+"."
+
+try: 
+  title = '1030 nm'
+  SPPdb1030 = FilterDatabase(SPPdb, '1030.0', 2)
+  print "Filter on wavelength: SPP database "+title+" has "+str(len(SPPdb1030))+" entries."
+  plotDatabasePeriod(SPPdb1030, title, 'SPPperiodEnhanced1030nm.eps', title)
+except:
+  print "Exception: no optical data is available for "+query+" at "+title+"."
+
+try: 
+  title = '800 nm'
   SPPdb800 = FilterDatabase(SPPdb, '800.0', 2)
-  print "Filter on wavelength: SPP database 800 nm has "+str(len(SPPdb800))+" entries."
-  plotDatabasePeriod(SPPdb800, '800 nm', 'SPPperiodEnhanced800nm.eps')
+  print "Filter on wavelength: SPP database "+title+" has "+str(len(SPPdb800))+" entries."
+  plotDatabasePeriod(SPPdb800, title, 'SPPperiodEnhanced800nm.eps', title)
 except: 
-  print "Exception: no optical data is available for "+query+"."
+  print "Exception: no optical data is available for "+query+" at "+title+"."
+
+try: 
+  title = '532 nm'
+  SPPdb532 = FilterDatabase(SPPdb, '532.0', 2)
+  print "Filter on wavelength: SPP database "+title+" has "+str(len(SPPdb532))+" entries."
+  plotDatabasePeriod(SPPdb532, title, 'SPPperiodEnhanced532nm.eps', title)
+except: 
+  print "Exception: no optical data is available for "+query+" at "+title+"."
 
 try:
+  title = '400 nm'
   SPPdb400 = FilterDatabase(SPPdb, '400.0', 2)
-  print "Filter on wavelength: SPP database 400 nm has "+str(len(SPPdb400))+" entries."
-  plotDatabasePeriod(SPPdb400, '400 nm', 'SPPperiodEnhanced400nm.eps')
+  print "Filter on wavelength: SPP database "+title+" has "+str(len(SPPdb400))+" entries."
+  plotDatabasePeriod(SPPdb400, title, 'SPPperiodEnhanced400nm.eps', title)
 except: 
-  print "Exception: no optical data is available for "+query+"."
+  print "Exception: no optical data is available for "+query+" at "+title+"."
 
 reverse = False #reverse eps1 and eps2 for plotting
-metal = True
+metal = False
 
 plotSeveralWavelengths(SPPdb800, SPPdb400, reverse, metal)
 
+# ===== PLOTTING the Lspp quantity as function of materials
 
 ## ================== Check the k1imag, k2imag signs...
 #Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, k1imag, k2imag = ExtractDataDb(SPPdb800)

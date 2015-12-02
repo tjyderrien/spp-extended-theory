@@ -60,7 +60,7 @@ def importFromPalikGraph(folder, filename):
   return 0
   #plt.show()
 
-def importFromTables(wavelength, folder, filename):
+def importFromTables(wavelength, folder, filename, plotting):
   # interpolate palik data from tables of Palik
 
   # Fetch data
@@ -82,37 +82,43 @@ def importFromTables(wavelength, folder, filename):
   # Interpolate the full array and check it visually
   nimesh = fni(wavelengths); kimesh = fki(wavelengths)
 
-  #plt.figure()
-  #plt.xlabel(r'$\lambda$ (nm)')
-  #plt.ylabel('n, k')
-  #plt.semilogx(1e9*wavelengths, n, 'bs', label='n Palik')
-  #plt.semilogx(1e9*wavelengths, kk, 'rs', label='k Palik')
-  #plt.semilogx(1e9*wavelengths, nimesh, 'b-', label='n interp')
-  #plt.semilogx(1e9*wavelengths, kimesh, 'r-', label='k interp')
-  #plt.grid()
-  #plt.legend(loc=2)
-  #plt.savefig('PalikData.eps')
-  #plt.show()
+  if (plotting): 
+	plt.figure()
+	plt.xlabel(r'$\lambda$ (nm)')
+	plt.ylabel('n, k')
+	plt.semilogx(1e9*wavelengths, n, 'bs', label='n Palik')
+	plt.semilogx(1e9*wavelengths, kk, 'rs', label='k Palik')
+	plt.semilogx(1e9*wavelengths, nimesh, 'b-', label='n interp')
+	plt.semilogx(1e9*wavelengths, kimesh, 'r-', label='k interp')
+	plt.grid()
+	plt.legend(loc=2)
+	plt.savefig('PalikData.eps')
+	plt.show()
+
+#==============================
 
 
 folder = "Database/"
 #filename = "a-Si-Palik"
-filename = "SiC-Palik"
+#filename = "SiC-Palik"
 #filename = "Ti-Palik"
+filename = "SiO2-Palik"
+#plotting = True
 
 print "Material: "+filename+"."
 #folder = "Database/PalikGraph/"
 #filename = "Ti-Palik"
 print "Lambda = 1064 nm"
-importFromTables(1064e-9, folder, filename)
+importFromTables(1064e-9, folder, filename, plotting=True)
+plotting = False
 print "Lambda = 1060 nm"
-importFromTables(1060e-9, folder, filename)
+importFromTables(1060e-9, folder, filename, plotting)
 print "Lambda = 1030 nm"
-importFromTables(1030e-9, folder, filename)
+importFromTables(1030e-9, folder, filename, plotting)
 print "Lambda = 800 nm"
-importFromTables(800e-9, folder, filename)
+importFromTables(800e-9, folder, filename, plotting)
 print "Lambda = 532 nm"
-importFromTables(532e-9, folder, filename)
+importFromTables(532e-9, folder, filename, plotting)
 print "Lambda = 400 nm"
-importFromTables(400e-9, folder, filename)
+importFromTables(400e-9, folder, filename, plotting)
 #importFromPalikGraph(folder, filename)

@@ -15,7 +15,6 @@ def FilterDatabase(SPPdb, query, FieldIndex):
   SPPdbFiltered = np.array(SPPdb[SPPdb[:,FieldIndex]==query,:]) #uses a table of booleans to select
   return SPPdbFiltered
 
-
 def CleanStrArray(Material2): 
   Material2clean = np.empty(Material2.shape, dtype='|S15')
   linenum=0
@@ -103,20 +102,27 @@ def plotSeveralWavelengths(database1, database2, reverse, metal):
   epsilon1 = np.add(eps1r,np.multiply(1e0j, eps1c))
   epsilon2 = np.add(eps2r,np.multiply(1e0j, eps2c))
   
-  if(not metal): 
-    refractiveindex1 = EpsilonToIndex(epsilon1)
-  else: 
-    refractiveindex1 = EpsilonToIndex(epsilon2)
-    
-  Radiation1=Wavelength/refractiveindex1.real
-  Radiation1=np.sort(Radiation1)
-
   fig1=plt.figure()
   plt.xlabel(r'Dielectric permittivity: $\mathcal{R}e(\varepsilon_2)$')
   plt.ylabel('SPP period $\Lambda$ (nm)')
+  
   plt.plot(eps2r, SPPperiod, 'or', label='800 nm', markersize=8)
+  
+  eps2range = np.arange(0e0,40e0,0.1e0)
+  
+  if(not metal): 
+    refractiveindex1 = EpsilonToIndex(epsilon1.real)
+  else: 
+    refractiveindex1 = EpsilonToIndex(epsilon2.real)
+    #refractiveindex1 = EpsilonToIndex(eps2range)
+    #Radiation1=Wavelength/refractiveindex1.real
+    #Radiation1=np.sort(Radiation1)
+    #plt.plot(eps2range, Radiation1, 'r-')
+    
+  Radiation1=Wavelength/refractiveindex1.real
+  Radiation1=np.sort(Radiation1)
   plt.plot(np.sort(eps2r), Radiation1[::-1], 'r-')
-
+  
   # Extract (again) for 400 nm
   
   if(reverse): #swap eps1 and eps2
@@ -154,22 +160,24 @@ def plotSeveralWavelengths(database1, database2, reverse, metal):
   plt.yticks([0,200,400,600,800])
   #plt.axis([0,35,0,1000])
   if(not metal): 
-    plt.legend(loc=4)
+    plt.legend(loc=2)
   else: 
     plt.legend(loc=1)
+  #plt.legend(handler_map={line1: HandlerLine2D(numpoints=1)})
+  #plt.legend(handler_map={line2: HandlerLine2D(numpoints=1)})
   #plt.title(query)
   plt.grid()
   
   if(not metal): 
     #a = plt.axes([-70,300,-40,700], axisbg='g')
-    #a = plt.axes([0.2,0.17,0.35,0.35], axisbg='w') #Good for SiO2
-    a = plt.axes([0.2,0.2,0.35,0.35], axisbg='w') #Good for Air
+    a = plt.axes([0.2,0.17,0.35,0.35], axisbg='w') #Good for SiO2
+    #a = plt.axes([0.2,0.2,0.35,0.35], axisbg='w') #Good for Air
 
     plt.xticks([-6,-4,-2,0])
-    #plt.axis([-6,0,250,290]) #Good for SiO2
-    plt.axis([-6,0,380,410]) #Good for Air
-    #plt.yticks([250,270,290]) #Good for SiO2
-    plt.yticks([380,390,400,410]) #Good for Air
+    plt.axis([-6,0,250,290]) #Good for SiO2
+    #plt.axis([-6,0,380,410]) #Good for Air
+    plt.yticks([250,270,290]) #Good for SiO2
+    #plt.yticks([380,390,400,410]) #Good for Air
     plt.grid()
     plt.plot(eps2r, SPPperiod, 'bs', markersize=8)
     plt.plot(np.sort(eps2r), Radiation1[::-1], 'b-')
@@ -184,13 +192,13 @@ def plotSeveralWavelengths(database1, database2, reverse, metal):
 # =======================================================
 
 ## Choose which material to select
-query = 'Air'
+#query = 'Air'
 #query = 'Au (Johnson 1972)'
 #query = 'Au (Palik)'
-#query = 'Ti (Palik)'
+query = 'Ti (Palik)'
 #query= 'SiC (Palik?)'
 #query = 'TiO2 (Devore 1951, e)'
-#query = 'SiO2 (Malitson 1965)'
+#query = 'SiO2 (Palik)'
 
 ## Generate the database
 SPPdb = GenerateDatabase()
@@ -205,21 +213,30 @@ print "Filter on materials: SPP database has now "+str(len(SPPdb))+" entries."
 #print "Filtering Material 1"
 #print SPPdb
 
-SPPdb1030 = FilterDatabase(SPPdb, '1030.0', 2)
-print "Filter on wavelength: SPP database 1030 nm has "+str(len(SPPdb1030))+" entries."
+try: 
+  SPPdb1030 = FilterDatabase(SPPdb, '1030.0', 2)
+  print "Filter on wavelength: SPP database 1030 nm has "+str(len(SPPdb1030))+" entries."
+  plotDatabasePeriod(SPPdb1030, '1030 nm', 'SPPperiodEnhanced1030nm.eps')
+except:
+  print "Exception: no optical data is available for "+query+"."
 
-SPPdb800 = FilterDatabase(SPPdb, '800.0', 2)
-print "Filter on wavelength: SPP database 800 nm has "+str(len(SPPdb800))+" entries."
+try: 
+  SPPdb800 = FilterDatabase(SPPdb, '800.0', 2)
+  print "Filter on wavelength: SPP database 800 nm has "+str(len(SPPdb800))+" entries."
+  plotDatabasePeriod(SPPdb800, '800 nm', 'SPPperiodEnhanced800nm.eps')
+except: 
+  print "Exception: no optical data is available for "+query+"."
 
-SPPdb400 = FilterDatabase(SPPdb, '400.0', 2)
-print "Filter on wavelength: SPP database 400 nm has "+str(len(SPPdb400))+" entries."
-
-plotDatabasePeriod(SPPdb1030, '1030 nm', 'SPPperiodEnhanced1030nm.eps')
-plotDatabasePeriod(SPPdb800, '800 nm', 'SPPperiodEnhanced800nm.eps')
-plotDatabasePeriod(SPPdb400, '400 nm', 'SPPperiodEnhanced400nm.eps')
+try:
+  SPPdb400 = FilterDatabase(SPPdb, '400.0', 2)
+  print "Filter on wavelength: SPP database 400 nm has "+str(len(SPPdb400))+" entries."
+  plotDatabasePeriod(SPPdb400, '400 nm', 'SPPperiodEnhanced400nm.eps')
+except: 
+  print "Exception: no optical data is available for "+query+"."
 
 reverse = False #reverse eps1 and eps2 for plotting
-metal = False
+metal = True
+
 plotSeveralWavelengths(SPPdb800, SPPdb400, reverse, metal)
 
 
@@ -253,7 +270,7 @@ deltaPeriodSPP = np.vectorize(deltaPeriodSPP)
 print deltaBetaSPP(800e-9, 1e0+0e0j, 1.1e0+1.1e0j, noise, noise, noise, noise)
 print deltaPeriodSPP(800e-9, 1e0+0e0j, 1.1e0+1.1e0j, noise, noise, noise, noise)
 
-precision = 1e-2
+precision = 1e-1
 
 print "Mesh generation..."
 epsr = np.arange(-5e0,5e0, precision)

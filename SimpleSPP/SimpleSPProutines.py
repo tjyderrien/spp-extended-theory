@@ -13,6 +13,7 @@ from scipy.interpolate import InterpolatedUnivariateSpline
 from matplotlib import rc
 # from pylab import *
 from scipy.constants import c, epsilon_0, mu_0, pi, e, m_e
+from matplotlib.legend_handler import HandlerLine2D
 
 lengthunit=1e-9
 eta = 1e-2 #assumed precision error on the dielectric permittivity
@@ -22,6 +23,7 @@ eta = 1e-2 #assumed precision error on the dielectric permittivity
 ## for Palatino and other serif fonts use:
 rc('font',**{'family':'serif','serif':['Palatino'], 'size':'20'})
 rc('text', usetex=True)
+mp.rcParams['legend.numpoints'] = 1
 
 # basic wave function
 def omega(wavelength):

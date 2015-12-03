@@ -16,7 +16,7 @@ from scipy.constants import c, epsilon_0, mu_0, pi, e, m_e
 from matplotlib.legend_handler import HandlerLine2D
 
 lengthunit=1e-9
-eta = 1e-2 #assumed precision error on the dielectric permittivity
+eta = 1e0 #assumed precision error on the dielectric permittivity
 
 # Settings for matplotlib
 #rc('font',**{'family':'sans-serif','sans-serif':['Helvetica'], 'size':'16'})

@@ -38,10 +38,35 @@ def importFromPalikGraph(folder, filename):
   fki = InterpolatedUnivariateSpline(wavelength2, k, k=order)
 
   #Interpolated one optical constants
-  wavelength = 800e-9
-  ni = fni(wavelength); ki = fki(wavelength)
-  epsilon = (ni+1j*ki)**2
-  print "Interpolated permittivity at "+str(wavelength*1e9)+" nm = "+str(epsilon)
+  try: 
+	wavelength = 800e-9
+	ni = fni(wavelength); ki = fki(wavelength)
+	epsilon = (ni+1j*ki)**2
+	print "Interpolated permittivity at "+str(wavelength*1e9)+" nm = "+str(epsilon)
+  except: 
+	  print "Interpolation for "+str(wavelength*1E9)+" nm failed."
+	  
+  try:
+	wavelength = 532e-9
+	ni = fni(wavelength); ki = fki(wavelength)
+	epsilon = (ni+1j*ki)**2
+	print "Interpolated permittivity at "+str(wavelength*1e9)+" nm = "+str(epsilon)
+  except: 
+	  print "Interpolation for "+str(wavelength*1E9)+" nm failed."
+  try:
+	wavelength = 400e-9
+	ni = fni(wavelength); ki = fki(wavelength)
+	epsilon = (ni+1j*ki)**2
+	print "Interpolated permittivity at "+str(wavelength*1e9)+" nm = "+str(epsilon)
+  except: 
+	  print "Interpolation for "+str(wavelength*1E9)+" nm failed."
+  try:
+	wavelength = 930e-9
+	ni = fni(wavelength); ki = fki(wavelength)
+	epsilon = (ni+1j*ki)**2
+	print "Interpolated permittivity at "+str(wavelength*1e9)+" nm = "+str(epsilon)
+  except: 
+	  print "Interpolation for "+str(wavelength*1E9)+" nm failed."
 
   # defining the new n and k on a common mesh
   ni = fni(wavelengths)
@@ -96,14 +121,13 @@ def importFromTables(wavelength, folder, filename, plotting):
 	plt.show()
 
 #==============================
-
-
 folder = "Database/"
 #filename = "a-Si-Palik"
 #filename = "SiC-Palik"
 #filename = "Ti-Palik"
-filename = "SiO2-Palik"
-#plotting = True
+#filename = "SiO2-Palik"
+filename = "W-Palik"
+plotting = True
 
 print "Material: "+filename+"."
 #folder = "Database/PalikGraph/"
@@ -121,4 +145,6 @@ print "Lambda = 532 nm"
 importFromTables(532e-9, folder, filename, plotting)
 print "Lambda = 400 nm"
 importFromTables(400e-9, folder, filename, plotting)
-#importFromPalikGraph(folder, filename)
+
+#===========================================
+#importFromPalikGraph("Database/PalikGraph/", "Zr-Krishnan")

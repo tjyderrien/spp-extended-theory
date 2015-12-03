@@ -55,6 +55,21 @@ def ExtractDataDb(SPPdbFiltered):
 
   return Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, k1imag, k2imag
 
+def plotDatabaseMaterials(database, legend, outputfile, query): 
+  """plot period of SPP at various interfaces contained in a database
+  """
+  # Extract the data for 800 nm
+  Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, k1imag, k2imag = ExtractDataDb(database)
+  
+  # CLean the first field	
+  Material2clean = CleanStrArray(Material2)
+  
+  # Prepare plot with arrows and text (but single wavelength)
+  makePlot(eps2r, eps2c, Material2clean, outputfile, query, r'$Re(\varepsilon)$', r'$Im(\varepsilon)$', legend, 'r')
+  #makePlot(eps2r, SPPdecayLength*1e-3, Material2clean, outputfile, query, r'$Re(\varepsilon)$', 'SPP decay length (um)', legend, 'r')
+
+  return 0
+
 def plotDatabasePeriod(database, legend, outputfile, query): 
   """plot period of SPP at various interfaces contained in a database
   """
@@ -262,17 +277,18 @@ plotSeveralWavelengths(SPPdb800, SPPdb400, reverse, metal)
 
 # ===== PLOTTING the Lspp quantity as function of materials
 
-## ================== Check the k1imag, k2imag signs...
-#Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, k1imag, k2imag = ExtractDataDb(SPPdb800)
+## ================== PLOT DATABASE ...
+Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, k1imag, k2imag = ExtractDataDb(SPPdb1030)
 
-#print k1imag, k2imag
+print k1imag, k2imag
 
-### Plot the database materials of 800 nm
-
-##print eps2r.shape, eps2c.shape
+## Plot the database materials of 1030 nm
+title = '1030 nm'
+plotDatabaseMaterials(SPPdb1030, title, 'Database.eps', title)
+#print eps2r.shape, eps2c.shape
 
 #plt.figure()
-#plt.title('Materials of database at 800 nm')
+#plt.title('Materials of database at 1030 nm')
 #plt.xlabel(r'$Re (\epsilon)$')
 #plt.ylabel(r'$Im (\epsilon)$')
 #plt.plot(eps2r, eps2c, 'rs')
@@ -280,11 +296,22 @@ plotSeveralWavelengths(SPPdb800, SPPdb400, reverse, metal)
 #plt.savefig('Database.eps')
 
 # =============== Output 2D plot delta(periodSPP) [Re(eps), Im(eps)]
+
+# Extract the material names from database
+Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1rM, eps1cM, eps2rM, eps2cM, k1imag, k2imag = ExtractDataDb(SPPdb1030)
+
+# Calculation of refractive index
+eps1rM=np.asfarray(eps1rM)
+eps1cM=np.asfarray(eps1cM)
+eps2rM=np.asfarray(eps2rM)
+eps2cM=np.asfarray(eps2cM)
+
+epsilon1 = np.add(eps1rM,np.multiply(1e0j, eps1cM))
+epsilon2 = np.add(eps2rM,np.multiply(1e0j, eps2cM))
+
 print "Plot the uncertainty on period as function of dielectric permittivity"
 
 noise = 1e0
-
-#Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, k1imag, k2imag = ExtractDataDb(SPPdb800)
 
 deltaBetaSPP = np.vectorize(deltaBetaSPP)
 deltaPeriodSPP = np.vectorize(deltaPeriodSPP)
@@ -301,7 +328,7 @@ epsc = np.arange(0e0,5e0, precision)
 eps2r, eps2c = np.meshgrid(epsr, epsc)
 
 print "Calculating uncertainty on SPP period..."
-deltaPeriod = 1e9*(deltaPeriodSPP(800e-9, 1e0, eps2r+eps2c*1e0j, 0e0, 0e0, noise, noise))
+deltaPeriod = 1e9*(deltaPeriodSPP(1030e-9, 1e0, eps2r+eps2c*1e0j, 0e0, 0e0, noise, noise))
 print "delta Period min = "+str(deltaPeriod.min())+", max = "+str(deltaPeriod.max())+"."
 #levels = MaxNLocator(nbins=15).tick_values(0e0, deltaPeriod.max())
 levels = [5, 10, 50, 100, 200, 300, 400, 500]
@@ -311,6 +338,8 @@ CS = plt.contourf(eps2r, eps2c, deltaPeriod, levels=levels, cmap=plt.cm.Blues)
 plt.xlabel(r'$Re(\varepsilon)$')
 plt.ylabel(r'$Im(\varepsilon)$')
 
+# adding the materials information !
+plt.plot(eps2rM, eps2cM, 'or', label='1030 nm', markersize=8)
 #plt.clabel(CS, levels=levels, inline=False, fontsize=20)
 
 #plt.clabel(CS, inline=1, fontsize=20)

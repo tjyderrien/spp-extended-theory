@@ -88,6 +88,8 @@ def etas(theta, f, s, epsilon, kappa, kappap, kappam):
 def etap(theta, f, s, epsilon, kappa, kappap, kappam):
 	return 2*pi*abs(vpp(theta, f, s, epsilon, kappa, kappap)+(vpm(theta, f, s, epsilon, kappa, kappam).conjugate()))
 
+
+#==== Attempting a 1D plot
 # Known quantities
 theta = 0 #Single value here, but we can vectorize functions easily later
 f = 0.5 #Filling factor
@@ -143,9 +145,78 @@ for kappax in kapparange:
   kappai = np.array([-cmath.sin(theta), 0])
   kappap = kappai + kappa; kappam = kappai - kappa
 
-  print "kappax = "+str(kappax)
+  #print "kappax = "+str(kappax)
   etaresult = etas(theta, f, s, epsilon, kappa, kappap, kappam)
-  print "eta = "+str(etaresult)
+  #print "eta = "+str(etaresult)
 
 
+#=========== Attempting a 2D plot
 
+query = 'Air'
+
+## Generate the database
+SPPdb = GenerateDatabase()
+print "SPP database has "+str(len(SPPdb))+" entries."
+
+print "Full Database:"
+print SPPdb
+
+# Select the material of interface 1
+SPPdb = FilterDatabase(SPPdb, query, 0)
+print "Filter on materials: SPP database has now "+str(len(SPPdb))+" entries."
+
+# Filter database
+
+try: 
+	title = '1030 nm'
+	SPPdb1030 = FilterDatabase(SPPdb, '1030.0', 2)
+	print "Filter on wavelength: SPP database "+title+" has "+str(len(SPPdb1030))+" entries."
+except:
+	print "Exception: no optical data is available for "+query+" at "+title+"."
+	exit()
+  
+# Extract materials from database
+Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1rM, eps1cM, eps2rM, eps2cM, k1imag, k2imag = ExtractDataDb(SPPdb1030)
+
+# Calculation of refractive index
+eps1rM=np.asfarray(eps1rM)
+eps1cM=np.asfarray(eps1cM)
+eps2rM=np.asfarray(eps2rM)
+eps2cM=np.asfarray(eps2cM)
+
+epsilon1 = np.add(eps1rM,np.multiply(1e0j, eps1cM))
+epsilon2 = np.add(eps2rM,np.multiply(1e0j, eps2cM))
+  
+print "Mesh generation..."
+precision = 1e-1
+kx = np.arange(-4e0,4e0,precision)
+ky = np.arange(-4e0,4e0,precision)
+kxx, kyy = np.meshgrid(kx, ky)
+
+# calculating Sipe efficiency for many materials
+print "Calculating efficiency for all (kx, ky) values at wavelength "+title+"."
+
+print "kxx shape = "+str(kxx.shape)+"."
+etaSipe = np.zeros(kxx.shape)
+
+materialIndex = 1 
+print Material2[materialIndex]
+
+for m in kx:
+	for n in ky:
+		kappa = np.array([kx[m], ky[n]])
+		kappai = np.array([-cmath.sin(theta), 0])
+		kappap = kappai + kappa; kappam = kappai - kappa
+		etaSipe[m,n] = etas(theta, f, s, epsilon2[materialIndex], kappa, kappap, kappam)
+	
+ 
+maximum = np.amax(etaSipe)
+print maximum
+# Plot the graph
+plt.figure()
+levels = np.arange(0,maximum,maximum/10)
+CS = plt.contourf(kxx, kyy, etaSipe, levels=levels, cmap=plt.cm.Blues)
+plt.xlabel(r'$\kappa_x$')
+plt.ylabel(r'$\kappa_y$')
+plt.colorbar(CS)
+plt.show()

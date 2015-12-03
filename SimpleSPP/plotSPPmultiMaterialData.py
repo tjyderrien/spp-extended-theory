@@ -9,12 +9,6 @@ from matplotlib.ticker import MaxNLocator
 
 #from makeTable import *
 
-def FilterDatabase(SPPdb, query, FieldIndex):
-  """ Filter SPP database using query and returns a smaller database
-  """
-  SPPdbFiltered = np.array(SPPdb[SPPdb[:,FieldIndex]==query,:]) #uses a table of booleans to select
-  return SPPdbFiltered
-
 def CleanStrArray(Material2): 
   Material2clean = np.empty(Material2.shape, dtype='|S15')
   linenum=0
@@ -24,36 +18,6 @@ def CleanStrArray(Material2):
     linenum = linenum + 1
   return(Material2clean)
 #print Material2clean
-
-def ExtractDataDb(SPPdbFiltered):
-  # Extract data from database
-  Material1 = SPPdbFiltered[:, 0]; Material2 = SPPdbFiltered[:,1]; 
-  Wavelength = SPPdbFiltered[:, 2]; 
-  OldSPPactiveBool = SPPdbFiltered[:,3]; NewSPPactiveBool = SPPdbFiltered[:,4]; 
-  SPPperiod = SPPdbFiltered[:,5]; SPPperiodError = SPPdbFiltered[:,6];
-  SPPdecayDepth1 = SPPdbFiltered[:,7]; SPPdecayDepth2 = SPPdbFiltered[:,8]; 
-  Reflectivity = SPPdbFiltered[:, 9]; OpticalPenetration1 = SPPdbFiltered[:,10]; OpticalPenetration2 = SPPdbFiltered[:,10]; SPPdecayLength = SPPdbFiltered[:,12]
-  eps1r = SPPdbFiltered[:, 13]; eps1c = SPPdbFiltered[:,14]; eps2r = SPPdbFiltered[:,15]; eps2c = SPPdbFiltered[:,16]; k1imag = SPPdbFiltered[:,17]; 
-  k2imag = SPPdbFiltered[:,18]
-  
-  #Converts strings to floats
-  Wavelength = np.asfarray(Wavelength)
-  SPPperiod = np.asfarray(SPPperiod)
-  SPPperiodError = np.asfarray(SPPperiodError)
-  SPPdecayDepth1 = np.asfarray(SPPdecayDepth1)
-  SPPdecayDepth2 = np.asfarray(SPPdecayDepth2)
-  Reflectivity = np.asfarray(Reflectivity)
-  OpticalPenetration1 = np.asfarray(OpticalPenetration1)
-  OpticalPenetration2 = np.asfarray(OpticalPenetration2)
-  SPPdecayLength = np.asfarray(SPPdecayLength)
-  eps1r = np.asfarray(eps1r)
-  eps1c = np.asfarray(eps1c)
-  eps2r = np.asfarray(eps2r)
-  eps2c = np.asfarray(eps2c)
-  k1imag = np.asfarray(k1imag)
-  k2imag = np.asfarray(k2imag)
-
-  return Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, k1imag, k2imag
 
 def plotDatabaseMaterials(database, legend, outputfile, query): 
   """plot period of SPP at various interfaces contained in a database

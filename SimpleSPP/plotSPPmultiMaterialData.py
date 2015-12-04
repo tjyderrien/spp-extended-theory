@@ -171,6 +171,9 @@ def plotSeveralWavelengths(database1, database2, reverse, metal):
 
 # =======================================================
 
+## Choose a wavelength
+wavelength = 800e-9
+
 ## Choose which material to select
 query = 'Air'
 #query = 'Au (Johnson 1972)'
@@ -193,62 +196,31 @@ print "Filter on materials: SPP database has now "+str(len(SPPdb))+" entries."
 #print "Filtering Material 1"
 #print SPPdb
 
+niceWavelength = str(int(wavelength*1e9))
+selectWavelength = str(niceWavelength)+'.0'
+title = niceWavelength+'nm'
 
 try: 
-  title = '1064 nm'
-  SPPdb1064 = FilterDatabase(SPPdb, '1064.0', 2)
-  print "Filter on wavelength: SPP database "+title+" has "+str(len(SPPdb1064))+" entries."
-  plotDatabasePeriod(SPPdb1064, title, 'SPPperiodEnhanced1064nm.eps', title)
+  SPPdb = FilterDatabase(SPPdb, selectWavelength, 2)
+  print "Filter on wavelength: SPP database "+title+" has "+str(len(SPPdb))+" entries."
+  plotDatabasePeriod(SPPdb, title, 'SPPperiodEnhanced1064nm.eps', title)
 except:
-  print "Exception: no optical data is available for "+query+" at "+title+"."
-
-try: 
-  title = '1030 nm'
-  SPPdb1030 = FilterDatabase(SPPdb, '1030.0', 2)
-  print "Filter on wavelength: SPP database "+title+" has "+str(len(SPPdb1030))+" entries."
-  plotDatabasePeriod(SPPdb1030, title, 'SPPperiodEnhanced1030nm.eps', title)
-except:
-  print "Exception: no optical data is available for "+query+" at "+title+"."
-
-try: 
-  title = '800 nm'
-  SPPdb800 = FilterDatabase(SPPdb, '800.0', 2)
-  print "Filter on wavelength: SPP database "+title+" has "+str(len(SPPdb800))+" entries."
-  plotDatabasePeriod(SPPdb800, title, 'SPPperiodEnhanced800nm.eps', title)
-except: 
-  print "Exception: no optical data is available for "+query+" at "+title+"."
-
-try: 
-  title = '532 nm'
-  SPPdb532 = FilterDatabase(SPPdb, '532.0', 2)
-  print "Filter on wavelength: SPP database "+title+" has "+str(len(SPPdb532))+" entries."
-  plotDatabasePeriod(SPPdb532, title, 'SPPperiodEnhanced532nm.eps', title)
-except: 
-  print "Exception: no optical data is available for "+query+" at "+title+"."
-
-try:
-  title = '400 nm'
-  SPPdb400 = FilterDatabase(SPPdb, '400.0', 2)
-  print "Filter on wavelength: SPP database "+title+" has "+str(len(SPPdb400))+" entries."
-  plotDatabasePeriod(SPPdb400, title, 'SPPperiodEnhanced400nm.eps', title)
-except: 
   print "Exception: no optical data is available for "+query+" at "+title+"."
 
 reverse = False #reverse eps1 and eps2 for plotting
 metal = False
 
-plotSeveralWavelengths(SPPdb800, SPPdb400, reverse, metal)
+#plotSeveralWavelengths(SPPdb800, SPPdb400, reverse, metal)
 
 # ===== PLOTTING the Lspp quantity as function of materials
 
 ## ================== PLOT DATABASE ...
-Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, k1imag, k2imag = ExtractDataDb(SPPdb1030)
+Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, k1imag, k2imag = ExtractDataDb(SPPdb)
 
-print k1imag, k2imag
+#print k1imag, k2imag
 
-## Plot the database materials of 1030 nm
-title = '1030 nm'
-plotDatabaseMaterials(SPPdb1030, title, 'Database.eps', title)
+## Plot the database materials 
+plotDatabaseMaterials(SPPdb, title, 'Database'+title+'.eps', title)
 #print eps2r.shape, eps2c.shape
 
 #plt.figure()
@@ -262,7 +234,7 @@ plotDatabaseMaterials(SPPdb1030, title, 'Database.eps', title)
 # =============== Output 2D plot delta(periodSPP) [Re(eps), Im(eps)]
 
 # Extract the material names from database
-Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1rM, eps1cM, eps2rM, eps2cM, k1imag, k2imag = ExtractDataDb(SPPdb1030)
+Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1rM, eps1cM, eps2rM, eps2cM, k1imag, k2imag = ExtractDataDb(SPPdb)
 
 # Calculation of refractive index
 eps1rM=np.asfarray(eps1rM)
@@ -275,27 +247,27 @@ epsilon2 = np.add(eps2rM,np.multiply(1e0j, eps2cM))
 
 print "Plot the uncertainty on period as function of dielectric permittivity"
 
-noise = 1e0
+noise = 5e0
 
 deltaBetaSPP = np.vectorize(deltaBetaSPP)
 deltaPeriodSPP = np.vectorize(deltaPeriodSPP)
 
-print deltaBetaSPP(800e-9, 1e0+0e0j, 1.1e0+1.1e0j, noise, noise, noise, noise)
-print deltaPeriodSPP(800e-9, 1e0+0e0j, 1.1e0+1.1e0j, noise, noise, noise, noise)
+print deltaBetaSPP(wavelength, 1e0+0e0j, 1.1e0+1.1e0j, noise, noise, noise, noise)
+print deltaPeriodSPP(wavelength, 1e0+0e0j, 1.1e0+1.1e0j, noise, noise, noise, noise)
 
-precision = 1e-1
+precision = 1e0
 
 print "Mesh generation..."
-epsr = np.arange(-5e0,5e0, precision)
-epsc = np.arange(0e0,5e0, precision)
+epsr = np.arange(-90e0,15e0, precision)
+epsc = np.arange(0e0,60e0, precision)
 
 eps2r, eps2c = np.meshgrid(epsr, epsc)
 
 print "Calculating uncertainty on SPP period..."
-deltaPeriod = 1e9*(deltaPeriodSPP(1030e-9, 1e0, eps2r+eps2c*1e0j, 0e0, 0e0, noise, noise))
+deltaPeriod = 1e9*(deltaPeriodSPP(wavelength, 1e0, eps2r+eps2c*1e0j, 0e0, 0e0, noise, noise))
 print "delta Period min = "+str(deltaPeriod.min())+", max = "+str(deltaPeriod.max())+"."
 #levels = MaxNLocator(nbins=15).tick_values(0e0, deltaPeriod.max())
-levels = [5, 10, 50, 100, 200, 300, 400, 500]
+levels = [1, 5, 10, 20, 30, 40, 50, 100]
 
 plt.figure()
 CS = plt.contourf(eps2r, eps2c, deltaPeriod, levels=levels, cmap=plt.cm.Blues)
@@ -303,7 +275,7 @@ plt.xlabel(r'$Re(\varepsilon)$')
 plt.ylabel(r'$Im(\varepsilon)$')
 
 # adding the materials information !
-plt.plot(eps2rM, eps2cM, 'or', label='1030 nm', markersize=8)
+plt.plot(eps2rM, eps2cM, 'or', label=str(wavelength)+'nm', markersize=8)
 #plt.clabel(CS, levels=levels, inline=False, fontsize=20)
 
 #plt.clabel(CS, inline=1, fontsize=20)

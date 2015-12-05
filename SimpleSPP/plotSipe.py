@@ -255,3 +255,9 @@ plt.xlabel(r'$\kappa_x$')
 plt.ylabel(r'$\kappa_y$')
 plt.colorbar(CS)
 plt.show()
+
+
+# TODO 
+# - Automatize the inverse Fourier transform to check regularity and pattern shape: see formula in my thesis. 
+# - Automatic calculation of orientation angle precision
+# - Can be great to plot directly precision angle as a function of materials. 

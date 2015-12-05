@@ -172,7 +172,7 @@ def plotSeveralWavelengths(database1, database2, reverse, metal):
 # =======================================================
 
 ## Choose a wavelength
-wavelength = 800e-9
+wavelength = 532e-9
 
 ## Choose which material to select
 query = 'Air'

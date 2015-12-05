@@ -91,17 +91,18 @@ def etap(theta, f, s, epsilon, kappa, kappap, kappam):
 
 #==== Attempting a 1D plot
 # Known quantities
-theta = 0 #Single value here, but we can vectorize functions easily later
-f = 0.5 #Filling factor
-s = 0.4 #Shape factor
+theta = 0e0 #Single value here, but we can vectorize functions easily later
+f = 0.5e0 #Filling factor
+s = 0.4e0 #Shape factor
 wavelength = 1030e-9
-epsilon = 12.80259+0.00109j
+#epsilon = 12.80259+0.00109j
+epsilon = -97.593456+25.2698472743j
 
 # Meshes for solution
 #kappax = np.arange(0, 4, 0.1)
 #kappay = np.arange(0, 4, 0.1)
 #kappa = np.array([wavelength * 1, wavelength * 0]); #test values
-kappax = 4 ; kappay = 0*kappax; #test values
+kappax = 4e0 ; kappay = 0e0*kappax; #test values
 
 
 #G = np.vectorize(G)
@@ -134,11 +135,14 @@ kappax = 4 ; kappay = 0*kappax; #test values
 
 #for kappax in meshkappa:
 
-ftab = np.arange(0, 1, 0.1)
+#ftab = np.arange(0, 1, 0.1)
 kapparange = np.arange(0.1,4,0.1)
 #for wavelength in wavelengths
 #for f in ftab:
-for kappax in kapparange:
+idtab = 0
+etaresult = np.zeros(kapparange.shape)
+kappax = 0e0
+for kappay in kapparange:
   
   ## Defining simple quantities for Sipe model
   kappa = np.array([kappax, kappay])
@@ -146,9 +150,22 @@ for kappax in kapparange:
   kappap = kappai + kappa; kappam = kappai - kappa
 
   #print "kappax = "+str(kappax)
-  etaresult = etas(theta, f, s, epsilon, kappa, kappap, kappam)
+  #print idtab
+  etaresult[idtab] = etas(theta, f, s, epsilon, kappa, kappap, kappam)
+  #print etaresult[idtab]
   #print "eta = "+str(etaresult)
+  idtab = idtab+1
 
+#=========== Make a 1D plot
+
+plt.figure()
+plt.xlabel(r'$\kappa_x$')
+plt.ylabel(r'$\eta$')
+print kapparange.shape, etaresult.shape
+plt.plot(kapparange, etaresult, '-', label='Sipe')
+print etaresult
+plt.savefig('SipeEtaKappaX.eps')
+#exit()
 
 #=========== Attempting a 2D plot
 
@@ -165,18 +182,28 @@ print SPPdb
 SPPdb = FilterDatabase(SPPdb, query, 0)
 print "Filter on materials: SPP database has now "+str(len(SPPdb))+" entries."
 
-# Filter database
+# Filter database on wavelength
 
 try: 
 	title = '1030 nm'
-	SPPdb1030 = FilterDatabase(SPPdb, '1030.0', 2)
-	print "Filter on wavelength: SPP database "+title+" has "+str(len(SPPdb1030))+" entries."
+	SPPdb = FilterDatabase(SPPdb, '1030.0', 2)
+	print "Filter on wavelength: SPP database "+title+" has "+str(len(SPPdb))+" entries."
+except:
+	print "Exception: no optical data is available for "+query+" at "+title+"."
+	exit()
+  
+# Filter database on materials
+
+try: 
+	title = 'Ti'
+	SPPdb = FilterDatabase(SPPdb, 'Mo (Palik)', 1)
+	print "Filter on material: SPP database "+title+" has "+str(len(SPPdb))+" entries."
 except:
 	print "Exception: no optical data is available for "+query+" at "+title+"."
 	exit()
   
 # Extract materials from database
-Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1rM, eps1cM, eps2rM, eps2cM, k1imag, k2imag = ExtractDataDb(SPPdb1030)
+Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1rM, eps1cM, eps2rM, eps2cM, k1imag, k2imag = ExtractDataDb(SPPdb)
 
 # Calculation of refractive index
 eps1rM=np.asfarray(eps1rM)
@@ -188,10 +215,10 @@ epsilon1 = np.add(eps1rM,np.multiply(1e0j, eps1cM))
 epsilon2 = np.add(eps2rM,np.multiply(1e0j, eps2cM))
   
 print "Mesh generation..."
-precision = 1e-1
+precision = 2.5e-2
 kx = np.arange(-4e0,4e0,precision)
 ky = np.arange(-4e0,4e0,precision)
-kxx, kyy = np.meshgrid(kx, ky)
+kxx, kyy = np.meshgrid(ky, kx)
 
 # calculating Sipe efficiency for many materials
 print "Calculating efficiency for all (kx, ky) values at wavelength "+title+"."
@@ -199,22 +226,30 @@ print "Calculating efficiency for all (kx, ky) values at wavelength "+title+"."
 print "kxx shape = "+str(kxx.shape)+"."
 etaSipe = np.zeros(kxx.shape)
 
-materialIndex = 1 
-print Material2[materialIndex]
+materialIndex = 0
+print "Preparing 2D figure for material "+str(Material2[materialIndex])
+print epsilon2[materialIndex]
 
-for m in kx:
-	for n in ky:
+for m in np.arange(0,(kx.size),1):
+	#idy=0
+	for n in np.arange(0,ky.size,1):
+		#print "[Debug]"+str(m)+", "+str(n)
 		kappa = np.array([kx[m], ky[n]])
 		kappai = np.array([-cmath.sin(theta), 0])
 		kappap = kappai + kappa; kappam = kappai - kappa
-		etaSipe[m,n] = etas(theta, f, s, epsilon2[materialIndex], kappa, kappap, kappam)
-	
+		etaSipe[m,n] = etap(theta, f, s, epsilon2[materialIndex], kappa, kappap, kappam)
+		#idy=idy+1
+	#idx=idx+1	
+
+print etaSipe
  
+numberlevels = 8
+
 maximum = np.amax(etaSipe)
 print maximum
 # Plot the graph
 plt.figure()
-levels = np.arange(0,maximum,maximum/10)
+levels = np.arange(0,maximum,maximum/numberlevels)
 CS = plt.contourf(kxx, kyy, etaSipe, levels=levels, cmap=plt.cm.Blues)
 plt.xlabel(r'$\kappa_x$')
 plt.ylabel(r'$\kappa_y$')

@@ -10,13 +10,14 @@ from SimpleSPProutines import *
 MaterialFolder="Database"
 
 MaterialFile1="Air"
-MaterialFile1="Si-Aspnes"
+#MaterialFile1="Si-Aspnes"
 #MaterialFile1="Ti-Palik"
 #MaterialFile2="Ag-Johnson"
-MaterialFile2="Ti-Johnson"
+#MaterialFile2="Ti-Johnson"
+MaterialFile2="Cu-Palik"
 
 UnitMat1=1e10
-UnitMat2=1e6
+UnitMat2=1e10
 
 # Loading Material dielectric complex permittivity into arrays
 MaterialArray2 = loadtxt(MaterialFolder+'/'+MaterialFile2, delimiter=' ', skiprows=4)

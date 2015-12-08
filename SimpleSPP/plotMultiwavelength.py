@@ -10,24 +10,24 @@ from SimpleSPProutines import *
 MaterialFolder="Database"
 
 MaterialFile1="Air"
-#MaterialFile1="Si-Aspnes"
-#MaterialFile1="Ti-Palik"
+#MaterialFile1="Si-Palik"
+#MaterialFile2="Ti-Palik"
 #MaterialFile2="Ag-Johnson"
 #MaterialFile2="Ti-Johnson"
-MaterialFile2="Cu-Palik"
+MaterialFile2="Mo-Palik"
 
 UnitMat1=1e10
 UnitMat2=1e10
 
 # Loading Material dielectric complex permittivity into arrays
-MaterialArray2 = loadtxt(MaterialFolder+'/'+MaterialFile2, delimiter=' ', skiprows=4)
+MaterialArray2 = loadtxt(MaterialFolder+'/'+MaterialFile2, delimiter='\t', skiprows=4)
 #wavelengths2 = MaterialArray2[:,0]
 nlines, ncols = MaterialArray2.shape
 
 #print nlines, ncols
 
 try:
-  MaterialArray1 = loadtxt(MaterialFolder+'/'+MaterialFile1, delimiter=' ', skiprows=4)
+  MaterialArray1 = loadtxt(MaterialFolder+'/'+MaterialFile1, delimiter='\t', skiprows=4)
 except:
   print "Material 1 ("+MaterialFile1+") was not found in "+MaterialFolder+"."
   print "Material 1 was replaced by Air."
@@ -86,6 +86,7 @@ plt.semilogx(1e9*wavelengths, eps2new.imag, '-', label='interp $Im('+MaterialFil
 #plt.legend(loc=2)
 plt.title('Dielectric permittivity')
 plt.savefig('epsilon.png')
+plt.show()
 
 ## plot SPP dispersion relation
 
@@ -105,6 +106,7 @@ plt.plot(omega(wavelengths)/c, omega(np.add(np.multiply(wavelengths,0e0), 800e-9
 plt.title('Dispersion relation at $'+MaterialFile1+'$/$'+MaterialFile2+'$ interface')
 plt.legend(loc=2)
 plt.savefig('Dispersion.eps')
+plt.show()
 
 ## plot the period with wavelength
 
@@ -116,6 +118,7 @@ plt.title('Period of field at $'+MaterialFile1+'$/$'+MaterialFile2+'$ interface'
 plt.legend(loc=2)
 plt.grid(True)
 plt.savefig('Period.eps')
+plt.show()
 
 ## plot the lifetime with wavelength
 #RealDerivativeByComplex = np.vectorize(RealDerivativeByComplex)
@@ -143,6 +146,7 @@ plt.title(MaterialFile1+'/'+MaterialFile2+' interface')
 plt.legend(loc=4)
 plt.axis([0,2000,0,400])
 plt.savefig('Velocities.eps')
+plt.show()
 
 ## Now we can calculate SPP lifetime
 LifeTimeOld = LifeTimeRaether(kspp[1:], eps1new[1:], eps2new[1:])

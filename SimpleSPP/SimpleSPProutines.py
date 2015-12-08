@@ -458,11 +458,11 @@ def SPPactiveInterfaces(dbarray, comment):
         
         # Print only the experimentally possible cases: SPP active depth must be smaller than absorption depth. 
         # ensure that SPPdecayDepth is smaller than layer thickness, to avoid shift of dispersion relation
-        ExperimentalAchievable = True; #ExperimentallyAchievable(OpticalPenetration1, SPPdecayDepth1)
+        ExperimentalAchievable = ExperimentallyAchievable(OpticalPenetration1, SPPdecayDepth1)
         
         # Print the table of active SPP interfaces for all cases or only new SPP interfaces					
         #if( not (comment=="new")): 
-        if(ExperimentalAchievable and (SPPperiod!=0)):
+        if(ExperimentalAchievable or (SPPperiod!=0)):
           counter=counter+1
           #print SPParray.shape
           SPParray = np.vstack((SPParray, [Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, 
@@ -738,6 +738,7 @@ def EffectiveIndex(eps1, eps2):
 
 def FilterDatabase(SPPdb, query, FieldIndex):
   """ Filter SPP database using query and returns a smaller database
+  /!\ content of query cell should be exact
   """
   SPPdbFiltered = np.array(SPPdb[SPPdb[:,FieldIndex]==query,:]) #uses a table of booleans to select
   return SPPdbFiltered

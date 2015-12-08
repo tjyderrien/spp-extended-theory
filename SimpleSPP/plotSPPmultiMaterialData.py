@@ -172,16 +172,16 @@ def plotSeveralWavelengths(database1, database2, reverse, metal):
 # =======================================================
 
 ## Choose a wavelength
-wavelength = 1030e-9
+wavelength = 800e-9
 
 ## Choose which material to select
-query = 'Air'
+#query = 'Air'
 #query = 'Au (Johnson 1972)'
 #query = 'Au (Palik)'
 #query = 'Ti (Palik)'
 #query= 'SiC (Palik?)'
 #query = 'TiO2 (Devore 1951, e)'
-#query = 'SiO2 (Palik)'
+query = 'SiO2 (Palik)'
 
 ## Generate the database
 SPPdb = GenerateDatabase()
@@ -208,7 +208,7 @@ except:
   print "Exception: no optical data is available for "+query+" at "+title+"."
 
 reverse = False #reverse eps1 and eps2 for plotting
-metal = False
+metal = True
 
 #plotSeveralWavelengths(SPPdb800, SPPdb400, reverse, metal)
 

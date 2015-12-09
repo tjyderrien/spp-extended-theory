@@ -92,7 +92,7 @@ def etap(theta, f, s, epsilon, kappa, kappap, kappam):
 #==== Attempting a 1D plot
 # Known quantities
 theta = 0e0 #Single value here, but we can vectorize functions easily later
-f = 0.1e0 #Filling factor
+f = 0.5e0 #Filling factor
 s = 0.4e0 #Shape factor
 #wavelength = 800e-9
 #epsilon = 12.80259+0.00109j
@@ -170,10 +170,11 @@ kapparange = np.arange(0.1,4,0.1)
 #=========== Attempting a 2D plot
 
 query = 'Air'
-query2= 'InP (Bonse 2005)'
+#query2= 'InP (Bonse 2005)'
+query2= 'Mo (Ordal 1988)'
 # /!\ Carefull: the expression must be exactly the one of MaterialDatabase.csv ...
 
-wavelength = 800
+wavelength = 1030
 select = str(wavelength)
 unit = 1E-9
 wavelength = wavelength * unit
@@ -269,6 +270,7 @@ CS = plt.contourf(kxx, kyy, etaSipe, levels=levels, cmap=plt.cm.Blues)
 plt.xlabel(r'$\kappa_x$')
 plt.ylabel(r'$\kappa_y$')
 plt.colorbar(CS)
+plt.savefig('Sipe2d'+str(wavelength/unit)+'nm-'+query2+'.eps')
 plt.show()
 
 

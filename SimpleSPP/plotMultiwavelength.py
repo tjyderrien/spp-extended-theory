@@ -12,15 +12,26 @@ MaterialFolder="Database"
 MaterialFile1="Air"
 #MaterialFile1="Si-Palik"
 #MaterialFile2="Ti-Palik"
-#MaterialFile2="Ag-Johnson"
+MaterialFile2="Ag-Johnson"
 #MaterialFile2="Ti-Johnson"
-MaterialFile2="Mo-Palik"
+#MaterialFile2="Mo-Palik"
 
 UnitMat1=1e10
-UnitMat2=1e10
+UnitMat2=1e6
 
 # Loading Material dielectric complex permittivity into arrays
-MaterialArray2 = loadtxt(MaterialFolder+'/'+MaterialFile2, delimiter='\t', skiprows=4)
+try: 
+	MaterialArray2 = loadtxt(MaterialFolder+'/'+MaterialFile2, delimiter='\t', skiprows=4)
+except: 
+	print "Could not read "+MaterialFile2+" database."
+	print "Attempting second method..."
+	try:
+		MaterialArray2 = loadtxt(MaterialFolder+'/'+MaterialFile2, delimiter=' ', skiprows=4)
+		print "Success."
+	except:
+		print "Also failed reading of database... Exiting."
+		exit()
+		
 #wavelengths2 = MaterialArray2[:,0]
 nlines, ncols = MaterialArray2.shape
 
@@ -158,11 +169,12 @@ LifeTimeNew = np.clip(LifeTimeNew, 0, 1)
 
 # Plotting the graphs
 
-#plt.figure()
-#plt.xlabel('Wavelength $\lambda$ (nm)')
-#plt.ylabel(r'SPP lifetime $\tau_{SPP}$ (ps)')
-#plt.semilogy(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeOld, 'b-', label=r'complex $\omega$, real $k_{SPP}$')
-#plt.semilogy(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeNew, 'r-', label=r'real $\omega$, complex $k_{SPP}$')
-#plt.title(MaterialFile1+'/'+MaterialFile2+' interface')
-#plt.legend(loc=4)
-#plt.savefig('Lifetime.eps')
+plt.figure()
+plt.xlabel('Wavelength $\lambda$ (nm)')
+plt.ylabel(r'SPP lifetime $\tau_{SPP}$ (ps)')
+plt.semilogy(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeOld, 'b-', label=r'complex $\omega$, real $k_{SPP}$')
+plt.semilogy(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeNew, 'r-', label=r'real $\omega$, complex $k_{SPP}$')
+plt.title(MaterialFile1+'/'+MaterialFile2+' interface')
+plt.legend(loc=4)
+plt.savefig('Lifetime.eps')
+plt.show()

@@ -127,7 +127,7 @@ folder = "Database/"
 #filename = "Ti-Palik"
 #filename = "SiO2-Palik"
 #filename = "W-Palik"
-filename = "Cu-Palik"
+filename = "Cr-Palik"
 plotting = True
 
 print "Material: "+filename+"."

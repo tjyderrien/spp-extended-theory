@@ -175,13 +175,13 @@ def plotSeveralWavelengths(database1, database2, reverse, metal):
 wavelength = 800e-9
 
 ## Choose which material to select
-#query = 'Air'
+query = 'Air'
 #query = 'Au (Johnson 1972)'
 #query = 'Au (Palik)'
 #query = 'Ti (Palik)'
 #query= 'SiC (Palik?)'
 #query = 'TiO2 (Devore 1951, e)'
-query = 'SiO2 (Palik)'
+#query = 'SiO2 (Palik)'
 
 ## Generate the database
 SPPdb = GenerateDatabase()
@@ -203,7 +203,7 @@ title = niceWavelength+'nm'
 try: 
   SPPdb = FilterDatabase(SPPdb, selectWavelength, 2)
   print "Filter on wavelength: SPP database "+title+" has "+str(len(SPPdb))+" entries."
-  plotDatabasePeriod(SPPdb, title, 'SPPperiodEnhanced1064nm.eps', title)
+  plotDatabasePeriod(SPPdb, title, 'SPPdecayLength'+niceWavelength+'nm.eps', title)
 except:
   print "Exception: no optical data is available for "+query+" at "+title+"."
 

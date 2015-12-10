@@ -710,7 +710,7 @@ def RealDerivativeByComplex(f,z):
   #return 0.5 * np.add(np.divide(np.diff(f),np.diff(z.real)), - 1j*np.divide(np.diff(f),np.diff(z.imag))) #original
 
 def LifeTimeRaether(beta, eps2, eps1):
-	omegasppimag=beta.real * c * eps1.imag/(2.*eps1.real**2) * (eps1.real * eps2)/(eps1.real + eps2)
+	omegasppimag=beta.real * c * eps1.imag/(2.*eps1.real**2) * (eps1.real * eps2.real)/(eps1.real + eps2.real)
 	lifetime=1e0/(omegasppimag)
 	return lifetime
 

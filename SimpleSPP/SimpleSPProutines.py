@@ -211,7 +211,7 @@ def deltaBetaSPP(wavelength, eps1, eps2, deps1r, deps1c, deps2r, deps2c):
             (2*eps1c*eps2r+2*eps1r*eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)-(2*eps1c*eps2r+2*eps1r*eps2c)*(eps1c+eps2c)/
             ((eps1r+eps2r)**2+(eps1c+eps2c)**2)**2*(2*eps1c+2*eps2c)))*deps2c
             
-    deltaReBeta = term1 + term2 + term3 + term4
+    deltaReBeta = abs(term1) + abs(term2) + abs(term3) + abs(term4)
     #deltaReBeta = 1e0/2e0*pi*abs(1e0/(2e0*(((eps1r*eps2r-eps1c*eps2c)*(eps1r+eps2r)/((eps1r+eps2r)**2+(eps1c+eps2c)**2) \
   #+(eps1c*eps2r+eps1r*eps2c)*(eps1c+eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2))**2 \
   #+((eps1c*eps2r+eps1r*eps2c)*(eps1r+eps2r)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)
@@ -462,7 +462,7 @@ def SPPactiveInterfaces(dbarray, comment):
         
         # Print the table of active SPP interfaces for all cases or only new SPP interfaces					
         #if( not (comment=="new")): 
-        if(ExperimentalAchievable or (SPPperiod!=0)):
+        if(ExperimentalAchievable and (SPPperiod!=0)):
           counter=counter+1
           #print SPParray.shape
           SPParray = np.vstack((SPParray, [Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, 

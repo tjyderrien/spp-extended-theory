@@ -12,8 +12,8 @@ MaterialFolder="Database"
 MaterialFile1="Air"
 #MaterialFile1="Si-Palik"
 #MaterialFile2="Ti-Palik"
-MaterialFile2="Ag-Johnson"
-#MaterialFile2="Ti-Johnson"
+#MaterialFile2="Ag-Johnson"
+MaterialFile2="Ti-Johnson"
 #MaterialFile2="Mo-Palik"
 
 UnitMat1=1e10
@@ -149,13 +149,14 @@ plt.figure()
 plt.xlabel(r'Wavelength $\lambda$ (nm)')
 plt.ylabel(r'Velocity $v$ ($\mu$m/ps)')
 plt.plot(1e9*2*pi*c/omegaspp[1:], 1E-6*SPPgroupVelocityPlot, 'g-', label=r'$v_g$')
-plt.plot(1e9*2*pi*c/omegaspp, 1E-6*SPPphaseVelocity, 'g--', label=r'$v_{\phi}$')
+#plt.plot(1e9*2*pi*c/omegaspp, 1E-6*SPPphaseVelocity, 'g--', label=r'$v_{\phi}$')
 #plt.plot(1e9*2*pi*c/omegaspp, c, label=r'$c$')
 #plt.plot(omega(wavelengths)/c, omega(wavelengths), label='Light line')
 #plt.plot(omega(wavelengths)/c, omega(np.add(np.multiply(wavelengths,0e0), 800e-9)), label=r'$c$')
 #plt.title(MaterialFile1+'/'+MaterialFile2+' interface')
 plt.legend(loc=4)
-plt.axis([0,2000,0,400])
+plt.xticks(np.arange(0, 2500, 500))
+plt.axis([200,2000,0,300])
 plt.savefig('Velocities.eps')
 plt.show()
 
@@ -172,9 +173,11 @@ LifeTimeNew = np.clip(LifeTimeNew, 0, 1)
 plt.figure()
 plt.xlabel('Wavelength $\lambda$ (nm)')
 plt.ylabel(r'SPP lifetime $\tau_{\mbox{SPP}}$ (ps)')
-plt.semilogy(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeOld, 'b-', label=r'complex $\omega$, real $\beta$')
-plt.semilogy(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeNew, 'r-', label=r'real $\omega$, complex $\beta$')
+plt.plot(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeOld, 'b--', label=r'complex $\omega$, real $\beta$')
+plt.plot(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeNew, 'r-', label=r'real $\omega$, complex $\beta$')
 #plt.title(MaterialFile1+'/'+MaterialFile2+' interface')
-plt.legend(loc=4)
+plt.legend(loc=2)
+#plt.xticks(np.arange(0, 2500, 500))
+plt.axis([200,2000,0,0.1])
 plt.savefig('Lifetime.eps')
 plt.show()

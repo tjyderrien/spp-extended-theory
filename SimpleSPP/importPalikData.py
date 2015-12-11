@@ -17,10 +17,12 @@ def importFromPalikGraph(folder, filename):
 
   narray = loadtxt(nfile, delimiter="\t", skiprows=1)
   karray = loadtxt(kfile, delimiter="\t", skiprows=1)
-
+  
+  unit = 1E-6
+  
   # import wavelength, n and k from Palik
-  wavelength1 = narray[:,0]*1e-6
-  wavelength2 = karray[:,0]*1e-6
+  wavelength1 = narray[:,0]*unit
+  wavelength2 = karray[:,0]*unit
   n = narray[:,1]
   k = karray[:,1]
   numrows = 10000
@@ -88,10 +90,18 @@ def importFromPalikGraph(folder, filename):
 def importFromTables(wavelength, folder, filename, plotting):
   # interpolate palik data from tables of Palik
 
+  unit1 = 1E-10 #Palik data
+  unit2 = 1E-6 #Johnson data
   # Fetch data
   DataFile = folder+filename
-  DataArray = loadtxt(DataFile, delimiter="\t", skiprows=4)
-  wavelengths = DataArray[:,0]*1e-10; n = DataArray[:,1]; kk = DataArray[:,2];
+  try:
+    DataArray = loadtxt(DataFile, delimiter="\t", skiprows=4)
+    wavelengths = DataArray[:,0]*unit1; 
+  except:
+    DataArray = loadtxt(DataFile, delimiter=" ", skiprows=4)
+    wavelengths = DataArray[:,0]*unit2
+    
+  n = DataArray[:,1]; kk = DataArray[:,2];
 
   # Interpolating using splines
   order = 1
@@ -125,9 +135,11 @@ folder = "Database/"
 #filename = "a-Si-Palik"
 #filename = "SiC-Palik"
 #filename = "Ti-Palik"
+#filename = "Ag-Johnson"
+filename = "Ti-Johnson"
 #filename = "SiO2-Palik"
 #filename = "W-Palik"
-filename = "Cr-Palik"
+#filename = "Cr-Palik"
 plotting = True
 
 print "Material: "+filename+"."

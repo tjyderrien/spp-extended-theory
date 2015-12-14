@@ -97,7 +97,7 @@ plt.semilogx(1e9*wavelengths, eps2new.imag, '-', label='interp $Im('+MaterialFil
 #plt.legend(loc=2)
 plt.title('Dielectric permittivity')
 plt.savefig('epsilon.png')
-plt.show()
+#plt.show()
 
 ## plot SPP dispersion relation
 
@@ -117,7 +117,7 @@ plt.plot(omega(wavelengths)/c, omega(np.add(np.multiply(wavelengths,0e0), 800e-9
 plt.title('Dispersion relation at $'+MaterialFile1+'$/$'+MaterialFile2+'$ interface')
 plt.legend(loc=2)
 plt.savefig('Dispersion.eps')
-plt.show()
+#plt.show()
 
 ## plot the period with wavelength
 
@@ -129,7 +129,7 @@ plt.title('Period of field at $'+MaterialFile1+'$/$'+MaterialFile2+'$ interface'
 plt.legend(loc=2)
 plt.grid(True)
 plt.savefig('Period.eps')
-plt.show()
+#plt.show()
 
 ## plot the lifetime with wavelength
 #RealDerivativeByComplex = np.vectorize(RealDerivativeByComplex)
@@ -158,7 +158,7 @@ plt.legend(loc=4)
 plt.xticks(np.arange(0, 2500, 500))
 plt.axis([200,2000,0,300])
 plt.savefig('Velocities.eps')
-plt.show()
+#plt.show()
 
 ## Now we can calculate SPP lifetime
 LifeTimeOld = LifeTimeRaether(kspp[1:], eps1new[1:], eps2new[1:])
@@ -168,7 +168,7 @@ LifeTimeNew = LifeTimeDerrien(kspp[1:], SPPgroupVelocity.real)
 LifeTimeOld = np.clip(LifeTimeOld, 0, 1)
 LifeTimeNew = np.clip(LifeTimeNew, 0, 1)
 
-# Plotting the graphs
+# Plotting the SPP lifetime
 
 plt.figure()
 plt.xlabel('Wavelength $\lambda$ (nm)')
@@ -180,4 +180,23 @@ plt.legend(loc=2)
 #plt.xticks(np.arange(0, 2500, 500))
 plt.axis([200,2000,0,0.1])
 plt.savefig('Lifetime.eps')
+#plt.show()
+
+
+# 
+print "Plotting the SPP decay depth..."
+kzSPP = np.vectorize(kzSPP)
+DecayDepth = np.vectorize(DecayDepth)
+
+SPPdecayDepth=DecayDepth(kzSPP(wavelengths, eps1new, eps2new))
+SPPdecayDepth2=DecayDepth(kzSPP(wavelengths, eps2new, eps1new))
+
+plt.figure()
+plt.xlabel('Wavelength $\lambda$ (nm)')
+plt.ylabel(r'SPP decay depth $\delta_{\mbox{SPP}}$ ($\mu$lm)')
+plt.semilogy(1e9*2*pi*c/omegaspp, 1E6*SPPdecayDepth, 'r-', label=r'Medium 1')
+plt.semilogy(1e9*2*pi*c/omegaspp, 1E6*SPPdecayDepth2, 'b--', label=r'Medium 2')
+plt.legend(loc=2)
+plt.axis([200,2000,0,10e0])
+plt.savefig('SppDecayDepth.eps')
 plt.show()

@@ -10,10 +10,12 @@ from SimpleSPProutines import *
 MaterialFolder="Database"
 
 MaterialFile1="Air"
+#MaterialFile1="SiO2-Palik"
 #MaterialFile1="Si-Palik"
 #MaterialFile2="Ti-Palik"
-#MaterialFile2="Ag-Johnson"
-MaterialFile2="Ti-Johnson"
+#MaterialFile2="Ag-Palik"
+MaterialFile2="Ag-Johnson"
+#MaterialFile2="Ti-Johnson"
 #MaterialFile2="Mo-Palik"
 
 UnitMat1=1e10
@@ -82,7 +84,7 @@ print "Interpolating on Wavelength mesh size = "+str(wavelengths.size)
 eps1new=np.add(feps1r(wavelengths),np.multiply(1.0j, feps1i(wavelengths)))
 eps2new=np.add(feps2r(wavelengths),np.multiply(1.0j, feps2i(wavelengths)))
 
-### Checking interpolation of the dielectric function
+print "Checking quality of interpolation for the dielectric function..."
 plt.figure()
 plt.xlabel('Wavelength (nm)')
 plt.ylabel('epsilon')
@@ -99,7 +101,7 @@ plt.title('Dielectric permittivity')
 plt.savefig('epsilon.png')
 #plt.show()
 
-## plot SPP dispersion relation
+print "Plot the SPP dispersion relation..."
 
 betaSPP = np.vectorize(betaSPP)
 omega = np.vectorize(omega)
@@ -119,7 +121,7 @@ plt.legend(loc=2)
 plt.savefig('Dispersion.eps')
 #plt.show()
 
-## plot the period with wavelength
+print "Plot the SPP period with wavelength..."
 
 plt.figure()
 plt.xlabel('Wavelength $\lambda$ $(nm)$')
@@ -131,7 +133,7 @@ plt.grid(True)
 plt.savefig('Period.eps')
 #plt.show()
 
-## plot the lifetime with wavelength
+print "Plot the lifetime with wavelength..."
 #RealDerivativeByComplex = np.vectorize(RealDerivativeByComplex)
 SPPgroupVelocity = RealDerivativeByComplex(omegaspp, kspp)
 SPPphaseVelocity = np.divide(omegaspp,kspp)
@@ -158,9 +160,10 @@ plt.legend(loc=4)
 plt.xticks(np.arange(0, 2500, 500))
 plt.axis([200,2000,0,300])
 plt.savefig('Velocities.eps')
+plt.savefig('Velocities.png')
 #plt.show()
 
-## Now we can calculate SPP lifetime
+print "Plot SPP lifetime with wavelength..."
 LifeTimeOld = LifeTimeRaether(kspp[1:], eps1new[1:], eps2new[1:])
 LifeTimeNew = LifeTimeDerrien(kspp[1:], SPPgroupVelocity.real)
 
@@ -184,19 +187,25 @@ plt.savefig('Lifetime.eps')
 
 
 # 
-print "Plotting the SPP decay depth..."
+print "Plotting the SPP decay depth and optical penetration depth..."
 kzSPP = np.vectorize(kzSPP)
 DecayDepth = np.vectorize(DecayDepth)
+omega = np.vectorize(omega) 
 
 SPPdecayDepth=DecayDepth(kzSPP(wavelengths, eps1new, eps2new))
 SPPdecayDepth2=DecayDepth(kzSPP(wavelengths, eps2new, eps1new))
+OpticalPenetrationDepth = 2e0*omega(wavelengths)/c*(eps2new**0.5e0)
+OpticalPenetrationDepth = (OpticalPenetrationDepth.imag)**(-1e0)
 
 plt.figure()
 plt.xlabel('Wavelength $\lambda$ (nm)')
 plt.ylabel(r'SPP decay depth $\delta_{\mbox{SPP}}$ ($\mu$lm)')
-plt.semilogy(1e9*2*pi*c/omegaspp, 1E6*SPPdecayDepth, 'r-', label=r'Medium 1')
-plt.semilogy(1e9*2*pi*c/omegaspp, 1E6*SPPdecayDepth2, 'b--', label=r'Medium 2')
-plt.legend(loc=2)
-plt.axis([200,2000,0,10e0])
+plt.semilogy(1e9*2*pi*c/omegaspp, 1E6*SPPdecayDepth, 'r-', label=r'$\delta_{SPP}$, medium 1')
+plt.semilogy(1e9*2*pi*c/omegaspp, 1E6*SPPdecayDepth2, 'r--', label=r'$\delta_{SPP}$, medium 2')
+plt.semilogy(1e9*2*pi*c/omegaspp, 1E6*OpticalPenetrationDepth, 'bx', label=r'$\delta_{OPD}$, medium 2')
+plt.legend(loc=1)
+#plt.axis([200,2000,0,10e0])
 plt.savefig('SppDecayDepth.eps')
+plt.savefig('SppDecayDepth.png')
 plt.show()
+

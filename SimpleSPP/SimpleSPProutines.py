@@ -458,7 +458,7 @@ def SPPactiveInterfaces(dbarray, comment):
         
         # Print only the experimentally possible cases: SPP active depth must be smaller than absorption depth. 
         # ensure that SPPdecayDepth is smaller than layer thickness, to avoid shift of dispersion relation
-        ExperimentalAchievable = True #ExperimentallyAchievable(OpticalPenetration1, SPPdecayDepth1)
+        ExperimentalAchievable = ExperimentallyAchievable(OpticalPenetration1, SPPdecayDepth1)
         
         # Print the table of active SPP interfaces for all cases or only new SPP interfaces					
         #if( not (comment=="new")): 
@@ -704,23 +704,24 @@ def RealDerivativeByComplex(f,z):
     f: z->f(z)
     z: z complex-valued numbers
   Output:
-    df/dz according to complex derivatives formula
+    df/dz according to Wirtinger complex derivatives formula
   """
-  return (0.5e0+0j) * (np.diff(f)/np.diff(z.real) - 1j*(np.diff(f)/np.diff(z.imag))) #original
-  #return 0.5 * np.add(np.divide(np.diff(f),np.diff(z.real)), - 1j*np.divide(np.diff(f),np.diff(z.imag))) #original
+  return 0.5e0 * (np.diff(f)/np.diff(z.real) - 1j*(np.diff(f)/np.diff(z.imag))) #original
 
 def LifeTimeRaether(beta, eps2, eps1):
-	omegasppimag=beta.real * c * eps1.imag/(2.*eps1.real**2) * (eps1.real * eps2.real)/(eps1.real + eps2.real)
-	lifetime=1e0/(omegasppimag)
+	omegasppimag=beta.real * c * eps1.imag/(2e0*eps1.real**2) * (eps1.real * eps2.real)/(eps1.real + eps2.real)
+	# lifetime=2e0*pi/omegasppimag #Raether formula
+	lifetime=1e0/omegasppimag #modified Raether formula to match with complex group velocity approach
 	return lifetime
 
 def SPPlength(beta):
-	return 1e0/(2e0 * beta.imag)
+  length = 1e0/(2e0 * beta.imag) #Maier formula
+  return length
 
 def LifeTimeDerrien(beta, vg):
-	length = SPPlength(beta)
-	lifetime = length * (vg)**(-1e0)
-	return lifetime
+  length = SPPlength(beta)
+  lifetime = length * (vg)**(-1e0)
+  return lifetime
               
 def EpsilonToIndex(eps):
   #returns the complex refractive index
@@ -728,7 +729,7 @@ def EpsilonToIndex(eps):
 
 def IndexToEpsilon(n):
   #returns the complex permittivity from optical index
-  return n**2
+  return n*n
 
 def EffectiveIndex(eps1, eps2): 
   #returns effective optical index of SPP
@@ -773,3 +774,7 @@ def ExtractDataDb(SPPdbFiltered):
   k2imag = np.asfarray(k2imag)
 
   return Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, k1imag, k2imag
+
+kzSPP = np.vectorize(kzSPP)
+DecayDepth = np.vectorize(DecayDepth)
+omega = np.vectorize(omega) 

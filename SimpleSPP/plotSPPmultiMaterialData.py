@@ -90,16 +90,16 @@ def plotSeveralWavelengths(database1, database2, reverse, metal):
     plt.xlabel(r'Dielectric permittivity: $\mathcal{R}e(\varepsilon_2)$')
   else:
     plt.xlabel(r'Dielectric permittivity: $\mathcal{R}e(\varepsilon_1)$')
-  plt.ylabel('SPP period $\Lambda$ (nm)')
   
+  plt.ylabel('SPP period $\Lambda$ (nm)')
   plt.plot(eps2r, SPPperiod, 'or', label='800 nm', markersize=8)
   
   eps2range = np.arange(0e0,40e0,0.1e0)
   
   if(not metal): 
-    refractiveindex1 = EpsilonToIndex(epsilon1.real)
+    refractiveindex1 = EpsilonToIndex(epsilon1)
   else: 
-    refractiveindex1 = EpsilonToIndex(epsilon2.real)
+    refractiveindex1 = EpsilonToIndex(epsilon2)
     #refractiveindex1 = EpsilonToIndex(eps2range)
     #Radiation1=Wavelength/refractiveindex1.real
     #Radiation1=np.sort(Radiation1)
@@ -130,7 +130,7 @@ def plotSeveralWavelengths(database1, database2, reverse, metal):
   else: 
     refractiveindex1 = EpsilonToIndex(epsilon2)
     
-  Radiation1=Wavelength/refractiveindex1
+  Radiation1=Wavelength/refractiveindex1.real
   Radiation1=np.sort(Radiation1)
 
   #plt.figure()
@@ -184,9 +184,9 @@ wavelength = 800e-9
 
 ## Choose which material to select
 #query = 'Air'
-#query = 'Au (Palik)'
+query = 'Au (Palik)'
 #query = 'Ti (Palik)'
-query = 'Ti (Johnson 1974)'
+#query = 'Ti (Johnson 1974)'
 #query= 'SiC (Palik?)'
 #query = 'TiO2 (Devore 1951, e)'
 #query = 'SiO2 (Palik)'

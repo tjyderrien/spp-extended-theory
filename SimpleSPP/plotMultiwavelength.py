@@ -9,17 +9,17 @@ from SimpleSPProutines import *
 #MaterialFolder="/usr/local/share/gsvit/data/spectra"
 MaterialFolder="Database"
 
-MaterialFile1="Air"
-#MaterialFile1="SiO2-Palik"
+#MaterialFile1="Air"
+MaterialFile1="SiO2-Palik"
 #MaterialFile1="Si-Palik"
 #MaterialFile2="Ti-Palik"
-#MaterialFile2="Ag-Palik"
-MaterialFile2="Ag-Johnson"
+MaterialFile2="Ag-Palik"
+#MaterialFile2="Ag-Johnson"
 #MaterialFile2="Ti-Johnson"
 #MaterialFile2="Mo-Palik"
 
 UnitMat1=1e10
-UnitMat2=1e6
+UnitMat2=1e10
 
 # Loading Material dielectric complex permittivity into arrays
 try: 
@@ -150,8 +150,8 @@ SPPgroupVelocityPlot = np.clip(SPPgroupVelocity.real, 0, 1000E8)
 plt.figure()
 plt.xlabel(r'Wavelength $\lambda$ (nm)')
 plt.ylabel(r'Velocity $v$ ($\mu$m/ps)')
-plt.plot(1e9*2*pi*c/omegaspp[1:], 1E-6*SPPgroupVelocityPlot, 'g-', label=r'$v_g$')
-#plt.plot(1e9*2*pi*c/omegaspp, 1E-6*SPPphaseVelocity, 'g--', label=r'$v_{\phi}$')
+plt.plot(1e9*2*pi*c/omegaspp[1:], 1E-6*SPPgroupVelocityPlot, 'b-', label=r'$v_g$')
+plt.plot(1e9*2*pi*c/omegaspp, 1E-6*SPPphaseVelocity, 'r--', label=r'$v_{\phi}$')
 #plt.plot(1e9*2*pi*c/omegaspp, c, label=r'$c$')
 #plt.plot(omega(wavelengths)/c, omega(wavelengths), label='Light line')
 #plt.plot(omega(wavelengths)/c, omega(np.add(np.multiply(wavelengths,0e0), 800e-9)), label=r'$c$')
@@ -166,31 +166,37 @@ plt.savefig('Velocities.png')
 print "Plot SPP lifetime with wavelength..."
 LifeTimeOld = LifeTimeRaether(kspp[1:], eps1new[1:], eps2new[1:])
 LifeTimeNew = LifeTimeDerrien(kspp[1:], SPPgroupVelocity.real)
+LifeTimePhase = LifeTimeDerrien(kspp[1:], SPPphaseVelocity[1:].real)
+LifeTimeApprox = 2e0*(eps2new.real)**2 /( omegaspp * eps1new.real**2 * eps2new.imag)
+
+print "Lifetime approx."
+print LifeTimeApprox
 
 # Let's clip Lifetime where they are negative. 
 LifeTimeOld = np.clip(LifeTimeOld, 0, 1)
 LifeTimeNew = np.clip(LifeTimeNew, 0, 1)
+LifeTimePhase = np.clip(LifeTimePhase, 0, 1)
+LifeTimeApprox = np.clip(LifeTimeApprox, 0, 1)
 
 # Plotting the SPP lifetime
 
 plt.figure()
 plt.xlabel('Wavelength $\lambda$ (nm)')
 plt.ylabel(r'SPP lifetime $\tau_{\mbox{SPP}}$ (ps)')
-plt.plot(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeOld, 'b--', label=r'complex $\omega$, real $\beta$')
-plt.plot(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeNew, 'r-', label=r'real $\omega$, complex $\beta$')
+plt.plot(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeOld, 'b-', label=r'Group, complex $\omega$, real $\beta$')
+plt.plot(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeNew, 'r-', label=r'Group, real $\omega$, complex $\beta$')
+plt.plot(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimePhase, 'r--', label=r'Phase, real $\omega$, complex $\beta$')
+plt.plot(1e9*2*pi*c/omegaspp, 1E12*LifeTimeApprox, 'b--', label=r'Phase, approx.')
 #plt.title(MaterialFile1+'/'+MaterialFile2+' interface')
 plt.legend(loc=2)
 #plt.xticks(np.arange(0, 2500, 500))
-plt.axis([200,2000,0,0.1])
+plt.axis([400,1000,0,0.6])
 plt.savefig('Lifetime.eps')
 #plt.show()
 
 
 # 
 print "Plotting the SPP decay depth and optical penetration depth..."
-kzSPP = np.vectorize(kzSPP)
-DecayDepth = np.vectorize(DecayDepth)
-omega = np.vectorize(omega) 
 
 SPPdecayDepth=DecayDepth(kzSPP(wavelengths, eps1new, eps2new))
 SPPdecayDepth2=DecayDepth(kzSPP(wavelengths, eps2new, eps1new))

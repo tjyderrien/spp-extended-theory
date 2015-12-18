@@ -180,19 +180,19 @@ def plotSeveralWavelengths(database1, database2, reverse, metal):
 # =======================================================
 
 ## Choose a wavelength
-wavelength = 800e-9
+wavelength = 400e-9
 
 ## Choose which material to select
-#query = 'Air'
-query = 'Au (Palik)'
+query = 'Air'
+#query = 'Au (Palik)'
 #query = 'Ti (Palik)'
 #query = 'Ti (Johnson 1974)'
 #query= 'SiC (Palik?)'
 #query = 'TiO2 (Devore 1951, e)'
 #query = 'SiO2 (Palik)'
 
-reverse = True #reverse eps1 and eps2 for plotting
-metal = True
+reverse = False #reverse eps1 and eps2 for plotting
+metal = False
 
 ## Generate the database
 SPPdb = GenerateDatabase()
@@ -214,7 +214,7 @@ print "Filter on materials: SPP database has now "+str(len(SPPdb))+" entries."
 
 niceWavelength = str(int(wavelength*1e9))
 selectWavelength = str(niceWavelength)+'.0'
-title = niceWavelength+'nm'
+title = niceWavelength+' nm'
 
 try: 
   SPPdb = FilterDatabase(SPPdb, selectWavelength, 2)

@@ -9,8 +9,8 @@ from SimpleSPProutines import *
 #MaterialFolder="/usr/local/share/gsvit/data/spectra"
 MaterialFolder="Database"
 
-#MaterialFile1="Air"
-MaterialFile1="SiO2-Palik"
+MaterialFile1="Air"
+#MaterialFile1="SiO2-Palik"
 #MaterialFile1="Si-Palik"
 #MaterialFile2="Ti-Palik"
 MaterialFile2="Ag-Palik"

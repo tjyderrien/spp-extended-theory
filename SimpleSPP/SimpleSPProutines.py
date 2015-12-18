@@ -396,7 +396,7 @@ def SPPactiveInterfaces(dbarray, comment):
         gap2=float(k[1]); 
       except: 
         gap2=10;
-        
+      RegularLIPSScondition = (eps2.imag > 1e0*abs(eps1.real))  
       #ConditionOnGap=(gap1<0.1)
       ConditionOnGap=True #always true to avoid selection
       
@@ -433,8 +433,9 @@ def SPPactiveInterfaces(dbarray, comment):
 	        NewSPPactiveBool='Yes'
         else: 
 	        NewSPPactiveBool='No'
+
         # If new or old SPP active condition is true, then show	
-        if ((SPPcondition(eps1,eps2)) or (OldSPPcondition(eps1,eps2))):
+        if ((SPPcondition(eps1,eps2)) or (OldSPPcondition(eps1,eps2)) or RegularLIPSScondition):
 	        SPPperiod=(period(betaSPP(wavelength1,eps1, eps2))/lengthunit)
 	        SPPdecayDepth1=(DecayDepth(kzSPP(wavelength1, eps1, eps2))/lengthunit)
 	        SPPdecayDepth2=(DecayDepth(kzSPP(wavelength2, eps2, eps1))/lengthunit)

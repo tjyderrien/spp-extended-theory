@@ -90,8 +90,10 @@ def importFromPalikGraph(folder, filename):
 def importFromTables(wavelength, folder, filename, plotting):
   # interpolate palik data from tables of Palik
 
-  unit1 = 1E-10 #Palik data
-  unit2 = 1E-6 #Johnson data
+  #unit1 = 1E-6 #Palik data
+  unit1 = 1E-6 #Other data
+  unit2 = 1E-6 #Other data
+ 
   # Fetch data
   DataFile = folder+filename
   try:
@@ -141,6 +143,7 @@ filename = "Si-Palik"
 #filename = "SiO2-Palik"
 #filename = "W-Palik"
 #filename = "Cr-Palik"
+filename = "BK7"
 plotting = True
 
 print "Material: "+filename+"."

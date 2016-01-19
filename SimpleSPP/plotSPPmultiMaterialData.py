@@ -19,7 +19,7 @@ def CleanStrArray(Material2):
   return(Material2clean)
 #print Material2clean
 
-def plotDatabaseMaterials(database, legend, outputfile, query): 
+def plotDatabaseMaterials(database, legend, outputfile, query): #{{{
   """plot period of SPP at various interfaces contained in a database
   """
   # Extract the data for 800 nm
@@ -33,8 +33,9 @@ def plotDatabaseMaterials(database, legend, outputfile, query):
   #makePlot(eps2r, SPPdecayLength*1e-3, Material2clean, outputfile, query, r'$Re(\varepsilon)$', 'SPP decay length (um)', legend, 'r')
 
   return 0
+#}}}
 
-def plotDatabasePeriod(database, legend, outputfile, query, metal): 
+def plotDatabasePeriod(database, legend, outputfile, query, metal): #{{{
   """plot period of SPP at various interfaces contained in a database
   """
   # Extract the data for 800 nm
@@ -51,20 +52,22 @@ def plotDatabasePeriod(database, legend, outputfile, query, metal):
   makePlot(eps2r, SPPdecayLength*1e-3, Material2clean, outputfile, query, r'$Re(\varepsilon)$', 'SPP decay length (um)', legend, 'r')
 
   return 0
+#}}}
 
 EpsilonToIndex = np.vectorize(EpsilonToIndex)
 EffectiveIndex = np.vectorize(EffectiveIndex)
 
-def Swap(eps1, eps2):
+def Swap(eps1, eps2):#{{{
   eps3 = eps1
   eps1 = eps2
   eps2 = eps3
   del eps3
   return(eps1, eps2) 
+#}}}
 
 Swap = np.vectorize(Swap)
 
-def plotSeveralWavelengths(database1, database2, reverse, metal):
+def plotSeveralWavelengths(database1, database2, reverse, metal):#{{{
   """
   Plot period as function of materials for two wavelengths
   """
@@ -176,7 +179,7 @@ def plotSeveralWavelengths(database1, database2, reverse, metal):
   plt.savefig('MultiMaterial_PeriodSPP.eps')
   plt.show()
   return 0
-
+#}}}
 # =======================================================
 
 ## Choose a wavelength

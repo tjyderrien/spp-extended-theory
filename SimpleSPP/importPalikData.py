@@ -133,10 +133,11 @@ def importFromTables(wavelength, folder, filename, plotting):
 #==============================
 folder = "Database/"
 #filename = "a-Si-Palik"
+filename = "Si-Palik"
 #filename = "SiC-Palik"
 #filename = "Ti-Palik"
 #filename = "Ag-Johnson"
-filename = "Ti-Johnson"
+#filename = "Ti-Johnson"
 #filename = "SiO2-Palik"
 #filename = "W-Palik"
 #filename = "Cr-Palik"
@@ -154,6 +155,8 @@ print "Lambda = 1030 nm"
 importFromTables(1030e-9, folder, filename, plotting)
 print "Lambda = 800 nm"
 importFromTables(800e-9, folder, filename, plotting)
+print "Lambda = 625 nm"
+importFromTables(625e-9, folder, filename, plotting)
 print "Lambda = 532 nm"
 importFromTables(532e-9, folder, filename, plotting)
 print "Lambda = 400 nm"

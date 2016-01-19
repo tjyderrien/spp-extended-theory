@@ -8,7 +8,7 @@ from SimpleSPProutines import *
 # Optical data are given in csv files, created using Engauge-digitizer software. 
 
 def importFromPalikGraph(folder, filename):
-  """This routine is made to import data captured using Engauge Digitized. 
+  """This routine is made to import data captured using Engauge Digitizer. 
   Be very careful! The data produced by this method are very unprecise. SPP spectoscopy requires precision to 1E-3. 
   This method gives a precision worst then 1E0. Then, it is only in case we have no other data. 
   """
@@ -144,9 +144,8 @@ def importFromAbsorptionData(wavelength, folder, filename, plotting):
 def importFromTables(wavelength, folder, filename, plotting):
   # interpolate palik data from tables of Palik
 
-  #unit1 = 1E-6 #Palik data
-  unit1 = 1E-6 #Other data
-  unit2 = 1E-6 #Other data
+  unit1 = 1E-10 #Palik data
+  #unit1 = 1E-6 #Other data
  
   # Fetch data
   DataFile = folder+filename
@@ -155,7 +154,7 @@ def importFromTables(wavelength, folder, filename, plotting):
     wavelengths = DataArray[:,0]*unit1; 
   except:
     DataArray = loadtxt(DataFile, delimiter=" ", skiprows=4)
-    wavelengths = DataArray[:,0]*unit2
+    wavelengths = DataArray[:,0]*unit1
     
   n = DataArray[:,1]; kk = DataArray[:,2];
 
@@ -187,7 +186,9 @@ def importFromTables(wavelength, folder, filename, plotting):
 	plt.show()
 
 #==============================
-#folder = "Database/"
+folder = "Database/"
+#filename = "Au-Johnson"
+filename = "Au-Palik"
 #filename = "a-Si-Palik"
 #filename = "Si-Palik"
 #filename = "SiC-Palik"
@@ -200,8 +201,8 @@ def importFromTables(wavelength, folder, filename, plotting):
 #filename = "BK7"
 plotting = True
 
-folder = "Database/PalikGraph/"
-filename = "c-Si-77K-Dash"
+#folder = "Database/PalikGraph/"
+#filename = "c-Si-77K-Dash"
 #filename = "Ti-Palik"
 
 #=========================================
@@ -212,13 +213,16 @@ print "Material: "+filename+"."
 
 #print "Lambda = 1064 nm"
 #importFromTables(1064e-9, folder, filename, plotting=True)
-#plotting = False
+
 #print "Lambda = 1060 nm"
 #importFromTables(1060e-9, folder, filename, plotting)
 #print "Lambda = 1030 nm"
 #importFromTables(1030e-9, folder, filename, plotting)
-#print "Lambda = 800 nm"
-#importFromTables(800e-9, folder, filename, plotting)
+print "Lambda = 800 nm"
+importFromTables(800e-9, folder, filename, plotting)
+print "Lambda = 795 nm"
+importFromTables(795e-9, folder, filename, plotting)
+plotting = False
 #print "Lambda = 625 nm"
 #importFromTables(625e-9, folder, filename, plotting)
 #print "Lambda = 532 nm"
@@ -229,5 +233,5 @@ print "Material: "+filename+"."
 #===========================================
 #importFromPalikGraph("Database/PalikGraph/", "Zr-Krishnan")
 #===========================================
-print "Lambda = 515 nm"
-importFromAbsorptionData(515e-9, folder, filename, plotting=True)
+#print "Lambda = 515 nm"
+#importFromAbsorptionData(515e-9, folder, filename, plotting=True)

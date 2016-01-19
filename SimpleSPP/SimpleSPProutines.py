@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 from scipy.interpolate import InterpolatedUnivariateSpline
 from matplotlib import rc
 # from pylab import *
-from scipy.constants import c, epsilon_0, mu_0, pi, e, m_e
+from scipy.constants import c, epsilon_0, mu_0, pi, e, m_e, h
 from matplotlib.legend_handler import HandlerLine2D
 
 lengthunit=1e-9

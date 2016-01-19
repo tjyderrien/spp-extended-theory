@@ -87,6 +87,60 @@ def importFromPalikGraph(folder, filename):
   return 0
   #plt.show()
 
+
+def importFromAbsorptionData(wavelength, folder, filename, plotting):
+  """This routine is made to import data captured using Engauge Digitized. 
+  Be very careful! The data produced by this method are very unprecise. SPP spectroscopy requires precision to 1E-3. 
+  This method gives a precision worst then 1E0. Then, it is only in case we have no other data. 
+  """
+  absfile = folder+filename+".csv"
+
+  narray = loadtxt(absfile, delimiter="\t", skiprows=1)
+  
+  unit = 1E9
+  
+  # import wavelength, alpha from spectroscopic data
+  wavelength1 = h*c/(narray[::-1,0]*e)
+  print wavelength1
+  n = 1e2*narray[::-1,1]
+  print n
+  numrows = 10000
+  base = 10
+  # interpolate n and k on new wavelength mesh
+  order=1
+  #wavelengths = np.arange(np.amin(wavelength2),np.amax(wavelength2), precision) #regular mesh, AWFUL for memory
+  print "Generating new wavelength mesh: ("+str(np.amin(wavelength1))+", "+str(np.amax(wavelength1))+")"
+  wavelengths = np.logspace(np.amin(np.log10(wavelength1)), np.amax(np.log10(wavelength1)), num=numrows, base=base, endpoint = True)
+
+  print "New wavelength mesh has "+str(numrows)+" rows."
+  #print wavelengths
+  
+  fni = InterpolatedUnivariateSpline(wavelength1, n, k=order)
+
+  #Interpolated one optical constants
+  try:
+    absnew = fni(wavelength)
+    print "Interpolated absorptivity at "+str(wavelength*unit)+" nm = "+str(absnew)
+  except:
+    print "Interpolation for "+str(wavelength*unit)+" nm failed."
+
+  # defining the new n and k on a common mesh
+  ni = fni(wavelengths)
+
+  if(plotting):
+    plt.figure()
+    plt.xlabel(r'Wavelength $\lambda$ (nm)')
+    plt.ylabel(r'$\alpha$ (m$^{-1}$)')
+    plt.loglog(wavelength1*unit, n, 'bs', label=r'$\alpha$ data')
+    plt.loglog(wavelengths*unit, ni, 'b-', label=r'$\alpha$ interp')
+    plt.grid()
+    plt.legend(loc=1)
+    plt.show()
+    plt.savefig('SpectroscopicData.eps')
+    
+  return 0
+  #plt.show()
+
 def importFromTables(wavelength, folder, filename, plotting):
   # interpolate palik data from tables of Palik
 
@@ -133,8 +187,9 @@ def importFromTables(wavelength, folder, filename, plotting):
 	plt.show()
 
 #==============================
-folder = "Database/"
+#folder = "Database/"
 #filename = "a-Si-Palik"
+#filename = "Si-Palik"
 #filename = "SiC-Palik"
 #filename = "Ti-Palik"
 #filename = "Ag-Johnson"
@@ -142,25 +197,37 @@ folder = "Database/"
 #filename = "SiO2-Palik"
 #filename = "W-Palik"
 #filename = "Cr-Palik"
-filename = "BK7"
+#filename = "BK7"
 plotting = True
 
-print "Material: "+filename+"."
-#folder = "Database/PalikGraph/"
+folder = "Database/PalikGraph/"
+filename = "c-Si-77K-Dash"
 #filename = "Ti-Palik"
-print "Lambda = 1064 nm"
-importFromTables(1064e-9, folder, filename, plotting=True)
-plotting = False
-print "Lambda = 1060 nm"
-importFromTables(1060e-9, folder, filename, plotting)
-print "Lambda = 1030 nm"
-importFromTables(1030e-9, folder, filename, plotting)
-print "Lambda = 800 nm"
-importFromTables(800e-9, folder, filename, plotting)
-print "Lambda = 532 nm"
-importFromTables(532e-9, folder, filename, plotting)
-print "Lambda = 400 nm"
-importFromTables(400e-9, folder, filename, plotting)
+
+#=========================================
+
+print "Material: "+filename+"."
+
+#==========================================
+
+#print "Lambda = 1064 nm"
+#importFromTables(1064e-9, folder, filename, plotting=True)
+#plotting = False
+#print "Lambda = 1060 nm"
+#importFromTables(1060e-9, folder, filename, plotting)
+#print "Lambda = 1030 nm"
+#importFromTables(1030e-9, folder, filename, plotting)
+#print "Lambda = 800 nm"
+#importFromTables(800e-9, folder, filename, plotting)
+#print "Lambda = 625 nm"
+#importFromTables(625e-9, folder, filename, plotting)
+#print "Lambda = 532 nm"
+#importFromTables(532e-9, folder, filename, plotting)
+#print "Lambda = 400 nm"
+#importFromTables(400e-9, folder, filename, plotting)
 
 #===========================================
 #importFromPalikGraph("Database/PalikGraph/", "Zr-Krishnan")
+#===========================================
+print "Lambda = 515 nm"
+importFromAbsorptionData(515e-9, folder, filename, plotting=True)

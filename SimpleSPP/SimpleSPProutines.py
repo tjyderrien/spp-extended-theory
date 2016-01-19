@@ -463,7 +463,7 @@ def SPPactiveInterfaces(dbarray, comment):
         
         # Print the table of active SPP interfaces for all cases or only new SPP interfaces					
         #if( not (comment=="new")): 
-        if(ExperimentalAchievable and (SPPperiod!=0)):
+        if(ExperimentalAchievable or (SPPperiod!=0)):
           counter=counter+1
           #print SPParray.shape
           SPParray = np.vstack((SPParray, [Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, 
@@ -743,6 +743,13 @@ def FilterDatabase(SPPdb, query, FieldIndex):
   /!\ content of query cell should be exact
   """
   SPPdbFiltered = np.array(SPPdb[SPPdb[:,FieldIndex]==query,:]) #uses a table of booleans to select
+  return SPPdbFiltered
+
+def FilterDatabaseLowerThan(SPPdb, query, FieldIndex):
+  """ Filter SPP database using query and returns a smaller database
+  /!\ content of query cell should be exact
+  """
+  SPPdbFiltered = np.array(SPPdb[SPPdb[:,FieldIndex]<query,:]) #uses a table of booleans to select
   return SPPdbFiltered
 
 

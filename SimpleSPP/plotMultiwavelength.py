@@ -13,13 +13,15 @@ MaterialFile1="Air"
 #MaterialFile1="SiO2-Palik"
 #MaterialFile1="Si-Palik"
 #MaterialFile2="Ti-Palik"
-MaterialFile2="Ag-Palik"
+#MaterialFile2="Ag-Palik"
+# MaterialFile2="Au-Palik"
+MaterialFile2="Au-Johnson"
 #MaterialFile2="Ag-Johnson"
 #MaterialFile2="Ti-Johnson"
 #MaterialFile2="Mo-Palik"
 
 UnitMat1=1e10
-UnitMat2=1e10
+UnitMat2=1e6
 
 # Loading Material dielectric complex permittivity into arrays
 try: 

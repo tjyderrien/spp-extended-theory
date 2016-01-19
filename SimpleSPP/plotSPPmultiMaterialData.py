@@ -180,7 +180,7 @@ def plotSeveralWavelengths(database1, database2, reverse, metal):
 # =======================================================
 
 ## Choose a wavelength
-wavelength = 400e-9
+wavelength = 800e-9
 
 ## Choose which material to select
 query = 'Air'
@@ -193,6 +193,8 @@ query = 'Air'
 
 reverse = False #reverse eps1 and eps2 for plotting
 metal = False
+
+thickness=500e-9
 
 ## Generate the database
 SPPdb = GenerateDatabase()
@@ -314,3 +316,4 @@ plt.colorbar(CS)
 plt.savefig('deltaPeriod.eps')
 plt.savefig('deltaPeriod.png')
 plt.show()
+

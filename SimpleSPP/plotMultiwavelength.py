@@ -9,16 +9,21 @@ from SimpleSPProutines import *
 #MaterialFolder="/usr/local/share/gsvit/data/spectra"
 MaterialFolder="Database"
 
-MaterialFile1="Air"
+#MaterialFile1="Air"
+#MaterialFile1="Al2O3-Palik"
 #MaterialFile1="SiO2-Palik"
+MaterialFile1="TiO2-Palik"
 #MaterialFile1="Si-Palik"
+
+#MaterialFile2="Al-Palik"
 #MaterialFile2="Ti-Palik"
 #MaterialFile2="Ag-Palik"
-# MaterialFile2="Au-Palik"
-MaterialFile2="Au-Johnson"
+#MaterialFile2="Au-Palik"
+#MaterialFile2="Au-Johnson"
 #MaterialFile2="Ag-Johnson"
-#MaterialFile2="Ti-Johnson"
+MaterialFile2="Ti-Johnson"
 #MaterialFile2="Mo-Palik"
+#MaterialFile2="Si-Palik"
 
 UnitMat1=1e10
 UnitMat2=1e6

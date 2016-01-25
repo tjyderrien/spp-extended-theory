@@ -1,0 +1,6422 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass revtex
+\options aps, reprint
+\use_default_options false
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman charter
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement t
+\paperfontsize default
+\spacing single
+\use_hyperref true
+\pdf_bookmarks true
+\pdf_bookmarksnumbered false
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks false
+\pdf_pdfborder true
+\pdf_colorlinks true
+\pdf_backref false
+\pdf_pdfusetitle true
+\papersize default
+\use_geometry true
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine natbib_numerical
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 2cm
+\topmargin 2cm
+\rightmargin 2cm
+\bottommargin 2cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 2
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Generation of SPP on Si targets in water medium upon femtosecond laser irradiati
+on
+\end_layout
+
+\begin_layout Author
+Thibault J.-Y.
+ Derrien
+\end_layout
+
+\begin_layout Affiliation
+BAM Bundesanstalt für Materialforschung und –prüfung, 
+\begin_inset Newline newline
+\end_inset
+
+Unter den Eichen 87, D-12205 Berlin, Germany 
+\end_layout
+
+\begin_layout Author
+Jörg Krüger
+\end_layout
+
+\begin_layout Affiliation
+BAM Bundesanstalt für Materialforschung und –prüfung, 
+\begin_inset Newline newline
+\end_inset
+
+Unter den Eichen 87, D-12205 Berlin, Germany 
+\end_layout
+
+\begin_layout Author
+Jörn Bonse
+\end_layout
+
+\begin_layout Affiliation
+BAM Bundesanstalt für Materialforschung und –prüfung, 
+\begin_inset Newline newline
+\end_inset
+
+Unter den Eichen 87, D-12205 Berlin, Germany 
+\end_layout
+
+\begin_layout Date
+September, 19th of 2013
+\end_layout
+
+\begin_layout Abstract
+Surface Plasmon Polariton in multilayer system is investigated for Ti and
+ Si, irradiated in air and in water.
+ The effect of the presence of an oxide layer is also considered.
+ The results demonstrate that far subwavelength periodicities can be reached
+ for several configurations.
+ A match with irradiation of Ti and Si in water is found if the presence
+ of an oxide layer is taken into account.
+ The role of water excitation and oxide layer are presented.
+ The resulting periodicity of SPP modes excited in Si immersed into water
+ explain the sub-200 nm LIPSS periodicities obtained experimentally.
+ The interference of SPPs at different interfaces give birth to a wide range
+ of far-subwavelength modes, depending on the layer thickness.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This report focuses on matching the Surface Plasmon Polariton periodicity
+ with LIPSS periodicities obtained experimentally in water on Si and on
+ Ti.
+ Several configurations are tested, and the effect of an oxide layer in
+ between is discussed.
+ 
+\end_layout
+
+\begin_layout Standard
+In a first part, we propose a summary of the SPP physics at a single interface.
+ Then the theory of SPP in a multilayer system is presented.
+ In the second part, we briefly sum up the experimental results to explain
+ theoretically.
+ In a third part, we apply single interface SPP theory and the multilayer
+ SPP theory to a common case.
+ We thus compare the results and discuss them with literature.
+ In a fourth part, we check that free-carrier dynamics in different materials
+ allow to reach the densities justifying small SPP periodicities found in
+ Section III.
+ In a fifth part, we give the analytical proof that Kerr effect is dominant
+ and thus show that considering high free-carrier density in both water
+ and silicon is reasonable.
+ 
+\end_layout
+
+\begin_layout Section
+Theory of Surface Plasmon Polaritons
+\end_layout
+
+\begin_layout Standard
+The SPP excitation conditions are investigated at a simple interface, and
+ then in a system composed of one layer, separating two semi-infinite parts
+ [Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Scheme"
+
+\end_inset
+
+].
+ 
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename /media/PHD/Travail/Berlin/Rapports/06-WaterSPP/Multilayer/MultiLayer.svg
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Scheme"
+
+\end_inset
+
+Scheme of the considered multilayer system.
+ 
+\begin_inset Formula $t=2a$
+\end_inset
+
+ is the thickness of the layer.
+ 
+\begin_inset Formula $k_{i}$
+\end_inset
+
+ are wavenumber in the layer 
+\begin_inset Formula $i$
+\end_inset
+
+, and 
+\begin_inset Formula $\varepsilon_{i}$
+\end_inset
+
+ is the dielectric function used to that layer.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+SPP excitation at a single interface
+\end_layout
+
+\begin_layout Subsubsection
+Conditions in a perfect media
+\end_layout
+
+\begin_layout Standard
+Condition for SPP excitation neglecting the absorption of the external medium
+ is given by both conditions 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Raether1986,Zayats2005,Maier2007"
+
+\end_inset
+
+ 
+\begin_inset Formula 
+\begin{equation}
+\begin{cases}
+f_{real}^{(1)}= & \Re e\left(\varepsilon_{1}\right)\Re e\left(\varepsilon_{2}\right)<0\\
+f_{real}^{(2)}= & \Re e\left(\varepsilon_{1}\right)+\Re e\left(\varepsilon_{2}\right)<0
+\end{cases}\label{eq:RussianCondition}
+\end{equation}
+
+\end_inset
+
+ where 
+\begin_inset Formula $\varepsilon_{1}\in\mathbb{R}$
+\end_inset
+
+ and 
+\begin_inset Formula $\varepsilon_{2}\in\mathbb{C}$
+\end_inset
+
+.
+ 
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:ConditionsSPPreal-Si"
+
+\end_inset
+
+ presents the values of these quantities as a function free-carrier density,
+ at the interface with Si.
+ 
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename /media/PHD/Travail/Berlin/Rapports/06-WaterSPP/Multilayer/SPPrussianCondition-Si-1.png
+	width 8cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename /media/PHD/Travail/Berlin/Rapports/06-WaterSPP/Multilayer/SPPrussianCondition-Si-2.png
+	width 8cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:ConditionsSPPreal-Si"
+
+\end_inset
+
+Conditions for SPP excitation by neglecting absorption at interface with
+ Si in different media.
+ (a) First condition.
+ (b) Second condition.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:ConditionsSPPreal-Ti"
+
+\end_inset
+
+ 
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename /media/PHD/Travail/Berlin/Rapports/06-WaterSPP/Multilayer/SPPrussianCondition-Ti-1.png
+	width 8cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename /media/PHD/Travail/Berlin/Rapports/06-WaterSPP/Multilayer/SPPrussianCondition-Ti-2.png
+	width 8cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:ConditionsSPPreal-Ti"
+
+\end_inset
+
+Conditions for SPP excitation by neglecting absorption at interface with
+ Ti in different media.
+ (a) First condition.
+ (b) Second condition.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ present the conditions at the interfaces with Ti.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+Figure ## presents the conditions at the interfaces with a-Si.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Conditions a medium with losses
+\end_layout
+
+\begin_layout Standard
+Condition for SPP excitation at a single interface between media 
+\begin_inset Formula $1$
+\end_inset
+
+ and 
+\begin_inset Formula $2$
+\end_inset
+
+ is given by 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Derrien2012"
+
+\end_inset
+
+ 
+\begin_inset Formula 
+\begin{equation}
+f(\varepsilon_{1},\varepsilon_{2})<0\label{eq:ConditionSPP}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula 
+\[
+f(\varepsilon_{1},\varepsilon_{2})=\Re e\left(\varepsilon_{1}\right)\Re e\left(\varepsilon_{2}\right)+\Im m\left(\varepsilon_{1}\right)\Im m\left(\varepsilon_{2}\right)
+\]
+
+\end_inset
+
+in agreement with the recent works of 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Norrman2013"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:ConditionSPPsimple"
+
+\end_inset
+
+ defines the possible interfaces at which SPP can be excited.
+ Results show possible excitation at : 
+\end_layout
+
+\begin_layout Itemize
+air / excited Si at very high free-carrier density in Si
+\end_layout
+
+\begin_layout Itemize
+water / excited Si at very high free-carrier density in Si
+\end_layout
+
+\begin_layout Itemize
+excited water / excited Si in a specific range of carrier density in Si
+ and water
+\end_layout
+
+\begin_layout Itemize
+excited water / Ti while water is still a dielectric
+\end_layout
+
+\end_inset
+
+
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Multilayer/SimpleSPPReEpsilonsOnSi.png
+	width 8cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Multilayer/SimpleSPPReEpsilonsOnTi.png
+	width 8cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:ConditionSPPsimple"
+
+\end_inset
+
+Validity domain for SPP condition at interfaces involving (a) Si, (b) Ti.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Multilayer/SPPperiodwithSiWater.png
+	width 8cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename /media/PHD/Travail/Berlin/Rapports/06-WaterSPP/Multilayer/20130731-SPPperiodExcitedSi.eps
+	width 8cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:SPPperiodicitySingleInterface"
+
+\end_inset
+
+SPP periodicity at the interfaces with Si.
+ (a) Periodicities.
+ (b) Periodicities considering conditions.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Multilayer/SPPperiodWithTi.png
+	width 8cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+SPP periodicity at the interfaces with Ti.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:SPPperiodicitySingleInterface"
+
+\end_inset
+
+ presents the resulting periodicities for each case at which SPP can be
+ excited.
+ 
+\end_layout
+
+\begin_layout Itemize
+air / Si*: 
+\begin_inset Formula $\Lambda_{SPP}\sim800$
+\end_inset
+
+ nm.
+ 
+\end_layout
+
+\begin_layout Itemize
+water / Si*: 
+\begin_inset Formula $\Lambda_{SPP}\sim630$
+\end_inset
+
+ nm.
+ 
+\end_layout
+
+\begin_layout Itemize
+water* / Si*: 
+\begin_inset Formula $400\, nm<\Lambda_{SPP}<1400\, nm$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+water* / Ti*: 
+\begin_inset Formula $600\, nm<\Lambda_{SPP}<650\, nm$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Itemize
+air / Ti*: 
+\begin_inset Formula $\Lambda_{SPP}\sim800\, nm$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Periodicity of SPPs at single interface
+\end_layout
+
+\begin_layout Standard
+Periodicity of the SPPs at a single interface is given by 
+\begin_inset Formula $\Lambda=\frac{2\pi}{\Re e\left(\beta\right)}$
+\end_inset
+
+ 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Raether1986,Zayats2005,Maier2007"
+
+\end_inset
+
+ where 
+\begin_inset Formula 
+\begin{equation}
+\beta=\frac{\omega}{c}\sqrt{\frac{\varepsilon_{1}\varepsilon_{2}}{\varepsilon_{1}+\varepsilon_{2}}}.\label{eq:SimpleSPP}
+\end{equation}
+
+\end_inset
+
+This relation is valid at any interface but must be restricted by condition
+ by Eq.
+ 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:ConditionSPP"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Subsection
+Multilayer SPP model
+\end_layout
+
+\begin_layout Standard
+Dispersion relation describing the electric and magnetic fields in the Transvers
+e Magnetic direction, in a multilayer system is given by 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Prade1991,Maier2007"
+
+\end_inset
+
+ 
+\begin_inset Formula 
+\begin{equation}
+e^{-2k_{1}t}=\frac{\frac{k_{1}}{\varepsilon_{1}}+\frac{k_{2}}{\varepsilon_{2}}}{\frac{k_{1}}{\varepsilon_{1}}-\frac{k_{2}}{\varepsilon_{2}}}\times\frac{\frac{k_{1}}{\varepsilon_{1}}+\frac{k_{3}}{\varepsilon_{3}}}{\frac{k_{1}}{\varepsilon_{1}}-\frac{k_{3}}{\varepsilon_{3}}}\label{eq:ImplicitEq}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula 
+\begin{equation}
+k_{i}^{2}=\beta^{2}-k_{0}^{2}\varepsilon_{i}\label{eq:WaveVectors}
+\end{equation}
+
+\end_inset
+
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $k_{i}$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+, 
+\begin_inset Formula $i\in\{1,2,3\}$
+\end_inset
+
+ is the complex wave number in medium 
+\begin_inset Formula $i$
+\end_inset
+
+.
+ 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\beta$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ is the complex wavenumber characterizing the possible electromagnetic modes
+ in the thin layer.
+ 
+\begin_inset Formula $\varepsilon_{i}$
+\end_inset
+
+, 
+\begin_inset Formula $i\in\{1,2,3\}$
+\end_inset
+
+ are the dielectric functions characterizing the optical properties of each
+ medium constituting the interface.
+ 
+\begin_inset Formula $k_{0}$
+\end_inset
+
+ is the incident laser wavenumber.
+ 
+\begin_inset Formula $t$
+\end_inset
+
+ is the thickness of the thin layer sandwiched between environment and bulk
+ sample [see Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Scheme"
+
+\end_inset
+
+].
+ 
+\end_layout
+
+\begin_layout Subsection
+Optical modeling
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+The dielectric function for Ti is taken from 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Golosov2011"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\end_inset
+
+Generally, we use dielectric function given by applying the Drude approximation
+ to the electron gas and obtain 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Dresselhaus2001"
+
+\end_inset
+
+ 
+\begin_inset Formula 
+\begin{equation}
+\varepsilon=\varepsilon_{\infty}-\frac{\omega_{p}^{2}}{\omega^{2}}\frac{1}{1+i\frac{\nu}{\omega}}\label{eq:DielectricFunction}
+\end{equation}
+
+\end_inset
+
+ where 
+\begin_inset Formula 
+\[
+\omega_{p}^{2}=\frac{n_{e}e^{2}}{m_{e}m^{*}\varepsilon_{0}}
+\]
+
+\end_inset
+
+Parameters are detailed in Table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:DielectricFunctions"
+
+\end_inset
+
+.
+ 
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="5">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Material
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\varepsilon_{\infty}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $m^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\nu^{-1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Ref
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Si
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $13.64+i0.048$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.18$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1.1$
+\end_inset
+
+ fs
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Sokolowski-Tinten2000"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+a-Si
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $14.9+i0.627$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.20$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1.0$
+\end_inset
+
+ fs
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Miyaji2012"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $SiO_{2}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\left(1.453\right)^{2}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1.00$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1.0$
+\end_inset
+
+ fs
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Water
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1.7583$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1.00$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1.7$
+\end_inset
+
+ fs
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Sarpe2012"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:DielectricFunctions"
+
+\end_inset
+
+Parameters used in the dielectric functions given by Eq.
+ 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:DielectricFunction"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Experimental results
+\end_layout
+
+\begin_layout Standard
+The presented experimental results only focus on LSFL structures.
+ Indeed, it is believed that HSFL structures (far from laser wavelength)
+ are not due to the excitation of Surface Plasmon Polarition.
+ The experimental measurements used as a basis in this work are presented
+ in Table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:Ripples-experimental-periodicity"
+
+\end_inset
+
+.
+ 
+\begin_inset Float table
+wide true
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="5">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Material
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Medium
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+N
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Period
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Orientation to 
+\begin_inset Formula $\overrightarrow{E}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Si
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+air
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+100
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $555-585$
+\end_inset
+
+ nm
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\bot$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Si
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+water
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+100
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $80-130$
+\end_inset
+
+ nm
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\bot$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Ti
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+air
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+50
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $590-80$
+\end_inset
+
+ nm
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\bot$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Ti
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+water
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1000
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $70-170$
+\end_inset
+
+ nm
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\bot$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:Ripples-experimental-periodicity"
+
+\end_inset
+
+Experimental periods of ripples on Si and Ti, in air and water.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Far sub-wavelength SPP modes in multilayer systems
+\end_layout
+
+\begin_layout Subsection
+Periodicity of SPP at single interface
+\end_layout
+
+\begin_layout Standard
+Periodicity calculations have been performed for possible combinations between
+ the following interfaces: water, excited water, Si, excited Si, and amorphous
+ Si.
+ Periodicity of SPPs at 
+\begin_inset Formula $Water/a-Si^{*}$
+\end_inset
+
+ and 
+\begin_inset Formula $a-Si^{*}/Si$
+\end_inset
+
+ interfaces have been performed by 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Miyaji2012"
+
+\end_inset
+
+ and will be used in the next sections.
+ 
+\end_layout
+
+\begin_layout Standard
+However, calculations had not been performed for excited water interface
+ with Si.
+ This case is interesting and can lead to generation far subwavelength LSFL
+ ripples perpendicular to the polarization as shown on Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:SPPwater"
+
+\end_inset
+
+.
+ Water can be excited by laser pulse and generate a high number of free-carriers
+ (
+\begin_inset Formula $N_{e}\sim3\times10^{22}$
+\end_inset
+
+ 
+\begin_inset Formula $cm^{-3}$
+\end_inset
+
+).
+ Indeed, the Kerr effect in water is ## times stronger than in air (
+\begin_inset Formula $n_{2}^{water}=$
+\end_inset
+
+) and the number of carriers in valence band is not limited in the liquid
+ 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Noack1999,Vogel2002"
+
+\end_inset
+
+.
+ 
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Multilayer/Water0-Water-Si0/LargeDepth/20130731-SPPperiodSiExcitedWaterSimple.eps
+	width 8cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:SPPwater"
+
+\end_inset
+
+Periodicity of Surface Plasmon Polariton at the interface 
+\begin_inset Formula $Water^{*}/Si$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Verification of the multilayer model
+\end_layout
+
+\begin_layout Paragraph
+Checking the limit case 
+\begin_inset Formula $a\rightarrow0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In case of two identical interfaces, the SPP wave number is given by Eq.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:SimpleSPP"
+
+\end_inset
+
+.
+ Performing analytical resolution of dispersion relation (Eq.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:ImplicitEq"
+
+\end_inset
+
+) over the multilayer model leads to the analytical solutions, 
+\begin_inset Formula 
+\[
+\beta_{a=0}\in\left\{ \pm k_{0}\sqrt{\varepsilon_{1}},\pm k_{0}\sqrt{\frac{\varepsilon_{2}\varepsilon_{3}}{\varepsilon_{2}+\varepsilon_{3}}}\right\} 
+\]
+
+\end_inset
+
+The first solution describes a propagation mode, and the second describe
+ a SPP mode at a single interface made by media II and III.
+ Thus, calculating the wave number 
+\begin_inset Formula $\beta$
+\end_inset
+
+ numerically can lead to the degeneracy that we well identified analytically.
+ The degeneracy of the solution can lead to a discontinuous resolution using
+ the numerical resolution technique.
+ 
+\end_layout
+
+\begin_layout Paragraph
+Validation on previous works
+\end_layout
+
+\begin_layout Standard
+First, the model has been verified by reproducing the results of 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Prade1991"
+
+\end_inset
+
+.
+ The results were reproduced with a very good accordance [see theoretical
+ report on HSFL in Ti].
+ 
+\end_layout
+
+\begin_layout Standard
+We also consider the case of experimental works proposed by 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Miyaji2012"
+
+\end_inset
+
+.
+ Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Miyaji"
+
+\end_inset
+
+ presents the SPP periodicity as a function of the free-carrier density
+ 
+\begin_inset Formula $N_{e}$
+\end_inset
+
+.
+ Periodicity is demonstrated for a single interface SPP living at the 
+\begin_inset Formula $water/a-Si^{*}$
+\end_inset
+
+ interface and at the 
+\begin_inset Formula $a-Si^{*}/Si$
+\end_inset
+
+ interface.
+ It is also calculated at the 
+\begin_inset Formula $a-Si^{*}/Si^{*}$
+\end_inset
+
+interface.
+ The multilayer SPP results are also shown for the case of a large layer
+ thickness (
+\begin_inset Formula $t=1$
+\end_inset
+
+ 
+\begin_inset Formula $\mu$
+\end_inset
+
+m here).
+ (i) Comparison with Ref.
+ 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Miyaji2012"
+
+\end_inset
+
+ reveals that invoking 
+\begin_inset Quotes eld
+\end_inset
+
+standing-wave model
+\begin_inset Quotes erd
+\end_inset
+
+ allowed to divide the results by a factor 2.
+ However, the interference between SPP and laser is included in the dispersion
+ relation of SPPs and thus should be avoided.
+ (ii) The multilayer SPP results match well with the case of SPP living
+ at the 
+\begin_inset Formula $water/a-Si^{*}$
+\end_inset
+
+ interface.
+ This allows us to validate the results obtained with multilayer model and
+ to go deeper using different configurations.
+ Only the 
+\begin_inset Formula $water/a-Si$
+\end_inset
+
+ interface leads to SPP excitation since 
+\begin_inset Formula $\alpha^{-1}(a-Si)<t$
+\end_inset
+
+ where 
+\begin_inset Formula $t$
+\end_inset
+
+ is the distance between interfaces.
+ (iii) None of the previously obtained results well explain the experimental
+ periodicity of Si irradiated in water.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Multilayer/Water0-aSi-Si0/30x30-10/20130730-ValidationMyaji1.eps
+	width 8cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Miyaji"
+
+\end_inset
+
+Periodicity of the SPP in the case of 
+\begin_inset Formula $Water-aSi^{*}-Si$
+\end_inset
+
+ interface.
+ Both single SPP model and multilayer SPP model are plotted.
+ For this Figure, 
+\begin_inset Formula $\varepsilon_{\infty}^{Si}=13.5+0.0384i$
+\end_inset
+
+ and 
+\begin_inset Formula $\varepsilon_{\infty}^{a-Si}=$
+\end_inset
+
+ were taken from Ref.
+ 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Miyaji2012"
+
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+The effect of coupled-SPPs in a thin layer
+\end_layout
+
+\begin_layout Standard
+In the previous section, we reproduced the results of a SPPs living at a
+ single interface 
+\begin_inset Formula $water/a-Si^{*}$
+\end_inset
+
+ using a multilayer model, considering the full sandwich 
+\begin_inset Formula $water/a-Si^{*}/Si$
+\end_inset
+
+, and setting the thickness of the 
+\begin_inset Formula $a-Si^{*}$
+\end_inset
+
+ layer to a large value e.g.
+ 
+\begin_inset Formula $1$
+\end_inset
+
+ 
+\begin_inset Formula $\mu m$
+\end_inset
+
+, which validates the approach.
+ We apply now the multilayer model to simpler systems in order to understand
+ the results obtained in a case a thin film.
+ Then, we will apply the multilayer model to a more complex configuration.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+The case of 
+\begin_inset Formula $air/Si^{*}/Si$
+\end_inset
+
+ revisited
+\end_layout
+
+\begin_layout Standard
+In this section, we analyze the simple case of 
+\begin_inset Formula $air-Si$
+\end_inset
+
+ with a thin excited layer at the surface.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Multilayer/air-Si-Si0/LargeTickness/20130731-SPPperiodExcitedSi.eps
+	width 8cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Multilayer/air-Si-Si0/LargeTickness/20130701-Contour.eps
+	width 10cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:IsoLinesAirSiSi0"
+
+\end_inset
+
+(a) Periodicity at 
+\begin_inset Formula $air-Si^{*}$
+\end_inset
+
+ interface.
+ (b) Isolines representing the SPP modes as a function of the free-carrier
+ density in 
+\begin_inset Formula $Air-Si*-Si$
+\end_inset
+
+ system.
+ 
+\begin_inset Formula $Si^{*}$
+\end_inset
+
+ is a Si excited layer.
+ The case of 
+\begin_inset Formula $air-Si^{*}$
+\end_inset
+
+ has been developed in Ref.
+ 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Derrien2013"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:IsoLinesAirSiSi0"
+
+\end_inset
+
+ (a) presents the periodicity of the SPPs at interfaces with excited Si.
+ The periodicities of SPP excited at single interface between air and excited
+ Si is presented.
+ We also propose a 
+\begin_inset Quotes eld
+\end_inset
+
+restricted SPP
+\begin_inset Quotes erd
+\end_inset
+
+ regime, taking into account densities for which SPP excitation is allowed
+ considering generalized conditions valid in materials with losses (Eq.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:ConditionSPP"
+
+\end_inset
+
+), compatible with recently published works of 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Norrman2013"
+
+\end_inset
+
+ (see Figures therein).
+ 
+\begin_inset Note Greyedout
+status collapsed
+
+\begin_layout Plain Layout
+The proper conditions have not been published yet 
+\noun on
+(let's do it! see report on Ti HSFL).
+ 
+\noun default
+It is demonstrated that the periodicity of SPP at single interface 
+\begin_inset Formula $air-Si^{*}$
+\end_inset
+
+is well described by the multilayer model with a large layer thickness.
+ 
+\end_layout
+
+\end_inset
+
+ The Figure also demonstrates that multilayer SPP model well reproduces
+ results of single layer SPPs, which means that no SPP is excited at the
+ second interface if 
+\begin_inset Formula $t=2$
+\end_inset
+
+ 
+\begin_inset Formula $\mu m$
+\end_inset
+
+.
+ As a verification, the case of large thickness is found equal to the single
+ 
+\begin_inset Formula $air-Si^{*}$
+\end_inset
+
+ interface SPP periodicity.
+ While 
+\begin_inset Formula $t=200$
+\end_inset
+
+ nm, we observe that a periodicity of nearly 210 nm can be obtained at low
+ density, and which corresponds to the wave propagation regime since periodicity
+ is equal to 
+\begin_inset Formula $\lambda/\Re e\sqrt{\varepsilon}$
+\end_inset
+
+.
+ This case is consistent with the experimental observation of 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Costache2004"
+
+\end_inset
+
+ in Si.
+ However, this mode is not really of SPP since conditions to excite SPPs
+ are a high density in the conduction band.
+ This mode is found at sub-critical densities and would correspond to interferen
+ces between propagated waves (radiation remnants ?).
+ At lower thicknesses, the multilayer SPP calculations provide an interesting
+ possible transition between the SPP mode and the propagation mode.
+ The transition occurs at the critical density defined by 
+\begin_inset Formula 
+\begin{equation}
+n_{cr}=\frac{m_{e}\varepsilon_{0}\Re e\left(\varepsilon_{\infty}\right)}{e^{2}}\left(\omega^{2}+\nu^{2}\right)\label{eq:CriticalDensity}
+\end{equation}
+
+\end_inset
+
+which has been represented by a vertical bar located at 
+\begin_inset Formula $n_{cr}=4.93\times10^{27}\, m^{-3}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:IsoLinesAirSiSi0"
+
+\end_inset
+
+ (b) reveals the periodicity of SPP living in the 
+\begin_inset Formula $Si^{*}$
+\end_inset
+
+ layer in the 
+\begin_inset Formula $air-Si*-Si$
+\end_inset
+
+ multilayer system.
+ While reducing the layer thickness, the periodicity in the thin layer changes
+ due to the interferences between the SPP living at the different interfaces.
+ While reducing the layer thickness, the SPP periodicity decreases and reveals
+ modes with a sub-100 nm periodicity.
+ In the case of irradiation with a 100 fs laser, these modes have not been
+ observed since the absorption depth of Si under ablation fluences is rather
+ 100 nm 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Derrien2012,Derrien2013"
+
+\end_inset
+
+.
+ Considering that limit, the periodicities in Si are higher than 600 nm
+ according to the results, which is consistent with the experimental observation
+s 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Bonse2009,Bonse2010"
+
+\end_inset
+
+ at reduced number of pulses.
+ 
+\begin_inset Note Greyedout
+status collapsed
+
+\begin_layout Plain Layout
+ At higher number of pulses, the cumulative effects could lead to a reduction
+ of the skin depth which could explain the tiny (~ 200 nm) periodicities
+ at very high number of pulses 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Costache2004"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\end_inset
+
+ Moreover, one has to consider the excitation conditions which restrict
+ the possible densities for excitation.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+The effect of interaction with water
+\end_layout
+
+\begin_layout Standard
+We turn now to the study of configurations (I) 
+\begin_inset Formula $water-Si^{*}-Si$
+\end_inset
+
+ and (II) 
+\begin_inset Formula $water-water^{*}-Si$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Multilayer/Water0-Si-Si0/LargeDepth/DetailedDensity/20130731-SPPperiodExcitedSiWater.eps
+	width 8cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Multilayer/Water0-Si-Si0/mEff0.18/20130731-SPPperiodSiExcitedSi.eps
+	width 8cm
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:IsoLinesWater0SiSi0"
+
+\end_inset
+
+(a) SPP mode periodicities at 
+\begin_inset Formula $water-Si^{*}-Si$
+\end_inset
+
+ interface.
+ Vertical bar shows the value of critical density in Si medium.
+ (b) Same configuration, calculation with effective mass for Si 
+\begin_inset Formula $m_{Si}^{*}=0.18$
+\end_inset
+
+.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:IsoLinesWater0SiSi0"
+
+\end_inset
+
+ presents the case of the 
+\begin_inset Formula $Water-Si*-Si$
+\end_inset
+
+ interface.
+ At 
+\begin_inset Formula $1$
+\end_inset
+
+ 
+\begin_inset Formula $\mu m$
+\end_inset
+
+ thickness, periodicity calculated with multilayer and single SPP models
+ are in good accordance.
+ This means that the first interface behaves as a bulk under laser interaction
+ and supports the SPP excitation.
+ The second interface does not see the laser excitation.
+ The interference between the SPPs is possible only if their are close enough.
+ This threshold distance is related to the skin depth of the layer under
+ laser excitation.
+ We can observe a transition from SPP regime to propagation regime while
+ free-carrier density is reducing.
+ The criterion to excite SPP then remains important in the case of a multilayer
+ system and corresponds to a threshold given by the critical density (Eq.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:CriticalDensity"
+
+\end_inset
+
+).
+ Finally, this configuration still does not explain the experimental results,
+ forcing us to check other possibilities.
+ 
+\end_layout
+
+\begin_layout Standard
+The SPP periodicities are reduced in the case of an alternated nature of
+ layers such as 
+\begin_inset Formula $dielectric-metal-dielectric$
+\end_inset
+
+ or 
+\begin_inset Formula $metal-dielectric-metal$
+\end_inset
+
+.
+ We turn now the study the possibility to excite water more than exciting
+ the sample itself.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Multilayer/Water0-Water-Si0/LargeDepth/DetailedNe/MoreDeep/20130731-SPPperiodSiExcitedWater.eps
+	width 8cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float 
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Multilayer/Water0-Water-Si0/LargeDepth/20130701-Contour.eps
+	width 10cm
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:IsoLinesWater0WaterSi0"
+
+\end_inset
+
+Isolines representing the SPP modes as a function of the free-carrier density
+ in 
+\begin_inset Formula $Water-Water*-Si$
+\end_inset
+
+ system.
+ Vertical bar shows the critical density in water medium (
+\begin_inset Formula $n_{cr}^{H_{2}O}=3.26\times10^{27}\, m^{-3}$
+\end_inset
+
+).
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:IsoLinesWater0WaterSi0"
+
+\end_inset
+
+ presents the simulation results performed considering the excitation of
+ a layer of water between the ambient medium and the bulk Si.
+ 
+\end_layout
+
+\begin_layout Standard
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:IsoLinesWater0WaterSi0"
+
+\end_inset
+
+ (a) demonstrates the SPP periodicity at the 
+\begin_inset Formula $water-water^{*}$
+\end_inset
+
+ interface, and 
+\begin_inset Formula $water^{*}-Si$
+\end_inset
+
+ interface.
+ The 
+\begin_inset Quotes eld
+\end_inset
+
+restricted
+\begin_inset Quotes erd
+\end_inset
+
+ curves show the periodicities for which SPP are allowed to be excited regarding
+ condition given by Eq.
+ 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:ConditionSPP"
+
+\end_inset
+
+.
+ We first underline multilayer 
+\begin_inset Formula $water-water^{*}-Si$
+\end_inset
+
+ system shows the same periodicity as SPP at single interface 
+\begin_inset Formula $water-water^{*}$
+\end_inset
+
+.
+ No low periodicity is observed for any layer thickness.
+ However, the SPP at simple interface 
+\begin_inset Formula $water^{*}/Si$
+\end_inset
+
+ reveals a periodicity of 105 nm near 
+\begin_inset Formula $N_{e}\sim3\times10^{28}$
+\end_inset
+
+ 
+\begin_inset Formula $m^{-3}$
+\end_inset
+
+.
+ Vertical bar shows the critical density in water (
+\begin_inset Formula $n_{cr}^{H_{2}O}=3.26\times10^{27}\, m^{-3}$
+\end_inset
+
+).
+ 
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:IsoLinesWater0WaterSi0"
+
+\end_inset
+
+ (b) demonstrate the SPP periodicity using isocurves as a function of free-carri
+er density and excited layer thickness 
+\begin_inset Formula $t$
+\end_inset
+
+.
+ we observe that for free-carrier density greater than critical density
+ (equal to 
+\begin_inset Formula $3.26\times10^{27}\, m^{-3}$
+\end_inset
+
+ in water), the periodicity is not very sensitive to the layer thickness,
+ accordingly with the experimental results.
+ 
+\end_layout
+
+\end_inset
+
+
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Subsection
+Results for different configurations
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Float table
+placement p
+wide true
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="14" columns="11">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Medium 1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Layer
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Medium 2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $\Lambda_{SPP}$
+\end_inset
+
+(nm)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $a=\frac{h}{2}$
+\end_inset
+
+ (nm)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $n_{e}(cm^{-3})$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $\nu_{1}^{-1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $\nu_{2}^{-1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $\nu_{3}^{-1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $T_{e}(Ti*)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $grid$
+\end_inset
+
+ 
+\begin_inset Formula $[N_{n_{e}}\times N_{a}]$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+air
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Si*
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Si
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $10-100$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $0-3$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $6\times10^{21}-10^{23}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+-
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+1.1 fs
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+-
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+-
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $20\times20$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Water
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Water*
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Si*
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $10-100$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $<5$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $10^{21}-10^{22}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+-
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+1.0 fs
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+1.1 fs
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+-
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $10\times10$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Water
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Water*
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Si
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $10-100$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $<5$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $10^{21}-10^{23}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+-
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+1.0 fs
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+-
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+-
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $10\times10$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Water
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+a-Si*
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Si
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Water
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Si*
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Si
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $10-100$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $<3.5$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $5\times10^{21}-10^{23}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+-
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+1.1 fs
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+-
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+-
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $10\times10$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+air
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Ti*
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Ti
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $800$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+-
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+-
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+10 kK
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $20\times20$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+water*
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Ti*
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Ti
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $200$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $20-100$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $5\times10^{21}-5\times10^{22}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+1.0 fs 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Fan2002"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+10 kK
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $5\times5$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+water
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Ti*
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Ti
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $600$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $1-100$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $5\times10^{21}-10^{23}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+10 kK
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $5\times5$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+water
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+water*
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Ti
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $540-610$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $1-50$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $2\times10^{21}-1\times10^{23}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+1.0 fs
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+-
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $10\times5$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+water
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+water*
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Ti
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $350-600$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $1-50$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $2\times10^{21}-1\times10^{23}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+1.7 fs 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Sarpe2012"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+-
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $10\times10$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+water
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+water*
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Ti*
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $500-800$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $1-50$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $6\times10^{19}-1\times10^{23}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+1.0 fs
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+10 kK
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $5\times10$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+water
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+water*
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Ti*
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $500-600$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $1-50$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $2\times10^{21}-1\times10^{23}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+1.0 fs
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+50 kK
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $5\times5$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+water
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $TiO_{2}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Ti
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $300-600$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $1-50$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $2.4\times10^{19}-7\times10^{20}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+1.0 fs
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $10\times10$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+SPP period as a function of the stack layered structure
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ However, the works of 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Noack1999"
+
+\end_inset
+
+ revealed that such densities can be reached in our regime.
+ 
+\end_layout
+
+\begin_layout Standard
+Considering the excitation of water revealed that sensitive reduction of
+ the SPP periodicity can be reached and must be investigated more deeply.
+ Moreover, looking forward alternating nature of dielectric layers drive
+ us to consider an oxide layer, which has been demonstrated as important
+ after irradiation in water.
+ 
+\end_layout
+
+\begin_layout Subsection
+Interfaces involving oxide layer
+\end_layout
+
+\begin_layout Standard
+Following our path after finding that far subwavelength periodicities are
+ possible if we consider excitation of water, we turn now to the study of
+ SPP periodicity considering the presence of an oxide layer.
+ We also compare the periodicities obtained in air medium with the one obtained
+ in water medium, so for Ti and Si.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+\begin_inset Formula $air/TiO_{2}^{*}/Ti$
+\end_inset
+
+ and 
+\begin_inset Formula $Water^{*}/TiO_{2}/Ti$
+\end_inset
+
+ systems
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Multilayer/air-TiO2-Ti0/20130731-SPPperiodTiExcitedTiO2.eps
+	width 8cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Multilayer/Water-TiO2Inf-Ti0/20130731-SPPperiodTiExcitedWater.eps
+	width 8cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:TiO2"
+
+\end_inset
+
+Periodicity in (a) the 
+\begin_inset Formula $air/TiO_{2}^{*}/Ti$
+\end_inset
+
+ system, (b) 
+\begin_inset Formula $water^{*}/TiO_{2}/Ti$
+\end_inset
+
+ systems
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:TiO2"
+
+\end_inset
+
+ (a) presents the possible EM wave mode periodicities in the multilayer
+ system 
+\begin_inset Formula $air-TiO_{2}^{*}-Ti$
+\end_inset
+
+.
+ It is shown that no special subwavelength mode living in the 
+\begin_inset Formula $TiO_{2}^{*}$
+\end_inset
+
+ layer.
+ This case remains unexplained.
+ 
+\end_layout
+
+\begin_layout Standard
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:TiO2"
+
+\end_inset
+
+ (b) presents the possible EM mode periodicities in the multilayer system
+ 
+\begin_inset Formula $water^{*}-TiO_{2}-Ti$
+\end_inset
+
+.
+ It is demonstrated that SPP mode living at the interface 
+\begin_inset Formula $water^{*}-TiO_{2}$
+\end_inset
+
+ can decrease to 200 nm, and down to 180 nm in the case of extraordinary
+ axis of the crystalline orientation of 
+\begin_inset Formula $TiO_{2}$
+\end_inset
+
+.
+ The periodicity of the SPP living in the 
+\begin_inset Formula $TiO_{2}$
+\end_inset
+
+ layer is distributed around the 
+\begin_inset Formula $TiO_{2}/Ti$
+\end_inset
+
+ interface, since periodicity of SPP at this interface is 210 nm.
+ By increasing density of water, the periodicity of SPP decreases in oxide
+ layer, especially if the thickness of the oxide layer decreases to several
+ nanometers.
+ In that case, sub-100 nm periodicities become possible to reach.
+ The experimental measurement reported in Table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:Ripples-experimental-periodicity"
+
+\end_inset
+
+ has been added to the Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:TiO2"
+
+\end_inset
+
+ (b).
+ These results demonstrate that considering the excitation of the surrounding
+ medium e.g.
+ water allows to explain the sub-200 nm periodicity in case of a presence
+ of an oxide layer at the surface of Ti.
+ A very good match is found for a oxide layer thickness of 20 nm, which
+ is reasonable after several irradiations.
+ Moreover, the required densities in water can be reached according to 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Noack1999"
+
+\end_inset
+
+, and our calculations in Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Free-carrier-dynamics"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+\begin_inset Formula $air/SiO_{2}^{*}/Si$
+\end_inset
+
+ and 
+\begin_inset Formula $water^{*}/SiO_{2}/Si$
+\end_inset
+
+ systems
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Multilayer/Water-SiO2Inf-Si0/Ne1e27-1e29/20130731-SPPperiodSiExcitedWater.eps
+	width 8cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:SiWater"
+
+\end_inset
+
+Periodicity in the 
+\begin_inset Formula $water^{*}/SiO_{2}/Si$
+\end_inset
+
+ system.
+ Left vertical bar indicates critical density 
+\begin_inset Formula $n_{cr}$
+\end_inset
+
+ (e.g.
+ 
+\begin_inset Formula $n_{cr}=\left\{ n_{e}|\Re e\left(\varepsilon_{H_{2}O}^{*}\right)=0\right\} $
+\end_inset
+
+).
+ Right vertical bar indicates the SPP threshold density given by Eq.
+ 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:ConditionSPP"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:SiWater"
+
+\end_inset
+
+ (b) presents the periodicity of SPPs calculated for the configuration 
+\begin_inset Formula $Water^{*}/SiO_{2}/Si$
+\end_inset
+
+.
+ The periodicity at the 
+\begin_inset Formula $water^{*}-SiO_{2}$
+\end_inset
+
+ interface (calculated using Eq 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:SimpleSPP"
+
+\end_inset
+
+) is shown in blue and is equal to the periodicity in presence of an oxide
+ layer of 
+\begin_inset Formula $2$
+\end_inset
+
+ 
+\begin_inset Formula $\mu m$
+\end_inset
+
+ (calculated by solving Eq.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:ImplicitEq"
+
+\end_inset
+
+).
+ This result validates the multilayer model and allows to consider smaller
+ oxide thicknesses.
+ Note that the periodicity at high density tends to 
+\begin_inset Formula $\lambda/\Re e\sqrt{\varepsilon_{SiO_{2}}}$
+\end_inset
+
+, and that SPP are not defined for 
+\begin_inset Formula $n_{e}<n_{cr}$
+\end_inset
+
+.
+ The curves involving 3 interfaces demonstrate that periodicity of SPPs
+ in presence of a thin oxide layer and excited water have a periodicity
+ 
+\begin_inset Formula $\Lambda<100$
+\end_inset
+
+ nm.
+ A good agreement is found with 
+\begin_inset Formula $t=10$
+\end_inset
+
+ nm for reachable densities 
+\begin_inset Formula $N_{e}=8\times10^{27}\, m^{-3}$
+\end_inset
+
+ in modification fluence regime.
+ The periodicity of SPP in multilayer as a function of free-carrier density
+ reached in water shows the same behavior than SPP at the 
+\begin_inset Formula $water^{*}/SiO_{2}$
+\end_inset
+
+ layer, but with a lower periodicity.
+ This suggests that presence of a thin oxide film over the Si surface is
+ important and plays a role in the reduction of the periodicity.
+ 
+\end_layout
+
+\begin_layout Standard
+As a conclusion of our investigations, we obtained two configurations matching
+ with experimental results (on Si and Ti irradiated in water) by considering
+ two key points: (i) excitation of the surrounding medium (water in this
+ case), (ii) presence of an oxide layer, which has been demonstrated as
+ being important by chemical analysis.
+ The multilayer system with excited water and oxide thus well explains the
+ periodicity reduction in liquids.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+\begin_inset Formula $water^{*}/SiO_{2}/Si^{*}$
+\end_inset
+
+ system
+\end_layout
+
+\begin_layout Standard
+Since ripples are observed at the surface of Si inside water, it turns out
+ that Si is excited.
+ Following results of Ref.
+ 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Bonse2009"
+
+\end_inset
+
+, we assume that modification density threshold of Si is equal in water
+ and is air.
+ We thus set the free-carrier density of Si to 
+\begin_inset Formula $4.6\times10^{21}$
+\end_inset
+
+ 
+\begin_inset Formula $cm^{-3}$
+\end_inset
+
+ in the experimental conditions of the current work (water medium, 
+\begin_inset Formula $F=0.12$
+\end_inset
+
+ 
+\begin_inset Formula $J/cm^{2}$
+\end_inset
+
+, 
+\begin_inset Formula $\tau=30$
+\end_inset
+
+ fs).
+ 
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Multilayer/Water-SiO2Inf-Si/NotSmoothed/20130918-SPPperiodExcitedSiExcitedWater-NotSmoothed.eps
+	width 8cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset Formula $m_{H_{2}O}^{*}=1$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Multilayer/Water-SiO2Inf-Si/meff0.5/20130918-SPPperiodExcitedSiExcitedWater.eps
+	width 8cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset Formula $m_{H_{2}O}^{*}=0.5$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:SPPWaterStarSiO2SiStar"
+
+\end_inset
+
+Periodicity of SPPs at the interface 
+\begin_inset Formula $Water^{*}-SiO_{2}-Si^{*}.$
+\end_inset
+
+ Density in Si has been fixed at the damage threshold 
+\begin_inset Formula $n_{e}=4.6\times10^{21}$
+\end_inset
+
+
+\begin_inset Formula $cm^{-3}$
+\end_inset
+
+.
+ (a) Effective mass is equal to 
+\begin_inset Formula $1$
+\end_inset
+
+ 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Sarpe2012"
+
+\end_inset
+
+; (b) Effective mass is equal to 
+\begin_inset Formula $0.5$
+\end_inset
+
+.
+ 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Noack1999"
+
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:SPPWaterStarSiO2SiStar"
+
+\end_inset
+
+ shows the possible periodicity in the 
+\begin_inset Formula $Water^{*}/SiO_{2}/Si^{*}$
+\end_inset
+
+ configuration.
+ Below critical density of water (
+\begin_inset Formula $n_{cr}^{H_{2}O}=3.26\times10^{21}$
+\end_inset
+
+
+\begin_inset Formula $cm^{-3}$
+\end_inset
+
+), periodicity follows 
+\begin_inset Formula $\Lambda=\lambda/n_{H_{2}O}^{*}$
+\end_inset
+
+ the propagation mode of EM waves in water.
+ Above this density, SPP mode is excited and leads to a substantial decrease
+ of the periodicity down to 50 nm in case of a ultra-thin (5 nm) oxide layer.
+ With a 10 nm oxide layer, the periodicity corresponds to the experimental
+ observations.
+ 
+\end_layout
+
+\begin_layout Standard
+A resonance cutting is observed at high density in water.
+ Indeed, a discontinuity is observed if 
+\begin_inset Formula $n_{e}>2\times10^{22}$
+\end_inset
+
+ 
+\begin_inset Formula $cm^{-2}$
+\end_inset
+
+.
+ The periodicity at high density in water converges smoothly to the propagation
+ mode of EM waves in silicon [
+\begin_inset Formula $k^{2}=\frac{\omega^{2}}{c^{2}}\varepsilon_{Si}\Leftrightarrow\Lambda=\lambda/\Re e\left(\varepsilon_{Si}\right)$
+\end_inset
+
+] at the fixed density.
+ In the case of a low density of free-carriers present in Si CB, this behavior
+ was also observed by an absence of possible wavenumbers.
+ Thus, we conclude that this mode is sensitive to the excitation of Si.
+ This effect correspond to a coupled mode involving the three media at the
+ same time i.e.
+ to coupled SPP modes.
+ It would be of interest to test the effect of the Si density in a more
+ detailed way.
+ 
+\end_layout
+
+\begin_layout Standard
+We could extend these results by working on the imaginary part of the SPP
+ wavenumber 
+\begin_inset Formula $\beta$
+\end_inset
+
+.
+ For example, this could explain the transition between propagation and
+ SPP regime by following the criterion 
+\begin_inset Formula 
+\[
+\alpha_{SPP}=2\Im m\left(\beta\right)>\alpha_{interband}=2\Im m\left(k\right)=2\frac{\omega}{c}\sqrt{\varepsilon_{Si}^{*}}
+\]
+
+\end_inset
+
+This would lead to a upper limit of density to excite the Surface Plasmon
+ Polariton, since above this limit, the SPPs do not couple with laser anymore.
+ 
+\end_layout
+
+\begin_layout Standard
+As a consequence, the thin film of silicon dioxide formed at the surface
+ of silicon has lead to a strong decrease of the periodicity while water
+ electrons are excited, in presence of an oxide layer covering the Si sample.
+ This result demonstrates that it exists a density for which the SPP living
+ in the thin dielectric layer has a periodicity of 100 nm while water is
+ excited.
+ Excitation level of Si only acts on the upper limit of the density to couple
+ with SPP modes.
+ The high densities considered for the SPP mode will be demonstrated to
+ be reached in the Section ##.
+ 
+\end_layout
+
+\begin_layout Standard
+However, it is not justified that free-carrier density required to damage
+ Si (
+\begin_inset Formula $n_{e}^{Si}=4.6\times10^{21}$
+\end_inset
+
+cm
+\begin_inset Formula $^{-3}$
+\end_inset
+
+) is lower than for the optical breakdown of water.
+ We have found that, by considering the optical mass of water 
+\begin_inset Formula $m_{H_{2}O}^{*}=0.5$
+\end_inset
+
+ 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Noack1999"
+
+\end_inset
+
+, the period follows a similar behavior, but for lower densities.
+ Using this optical mass allows that it exists 
+\begin_inset Formula $n_{e}^{(H_{2}O)}$
+\end_inset
+
+ for which the periodicity corresponds to the experimental one, and for
+ which 
+\begin_inset Formula $n_{e}^{(H_{2}O)}<n_{e}^{(Si)}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Section
+Free-carrier dynamics in 
+\begin_inset Formula $Si$
+\end_inset
+
+ and 
+\begin_inset Formula $H_{2}O$
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Free-carrier-dynamics"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Free carrier density of Si in air and water
+\end_layout
+
+\begin_layout Standard
+Now we have calculated possible periodicities at the interfaces present
+ in the system, and considered the possible interactions together, we calculate
+ the densities that the laser can excite in either Si, in air and in water
+ medium.
+ 
+\end_layout
+
+\begin_layout Paragraph
+Model for Si
+\end_layout
+
+\begin_layout Standard
+For Si, we calculate the number of carriers excited in the conduction band.
+ Calculations were performed for interaction in air and in water environments.
+ 
+\end_layout
+
+\begin_layout Standard
+Free-carrier density 
+\begin_inset Formula $N_{e}$
+\end_inset
+
+ is calculated considering photonic transitions by solving Eq.
+ 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:NeAnalytic"
+
+\end_inset
+
+ 
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial N_{e}}{\partial t}=\frac{\sigma_{1}I}{\hbar\omega}+\frac{\sigma_{2}I^{2}}{2\hbar\omega}\label{eq:NeAnalytic}
+\end{equation}
+
+\end_inset
+
+where laser intensity at the surface is given by Eq.
+ 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:Intensity"
+
+\end_inset
+
+ 
+\begin_inset Formula 
+\begin{equation}
+I(t)_{z=0}=(1-R)\times\frac{F}{\tau}\sqrt{\frac{4\ln2}{\pi}}\times e^{-\frac{1}{2}\left(\frac{t}{\sigma_{\tau}}\right)^{2}}\label{eq:Intensity}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\sigma_{\tau}=\frac{\tau}{2\sqrt{2\ln2}}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+The calculations have been performed for the following cases: (i) by solving
+ Eq.
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:NeAnalytic"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:Intensity"
+
+\end_inset
+
+) and taking 
+\begin_inset Formula $R$
+\end_inset
+
+ as constant; (b) by using the model of Ref.
+ 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Derrien2013a"
+
+\end_inset
+
+ accounting for the contribution to the whole sample to the surface reflectivity.
+ 
+\end_layout
+
+\begin_layout Paragraph
+Model for water
+\end_layout
+
+\begin_layout Standard
+For water, quantity of free-carriers in water is calculated by using the
+ model of 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Noack1999"
+
+\end_inset
+
+, where multiphotonic excitation of water (Keldysh model), cascade ionization
+ and recombination of free-carriers with water molecules have been taken
+ into account.
+ 
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial N_{e}^{H_{2}O}}{\partial t}=w_{MPI}(t)+\eta_{casc}N_{e}^{H_{2}O}\label{eq:NeH2O}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula 
+\[
+w_{MPI}(t)=\frac{2\omega}{9\pi}\left(\frac{m\omega}{2\hbar}\right)^{3/2}\left(\frac{2e^{2}I_{abs}(t)}{16m_{e}E_{g}\omega^{2}c\varepsilon_{0}n}\right)^{k}e^{2k}\phi\left(\sqrt{2k-\frac{2E_{g}}{\hbar\omega}}\right)
+\]
+
+\end_inset
+
+ and 
+\begin_inset Formula $\phi(x)=e^{-x^{2}}\int_{0}^{x}e^{y^{2}}dy$
+\end_inset
+
+.
+ 
+\begin_inset Formula $k$
+\end_inset
+
+ is the number of photons involved in the transition 
+\begin_inset Formula 
+\[
+k=E\left(\frac{E_{gap}}{\hbar\omega}+1\right)
+\]
+
+\end_inset
+
+ and 
+\begin_inset Formula $I_{abs}(t)=\left(1-R_{interface}\right)I_{0}\sqrt{\frac{4\ln2}{\pi}}e^{-4\ln2\left(\frac{t}{\tau}\right)^{2}}$
+\end_inset
+
+, where reflectivity at the 
+\begin_inset Formula $air-SiO_{2}-water$
+\end_inset
+
+ interface is 
+\begin_inset Formula $R_{interface}=3.17\%$
+\end_inset
+
+.
+ In this section, solution of Eq.
+ 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:NeH2O"
+
+\end_inset
+
+ has been calculated analytically, following the parameters given by 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Noack1999"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Paragraph
+Results
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Multilayer/20130730-MaxDensity30fs.eps
+	width 8cm
+	clip
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Maximum-free-carrier-density"
+
+\end_inset
+
+Maximum free-carrier density as a function of laser fluence, model and environme
+nt.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Maximum-free-carrier-density"
+
+\end_inset
+
+ presents the maximum free-carrier density as a function of laser fluence.
+ It is demonstrated that surface screening becomes important above 
+\begin_inset Formula $0.15$
+\end_inset
+
+ 
+\begin_inset Formula $J/cm^{2}$
+\end_inset
+
+ while 
+\begin_inset Formula $\tau=30$
+\end_inset
+
+ fs and 
+\begin_inset Formula $\lambda=800$
+\end_inset
+
+ nm.
+ The possible number of free-carriers is thus known at the 
+\begin_inset Formula $air-Si^{*}$
+\end_inset
+
+ interface.
+ The density of free-carriers has also been calculated the water environment.
+ We demonstrate that more free-carriers are excited in the case of water
+ environment comparatively to irradiation in air.
+ Indeed, reflectivity at the interfaces 
+\begin_inset Formula $air-Si$
+\end_inset
+
+ is 
+\begin_inset Formula $32.9\%$
+\end_inset
+
+.
+ However, the reflectivity at 
+\begin_inset Formula $H_{2}O-Si$
+\end_inset
+
+ interface is 
+\begin_inset Formula $22\%$
+\end_inset
+
+.
+ Experimental irradiations have been performed at 
+\begin_inset Formula $0.1$
+\end_inset
+
+ 
+\begin_inset Formula $J/cm^{2}$
+\end_inset
+
+, which demonstrate the possible number of free-carriers in Si surface in
+ air environment is 
+\begin_inset Formula $2.0\times10^{21}$
+\end_inset
+
+
+\begin_inset Formula $cm^{-3}$
+\end_inset
+
+, and is 
+\begin_inset Formula $2.5\times10^{21}$
+\end_inset
+
+
+\begin_inset Formula $cm^{-3}$
+\end_inset
+
+ in water environment.
+ The skin layer at this fluence is 
+\begin_inset Formula $200$
+\end_inset
+
+ nm in air and 
+\begin_inset Formula $150$
+\end_inset
+
+ nm in water environments.
+ It is also demonstrated that at this laser fluence, the analytic calculations
+ are sufficient e.g.
+ surface reflectivity is not modified during laser irradiation.
+ 
+\end_layout
+
+\begin_layout Standard
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Maximum-free-carrier-density"
+
+\end_inset
+
+ also presents the maximum free-carrier density obtained in water.
+ Results show that the density of free-carriers in water is lower than free-carr
+ier density inside Si at a given laser fluence.
+ However, (i) the thickness of the water layer in front on the Si sample
+ is about 5 mm, (ii) and Kerr effect in water is stronger than in Si.
+ These conditions are sufficient to induce self-focusing effects, as filamentati
+on is observed experimentally.
+ We now demonstrate that these effects are important.
+ 
+\end_layout
+
+\begin_layout Standard
+The required free-carrier density for ablation of the Si material is of
+ the order of 
+\begin_inset Formula $5\times10^{21}$
+\end_inset
+
+cm
+\begin_inset Formula $^{-3}$
+\end_inset
+
+, and the laser fluence which allows ablation is consistent with the experimenta
+lly identified ablation threshold for a pulse duration of 
+\begin_inset Formula $\tau=30$
+\end_inset
+
+ fs.
+ Since ripples are observed at the sample surface, this requires that sample
+ has been exposed to a rather high energy, corresponding excitation level
+ occurring during ablation.
+ Such fluence is however not sufficient to induce a so high density of free-carr
+iers in water.
+ Then, the excitation of the water will always been reduced in front of
+ the one of silicon.
+ After revision, the periodicities provided by considering the optical mass
+ proposed by 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Noack1999"
+
+\end_inset
+
+ 
+\begin_inset Formula $m'=0.5$
+\end_inset
+
+ can be reached for densities of 
+\begin_inset Formula $\sim2.5\times10^{21}$
+\end_inset
+
+ cm
+\begin_inset Formula $^{-3}$
+\end_inset
+
+.
+ However, following the calculations we performed in this section, such
+ density of water electrons is still not reached at the considered laser
+ fluences.
+ Even if we consider that water actually reaches this level of excitation,
+ it means something has to decrease the energy reaching the Si sample.
+ It is possible that the thin film of 
+\begin_inset Formula $SiO_{2}$
+\end_inset
+
+ is absorbing a part of the energy preventing the Si is too much excited.
+ But then it requires that we also consider the excitation of the 
+\begin_inset Formula $SiO_{2}$
+\end_inset
+
+ layer.
+ Let's try with several values of excitation of the 
+\begin_inset Formula $SiO_{2}$
+\end_inset
+
+ (
+\begin_inset Formula $n_{e}(SiO_{2})\in[10^{25},10^{26},10^{27}]$
+\end_inset
+
+ 
+\begin_inset Formula $m^{-3}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Section
+Kerr effect in water
+\end_layout
+
+\begin_layout Standard
+In experimental conditions using a water vessel, it is difficult to know
+ precisely the physical parameters such as distance, laser energy, and spot
+ size on the sample.
+ Indeed, sensors cannot be used inside water, thus spot size, laser intensity
+ and exact position of the sample are not well-known.
+ We will then consider a theoretical approach in order to be able to calculate
+ the range of intensities reaching the Si sample.
+ We will conclude that, as observed on the SEM pictures, Kerr effect plays
+ a major role and leads to the excitation of both water and Si.
+ 
+\end_layout
+
+\begin_layout Standard
+The experimental parameters which are known with a good precision are: laser
+ wavelength 
+\begin_inset Formula $790$
+\end_inset
+
+ nm, pulse duration 
+\begin_inset Formula $30$
+\end_inset
+
+ fs, focal length of the spherical mirror 
+\begin_inset Formula $f=500$
+\end_inset
+
+ mm, diameter of the laser beam before the length is 
+\begin_inset Formula $\textrm{Ø}=10=2w_{01}$
+\end_inset
+
+ mm, waist of the laser beam is estimated at 
+\begin_inset Formula $z_{1}=1.5$
+\end_inset
+
+ m, spot size before the water vessel is 
+\begin_inset Formula $w_{1}=140$
+\end_inset
+
+ 
+\begin_inset Formula $\mu m$
+\end_inset
+
+, and laser fluence was also measured at the position 
+\begin_inset Formula $z_{M}=-10$
+\end_inset
+
+ mm.
+ 
+\end_layout
+
+\begin_layout Standard
+Following relation linking waist spot sizes of a lens with incident gaussian
+ beam parameters 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Weichel1976"
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+w_{0}^{-2}=\left[w_{01}^{-2}\left(1-\frac{z_{1}}{f}\right)^{2}+f^{-2}\left(\frac{\pi w_{01}}{\lambda}\right)^{2}\right]^{-1},
+\]
+
+\end_inset
+
+with 
+\begin_inset Formula $z_{1}=1.5$
+\end_inset
+
+ m is the distance between lens and beam waist place before the spherical
+ mirror (focal length 
+\begin_inset Formula $f=500$
+\end_inset
+
+ mm) on the optical path, we find that beam waist after spherical mirror
+ is 
+\begin_inset Formula $w_{0}=25.15$
+\end_inset
+
+ 
+\begin_inset Formula $\mu m$
+\end_inset
+
+.
+ The sample has been positioned nearly 
+\begin_inset Formula $\left|z_{M}\right|=10$
+\end_inset
+
+ mm before the beam waist in water.
+ 
+\end_layout
+
+\begin_layout Standard
+The importance of the Kerr effect can be demonstrated by calculating the
+ 
+\begin_inset Quotes eld
+\end_inset
+
+B integral
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Momma1998"
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+B=\frac{2\pi}{\lambda}\int_{z=0}^{z=L}I(z)n_{2}dz\label{eq:Bintegral}
+\end{equation}
+
+\end_inset
+
+which, if 
+\begin_inset Formula $B>2\pi$
+\end_inset
+
+, demonstrates the importance of the non-linear refraction effects (
+\begin_inset Formula $n_{2}=2.8\times10^{-20}$
+\end_inset
+
+ 
+\begin_inset Formula $m^{2}/W$
+\end_inset
+
+ is the Kerr effect coefficient in water 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Weber2003"
+
+\end_inset
+
+).
+ 
+\end_layout
+
+\begin_layout Standard
+Gaussian beam distribution of intensity is given by 
+\begin_inset Formula 
+\[
+I(t,r,z)=I_{0}e^{-2\left(\frac{r}{w(z)}\right)^{2}}\left(\frac{w_{0}}{w(z)}\right)^{2}e^{-\frac{1}{2}\left(\frac{t}{\sigma_{\tau}}\right)^{2}}
+\]
+
+\end_inset
+
+with 
+\begin_inset Formula 
+\[
+w(z)=w_{0}\sqrt{1+\left(\frac{z}{z_{R}}\right)^{2}}
+\]
+
+\end_inset
+
+ 
+\begin_inset Formula $z_{R}=\frac{\pi w_{0}^{2}}{\lambda}$
+\end_inset
+
+ is the Rayleigh length equal to 
+\begin_inset Formula $2.51$
+\end_inset
+
+ mm i.e.
+ lower than the distance between waist and sample.
+ 
+\end_layout
+
+\begin_layout Standard
+Intensity has been measured experimentally at nearly 
+\begin_inset Formula $10$
+\end_inset
+
+ mm from the beam waist.
+ The definition of fluence for a Gaussian beam is given by 
+\begin_inset Formula 
+\[
+F(z)=\int_{t=-4\tau}^{t=4\tau}\int_{r=0}^{r\rightarrow\infty}2\pi r\, I(t,r,z)\, dr\, dt
+\]
+
+\end_inset
+
+Experimentally, the fluence measured at 
+\begin_inset Formula $z_{M}=-10$
+\end_inset
+
+ mm from the beam waist is given by 
+\begin_inset Formula 
+\[
+F_{exp}(z_{M})=\frac{2E}{\pi w_{1}^{2}}
+\]
+
+\end_inset
+
+As a first approximation, we neglect the effect of water optical index to
+ express the intensity distribution.
+ We find 
+\begin_inset Formula $I_{0}$
+\end_inset
+
+ by solving the energy 
+\begin_inset Formula $E$
+\end_inset
+
+ conservation along the beam axis 
+\begin_inset Formula $z$
+\end_inset
+
+ 
+\begin_inset Formula 
+\[
+E(z_{M})=\frac{\pi w_{1}^{2}}{2}\int_{t=-4\tau}^{t=4\tau}\int_{r=0}^{r\rightarrow\infty}2\pi r\, I(t,r,z)\, dr\, dt=\frac{F_{exp}}{2}\pi w_{1}^{2}
+\]
+
+\end_inset
+
+As a result, we find that at fluence 
+\begin_inset Formula $0.1$
+\end_inset
+
+ 
+\begin_inset Formula $J/cm^{2}$
+\end_inset
+
+ and pulse duration 
+\begin_inset Formula $\tau=30$
+\end_inset
+
+ fs, intensity at the beam waist is 
+\begin_inset Formula $I_{0}=9.7071\times10^{13}$
+\end_inset
+
+ 
+\begin_inset Formula $W/cm^{2}$
+\end_inset
+
+, and the peak intensity at the sample position is 
+\begin_inset Formula $I(0,0,z_{M})=5.772\times10^{12}$
+\end_inset
+
+ 
+\begin_inset Formula $W/cm^{2}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+We can now calculate the value of B-integral given in Eq.
+ 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:Bintegral"
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+B\cong600.53\gg2\pi.
+\]
+
+\end_inset
+
+This result demonstrates that non-linear Kerr effect is dominating the propagati
+on in water medium on the length of 
+\begin_inset Formula $L=5$
+\end_inset
+
+ mm.
+ We also found that intensity at the target of Si sample is greater than
+ the breakdown threshold at short pulse duration proposed by 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Feng1997"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Section
+Conclusions
+\end_layout
+
+\begin_layout Standard
+A multilayer SPP model has been studied and applied to different configurations
+ involving Ti, Si in air and water, with and without of an oxide layer of
+ thickness 
+\begin_inset Formula $t$
+\end_inset
+
+.
+ In each case, it has been demonstrated that a layer thickness leads to
+ reproduce the SPP periodicities involving one simple interface.
+ The allowed to validate the model to use it for deeper investigations.
+ 
+\end_layout
+
+\begin_layout Standard
+The dispersion relation has been calculated numerically and describes both
+ propagative modes (
+\begin_inset Formula $\propto\lambda/n^{*}$
+\end_inset
+
+) and SPP modes, and is also valid to describe the coupled interface SPP
+ modes.
+ The condition to excite SPP modes 
+\begin_inset Formula $\Re e\left(\varepsilon\right)=0$
+\end_inset
+
+ also applies in the case of a multilayer system and thus, the required
+ threshold density 
+\begin_inset Formula $n_{e}$
+\end_inset
+
+ corresponds to the so-called 
+\begin_inset Quotes eld
+\end_inset
+
+critical density
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Formula $n_{cr}$
+\end_inset
+
+ or 
+\begin_inset Quotes erd
+\end_inset
+
+screening density
+\begin_inset Quotes erd
+\end_inset
+
+ in solids.
+ 
+\end_layout
+
+\begin_layout Standard
+Sub-200 nm periodicities of LIPSS formed at the surface of Si and Ti in
+ water environment are explained by the excitation of Surface Plasmon Polariton
+ at the 
+\begin_inset Formula $water^{*}/oxide$
+\end_inset
+
+ interface, requiring excitation of the water by the laser.
+ It has been demonstrated that the resulting periodicities explain for the
+ first time the observed 
+\begin_inset Quotes eld
+\end_inset
+
+tiny
+\begin_inset Quotes erd
+\end_inset
+
+ LSFL structures at the interface of Ti and Si irradiated in water.
+ The role of the oxide layer and the excitation of the surrounding medium
+ are responsible for the reduction of the SPP periodicity, by interference
+ between SPP modes at the interfaces of the oxide layer.
+ 
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+Appendix: Gaussian optics
+\end_layout
+
+\begin_layout Plain Layout
+For a scalar electric field 
+\begin_inset Formula $E\in\mathbb{C}$
+\end_inset
+
+ (polarization effects are neglected),we can write Helmoltz equation 
+\begin_inset Formula 
+\[
+\left(\nabla^{2}+k^{2}\right)E=0
+\]
+
+\end_inset
+
+We express electric field by 
+\begin_inset Formula 
+\[
+E(x,y,z)=u(x,y,z)e^{-ikz}
+\]
+
+\end_inset
+
+which leads to solve the following Eq.
+ 
+\begin_inset Formula 
+\[
+\nabla^{2}u-2ik\frac{\partial u}{\partial z}=0
+\]
+
+\end_inset
+
+Paraxial approximation consists in writing 
+\begin_inset Formula 
+\[
+\frac{\partial^{2}u}{\partial z^{2}}\ll2k\frac{\partial u}{\partial z}
+\]
+
+\end_inset
+
+ and thus to neglect the term 
+\begin_inset Formula $\nabla_{z}^{2}u$
+\end_inset
+
+ in front of the others, leading to write 
+\begin_inset Formula 
+\[
+\nabla_{x,y}^{2}u-2ik\frac{\partial u}{\partial z}=0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The free-carrier densities required to justify these results have been calculate
+d as a function of laser fluence in water, and in Si immersed in air or
+ water.
+ Results showed that such densities are reached in Si in air and water medium
+ at 
+\begin_inset Formula $30$
+\end_inset
+
+ fs, 
+\begin_inset Formula $0.1$
+\end_inset
+
+ J/cm
+\begin_inset Formula $^{2}$
+\end_inset
+
+.
+ However, the pulse propagation in water is very sensitive to Kerr effect,
+ which prevents any control over the intensity reaching the sample.
+ Indeed, calculation of the B-integral demonstrated that Kerr effect is
+ very important during the propagation.
+ This effect justifies how free-carrier density can reach very high values
+ in water, sufficiently to justify the far subwavelength periodicities,
+ matching with experimental measurements.
+ 
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "/media/PHD/Travail/These/Articles/bibliographie_lue"
+options "unsrtnat"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

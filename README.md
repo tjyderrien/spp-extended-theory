@@ -6,10 +6,6 @@
 
 * J. Bonse, BAM Berlin: scientist, BAM Federal Institute of Materials Research and Testing, Berlin
 
-# Technical support
-
-* R. Garai, Hilase Centre FZU, AV CR : helped for some LIPSS databasing
-
 # Current collaborators
 
 * Yoann Levy, Hilase/FZU, Prague, Czech Republic
@@ -70,4 +66,4 @@ For each of these data, the following theories can be applied.
 
 * git commit -m 'LIPSS database: update of Aug 7th 2015': Just give the description of changes you have applied. 
 
-* git push: Upload your changes to the central server on Bitbucket.org. 
+* git push: Upload your changes to the central server on Bitbucket.org.

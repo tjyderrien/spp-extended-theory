@@ -3,6 +3,8 @@
 # Gather datas from files
 # 
 
+pathToFilter="/home/thibault/Documents/Codes/Scripts"
+
 rm *.tmp
 
 cat NeList.dat | tr "\t" "\n" > NeList.tmp
@@ -45,8 +47,8 @@ done
 cat betaShaped.tmp | tr '+' ' ' > betaShaped2.tmp
 cat betaShaped2.tmp | tr '*I' ' ' > betaShaped3.tmp
 
-# awk '{ if($3<10e-6) print; else {print $1,$2,"?", "?"}}' Result.tmp | awk -f '/home/thibault/Documents/Codes/Scripts/pm3d.awk' > Result.awked.tmp
-awk '{ if($3<1e10) print; else {print $1,$2,"?", "?"}}' Result.tmp | awk -f '/home/thibault/Documents/LaAPT/Scripts/pm3d.awk' > Result.awked.tmp
-awk '{ if($3<1e10) print; else {print $1,$2,"?", "?"}}' DampingLength.tmp | awk -f '/home/thibault/Documents/LaAPT/Scripts/pm3d.awk' > Damping.awked.tmp
+# awk '{ if($3<10e-6) print; else {print $1,$2,"?", "?"}}' Result.tmp | awk -f '${pathToFilder}/pm3d.awk' > Result.awked.tmp
+awk '{ if($3<1e10) print; else {print $1,$2,"?", "?"}}' Result.tmp | awk -f ${pathToFilter}/pm3d.awk > Result.awked.tmp
+awk '{ if($3<1e10) print; else {print $1,$2,"?", "?"}}' DampingLength.tmp | awk -f ${pathToFilter}/pm3d.awk > Damping.awked.tmp
 awk '{ if($3<1e10) print; else {print $1,$2,"?", "?"}}' betaShaped3.tmp > Beta.awked.tmp
-# | awk -f '/home/thibault/Documents/LaAPT/Scripts/pm3d.awk' > Beta.awked.tmp
+# | awf -f '${pathToFilter}/pm3d.awk' > Beta.awked.tmp

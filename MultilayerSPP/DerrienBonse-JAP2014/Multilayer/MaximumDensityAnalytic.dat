@@ -1,0 +1,11 @@
+# tau=30 fs
+# lambda=800 nm
+# fluence	maximum density
+# CAREFUL: calculated with R=0.33 at AIR/Si interface
+0.05	5.31457e26
+0.1	1.833e27
+0.15	3.9046e27
+0.2	6.7464e27
+0.25	1.0358e28
+0.3	1.4740e28
+0.35	1.989e28

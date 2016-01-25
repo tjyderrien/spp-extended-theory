@@ -9,7 +9,7 @@ from matplotlib.ticker import MaxNLocator
 
 #from makeTable import *
 
-def CleanStrArray(Material2): 
+def CleanStrArray(Material2): #{{{
   Material2clean = np.empty(Material2.shape, dtype='|S15')
   linenum=0
   for line in Material2: #for each line, replace Material2[line] with first word of Material2[line]
@@ -17,7 +17,9 @@ def CleanStrArray(Material2):
     Material2clean[linenum] = fields[0]
     linenum = linenum + 1
   return(Material2clean)
+#}}}
 #print Material2clean
+
 
 def plotDatabaseMaterials(database, legend, outputfile, query): #{{{
   """plot period of SPP at various interfaces contained in a database
@@ -183,14 +185,14 @@ def plotSeveralWavelengths(database1, database2, reverse, metal):#{{{
 # =======================================================
 
 ## Choose a wavelength
-wavelength = 1030e-9
+wavelength = 800e-9
 
 
 ## Choose which material to select
-query = 'Air'
+#query = 'Air'
 #query = 'Au (Palik)'
 #query = 'Ti (Palik)'
-#query = 'Ti (Johnson 1974)'
+query = 'Ti (Johnson 1974)'
 #query= 'SiC (Palik?)'
 #query = 'TiO2 (Devore 1951, e)'
 #query = 'SiO2 (Palik)'
@@ -207,7 +209,7 @@ print "SPP database has "+str(len(SPPdb))+" entries."
 print "Full Database:"
 print SPPdb
 
-# Select the material of interface 1
+# Select the material of interface 1 #TODO: This selector may be not clear for users. 
 if (not metal):
   SPPdb = FilterDatabase(SPPdb, query, 0)
 else:
@@ -306,12 +308,22 @@ print "delta Period min = "+str(deltaPeriod.min())+", max = "+str(deltaPeriod.ma
 levels = [1, 5, 10, 20, 30, 40, 50, 100]
 
 plt.figure()
-CS = plt.contourf(eps2r, eps2c, deltaPeriod, levels=levels, cmap=plt.cm.Blues)
+
+if(reverse): #{
+	CS = plt.contourf(eps1r, eps1c, deltaPeriod, levels=levels, cmap=plt.cm.Blues)
+else:
+	CS = plt.contourf(eps2r, eps2c, deltaPeriod, levels=levels, cmap=plt.cm.Blues)
+#}
+	
 plt.xlabel(r'$Re(\varepsilon)$')
 plt.ylabel(r'$Im(\varepsilon)$')
 
 # adding the materials information !
-plt.plot(eps2rM, eps2cM, 'or', label=str(wavelength)+'nm', markersize=8)
+if(reverse): #{
+	plt.plot(eps1rM, eps1cM, 'or', label=str(wavelength)+'nm', markersize=8)
+else:
+	plt.plot(eps2rM, eps2cM, 'or', label=str(wavelength)+'nm', markersize=8)
+#}
 #plt.clabel(CS, levels=levels, inline=False, fontsize=20)
 
 #plt.clabel(CS, inline=1, fontsize=20)

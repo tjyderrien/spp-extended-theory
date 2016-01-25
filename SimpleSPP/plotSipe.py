@@ -92,8 +92,8 @@ def etap(theta, f, s, epsilon, kappa, kappap, kappam):
 #==== Attempting a 1D plot
 # Known quantities
 theta = 0e0 #Single value here, but we can vectorize functions easily later
-f = 0.5e0 #Filling factor
-s = 0.4e0 #Shape factor
+f = 0.1e0 #Filling factor: taken from Bonse et al, JAP (2009)
+s = 0.4e0 #Shape factor: taken from Bonse et al, JAP (2009)
 #wavelength = 800e-9
 #epsilon = 12.80259+0.00109j
 #epsilon = -97.593456+25.2698472743j
@@ -103,35 +103,6 @@ s = 0.4e0 #Shape factor
 #kappay = np.arange(0, 4, 0.1)
 #kappa = np.array([wavelength * 1, wavelength * 0]); #test values
 kappax = 4e0 ; kappay = 0e0*kappax; #test values
-
-
-#G = np.vectorize(G)
-#F = np.vectorize(F)
-#R = np.vectorize(R)
-#gammaz = np.vectorize(gammaz)
-#gammat = np.vectorize(gammat)
-#tz = np.vectorize(tz)
-#tx = np.vectorize(tx)
-#ts = np.vectorize(ts)
-#hzz = np.vectorize(hzz)
-#hzk = np.vectorize(hzk)
-#hkz = np.vectorize(hkz)
-#hkk = np.vectorize(hkk)
-#hss = np.vectorize(hss)
-#kappapn = np.vectorize(kappapn)
-#kappamn = np.vectorize(kappamn)
-#kpDotY = np.vectorize(kpDotY)
-#kpDotX = np.vectorize(kpDotX)
-#kmDotY = np.vectorize(kmDotY)
-#kmDotX = np.vectorize(kmDotX)
-#kpn = np.vectorize(kpn)
-#kmn = np.vectorize(kmn)
-#vsp = np.vectorize(vsp)
-#vsm = np.vectorize(vsm)
-#vpp = np.vectorize(vpp) 
-#vpm = np.vectorize(vpm)
-#etas = np.vectorize(etas)
-#etap = np.vectorize(etap)
 
 #for kappax in meshkappa:
 
@@ -167,7 +138,7 @@ kapparange = np.arange(0.1,4,0.1)
 #plt.savefig('SipeEtaKappaX.eps')
 ##exit()
 
-#=========== Attempting a 2D plot
+#=========== 2D plot
 
 query = 'Air'
 #query2= 'InP (Bonse 2005)'

@@ -1,0 +1,1008 @@
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
+\begin_document
+\begin_header
+\textclass revtex4-1
+\options aip, sort&compress, reprint
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman charter
+\font_sans default
+\font_typewriter default
+\font_math auto
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref true
+\pdf_bookmarks true
+\pdf_bookmarksnumbered false
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks true
+\pdf_pdfborder true
+\pdf_colorlinks false
+\pdf_backref false
+\pdf_pdfusetitle true
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine natbib
+\cite_engine_type numerical
+\biblio_style plainnat
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 2cm
+\topmargin 2cm
+\rightmargin 2cm
+\bottommargin 2cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Rigorous refraction law at the interface with an absorbing medium
+\end_layout
+
+\begin_layout Author
+Thibault J.-Y.
+ Derrien
+\end_layout
+
+\begin_layout Affiliation
+BAM Bundesanstalt für Materialforschung und –prüfung, Unter den Eichen 87,
+ D-12205 Berlin, Germany 
+\end_layout
+
+\begin_layout Author
+Jörg Krüger
+\end_layout
+
+\begin_layout Affiliation
+BAM Bundesanstalt für Materialforschung und –prüfung, Unter den Eichen 87,
+ D-12205 Berlin, Germany 
+\end_layout
+
+\begin_layout Author
+Andreas Hertzwig
+\end_layout
+
+\begin_layout Affiliation
+BAM Bundesanstalt für Materialforschung und –prüfung, Unter den Eichen 87,
+ D-12205 Berlin, Germany 
+\end_layout
+
+\begin_layout Author
+Jörn Bonse
+\end_layout
+
+\begin_layout Affiliation
+BAM Bundesanstalt für Materialforschung und –prüfung, Unter den Eichen 87,
+ D-12205 Berlin, Germany 
+\end_layout
+
+\begin_layout Date
+April, 20th of 2014
+\end_layout
+
+\begin_layout Abstract
+Snell-Descartes refraction law has still not a clear description in absorbing
+ materials.
+ Today, understanding transient optics involving intense laser irradiation
+ and excitation of Surface Plasmon Polaritons under intense fields require
+ a proper description of the refraction angle in absorbing materials, also
+ while the approximation of low-absorbing materials drops down.
+ In this work, several available models are compared with FDTD 3D simulations
+ in absorbing materials and with ellipsometric phase measurements in reflection
+ configuration.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+Despite that the problem of refraction law in absorbing materials is treated
+ in many references from literature 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Born1980,Palik1985,Kovalenko2001,Shen2010"
+
+\end_inset
+
+, no satisfying description was available in the case of strongly absorbing
+ materials so far.
+ Moreover, it is common to find references in which this difficulty is not
+ mentioned despite that a proper description of refraction in strongly absorbing
+ materials was required in both numerical 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Bulgakova2010"
+
+\end_inset
+
+ and experimental studies 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Sokolowski-Tinten2000,Shank1983"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+The well-known law for refraction is given by Snell-Descartes law 
+\begin_inset Formula 
+\[
+\theta_{i+1}=\arcsin\left(\sqrt{\frac{\varepsilon_{i}}{\varepsilon_{i+1}}}\sin\theta_{i}\right).
+\]
+
+\end_inset
+
+Snell-Descartes law must be valid in case of complex dielectric functions
+ as stated by Stratton 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Stratton1941"
+
+\end_inset
+
+ (and experimentally proved by ???).
+ In case of total reflection, a phase shift between equiphase plans and
+ constant amplitude plans appears, leading to heterogeneous waves, then
+ to interferences.
+ 
+\end_layout
+
+\begin_layout Standard
+This work aims to correctly describe the refraction angle as a function
+ of the incident angle and validate a general multilayer model, valid in
+ both transparent and absorbing media.
+ 
+\end_layout
+
+\begin_layout Subsection
+The problem
+\end_layout
+
+\begin_layout Standard
+At the interface with a slab material, a monochromatic wave experiments
+ a reflection and a refraction as well described by the well-known Snell-Descart
+es law as follows for air environment 
+\begin_inset Formula 
+\[
+\sin\theta_{i}=n\sin\theta_{r},
+\]
+
+\end_inset
+
+ where 
+\begin_inset Formula $\theta_{i}\in\mathbb{R}$
+\end_inset
+
+ is the incident angle, and 
+\begin_inset Formula $\theta_{r}$
+\end_inset
+
+ is the refracted angle.
+\end_layout
+
+\begin_layout Standard
+However, as soon as we consider an absorbing material, then, the optical
+ index (and thus the dielectric permittivity 
+\begin_inset Formula $\varepsilon=n^{2}$
+\end_inset
+
+) is a complex-valued quantity 
+\begin_inset Formula 
+\[
+n\in\mathbb{C}
+\]
+
+\end_inset
+
+and the angles of refraction also become a complex-valued quantity.
+ As a consequence, the Snell law can remains valid, but only under certain
+ conditions and an extended physical picture has to be considered.
+\end_layout
+
+\begin_layout Subsection
+The meaning of a complex angle
+\end_layout
+
+\begin_layout Standard
+First, a complex angle has not a clear physical meaning.
+ In the outer region of the sample, the incidence angle is well defined
+ and real-valued.
+ As soon as the wave gets into the material, the angles (both refraction
+ and reflection) become complex-valued.
+ Two interpretations can be given to a complex angle.
+\end_layout
+
+\begin_layout Standard
+(i) Born and Wolf 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Born1980"
+
+\end_inset
+
+ considered it as a change of optical index as the angle is changing, which
+ can be understood as anisotropy.
+ However, nothing tells that simply using complex angles inside the sample
+ is a sufficient formalism to properly consider this anisotropy.
+\end_layout
+
+\begin_layout Standard
+(ii) A physical picture was proposed describing a shift between the equal
+ amplitude wave front and the equal phase front.
+\end_layout
+
+\begin_layout Standard
+In both cases, the angle of refraction cannot be considered as a well-defined
+ peak value anymore and becomes a large distribution.
+ A change of angle of refraction is nothing else than a change of the wave
+ momentum, which is actually a 
+\emph on
+scattering
+\emph default
+ 
+\emph on
+event
+\emph default
+.
+ The laser wave is scattered by matter and interacts (at optical frequencies)
+ with the electronic band structure.
+ The case of an absorbing material requires to consider a rigorous approach
+ to describe properly the wave scattering by an absorbing sample, for example
+ by using transmission matrix formulation or direct solving of Maxwell equations.
+ Anisotropic solution are found and a vector field formulation might be
+ unavoidable.
+ Recently, time-dependent Maxwell calculations have been performed in order
+ to correctly reproduce the energy-dependent reflectivity measurements 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Zhang2014b"
+
+\end_inset
+
+, and have identified a clear anisotropic response from the sample 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Bulgakova2013"
+
+\end_inset
+
+, giving explanation to arising anistropic structures such as nanogratings
+ in silica.
+ 
+\end_layout
+
+\begin_layout Subsection
+How to solve the problem ?
+\end_layout
+
+\begin_layout Standard
+Before considering any advanced theories, it is proposed to consider the
+ Snell Law using a multi-layered reflection model to calculate the sample
+ reflectivity of a stratified material.
+\end_layout
+
+\begin_layout Standard
+By comparison with a FDTD Maxwell 3D calculation, it will be shown that
+ Snell-Descartes law can remain valid for low absorbing materials, but fails
+ in the case of strongly absorbing materials.
+ A simple criterion identifying the validity limit of the complex-valued
+ Snell-Descartes law will be also proposed.
+\end_layout
+
+\begin_layout Subsection
+Could an experiment measure that ?
+\end_layout
+
+\begin_layout Subsubsection
+About measuring the angle
+\end_layout
+
+\begin_layout Standard
+Not a simple one.
+ Actually, the refracted angle can be measured if you can measure inside
+ matter.
+ Due to the backward light principle, the angle that is measured by reflection
+ or by transmission through a thin-film is the same as the incident one,
+ whatever happens inside the sample!
+\end_layout
+
+\begin_layout Standard
+The way to produce such a measurement is thus to make the problem time-dependent
+ and to observe a change of the refraction angle as a function of time,
+ but limiting the space to sub-wavelength film thickness.
+ This can be performed by an intense and ultrashort laser pulse which changes
+ the optical properties of the sample as a function of time, and observe
+ the transmitted wave direction evolution (how ?).
+\end_layout
+
+\begin_layout Subsubsection
+About measuring the reflected beam phase
+\end_layout
+
+\begin_layout Standard
+However, by considering a multilayer model to calculate the surface reflectivity
+, it would be possible to obtain the phase of the reflected signal theoretically.
+ The formula involves the transmission angles inside the material, and complex
+ optical indices.
+ As a consequence, it is possible to compare the phase of the reflected
+ beam with the phase of the calculated one.
+ A comparison with FDTD calculation is also possible, despite that I focused
+ on obtained the angle instead of the phase of the reflected beam.
+ 
+\end_layout
+
+\begin_layout Subsection
+So, is it so bad, doctor ?
+\end_layout
+
+\begin_layout Standard
+So it seems that this theoretical limit of the Snell law is a real physical
+ problem, and that the concept of refractive angle inside matter is not
+ well understood yet for any materials.
+ However, in the theoretical world (so in simulation codes!), this angle
+ is required, and is still a complex-valued quantity.
+ So this problem is important and must be solved in a clear way.
+\end_layout
+
+\begin_layout Subsection
+Theoretical limit of Snell-Descartes law: mathematical and physical reasons
+\end_layout
+
+\begin_layout Standard
+Let's investigate now why Snell-Descartes low is limited to low-absorbing
+ materials.
+\end_layout
+
+\begin_layout Standard
+The Snell law is expressed by the following formula, using the dielectric
+ permittivity
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\sqrt{\varepsilon_{i}}\sin\theta_{i}=\sqrt{\varepsilon_{i+1}}\sin\theta_{i+1}
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $i$
+\end_inset
+
+ is the i-th layer of the sample.
+ The complex-valued refractive angle 
+\begin_inset Formula $\theta_{i+1}$
+\end_inset
+
+ is given by
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\theta_{i+1}=\sin^{-1}\left[\sin\theta_{i}\sqrt{\frac{\varepsilon_{i}}{\varepsilon_{i+1}}}\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The real-valued 
+\begin_inset Formula $\arcsin$
+\end_inset
+
+ function applied to 
+\begin_inset Formula $x\in\mathbb{R}$
+\end_inset
+
+ has the following property 
+\begin_inset Formula 
+\[
+\left|\arcsin(x)\right|\le\frac{\pi}{2}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+However, the complex-valued number 
+\begin_inset Formula $\arcsin(z)$
+\end_inset
+
+, where 
+\begin_inset Formula $z\in\mathbb{C}$
+\end_inset
+
+ has a modulus which looses its trigonometric properties as soon as 
+\begin_inset Formula 
+\[
+\left|\sqrt{\frac{\varepsilon_{i}}{\varepsilon_{i+1}}}\right|>1
+\]
+
+\end_inset
+
+This situation actually leads to a loss of the angle definition and constitutes
+ a criterion which allows to check if the Snell-Descartes law can give an
+ accurate description in an absorbing medium.
+ This is the mathematical reason.
+\end_layout
+
+\begin_layout Standard
+The physical reason is that the angle of refraction does not stand any longer
+ since scattering occurs and that the angle becomes a broad distribution,
+ which should be taken into account to conserve the energy and momentum.
+ 
+\end_layout
+
+\begin_layout Subsection
+What if I just take the real part of the angle ?
+\end_layout
+
+\begin_layout Standard
+Let's do it.
+ If we consider to take the real part of the ratio 
+\begin_inset Formula 
+\[
+\Re e\sqrt{\frac{\varepsilon_{i}}{\varepsilon_{i+1}}},
+\]
+
+\end_inset
+
+then, indeed, the modulus of the sinus content is limited to the unity,
+ and then no mathematical problem emerges from the model.
+ However, this description is clearly not physical and is not valid in absorbing
+ materials as demonstrated in the next section.
+ 
+\end_layout
+
+\begin_layout Subsection
+More models
+\end_layout
+
+\begin_layout Standard
+Other references are available here : 
+\end_layout
+
+\begin_layout Standard
+M.
+ H.
+ Arzelies, La Réflexion Vitreuse, Annales de Physique (Paris), Vol.
+ 1, 5-69 (1946)
+\end_layout
+
+\begin_layout Standard
+I.
+ N.
+ Court, F.
+ K.
+ von Willisen, 
+\begin_inset Quotes eld
+\end_inset
+
+Frustrated Total Internal Reflection and Application of its Principles to
+ Laser Cavity Design
+\begin_inset Quotes erd
+\end_inset
+
+, Applied Optics, Vol.
+ 3, No.
+ 6, 719-726 (1964)
+\end_layout
+
+\begin_layout Standard
+P.
+ E.
+ Cidor, Refraction into an absorbing medium, American Journal of Physics
+ 44, 786 (1976)
+\end_layout
+
+\begin_layout Standard
+T.
+ Oates, Progress on Surface Science 86 (2011)
+\end_layout
+
+\begin_layout Section
+Numerical experiments
+\end_layout
+
+\begin_layout Subsection
+FDTD study of refracted angle as a function of incident angle in absorbing
+ material
+\end_layout
+
+\begin_layout Standard
+FDTD simulations have been performed in order to clarify the real refraction
+ angle as a function of the material dielectric functions.
+ The optical index 
+\begin_inset Formula $n+ik$
+\end_inset
+
+ have been swept.
+ Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:ComparisonFDTDvsSnell-0"
+
+\end_inset
+
+ presents the refracted angle as a function of real optical index 
+\begin_inset Formula $n$
+\end_inset
+
+, and for a non-absorbing material (
+\begin_inset Formula $k=0$
+\end_inset
+
+).
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename /media/thibault/PHD/Travail/Berlin/Rapports/01-DoublePulseSi/Reflectivity/04-ExactRefraction/20130611-RefractionOfNk0.eps
+	width 8cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:ComparisonFDTDvsSnell-0"
+
+\end_inset
+
+Comparison between FDTD simulation of the refraction angle with Snell law
+ calculated in the case of a non-absorbing medium (
+\begin_inset Formula $k=0$
+\end_inset
+
+).
+ Incidence angle is 45°.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:ComparisonFDTDvsSnell-0"
+
+\end_inset
+
+ demonstrates the Snell-Descartes law in the case of a non-absorbing medium.
+ All the theories fit to this case, but Euler equation fails at low optical
+ index.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename 04-ExactRefraction/20130611-RefractionOfNk0.5.eps
+	width 8cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:ComparisonFDTDvsSnell-0.5"
+
+\end_inset
+
+Comparison between FDTD simulation of the refraction angle with Snell law
+ calculated in the case of an absorbing medium (
+\begin_inset Formula $k=0.5$
+\end_inset
+
+).
+ Incidence angle is 45°.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:ComparisonFDTDvsSnell-0.5"
+
+\end_inset
+
+ demonstrates the refraction angle as a function of the real part of the
+ refractive index 
+\begin_inset Formula $n$
+\end_inset
+
+ for a imaginary part 
+\begin_inset Formula $k=0.5$
+\end_inset
+
+.
+ It is shown that no model fit to the FDTD simulations data.
+ Actually, the proposed results are already in the range that approximation
+ 
+\begin_inset Formula $\Im m\left(\widetilde{n}\right)\ll\Re e\left(\widetilde{n}\right)$
+\end_inset
+
+ fails.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename 04-ExactRefraction/20130611-RefractionOfNk1.0.eps
+	width 8cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:ComparisonFDTDvsSnell-1"
+
+\end_inset
+
+Comparison between FDTD simulation of the refraction angle with Snell law
+ calculated in the case of a strongly absorbing medium (
+\begin_inset Formula $k=1.0$
+\end_inset
+
+).
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This discrepency is also demonstrated for strongly absorbing materials (
+\begin_inset Formula $k=1$
+\end_inset
+
+) on Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:ComparisonFDTDvsSnell-1"
+
+\end_inset
+
+.
+ Snell law is not valid in the case of absorbing material, thus a special
+ treatment has to be performed, as stated by Stratton 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Stratton1941"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Section
+Experimental measurements
+\end_layout
+
+\begin_layout Subsection
+Phase reflectivity theory 
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Model-of-reflectivity"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Surface reflectivity is defined by 
+\begin_inset Formula $R=\left|r_{0,N}\right|^{2}$
+\end_inset
+
+ where 
+\begin_inset Formula $N$
+\end_inset
+
+ is the number of considered optical layers and layer 
+\begin_inset Formula $0$
+\end_inset
+
+ corresponds to the external environment.
+ The surface reflectivity is described by the the Fresnel equations 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Born1980,Prokhorov1990"
+
+\end_inset
+
+.
+ We take into account the contribution of each layer to the surface reflectivity
+ by using a recurrence formula given by the transmission matrix model 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Born1980,Bauerle2000,Bulgakova2010"
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+r_{i,k}=\frac{r_{i,i+1}+r_{i+1,k}e^{2i\phi_{i+1}}}{1+r_{i,i+1}r_{i+1,k}e^{2i\phi_{i+1}}}\label{eq:Reflectivity}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula 
+\begin{equation}
+\phi_{i+1}=\frac{2\pi h_{i+1}}{\lambda}\sqrt{\varepsilon_{i+1}}\cos\theta_{i+1}\label{eq:Phase}
+\end{equation}
+
+\end_inset
+
+ is the phase shift induced by the 
+\begin_inset Formula $i+1$
+\end_inset
+
+ layer, 
+\begin_inset Formula $h_{i+1}$
+\end_inset
+
+ is the thickness of the layer 
+\begin_inset Formula $i+1$
+\end_inset
+
+, and 
+\begin_inset Formula $\theta_{i+1}$
+\end_inset
+
+ is the angle of incidence at layer 
+\begin_inset Formula $i+1$
+\end_inset
+
+.
+ 
+\begin_inset Formula $r_{i,i+1}$
+\end_inset
+
+ is given by Fresnel formulas 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Jackson1999"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+r_{i,i+1}=\frac{\sqrt{\varepsilon_{i}}\cos\theta_{i}-\sqrt{\varepsilon_{i+1}-\varepsilon_{i}\sin^{2}\theta_{i}}}{\sqrt{\varepsilon_{i}}\cos\theta_{i}+\sqrt{\varepsilon_{i+1}-\varepsilon_{i}\sin^{2}\theta_{i}}}\label{eq:Fresnel1}
+\end{equation}
+
+\end_inset
+
+ in the case of perpendicular polarization, and 
+\begin_inset Formula 
+\begin{equation}
+r_{i,i+1}=\frac{\varepsilon_{i+1}\cos\theta_{i}-\sqrt{\varepsilon_{i}}\sqrt{\varepsilon_{i+1}-\varepsilon_{i}\sin^{2}\theta_{i}}}{\varepsilon_{i+1}\cos\theta_{i}+\sqrt{\varepsilon_{i}}\sqrt{\varepsilon_{i+1}-\varepsilon_{i}\sin^{2}\theta_{i}}}\label{eq:Fresnel2}
+\end{equation}
+
+\end_inset
+
+in the case of a parallel polarization.
+ 
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+r_{i,i+1}=\frac{\sqrt{\varepsilon_{i+1}}-\sqrt{\varepsilon_{i}}}{\sqrt{\varepsilon_{i+1}}+\sqrt{\varepsilon_{i}}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula $\varepsilon_{i}$
+\end_inset
+
+ is the full complex dielectric function calculated at the layer 
+\begin_inset Formula $i$
+\end_inset
+
+, and 
+\begin_inset Formula $\theta_{i}$
+\end_inset
+
+ is the angle of incidence at the layer 
+\begin_inset Formula $i$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Subsection
+Proposed experiment
+\end_layout
+
+\begin_layout Standard
+What can be verified experimentally is the knowledge of the refractive angle
+ 
+\begin_inset Formula $\theta_{i+1}$
+\end_inset
+
+ in Eq.
+ 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:Phase"
+
+\end_inset
+
+.
+ This can be performed by calculating the phase of a perfect slab sample.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "/media/thibault/PHD/Travail/These/Articles/bibliographie_lue"
+options "/media/thibault/PHD/Travail/Berlin/Publications/MultilayerWater/jap"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

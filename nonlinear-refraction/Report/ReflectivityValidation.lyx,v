@@ -1,0 +1,2537 @@
+head	1.1;
+access;
+symbols;
+locks
+	thibault:1.1; strict;
+comment	@# @;
+
+
+1.1
+date	2014.04.20.17.31.23;	author thibault;	state Exp;
+branches;
+next	;
+
+
+desc
+@Version Validation reflectivity for Flirt 1D
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass revtex
+\options aip, sort&compress, reprint
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman charter
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine natbib_numerical
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 2cm
+\topmargin 2cm
+\rightmargin 2cm
+\bottommargin 2cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Rigorous refraction and reflection laws at interface with a multilayer absorbing
+ medium
+\end_layout
+
+\begin_layout Author
+Thibault J.-Y.
+ Derrien
+\end_layout
+
+\begin_layout Affiliation
+BAM Bundesanstalt für Materialforschung und –prüfung, 
+\begin_inset Newline newline
+\end_inset
+
+Unter den Eichen 87, D-12205 Berlin, Germany 
+\end_layout
+
+\begin_layout Author
+Jörg Krüger
+\end_layout
+
+\begin_layout Affiliation
+BAM Bundesanstalt für Materialforschung und –prüfung, 
+\begin_inset Newline newline
+\end_inset
+
+Unter den Eichen 87, D-12205 Berlin, Germany 
+\end_layout
+
+\begin_layout Author
+Jörn Bonse
+\end_layout
+
+\begin_layout Affiliation
+BAM Bundesanstalt für Materialforschung und –prüfung, 
+\begin_inset Newline newline
+\end_inset
+
+Unter den Eichen 87, D-12205 Berlin, Germany 
+\end_layout
+
+\begin_layout Date
+June, 11th of 2014
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Introduction
+\end_layout
+
+\begin_layout Standard
+Aims of this report are: 
+\end_layout
+
+\begin_layout Itemize
+to validate an important multilayer reflectivity model by reproducing the
+ experimental results of 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Sokolowski-Tinten2000"
+
+\end_inset
+
+, 
+\end_layout
+
+\begin_layout Itemize
+to provide a general description of the underlying assumptions, especially
+ on refraction law in absorbing media, 
+\end_layout
+
+\begin_layout Itemize
+to address the problem of defocusing in condition of overcritical plasma
+ density.
+ 
+\end_layout
+
+\begin_layout Section
+Experimental conditions of Ref.
+ [1]
+\end_layout
+
+\begin_layout Standard
+In this report, the surface reflectivity is calculated as a function of
+ laser fluence using the laser parameters of 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Sokolowski-Tinten2000"
+
+\end_inset
+
+.
+ The considered processes are the following: 
+\end_layout
+
+\begin_layout Itemize
+one-photon ionization, and two-photon ionization : two-photon rate is really
+ high.
+ 
+\end_layout
+
+\begin_layout Itemize
+free-carrier absorption
+\end_layout
+
+\begin_layout Itemize
+band-filling effect (absent from free-carrier balance equation, absent from
+ intensity calculation, present in dielectric functions)
+\end_layout
+
+\begin_layout Itemize
+Dielectric constant is not exactly the same as Palik
+\end_layout
+
+\begin_layout Itemize
+Collision frequencies are different for Fresnel and Multilayer equation
+ cases
+\end_layout
+
+\begin_layout Itemize
+Constant band gap
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement t
+wide true
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="5">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Laser wavelength
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Pulse duration
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Angle of incidence 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Polarization
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Pump pulse
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+625 nm
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+100 fs
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+30°
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+S (0°)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Probe pulse
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+625 nm
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+100 fs
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+49°
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+P (90°)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Laser parameters taken by 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Sokolowski-Tinten2000"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement t
+wide true
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="4" columns="5">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Fresnel reflectivity
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Multilayer reflectivity
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Collision frequency
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.5 fs
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.1 fs
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Material parameters taken by 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Sokolowski-Tinten2000"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Theory: Model of reflectivity
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Model-of-reflectivity"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Surface reflectivity is defined by 
+\begin_inset Formula $R=\left|r_{0,N}\right|^{2}$
+\end_inset
+
+ where 
+\begin_inset Formula $N$
+\end_inset
+
+ is the number of considered optical layers and layer 
+\begin_inset Formula $0$
+\end_inset
+
+ corresponds to the external environment.
+ The surface reflectivity is described by the the Fresnel equations 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Born1980,Prokhorov1990"
+
+\end_inset
+
+.
+ We take into account the contribution of each layer to the surface reflectivity
+ by using a recurrence formula given by the transmission matrix model 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Born1980,Baeuerle2000,Bulgakova2010"
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+r_{i,k}=\frac{r_{i,i+1}+r_{i+1,k}e^{2i\phi_{i+1}}}{1+r_{i,i+1}r_{i+1,k}e^{2i\phi_{i+1}}}\label{eq:Reflectivity}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula 
+\begin{equation}
+\phi_{i+1}=\frac{2\pi h_{i+1}}{\lambda}\sqrt{\varepsilon_{i+1}}\cos\theta_{i+1}\label{eq:Phase}
+\end{equation}
+
+\end_inset
+
+ is the phase shift induced by the 
+\begin_inset Formula $i+1$
+\end_inset
+
+ layer, 
+\begin_inset Formula $h_{i+1}$
+\end_inset
+
+ is the thickness of the layer 
+\begin_inset Formula $i+1$
+\end_inset
+
+, and 
+\begin_inset Formula $\theta_{i+1}$
+\end_inset
+
+ is the angle of incidence at layer 
+\begin_inset Formula $i+1$
+\end_inset
+
+.
+ 
+\begin_inset Formula $r_{i,i+1}$
+\end_inset
+
+ is given by Fresnel formulas 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Jackson1999"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+r_{i,i+1}=\frac{\sqrt{\varepsilon_{i}}\cos\theta_{i}-\sqrt{\varepsilon_{i+1}-\varepsilon_{i}\sin^{2}\theta_{i}}}{\sqrt{\varepsilon_{i}}\cos\theta_{i}+\sqrt{\varepsilon_{i+1}-\varepsilon_{i}\sin^{2}\theta_{i}}}\label{eq:Fresnel1}
+\end{equation}
+
+\end_inset
+
+ in the case of perpendicular polarization, and 
+\begin_inset Formula 
+\begin{equation}
+r_{i,i+1}=\frac{\varepsilon_{i+1}\cos\theta_{i}-\sqrt{\varepsilon_{i}}\sqrt{\varepsilon_{i+1}-\varepsilon_{i}\sin^{2}\theta_{i}}}{\varepsilon_{i+1}\cos\theta_{i}+\sqrt{\varepsilon_{i}}\sqrt{\varepsilon_{i+1}-\varepsilon_{i}\sin^{2}\theta_{i}}}\label{eq:Fresnel2}
+\end{equation}
+
+\end_inset
+
+in the case of a parallel polarization.
+ 
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+r_{i,i+1}=\frac{\sqrt{\varepsilon_{i+1}}-\sqrt{\varepsilon_{i}}}{\sqrt{\varepsilon_{i+1}}+\sqrt{\varepsilon_{i}}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula $\varepsilon_{i}$
+\end_inset
+
+ is the full complex dielectric function calculated at the layer 
+\begin_inset Formula $i$
+\end_inset
+
+, and 
+\begin_inset Formula $\theta_{i}$
+\end_inset
+
+ is the angle of incidence at the layer 
+\begin_inset Formula $i$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+Despite that this point is never mentioned in the papers claiming 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Bulgakova2010,Sokolowski-Tinten2000,Shank1983"
+
+\end_inset
+
+ the use of the multilayer model for reflectivity, a description of the
+ refracted angle is required, especially in the regime of interaction investigat
+ed by 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Sokolowski-Tinten2000"
+
+\end_inset
+
+.
+ The well-known law for refraction is given by Snell-Descartes law 
+\begin_inset Formula 
+\[
+\theta_{i+1}=\arcsin\left(\sqrt{\frac{\varepsilon_{i}}{\varepsilon_{i+1}}}\sin\theta_{i}\right).
+\]
+
+\end_inset
+
+Snell-Descartes law must be valid in case of complex dielectric functions
+ as stated by 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Stratton1941"
+
+\end_inset
+
+ (and experimentally proved by ###).
+ In case of total reflection, a phase shift between equiphase plans and
+ constant amplitude plans appears, leading to heterogeneous waves, then
+ to interferences.
+ Since our multilayer reflectivity model is limited to a homogeneous distributio
+n of fields in the plane normal to the surface, then we must impose a physical
+ limit by which is expressed by the following condition 
+\begin_inset Formula 
+\[
+\left|\sqrt{\frac{\varepsilon_{i}}{\varepsilon_{i+1}}}\right|\leqslant1
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This work aims to correctly describe the refraction angle as a function
+ of the incident angle and validate a general multilayer model, valid in
+ both transparent and absorbing media.
+ 
+\end_layout
+
+\begin_layout Section
+Results
+\end_layout
+
+\begin_layout Subsection
+FDTD study of refracted angle as a function of incident angle in absorbing
+ material
+\end_layout
+
+\begin_layout Standard
+FDTD simulations have been performed in order to clarify the real refraction
+ angle as a function of the material dielectric functions.
+ The optical index 
+\begin_inset Formula $n+ik$
+\end_inset
+
+ have been sweep.
+ Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:ComparisonFDTDvsSnell"
+
+\end_inset
+
+ presents the refracted angle as a function of real optical index 
+\begin_inset Formula $n$
+\end_inset
+
+, and for several values of 
+\begin_inset Formula $k$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename /media/PHD/Travail/Berlin/Rapports/01-DoublePulseSi/Reflectivity/04-ExactRefraction/20130611-RefractionOfNkClear.eps
+	width 8cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:ComparisonFDTDvsSnell"
+
+\end_inset
+
+Comparison between FDTD simulation of the refraction angle with Snell law
+ calculated in an absorbing medium.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:ComparisonFDTDvsSnell"
+
+\end_inset
+
+ clearly demonstrates that Snell law is not valid in the case of absorbing
+ material, and that a special treatment has to be performed, as stated by
+ 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Stratton1941"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Subsection
+Reflectivity using Snell law of refraction for absorbing materials
+\end_layout
+
+\begin_layout Standard
+In this section, we investigate the different possible approximations in
+ order to find a reasonable description of the surface reflectivity using
+ the multilayer model, and comparing different description of the refracted
+ angle.
+ First, we prepare a set of distributions to perform the tests.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename DensityDistribution.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename EpsilonOfNe.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:ProfilesNeRe"
+
+\end_inset
+
+Profiles considered in the following examples.
+ (a) Free-carrier density.
+ (b) Corresponding dielectric function with 
+\begin_inset Formula $\nu^{-1}=1.1$
+\end_inset
+
+ fs.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:ProfilesNeRe"
+
+\end_inset
+
+ presents the profile of density and thus of dielectric function distribution
+ as a function of depth.
+ Free-carrier density is defined by 
+\begin_inset Formula 
+\[
+n_{e}(z)=n_{e}^{0}e^{-\alpha z}
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $n_{e}^{0}=1.35\times10^{28}$
+\end_inset
+
+ 
+\begin_inset Formula $m^{-3}$
+\end_inset
+
+, and 
+\begin_inset Formula $\alpha\simeq10^{7}$
+\end_inset
+
+ 
+\begin_inset Formula $m^{-1}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+Now, we consider the different models.
+ 
+\end_layout
+
+\begin_layout Paragraph
+No refraction approximation
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename 00-NoRefraction/Sokol-5e28-100nm.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset Formula $h=100$
+\end_inset
+
+ nm
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename 00-NoRefraction/Sokol-5e28-10nm.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset Formula $h=10$
+\end_inset
+
+ nm
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename 00-NoRefraction/Sokol-5e28-1nm.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset Formula $h=1$
+\end_inset
+
+ nm
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:RconstantAngle"
+
+\end_inset
+
+Reflectivity as a function of free-carrier density in Si.
+ Case 
+\begin_inset Formula $\theta_{i}=\theta_{0}$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:RconstantAngle"
+
+\end_inset
+
+ presents the reflectivity as a function of free-carrier density using 
+\begin_inset Formula $\theta_{0}=\theta_{i}$
+\end_inset
+
+ for any layer.
+ As soon as the gradient of density is too strong and that the optical layer
+ is small (~10 nm), the reflectivity out-passes physical limits.
+ Then, the description using a real angle of incidence is false.
+ A deeper look at the Eq.
+ 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:Phase"
+
+\end_inset
+
+ shows that even using a real angle, the dielectric function is complex
+ and thus leads to a complex phase, e.g.
+ can lead to an enhancement or damping of the reflectivity in each layer.
+ Indeed, 
+\begin_inset CommandInset citation
+LatexCommand citet
+after "p. 24"
+key "Palik1998"
+
+\end_inset
+
+ considers that the angle 
+\begin_inset Formula $\theta_{i}$
+\end_inset
+
+ is always real, but the phase 
+\begin_inset Formula $\phi_{i}$
+\end_inset
+
+ is complex due to the absorbing medium.
+ 
+\end_layout
+
+\begin_layout Paragraph
+Refraction in the first layer only
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename 01-RefractionAtFirstLayer-RealAngle/5e28-100nm.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset Formula $h=100$
+\end_inset
+
+ nm
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename 01-RefractionAtFirstLayer-RealAngle/5e28-10nm.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset Formula $h=10$
+\end_inset
+
+ nm
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename 01-RefractionAtFirstLayer-RealAngle/5e28-1nm.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset Formula $h=1$
+\end_inset
+
+ nm
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename 01-RefractionAtFirstLayer-RealAngle/5e28-0.1nm.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset Formula $h=0.1$
+\end_inset
+
+ nm
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:RconstantAngleOneLayer"
+
+\end_inset
+
+Reflectivity as a function of free-carrier density in Si.
+ Case 
+\begin_inset Formula $\theta_{i}=\theta_{1}$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:RconstantAngleOneLayer"
+
+\end_inset
+
+ presents the reflectivity considering a constant angle of refraction distributi
+on equal to the one at the surface in the whole sample.
+ The refraction angle at 
+\begin_inset Formula $49°$
+\end_inset
+
+ for a density of 
+\begin_inset Formula $3.35\times10^{28}$
+\end_inset
+
+
+\begin_inset Formula $m^{-3}$
+\end_inset
+
+ at the surface is 
+\begin_inset Formula $11.5\text{°}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+The results show that having a strong gradient lead to a decrease of the
+ reflectivity.
+ The medium is very dense but is also optically very thin.
+ 
+\end_layout
+
+\begin_layout Paragraph
+Refraction in each layer, real angles, complex phase
+\end_layout
+
+\begin_layout Standard
+This case corresponds to the description of 
+\begin_inset CommandInset citation
+LatexCommand citet
+after "p. 24"
+key "Palik1998"
+
+\end_inset
+
+ and is coded in our simulation code.
+ Reflectivity is a complex quantity, the phase information is also a complex
+ quantity, but the refraction angle is made real before treatment.
+ 
+\end_layout
+
+\begin_layout Paragraph
+Refraction in each layer: complex angles, complex phase, complex functions,
+ no limit.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Stratton1941"
+
+\end_inset
+
+ clearly indicates that complex angles are physical and also mention an
+ experimental demonstration.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename MultiLayerModel-1umLayers.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename MultiLayerModel-100nmLayers.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename MultiLayerModel-10nmLayers.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename MultiLayerModel-1nmLayers.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:EffectOfLayers"
+
+\end_inset
+
+Study of the reflectivity multilayer model.
+ (a) 
+\begin_inset Formula $h_{i}=1\ \mu m$
+\end_inset
+
+.
+ (b) 
+\begin_inset Formula $h_{i}=100$
+\end_inset
+
+ nm.
+ (c) 
+\begin_inset Formula $h_{i}=10$
+\end_inset
+
+ nm.
+ (d) 
+\begin_inset Formula $h_{i}=1$
+\end_inset
+
+ nm.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:EffectOfLayers"
+
+\end_inset
+
+ presents the behavior of the surface reflectivity considering the exponentially
+ decreasing free-carrier density previously defined.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename MultiLayerModel-1nmLayers.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename MultiLayerModel-1nmLayers-HighDensities.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:EffectOfLayers-1"
+
+\end_inset
+
+Study of the reflectivity multilayer model.
+ 
+\begin_inset Formula $h_{i}=1\ nm$
+\end_inset
+
+.
+ (a) 
+\begin_inset Formula $Z*<1$
+\end_inset
+
+.
+ (b) 
+\begin_inset Formula $Z*>1$
+\end_inset
+
+.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:EffectOfLayers-1"
+
+\end_inset
+
+ presents the problem in details.
+ This problem originates from a non-physical element present in Eq.
+ 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:Phase"
+
+\end_inset
+
+.
+ Indeed, the term 
+\begin_inset Formula $\cos\theta_{i}$
+\end_inset
+
+ with complex valued angle can lead to the case where the following condition
+ is not respected 
+\begin_inset Formula 
+\begin{equation}
+\left|\sqrt{\frac{\varepsilon_{i}}{\varepsilon_{i+1}}}\right|\leq1\label{eq:Limit}
+\end{equation}
+
+\end_inset
+
+ thus driving the 
+\begin_inset Formula $\arcsin$
+\end_inset
+
+ function out from its definition set 
+\begin_inset Formula $[-1;1]$
+\end_inset
+
+.
+ The angle of incidence is a complex valued quantity since it is used in
+ the Fresnel formulas (Eq.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:Fresnel1"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:Fresnel2"
+
+\end_inset
+
+) and lead to a good description only if the refraction leads to lower angles.
+ Thus, we apply Eq.
+ 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:Limit"
+
+\end_inset
+
+ which allows to get the following results.
+ 
+\end_layout
+
+\begin_layout Paragraph
+Refraction in each layer: complex angles, phase, and functions, limit enabled.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Reflectivity1umWithLimiter.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Reflectivity100nmWithLimiter.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename /media/PHD/Travail/Berlin/Rapports/01-DoublePulseSi/Reflectivity/Reflectivity10nmWithLimiter.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Reflectivity1nmWithLimiter.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Study of multilayer reflectivity model with a limit given by Eq.
+ 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:Limit"
+
+\end_inset
+
+ on the angle of refraction.
+ 
+\begin_inset Formula $n_{e}^{0}=2\times10^{29}$
+\end_inset
+
+ 
+\begin_inset Formula $m^{-3}$
+\end_inset
+
+.
+ (a) 
+\begin_inset Formula $h_{i}=1\ \mu m$
+\end_inset
+
+.
+ (b) 
+\begin_inset Formula $h_{i}=100$
+\end_inset
+
+ nm.
+ (c) 
+\begin_inset Formula $h_{i}=10$
+\end_inset
+
+ nm.
+ (d) 
+\begin_inset Formula $h_{i}=1$
+\end_inset
+
+ nm.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Paragraph
+Just an idea: 
+\end_layout
+
+\begin_layout Plain Layout
+Generally, a decrease of reflectivity corresponds to a plasmon resonance.
+ In this case, the value where 
+\begin_inset Formula $\frac{\partial R}{\partial n_{e}}=0$
+\end_inset
+
+ would defines the fluence (or density) above which a plasmon resonance
+ is induced.
+ 
+\end_layout
+
+\end_inset
+
+ Using a complex angle seems to shift the critical density (defined by 
+\begin_inset Formula $\Re e\left(\varepsilon\right)=0$
+\end_inset
+
+ and 
+\begin_inset Formula $\frac{\partial R}{\partial n_{e}}=0$
+\end_inset
+
+).
+ 
+\end_layout
+
+\begin_layout Paragraph
+To develop
+\end_layout
+
+\begin_layout Standard
+The refraction at the interface between two complex media has also been
+ studied by 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Shen2010"
+
+\end_inset
+
+.
+ 
+\noun on
+Compare the model on the FDTD simulations.
+ 
+\end_layout
+
+\begin_layout Subsection
+Comparison with experiment
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename 20130517-Reflectivity.eps
+	width 8cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:SokolRef"
+
+\end_inset
+
+Reflectivity as a function of laser fluence
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:SokolRef"
+
+\end_inset
+
+ present the reflectivity as a function of laser fluence.
+ The experimental results have been reported as blue points.
+ The simulation results have been reported in plain curves.
+ The plain curve corresponds to calculation using Fresnel formula supposing
+ that the refraction medium is optically thick.
+ The dashed curve corresponds to the multilayer model developed in Section
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Model-of-reflectivity"
+
+\end_inset
+
+, and assumes that each layer can be optically thin.
+ One observe on this graph that the hypothesis of optically thick medium
+ leads to a mismatch between simulation and experiment.
+ However, multilayer model provide a better match and well reproduces the
+ global behavior of the experiment.
+ 
+\end_layout
+
+\begin_layout Standard
+For example, the threshold fluence defined by the minimum reflectivity is
+ the same for theory and in the experiment.
+ 
+\end_layout
+
+\begin_layout Standard
+However, the minimum reflectivity is slightly different.
+ Indeed, the experimental value is 15%, but the calculated value is 10%.
+ Regarding the knowledge we have on the model analysis we did in the Section
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Model-of-reflectivity"
+
+\end_inset
+
+, we can conclude that the gradient of density is stronger in the case of
+ Sokolowski-Tinten calculations.
+ Indeed, a variation of density on a very shallow layer leads to an increase
+ of the minimum reflectivity at the threshold.
+ The gradient of density may be underestimated in the case of the simulation.
+ This can result from the smallest mesh size taken at the surface of the
+ sample, and to the boundary condition.
+ 
+\end_layout
+
+\begin_layout Subsection
+Taking into account the melted layer index
+\end_layout
+
+\begin_layout Standard
+As demonstrated by 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Sokolowski-Tinten2000"
+
+\end_inset
+
+, the melting processes are not important in the time-reflectometry measurements
+ until a certain fluence threshold of nearly 400 
+\begin_inset Formula $mJ/cm^{2}$
+\end_inset
+
+, at 625 nm wavelength and 100 fs pulse duration.
+ However, at higher fluences, and especially in double pulse experiments
+ 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Hoehm2013"
+
+\end_inset
+
+ at several ps delays, the liquid layer formation can play a role into the
+ laser absorption.
+ To take this point into account, there exist different formulations.
+ A first model is to take the specular reflectivity change as a function
+ of temperature 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Korfiatis2007,Tsibidis2011"
+
+\end_inset
+
+, but has the drawback to not take into account the response of the free-carrier
+s.
+ Then, we propose to base the modeling of surface reflectivity change in
+ melted silicon by calculating the dielectric function of the melted layer
+ following the ratio of melted liquid 
+\begin_inset Formula $\eta$
+\end_inset
+
+ in the numerical cell, using the following formula in a first approximation
+ 
+\begin_inset Formula 
+\[
+\varepsilon=\left(\varepsilon_{c-Si}+\Delta\varepsilon_{Drude}\right)\left(1-\eta\right)+\eta\varepsilon_{l-Si}
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\varepsilon_{l-Si}=-14.85+47.88i$
+\end_inset
+
+ [REF?].
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename /media/PHD/Travail/Berlin/Rapports/01-DoublePulseSi/Reflectivity/20130611-RevolutionF600doublePulse100fs.eps
+	width 8cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:RwithMelting"
+
+\end_inset
+
+Surface reflectivity evolution and surface lattice temperature after double
+ pulse delay of 100 fs.
+ 
+\begin_inset Formula $F=0.6$
+\end_inset
+
+ 
+\begin_inset Formula $J/cm^{2}$
+\end_inset
+
+, 
+\begin_inset Formula $\tau=100$
+\end_inset
+
+ fs, 
+\begin_inset Formula $\lambda=800$
+\end_inset
+
+ nm.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:RwithMelting"
+
+\end_inset
+
+ presents the evolution of surface reflectivity as a function of time after
+ a double pulse sequence.
+ Laser peak fluence is 
+\begin_inset Formula $0.6$
+\end_inset
+
+ 
+\begin_inset Formula $J/cm^{2}$
+\end_inset
+
+, pulse duration is 
+\begin_inset Formula $\tau=100$
+\end_inset
+
+ fs, and laser wavelength is 800 nm.
+ The angle of incidence is normal to the surface.
+ The results demonstrate that the description is not diverging and can be
+ validated on experiments now.
+ 
+\end_layout
+
+\begin_layout Standard
+A good question is : what does happen to the free-carrier excited by laser
+ during the solid phase, after transition to liquid state ? The works of
+ 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Beye2010"
+
+\end_inset
+
+ would help to answer this question.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "/media/PHD/Travail/These/Articles/bibliographie_lue"
+options "unsrtnat"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
+@

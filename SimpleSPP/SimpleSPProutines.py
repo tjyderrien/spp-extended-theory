@@ -26,11 +26,12 @@ rc('text', usetex=True)
 mp.rcParams['legend.numpoints'] = 1
 
 # basic wave function
-def omega(wavelength):
+def omega(wavelength):#{{{
   return 2.0*pi*c/wavelength
+#}}}
 
 # SPP BASIC FUNCTIONS
-def betaSPP(wavelength, eps1, eps2):
+def betaSPP(wavelength, eps1, eps2):#{{{
   """calculate the SPP wave number on a flat interface
     input: wavelength (float), eps1 (complex), eps2(complex)
   """
@@ -42,8 +43,9 @@ def betaSPP(wavelength, eps1, eps2):
     value = -1e0+0e0j
     
   return value
-  
-def AsymmetricSPPconditionPos(eps1, eps2):
+#}}}
+
+def AsymmetricSPPconditionPos(eps1, eps2):#{{{
 	""" Assume that Re(k1).Re(k2) > 0 and verify the subsequent consequences alltogether.
 	It exists then two sub-modes, let's say a positive one (Im k1<0, Im k2>0), and a negative one (Im k1>0, Im k2<0)
 	This routine is about: Im(k1)>0, Im(k2)<0
@@ -53,8 +55,9 @@ def AsymmetricSPPconditionPos(eps1, eps2):
 	condition = (value.imag < 0e0)
 	#condition = (eps1.imag / eps2.imag * eps2.real < eps1.real)
 	return condition
+#}}}
 
-def AsymmetricSPPconditionNeg(eps1, eps2):
+def AsymmetricSPPconditionNeg(eps1, eps2):#{{{
 	""" Assume that Re(k1).Re(k2) > 0 and verify the subsequent consequences alltogether.
 	It exists then two sub-modes, let's say a positive one (Im k1<0, Im k2>0), and a negative one (Im k1>0, Im k2<0)
 	This routine is about: Im(k1)<0, Im(k2)>0
@@ -64,8 +67,9 @@ def AsymmetricSPPconditionNeg(eps1, eps2):
 	condition = (value.imag > 0e0)
 	#condition = (eps1.imag / eps2.imag * eps2.real < eps1.real)
 	return condition
+#}}}
 
-def SPPconditionValue(eps1, eps2):
+def SPPconditionValue(eps1, eps2):#{{{
   """SPPconditionValue() returns the value of condition for SPP. If its negative, then SPP can be excited at a flat interface. 
   /!\ This condition is restricted to checking the real part of the dispersion relation for symmetric SPP only. 
     Input: eps1, eps2: complex-valued quantities
@@ -73,8 +77,9 @@ def SPPconditionValue(eps1, eps2):
   """
   condition=eps1.real*eps2.real+eps1.imag*eps2.imag
   return condition
+#}}}
 
-def SPPcondition(eps1, eps2):
+def SPPcondition(eps1, eps2):#{{{
   """ Returns a boolean claiming if SPP are excitable on an interface
   """
   if (SPPconditionValue(eps1, eps2) < 0.0):
@@ -82,8 +87,9 @@ def SPPcondition(eps1, eps2):
   else:
     output=False
   return output
+#}}}
 
-def OldSPPcondition(eps1, eps2):
+def OldSPPcondition(eps1, eps2):#{{{
   """SPPconditionValue() returns the value of condition for SPP IN PERFECT MATERIALS (Im(eps)<<|Re(eps)). If its negative, then SPP can be excited at a flat interface. 
     Input: eps1, eps2: complex-valued quantities
     Output: float
@@ -93,14 +99,16 @@ def OldSPPcondition(eps1, eps2):
   # Let's use its generalization which is actually symmetric. 
   condition2 = (eps1.real * eps2.real / (eps1.real + eps2.real) > 0e0)
   return (condition1 and condition2)
+#}}}
 
-def period(betaSPP):
+def period(betaSPP):#{{{
   """ Returns the period of the light-SPP field at a given interface
   """
   return 2.0*pi/betaSPP.real
+#}}}
 
 # Precision over knowledge of period
-def deltaBetaSPP(wavelength, eps1, eps2, deps1r, deps1c, deps2r, deps2c):
+def deltaBetaSPP(wavelength, eps1, eps2, deps1r, deps1c, deps2r, deps2c):#{{{
   """Calculates the precision over Re(beta) using uncertainty calculations
   """
   eps1r = eps1.real; eps1c = eps1.imag
@@ -304,8 +312,9 @@ def deltaBetaSPP(wavelength, eps1, eps2, deps1r, deps1c, deps2r, deps2c):
     deltaReBeta = -1e0
   
   return deltaReBeta
+#}}}
 
-def deltaPeriodSPP(wavelength, eps1, eps2, deps1r, deps1c, deps2r, deps2c):
+def deltaPeriodSPP(wavelength, eps1, eps2, deps1r, deps1c, deps2r, deps2c): #{{{
   ## returns the absolute uncertainty on the SPP period.
   ## this function was validated on one typical value where function is close to singularity. 
   deltaBeta = deltaBetaSPP(wavelength, eps1, eps2, deps1r, deps1c, deps2r, deps2c)
@@ -316,21 +325,25 @@ def deltaPeriodSPP(wavelength, eps1, eps2, deps1r, deps1c, deps2r, deps2c):
   except:
     value = -1e0
   return value.real
+#}}}
 
 ### SPP decay depth
-def DecayDepth(kzSPP):
+def DecayDepth(kzSPP):#{{{
   return 2e0*pi/kzSPP.real
+#}}}
 
-def kzSPP(wavelength,eps1,eps2):
+def kzSPP(wavelength,eps1,eps2):#{{{
   return cmath.sqrt(betaSPP(wavelength,eps1,eps2)**2-eps1*(omega(wavelength)**2/c**2))
+#}}}
 
-def DecayLengthSPP(beta):
+def DecayLengthSPP(beta):#{{{
 	"""Return the coherent length of SPPs
 	"""
 	return 1e0/(2e0*beta.imag)
+#}}}
   
 # OPTICAL FUNCTIONS
-def Drude(wavelength, ne, epsilon, nu):
+def Drude(wavelength, ne, epsilon, nu):#{{{
   """Return the value of dielectric function based on simplified Drude model
   Input:
     wavelength (float)
@@ -342,8 +355,9 @@ def Drude(wavelength, ne, epsilon, nu):
   omegap2=ne * e**2 / (m_e * meffe * epsilon_0)
   omega=2.0*pi*c/wavelength
   return epsilon - omegap2/(omega*omega) * 1/(1+1j*nu/omega)
+#}}}
 
-def reflectivity(eps1, eps2):
+def reflectivity(eps1, eps2):#{{{
   """Return Fresnel reflectivity 
   Input:
     eps1: complex-valued permittivity 1+j0
@@ -353,10 +367,11 @@ def reflectivity(eps1, eps2):
   """
   R=abs(((eps1**0.5e0-eps2**0.5e0)/(eps1**0.5e0+eps2**0.5e0))**2)
   return R
+#}}}
   
 ## More elaborated functions
 
-def ExperimentallyAchievable(OpticalPenetrationDepth, DecayDepth):
+def ExperimentallyAchievable(OpticalPenetrationDepth, DecayDepth):#{{{
   """ Print only the experimentally possible cases: SPP active depth must be smaller than absorption depth. 
     # if Opd1 > 0, then: 
     #   return (Opd1 > SPPdecayDepth1)
@@ -368,8 +383,9 @@ def ExperimentallyAchievable(OpticalPenetrationDepth, DecayDepth):
     return (OpticalPenetrationDepth > DecayDepth)
   else:
     return True
+#}}}
 
-def SPPactiveInterfaces(dbarray, comment):
+def SPPactiveInterfaces(dbarray, comment):#{{{
   """Print all the SPP-active interfaces available in database
   CONSIDERS ONLY SYMMETRIC CASES
   If comment=="new", old SPP-active interfaces are removed from the table
@@ -472,6 +488,7 @@ def SPPactiveInterfaces(dbarray, comment):
 	eps2.real, eps2.imag, SPPdepthImagk1, SPPdepthImagk2]))
           
   return SPParray
+#}}}
 
 #def AsymmetricSPPposActiveInterfaces(dbarray, comment):
   #"""Print all the SPP-active interfaces available in database
@@ -715,9 +732,10 @@ def LifeTimeRaether(beta, eps2, eps1):
 	lifetime=1e0/omegasppimag #modified Raether formula to match with complex group velocity approach
 	return lifetime
 
-def SPPlength(beta):
+def SPPlength(beta): #{{{
   length = 1e0/(2e0 * beta.imag) #Maier formula
   return length
+#}}}
 
 def LifeTimeDerrien(beta, vg):
   length = SPPlength(beta)

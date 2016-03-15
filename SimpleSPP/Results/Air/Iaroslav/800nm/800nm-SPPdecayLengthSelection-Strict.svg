@@ -18,7 +18,7 @@
    inkscape:version="0.48.4 r9939"
    sodipodi:docname="800nm-SPPdecayLengthSelection-Strict.svg">
   <metadata
-     id="metadata628">
+     id="metadata608">
     <rdf:RDF>
       <cc:Work
          rdf:about="">
@@ -38,12 +38,12 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:window-width="1920"
-     inkscape:window-height="1025"
-     id="namedview626"
+     inkscape:window-height="1145"
+     id="namedview606"
      showgrid="false"
-     inkscape:zoom="1.7481481"
-     inkscape:cx="360"
-     inkscape:cy="-65.630063"
+     inkscape:zoom="0.87407407"
+     inkscape:cx="900.08139"
+     inkscape:cy="23.170285"
      inkscape:window-x="0"
      inkscape:window-y="27"
      inkscape:window-maximized="1"
@@ -80,7 +80,7 @@
      style="stroke-linecap:butt;stroke-linejoin:round">
     <path
        clip-path="url(#p7ff5b81e1d)"
-       d="m 271.181,198.742 -1.488,-9.86 1.413,0 0,-0.649 0.149,0 0,0.649 1.414,0 z"
+       d="m 280.753,216.807 -1.656,-8.138 1.573,0 0,-0.535 0.166,0 0,0.535 1.573,0 z"
        style="opacity:0.3;fill:#808080;stroke:#808080;stroke-linecap:butt;stroke-linejoin:miter"
        id="path17"
        inkscape:connector-curvature="0" />
@@ -90,7 +90,7 @@
      style="stroke-linecap:butt;stroke-linejoin:round">
     <path
        clip-path="url(#p7ff5b81e1d)"
-       d="m 274.62,206.639 -1.488,-9.86 1.414,0 0,-47.199 0.148,0 0,47.199 1.414,0 z"
+       d="m 284.58,223.325 -1.656,-8.138 1.573,0 0,-38.958 0.166,0 0,38.958 1.572,0 z"
        style="opacity:0.3;fill:#808080;stroke:#808080;stroke-linecap:butt;stroke-linejoin:miter"
        id="path20"
        inkscape:connector-curvature="0" />
@@ -112,113 +112,113 @@
        style="stroke-linecap:butt;stroke-linejoin:round">
       <use
          style="fill:#ff0000;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter"
-         x="372.05865"
+         x="392.99802"
          xlink:href="#m58aa2fe647"
-         y="194.12746"
+         y="212.99857"
          id="use28"
          width="576"
          height="432" />
       <use
          style="fill:#ff0000;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter"
-         x="271.18069"
+         x="280.75296"
          xlink:href="#m58aa2fe647"
-         y="198.74176"
+         y="216.80724"
          id="use30"
          width="576"
          height="432" />
       <use
          style="fill:#ff0000;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter"
-         x="106.89465"
+         x="97.954865"
          xlink:href="#m58aa2fe647"
-         y="82.997505"
+         y="121.27144"
          id="use32"
          width="576"
          height="432" />
       <use
          style="fill:#ff0000;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter"
-         x="348.41489"
+         x="366.69003"
          xlink:href="#m58aa2fe647"
-         y="84.953827"
+         y="122.8862"
          id="use34"
          width="576"
          height="432" />
       <use
          style="fill:#ff0000;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter"
-         x="274.61993"
+         x="284.57974"
          xlink:href="#m58aa2fe647"
-         y="206.63853"
+         y="223.32526"
          id="use36"
          width="576"
          height="432" />
       <use
          style="fill:#ff0000;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter"
-         x="458.14505"
+         x="488.78476"
          xlink:href="#m58aa2fe647"
-         y="259.4599"
+         y="266.92426"
          id="use38"
          width="576"
          height="432" />
       <use
          style="fill:#ff0000;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter"
-         x="400.55487"
+         x="424.70523"
          xlink:href="#m58aa2fe647"
-         y="180.79247"
+         y="201.99181"
          id="use40"
          width="576"
          height="432" />
       <use
          style="fill:#ff0000;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter"
-         x="269.28949"
+         x="278.64865"
          xlink:href="#m58aa2fe647"
-         y="246.77374"
+         y="256.45303"
          id="use42"
          width="576"
          height="432" />
       <use
          style="fill:#ff0000;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter"
-         x="175.61517"
+         x="174.41893"
          xlink:href="#m58aa2fe647"
-         y="148.79565"
+         y="175.5815"
          id="use44"
          width="576"
          height="432" />
       <use
          style="fill:#ff0000;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter"
-         x="124.55984"
+         x="117.6106"
          xlink:href="#m58aa2fe647"
-         y="80.010361"
+         y="118.80584"
          id="use46"
          width="576"
          height="432" />
       <use
          style="fill:#ff0000;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter"
-         x="277.2403"
+         x="287.49536"
          xlink:href="#m58aa2fe647"
-         y="167.98534"
+         y="191.42075"
          id="use48"
          width="576"
          height="432" />
       <use
          style="fill:#ff0000;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter"
-         x="397.59189"
+         x="421.40839"
          xlink:href="#m58aa2fe647"
-         y="203.96146"
+         y="221.11559"
          id="use50"
          width="576"
          height="432" />
       <use
          style="fill:#ff0000;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter"
-         x="447.21942"
+         x="476.62802"
          xlink:href="#m58aa2fe647"
-         y="210.77477"
+         y="226.73932"
          id="use52"
          width="576"
          height="432" />
       <use
          style="fill:#ff0000;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter"
-         x="212.45093"
+         x="215.4054"
          xlink:href="#m58aa2fe647"
-         y="202.53894"
+         y="219.94144"
          id="use54"
          width="576"
          height="432" />
@@ -271,7 +271,7 @@
          style="stroke-linecap:butt;stroke-linejoin:round">
         <path
            clip-path="url(#p7ff5b81e1d)"
-           d="M 72,388.8 72,43.2"
+           d="m 141.912,388.8 0,-345.6"
            style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:1, 3;stroke-dashoffset:0"
            id="path71"
            inkscape:connector-curvature="0" />
@@ -292,7 +292,7 @@
            style="stroke-linecap:butt;stroke-linejoin:round">
           <use
              style="stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round"
-             x="72"
+             x="141.91174"
              xlink:href="#m93b0483c22"
              y="388.79999"
              id="use79"
@@ -316,7 +316,7 @@
            style="stroke-linecap:butt;stroke-linejoin:round">
           <use
              style="stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round"
-             x="72"
+             x="141.91174"
              xlink:href="#m741efc42ff"
              y="43.200001"
              id="use87"
@@ -327,7 +327,7 @@
       <g
          id="text_1"
          style="stroke-linecap:butt;stroke-linejoin:round">
-        <!-- $-20$ -->
+        <!-- $-15$ -->
         <defs
            id="defs90">
           <path
@@ -336,18 +336,18 @@
              inkscape:connector-curvature="0"
              style="stroke-linecap:butt;stroke-linejoin:round" />
           <path
-             d="m 1.59375,2.5 0,-2.5 C 20.2969,0 20.2969,0 23.9062,0 27.5,0 27.5,0 46.7969,0 c -0.2031,1.95312 -0.2031,2.90625 -0.2031,4.20312 0,1.23438 0,2.15626 0.2031,4.21876 -11.5,0 -16.0938,0 -34.5938,0 L 30.4062,27.5156 C 40.0938,37.7188 43.0938,43.1719 43.0938,50.5938 43.0938,61.9688 35.2969,69 22.5938,69 15.4062,69 10.5,67 5.59375,62.0156 l -1.6875,-13.5937 2.89063,0 1.29687,4.5937 C 9.70312,58.7969 13.2969,61.2969 20,61.2969 c 8.5938,0 14.0938,-5.4063 14.0938,-13.875 0,-7.5 -4.1876,-14.875 -15.5,-26.8594 z"
-             id="URW_Palladio_L_Roman-50"
+             d="m 12.7031,60.5781 c 12.8907,0 18.5,0 30.5,0 l 0.5,0.4688 C 43.5,62.75 43.5,63.5 43.5,64.75 c 0,1.3281 0,2.0781 0.2031,3.7812 L 43.2031,69 c -7.5,0 -12,0 -17.4062,0 -5.5,0 -9.8907,0 -17.39065,0 l -0.5,-0.2031 C 8,62.6719 8.09375,58.2656 8.09375,55.0469 8.09375,46.5156 7.79688,36.875 7.5,32.4531 l 2,-0.6093 C 14.2031,36.5781 16.9062,38 21.7969,38 31.4062,38 37.4062,31.1406 37.4062,20.25 37.4062,9.0625 31,2.5 20.0938,2.5 14.7031,2.5 9.70312,4.32812 8.29688,6.9375 L 3.70312,15.2031 1.29688,13.7969 C 3.59375,8.0625 4.79688,4.84375 6.20312,0.421875 9,-1.10938 13,-2 17.2969,-2 24,-2 31.0938,0.921875 36.5938,5.75 c 6.1093,5.4375 9.3124,12.2812 9.3124,19.7188 0,11.3906 -8.1093,19.4374 -19.5,19.4374 -4.8124,0 -8.4062,-1.2968 -14.6093,-5 z"
+             id="URW_Palladio_L_Roman-53"
              inkscape:connector-curvature="0"
              style="stroke-linecap:butt;stroke-linejoin:round" />
           <path
-             d="M 26.2969,69 C 10.7969,69 2.90625,56.6875 2.90625,32.4531 2.90625,20.7188 5,10.625 8.5,5.71875 12,0.796875 17.5938,-2 23.7969,-2 38.9062,-2 46.5,11.0156 46.5,36.6562 46.5,58.5781 40,69 26.2969,69 M 24.5,65.5 c 9.7031,0 13.5938,-9.8125 13.5938,-33.8594 C 38.0938,10.3281 34.2969,1.5 25.0938,1.5 15.4062,1.5 11.2969,11.625 11.2969,36.0625 11.2969,57.1875 15,65.5 24.5,65.5"
-             id="URW_Palladio_L_Roman-48"
+             d="m 6.70312,56 1,0 12.89068,5.8125 c 0.1093,0.0937 0.2031,0.0937 0.3124,0.0937 0.5938,0 0.7969,-0.8906 0.7969,-3.2968 l 0,-49.03128 c 0,-5.26562 -1.1093,-6.375 -6.5,-6.375 l -5.60935,0 0,-3.20312 C 25,0 25,0 26.0938,0 c 1.3124,0 3.5,0 6.9062,0 1.2031,0 4.7031,0 8.7969,0 l 0,3.20312 -5.2031,0 c -5.5,0 -6.5,1.10938 -6.5,6.35938 l 0,59.8594 -1.3907,0.5 C 22.2031,66.5156 15.0938,63.5156 6,60.3125 z"
+             id="URW_Palladio_L_Roman-49"
              inkscape:connector-curvature="0"
              style="stroke-linecap:butt;stroke-linejoin:round" />
         </defs>
         <g
-           transform="matrix(0.2,0,0,-0.2,53.843189,407.05647)"
+           transform="matrix(0.2,0,0,-0.2,123.75493,407.05647)"
            id="g95"
            style="stroke-linecap:butt;stroke-linejoin:round">
           <use
@@ -361,7 +361,7 @@
              height="432" />
           <use
              transform="matrix(0.99626401,0,0,0.99626401,81.941696,0)"
-             xlink:href="#URW_Palladio_L_Roman-50"
+             xlink:href="#URW_Palladio_L_Roman-49"
              id="use99"
              style="stroke-linecap:butt;stroke-linejoin:round"
              x="0"
@@ -370,7 +370,7 @@
              height="432" />
           <use
              transform="matrix(0.99626401,0,0,0.99626401,131.7549,0)"
-             xlink:href="#URW_Palladio_L_Roman-48"
+             xlink:href="#URW_Palladio_L_Roman-53"
              id="use101"
              style="stroke-linecap:butt;stroke-linejoin:round"
              x="0"
@@ -388,7 +388,7 @@
          style="stroke-linecap:butt;stroke-linejoin:round">
         <path
            clip-path="url(#p7ff5b81e1d)"
-           d="m 146.4,388.8 0,-345.6"
+           d="m 224.695,388.8 0,-345.6"
            style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:1, 3;stroke-dashoffset:0"
            id="path105"
            inkscape:connector-curvature="0" />
@@ -401,7 +401,7 @@
            style="stroke-linecap:butt;stroke-linejoin:round">
           <use
              style="stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round"
-             x="146.39999"
+             x="224.69527"
              xlink:href="#m93b0483c22"
              y="388.79999"
              id="use110"
@@ -417,7 +417,7 @@
            style="stroke-linecap:butt;stroke-linejoin:round">
           <use
              style="stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round"
-             x="146.39999"
+             x="224.69527"
              xlink:href="#m741efc42ff"
              y="43.200001"
              id="use115"
@@ -428,28 +428,23 @@
       <g
          id="text_2"
          style="stroke-linecap:butt;stroke-linejoin:round">
-        <!-- $-15$ -->
+        <!-- $-10$ -->
         <defs
            id="defs118">
           <path
-             d="m 12.7031,60.5781 c 12.8907,0 18.5,0 30.5,0 l 0.5,0.4688 C 43.5,62.75 43.5,63.5 43.5,64.75 c 0,1.3281 0,2.0781 0.2031,3.7812 L 43.2031,69 c -7.5,0 -12,0 -17.4062,0 -5.5,0 -9.8907,0 -17.39065,0 l -0.5,-0.2031 C 8,62.6719 8.09375,58.2656 8.09375,55.0469 8.09375,46.5156 7.79688,36.875 7.5,32.4531 l 2,-0.6093 C 14.2031,36.5781 16.9062,38 21.7969,38 31.4062,38 37.4062,31.1406 37.4062,20.25 37.4062,9.0625 31,2.5 20.0938,2.5 14.7031,2.5 9.70312,4.32812 8.29688,6.9375 L 3.70312,15.2031 1.29688,13.7969 C 3.59375,8.0625 4.79688,4.84375 6.20312,0.421875 9,-1.10938 13,-2 17.2969,-2 24,-2 31.0938,0.921875 36.5938,5.75 c 6.1093,5.4375 9.3124,12.2812 9.3124,19.7188 0,11.3906 -8.1093,19.4374 -19.5,19.4374 -4.8124,0 -8.4062,-1.2968 -14.6093,-5 z"
-             id="URW_Palladio_L_Roman-53"
-             inkscape:connector-curvature="0"
-             style="stroke-linecap:butt;stroke-linejoin:round" />
-          <path
-             d="m 6.70312,56 1,0 12.89068,5.8125 c 0.1093,0.0937 0.2031,0.0937 0.3124,0.0937 0.5938,0 0.7969,-0.8906 0.7969,-3.2968 l 0,-49.03128 c 0,-5.26562 -1.1093,-6.375 -6.5,-6.375 l -5.60935,0 0,-3.20312 C 25,0 25,0 26.0938,0 c 1.3124,0 3.5,0 6.9062,0 1.2031,0 4.7031,0 8.7969,0 l 0,3.20312 -5.2031,0 c -5.5,0 -6.5,1.10938 -6.5,6.35938 l 0,59.8594 -1.3907,0.5 C 22.2031,66.5156 15.0938,63.5156 6,60.3125 z"
-             id="URW_Palladio_L_Roman-49"
+             d="M 26.2969,69 C 10.7969,69 2.90625,56.6875 2.90625,32.4531 2.90625,20.7188 5,10.625 8.5,5.71875 12,0.796875 17.5938,-2 23.7969,-2 38.9062,-2 46.5,11.0156 46.5,36.6562 46.5,58.5781 40,69 26.2969,69 M 24.5,65.5 c 9.7031,0 13.5938,-9.8125 13.5938,-33.8594 C 38.0938,10.3281 34.2969,1.5 25.0938,1.5 15.4062,1.5 11.2969,11.625 11.2969,36.0625 11.2969,57.1875 15,65.5 24.5,65.5"
+             id="URW_Palladio_L_Roman-48"
              inkscape:connector-curvature="0"
              style="stroke-linecap:butt;stroke-linejoin:round" />
         </defs>
         <g
-           transform="matrix(0.2,0,0,-0.2,128.24319,407.05647)"
-           id="g122"
+           transform="matrix(0.2,0,0,-0.2,206.53845,407.05647)"
+           id="g121"
            style="stroke-linecap:butt;stroke-linejoin:round">
           <use
              transform="scale(1.0381069,1.0381069)"
              xlink:href="#CMSY10-0"
-             id="use124"
+             id="use123"
              style="stroke-linecap:butt;stroke-linejoin:round"
              x="0"
              y="0"
@@ -458,7 +453,7 @@
           <use
              transform="matrix(0.99626401,0,0,0.99626401,81.941696,0)"
              xlink:href="#URW_Palladio_L_Roman-49"
-             id="use126"
+             id="use125"
              style="stroke-linecap:butt;stroke-linejoin:round"
              x="0"
              y="0"
@@ -466,8 +461,8 @@
              height="432" />
           <use
              transform="matrix(0.99626401,0,0,0.99626401,131.7549,0)"
-             xlink:href="#URW_Palladio_L_Roman-53"
-             id="use128"
+             xlink:href="#URW_Palladio_L_Roman-48"
+             id="use127"
              style="stroke-linecap:butt;stroke-linejoin:round"
              x="0"
              y="0"
@@ -484,23 +479,23 @@
          style="stroke-linecap:butt;stroke-linejoin:round">
         <path
            clip-path="url(#p7ff5b81e1d)"
-           d="m 220.8,388.8 0,-345.6"
+           d="m 307.479,388.8 0,-345.6"
            style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:1, 3;stroke-dashoffset:0"
-           id="path132"
+           id="path131"
            inkscape:connector-curvature="0" />
       </g>
       <g
          id="line2d_9"
          style="stroke-linecap:butt;stroke-linejoin:round">
         <g
-           id="g135"
+           id="g134"
            style="stroke-linecap:butt;stroke-linejoin:round">
           <use
              style="stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round"
-             x="220.8"
+             x="307.47879"
              xlink:href="#m93b0483c22"
              y="388.79999"
-             id="use137"
+             id="use136"
              width="576"
              height="432" />
         </g>
@@ -509,14 +504,14 @@
          id="line2d_10"
          style="stroke-linecap:butt;stroke-linejoin:round">
         <g
-           id="g140"
+           id="g139"
            style="stroke-linecap:butt;stroke-linejoin:round">
           <use
              style="stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round"
-             x="220.8"
+             x="307.47879"
              xlink:href="#m741efc42ff"
              y="43.200001"
-             id="use142"
+             id="use141"
              width="576"
              height="432" />
         </g>
@@ -524,15 +519,15 @@
       <g
          id="text_3"
          style="stroke-linecap:butt;stroke-linejoin:round">
-        <!-- $-10$ -->
+        <!-- $-5$ -->
         <g
-           transform="matrix(0.2,0,0,-0.2,202.64319,407.05647)"
-           id="g145"
+           transform="matrix(0.2,0,0,-0.2,294.3033,407.05647)"
+           id="g144"
            style="stroke-linecap:butt;stroke-linejoin:round">
           <use
              transform="scale(1.0381069,1.0381069)"
              xlink:href="#CMSY10-0"
-             id="use147"
+             id="use146"
              style="stroke-linecap:butt;stroke-linejoin:round"
              x="0"
              y="0"
@@ -540,17 +535,8 @@
              height="432" />
           <use
              transform="matrix(0.99626401,0,0,0.99626401,81.941696,0)"
-             xlink:href="#URW_Palladio_L_Roman-49"
-             id="use149"
-             style="stroke-linecap:butt;stroke-linejoin:round"
-             x="0"
-             y="0"
-             width="576"
-             height="432" />
-          <use
-             transform="matrix(0.99626401,0,0,0.99626401,131.7549,0)"
-             xlink:href="#URW_Palladio_L_Roman-48"
-             id="use151"
+             xlink:href="#URW_Palladio_L_Roman-53"
+             id="use148"
              style="stroke-linecap:butt;stroke-linejoin:round"
              x="0"
              y="0"
@@ -567,23 +553,23 @@
          style="stroke-linecap:butt;stroke-linejoin:round">
         <path
            clip-path="url(#p7ff5b81e1d)"
-           d="m 295.2,388.8 0,-345.6"
+           d="m 390.262,388.8 0,-345.6"
            style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:1, 3;stroke-dashoffset:0"
-           id="path155"
+           id="path152"
            inkscape:connector-curvature="0" />
       </g>
       <g
          id="line2d_12"
          style="stroke-linecap:butt;stroke-linejoin:round">
         <g
-           id="g158"
+           id="g155"
            style="stroke-linecap:butt;stroke-linejoin:round">
           <use
              style="stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round"
-             x="295.20001"
+             x="390.2623"
              xlink:href="#m93b0483c22"
              y="388.79999"
-             id="use160"
+             id="use157"
              width="576"
              height="432" />
         </g>
@@ -592,14 +578,14 @@
          id="line2d_13"
          style="stroke-linecap:butt;stroke-linejoin:round">
         <g
-           id="g163"
+           id="g160"
            style="stroke-linecap:butt;stroke-linejoin:round">
           <use
              style="stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round"
-             x="295.20001"
+             x="390.2623"
              xlink:href="#m741efc42ff"
              y="43.200001"
-             id="use165"
+             id="use162"
              width="576"
              height="432" />
         </g>
@@ -607,24 +593,15 @@
       <g
          id="text_4"
          style="stroke-linecap:butt;stroke-linejoin:round">
-        <!-- $-5$ -->
+        <!-- $0$ -->
         <g
-           transform="matrix(0.2,0,0,-0.2,282.02451,407.05647)"
-           id="g168"
+           transform="matrix(0.2,0,0,-0.2,385.28099,407.05647)"
+           id="g165"
            style="stroke-linecap:butt;stroke-linejoin:round">
           <use
-             transform="scale(1.0381069,1.0381069)"
-             xlink:href="#CMSY10-0"
-             id="use170"
-             style="stroke-linecap:butt;stroke-linejoin:round"
-             x="0"
-             y="0"
-             width="576"
-             height="432" />
-          <use
-             transform="matrix(0.99626401,0,0,0.99626401,81.941696,0)"
-             xlink:href="#URW_Palladio_L_Roman-53"
-             id="use172"
+             transform="scale(0.99626401,0.99626401)"
+             xlink:href="#URW_Palladio_L_Roman-48"
+             id="use167"
              style="stroke-linecap:butt;stroke-linejoin:round"
              x="0"
              y="0"
@@ -641,23 +618,23 @@
          style="stroke-linecap:butt;stroke-linejoin:round">
         <path
            clip-path="url(#p7ff5b81e1d)"
-           d="m 369.6,388.8 0,-345.6"
+           d="m 473.046,388.8 0,-345.6"
            style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:1, 3;stroke-dashoffset:0"
-           id="path176"
+           id="path171"
            inkscape:connector-curvature="0" />
       </g>
       <g
          id="line2d_15"
          style="stroke-linecap:butt;stroke-linejoin:round">
         <g
-           id="g179"
+           id="g174"
            style="stroke-linecap:butt;stroke-linejoin:round">
           <use
              style="stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round"
-             x="369.60001"
+             x="473.04584"
              xlink:href="#m93b0483c22"
              y="388.79999"
-             id="use181"
+             id="use176"
              width="576"
              height="432" />
         </g>
@@ -666,14 +643,14 @@
          id="line2d_16"
          style="stroke-linecap:butt;stroke-linejoin:round">
         <g
-           id="g184"
+           id="g179"
            style="stroke-linecap:butt;stroke-linejoin:round">
           <use
              style="stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round"
-             x="369.60001"
+             x="473.04584"
              xlink:href="#m741efc42ff"
              y="43.200001"
-             id="use186"
+             id="use181"
              width="576"
              height="432" />
         </g>
@@ -681,80 +658,15 @@
       <g
          id="text_5"
          style="stroke-linecap:butt;stroke-linejoin:round">
-        <!-- $0$ -->
-        <g
-           transform="matrix(0.2,0,0,-0.2,364.61868,407.05647)"
-           id="g189"
-           style="stroke-linecap:butt;stroke-linejoin:round">
-          <use
-             transform="scale(0.99626401,0.99626401)"
-             xlink:href="#URW_Palladio_L_Roman-48"
-             id="use191"
-             style="stroke-linecap:butt;stroke-linejoin:round"
-             x="0"
-             y="0"
-             width="576"
-             height="432" />
-        </g>
-      </g>
-    </g>
-    <g
-       id="xtick_6"
-       style="stroke-linecap:butt;stroke-linejoin:round">
-      <g
-         id="line2d_17"
-         style="stroke-linecap:butt;stroke-linejoin:round">
-        <path
-           clip-path="url(#p7ff5b81e1d)"
-           d="M 444,388.8 444,43.2"
-           style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:1, 3;stroke-dashoffset:0"
-           id="path195"
-           inkscape:connector-curvature="0" />
-      </g>
-      <g
-         id="line2d_18"
-         style="stroke-linecap:butt;stroke-linejoin:round">
-        <g
-           id="g198"
-           style="stroke-linecap:butt;stroke-linejoin:round">
-          <use
-             style="stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round"
-             x="444"
-             xlink:href="#m93b0483c22"
-             y="388.79999"
-             id="use200"
-             width="576"
-             height="432" />
-        </g>
-      </g>
-      <g
-         id="line2d_19"
-         style="stroke-linecap:butt;stroke-linejoin:round">
-        <g
-           id="g203"
-           style="stroke-linecap:butt;stroke-linejoin:round">
-          <use
-             style="stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round"
-             x="444"
-             xlink:href="#m741efc42ff"
-             y="43.200001"
-             id="use205"
-             width="576"
-             height="432" />
-        </g>
-      </g>
-      <g
-         id="text_6"
-         style="stroke-linecap:butt;stroke-linejoin:round">
         <!-- $5$ -->
         <g
-           transform="matrix(0.2,0,0,-0.2,439.01868,407.05647)"
-           id="g208"
+           transform="matrix(0.2,0,0,-0.2,468.06451,407.05647)"
+           id="g184"
            style="stroke-linecap:butt;stroke-linejoin:round">
           <use
              transform="scale(0.99626401,0.99626401)"
              xlink:href="#URW_Palladio_L_Roman-53"
-             id="use210"
+             id="use186"
              style="stroke-linecap:butt;stroke-linejoin:round"
              x="0"
              y="0"
@@ -764,85 +676,11 @@
       </g>
     </g>
     <g
-       id="xtick_7"
-       style="stroke-linecap:butt;stroke-linejoin:round">
-      <g
-         id="line2d_20"
-         style="stroke-linecap:butt;stroke-linejoin:round">
-        <path
-           clip-path="url(#p7ff5b81e1d)"
-           d="m 518.4,388.8 0,-345.6"
-           style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:1, 3;stroke-dashoffset:0"
-           id="path214"
-           inkscape:connector-curvature="0" />
-      </g>
-      <g
-         id="line2d_21"
-         style="stroke-linecap:butt;stroke-linejoin:round">
-        <g
-           id="g217"
-           style="stroke-linecap:butt;stroke-linejoin:round">
-          <use
-             style="stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round"
-             x="518.40002"
-             xlink:href="#m93b0483c22"
-             y="388.79999"
-             id="use219"
-             width="576"
-             height="432" />
-        </g>
-      </g>
-      <g
-         id="line2d_22"
-         style="stroke-linecap:butt;stroke-linejoin:round">
-        <g
-           id="g222"
-           style="stroke-linecap:butt;stroke-linejoin:round">
-          <use
-             style="stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round"
-             x="518.40002"
-             xlink:href="#m741efc42ff"
-             y="43.200001"
-             id="use224"
-             width="576"
-             height="432" />
-        </g>
-      </g>
-      <g
-         id="text_7"
-         style="stroke-linecap:butt;stroke-linejoin:round">
-        <!-- $10$ -->
-        <g
-           transform="matrix(0.2,0,0,-0.2,508.43736,407.05647)"
-           id="g227"
-           style="stroke-linecap:butt;stroke-linejoin:round">
-          <use
-             transform="scale(0.99626401,0.99626401)"
-             xlink:href="#URW_Palladio_L_Roman-49"
-             id="use229"
-             style="stroke-linecap:butt;stroke-linejoin:round"
-             x="0"
-             y="0"
-             width="576"
-             height="432" />
-          <use
-             transform="matrix(0.99626401,0,0,0.99626401,49.8132,0)"
-             xlink:href="#URW_Palladio_L_Roman-48"
-             id="use231"
-             style="stroke-linecap:butt;stroke-linejoin:round"
-             x="0"
-             y="0"
-             width="576"
-             height="432" />
-        </g>
-      </g>
-    </g>
-    <g
-       id="text_8"
+       id="text_6"
        style="stroke-linecap:butt;stroke-linejoin:round">
       <!-- $Re(\varepsilon)$ -->
       <defs
-         id="defs234">
+         id="defs189">
         <path
            d="m 33.0938,-24 c 0,0.2969 0,0.5 -1.6876,2.2031 -12.5,12.6719 -15.7031,31.6719 -15.7031,47.0313 0,17.5 3.7969,35 16.0938,47.5468 1.2969,1.2032 1.2969,1.4063 1.2969,1.7032 0,0.7031 -0.3907,1.0156 -1,1.0156 -1,0 -10,-6.8281 -15.8907,-19.6094 C 11.0938,44.8438 9.90625,33.6875 9.90625,25.2344 9.90625,17.4062 11,5.25 16.5,-6.10938 22.5,-18.4688 31.0938,-25 32.0938,-25 c 0.6093,0 1,0.2969 1,1"
            id="CMR10-40"
@@ -871,12 +709,12 @@
       </defs>
       <g
          transform="matrix(0.2,0,0,-0.2,271.87535,432.8186)"
-         id="g241"
+         id="g196"
          style="stroke-linecap:butt;stroke-linejoin:round">
         <use
            transform="scale(0.99626401,0.99626401)"
            xlink:href="#URW_Palladio_L_Italic-82"
-           id="use243"
+           id="use198"
            style="stroke-linecap:butt;stroke-linejoin:round"
            x="0"
            y="0"
@@ -885,7 +723,7 @@
         <use
            transform="matrix(0.99626401,0,0,0.99626401,68.940463,0)"
            xlink:href="#URW_Palladio_L_Italic-101"
-           id="use245"
+           id="use200"
            style="stroke-linecap:butt;stroke-linejoin:round"
            x="0"
            y="0"
@@ -894,7 +732,7 @@
         <use
            transform="matrix(1.0381069,0,0,1.0381069,110.18583,0)"
            xlink:href="#CMR10-40"
-           id="use247"
+           id="use202"
            style="stroke-linecap:butt;stroke-linejoin:round"
            x="0"
            y="0"
@@ -903,7 +741,7 @@
         <use
            transform="matrix(0.99626401,0,0,0.99626401,152.92554,0)"
            xlink:href="#Pazo_Math_Italic-35"
-           id="use249"
+           id="use204"
            style="stroke-linecap:butt;stroke-linejoin:round"
            x="0"
            y="0"
@@ -912,7 +750,7 @@
         <use
            transform="matrix(1.0381069,0,0,1.0381069,192.87572,0)"
            xlink:href="#CMR10-41"
-           id="use251"
+           id="use206"
            style="stroke-linecap:butt;stroke-linejoin:round"
            x="0"
            y="0"
@@ -928,20 +766,20 @@
        id="ytick_1"
        style="stroke-linecap:butt;stroke-linejoin:round">
       <g
-         id="line2d_23"
+         id="line2d_17"
          style="stroke-linecap:butt;stroke-linejoin:round">
         <path
            clip-path="url(#p7ff5b81e1d)"
-           d="m 72,388.8 446.4,0"
+           d="m 72,373.682 446.4,0"
            style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:1, 3;stroke-dashoffset:0"
-           id="path256"
+           id="path211"
            inkscape:connector-curvature="0" />
       </g>
       <g
-         id="line2d_24"
+         id="line2d_18"
          style="stroke-linecap:butt;stroke-linejoin:round">
         <defs
-           id="defs259">
+           id="defs214">
           <path
              d="M 0,0 4,0"
              id="m728421d6d4"
@@ -949,23 +787,23 @@
              inkscape:connector-curvature="0" />
         </defs>
         <g
-           id="g262"
+           id="g217"
            style="stroke-linecap:butt;stroke-linejoin:round">
           <use
              style="stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round"
              x="72"
              xlink:href="#m728421d6d4"
-             y="388.79999"
-             id="use264"
+             y="373.6821"
+             id="use219"
              width="576"
              height="432" />
         </g>
       </g>
       <g
-         id="line2d_25"
+         id="line2d_19"
          style="stroke-linecap:butt;stroke-linejoin:round">
         <defs
-           id="defs267">
+           id="defs222">
           <path
              d="M 0,0 -4,0"
              id="mcb0005524f"
@@ -973,30 +811,30 @@
              inkscape:connector-curvature="0" />
         </defs>
         <g
-           id="g270"
+           id="g225"
            style="stroke-linecap:butt;stroke-linejoin:round">
           <use
              style="stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round"
              x="518.40002"
              xlink:href="#mcb0005524f"
-             y="388.79999"
-             id="use272"
+             y="373.6821"
+             id="use227"
              width="576"
              height="432" />
         </g>
       </g>
       <g
-         id="text_9"
+         id="text_7"
          style="stroke-linecap:butt;stroke-linejoin:round">
         <!-- $0$ -->
         <g
-           transform="matrix(0.2,0,0,-0.2,58.03736,393.11883)"
-           id="g275"
+           transform="matrix(0.2,0,0,-0.2,58.03736,378.00093)"
+           id="g230"
            style="stroke-linecap:butt;stroke-linejoin:round">
           <use
              transform="scale(0.99626401,0.99626401)"
              xlink:href="#URW_Palladio_L_Roman-48"
-             id="use277"
+             id="use232"
              style="stroke-linecap:butt;stroke-linejoin:round"
              x="0"
              y="0"
@@ -1009,59 +847,59 @@
        id="ytick_2"
        style="stroke-linecap:butt;stroke-linejoin:round">
       <g
-         id="line2d_26"
+         id="line2d_20"
          style="stroke-linecap:butt;stroke-linejoin:round">
         <path
            clip-path="url(#p7ff5b81e1d)"
-           d="m 72,323.067 446.4,0"
+           d="m 72,319.426 446.4,0"
            style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:1, 3;stroke-dashoffset:0"
-           id="path281"
+           id="path236"
            inkscape:connector-curvature="0" />
       </g>
       <g
-         id="line2d_27"
+         id="line2d_21"
          style="stroke-linecap:butt;stroke-linejoin:round">
         <g
-           id="g284"
+           id="g239"
            style="stroke-linecap:butt;stroke-linejoin:round">
           <use
              style="stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round"
              x="72"
              xlink:href="#m728421d6d4"
-             y="323.0672"
-             id="use286"
+             y="319.42599"
+             id="use241"
              width="576"
              height="432" />
         </g>
       </g>
       <g
-         id="line2d_28"
+         id="line2d_22"
          style="stroke-linecap:butt;stroke-linejoin:round">
         <g
-           id="g289"
+           id="g244"
            style="stroke-linecap:butt;stroke-linejoin:round">
           <use
              style="stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round"
              x="518.40002"
              xlink:href="#mcb0005524f"
-             y="323.0672"
-             id="use291"
+             y="319.42599"
+             id="use246"
              width="576"
              height="432" />
         </g>
       </g>
       <g
-         id="text_10"
+         id="text_8"
          style="stroke-linecap:butt;stroke-linejoin:round">
         <!-- $1$ -->
         <g
-           transform="matrix(0.2,0,0,-0.2,58.03736,327.38604)"
-           id="g294"
+           transform="matrix(0.2,0,0,-0.2,58.03736,323.74481)"
+           id="g249"
            style="stroke-linecap:butt;stroke-linejoin:round">
           <use
              transform="scale(0.99626401,0.99626401)"
              xlink:href="#URW_Palladio_L_Roman-49"
-             id="use296"
+             id="use251"
              style="stroke-linecap:butt;stroke-linejoin:round"
              x="0"
              y="0"
@@ -1074,59 +912,67 @@
        id="ytick_3"
        style="stroke-linecap:butt;stroke-linejoin:round">
       <g
-         id="line2d_29"
+         id="line2d_23"
          style="stroke-linecap:butt;stroke-linejoin:round">
         <path
            clip-path="url(#p7ff5b81e1d)"
-           d="m 72,257.334 446.4,0"
+           d="m 72,265.17 446.4,0"
            style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:1, 3;stroke-dashoffset:0"
-           id="path300"
+           id="path255"
            inkscape:connector-curvature="0" />
       </g>
       <g
-         id="line2d_30"
+         id="line2d_24"
          style="stroke-linecap:butt;stroke-linejoin:round">
         <g
-           id="g303"
+           id="g258"
            style="stroke-linecap:butt;stroke-linejoin:round">
           <use
              style="stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round"
              x="72"
              xlink:href="#m728421d6d4"
-             y="257.33444"
-             id="use305"
+             y="265.16986"
+             id="use260"
              width="576"
              height="432" />
         </g>
       </g>
       <g
-         id="line2d_31"
+         id="line2d_25"
          style="stroke-linecap:butt;stroke-linejoin:round">
         <g
-           id="g308"
+           id="g263"
            style="stroke-linecap:butt;stroke-linejoin:round">
           <use
              style="stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round"
              x="518.40002"
              xlink:href="#mcb0005524f"
-             y="257.33444"
-             id="use310"
+             y="265.16986"
+             id="use265"
              width="576"
              height="432" />
         </g>
       </g>
       <g
-         id="text_11"
+         id="text_9"
          style="stroke-linecap:butt;stroke-linejoin:round">
         <!-- $2$ -->
+        <defs
+           id="defs268">
+          <path
+             d="m 1.59375,2.5 0,-2.5 C 20.2969,0 20.2969,0 23.9062,0 27.5,0 27.5,0 46.7969,0 c -0.2031,1.95312 -0.2031,2.90625 -0.2031,4.20312 0,1.23438 0,2.15626 0.2031,4.21876 -11.5,0 -16.0938,0 -34.5938,0 L 30.4062,27.5156 C 40.0938,37.7188 43.0938,43.1719 43.0938,50.5938 43.0938,61.9688 35.2969,69 22.5938,69 15.4062,69 10.5,67 5.59375,62.0156 l -1.6875,-13.5937 2.89063,0 1.29687,4.5937 C 9.70312,58.7969 13.2969,61.2969 20,61.2969 c 8.5938,0 14.0938,-5.4063 14.0938,-13.875 0,-7.5 -4.1876,-14.875 -15.5,-26.8594 z"
+             id="URW_Palladio_L_Roman-50"
+             inkscape:connector-curvature="0"
+             style="stroke-linecap:butt;stroke-linejoin:round" />
+        </defs>
         <g
-           transform="matrix(0.2,0,0,-0.2,58.03736,261.65325)"
-           id="g313"
+           transform="matrix(0.2,0,0,-0.2,58.03736,269.48869)"
+           id="g271"
            style="stroke-linecap:butt;stroke-linejoin:round">
           <use
              transform="scale(0.99626401,0.99626401)"
              xlink:href="#URW_Palladio_L_Roman-50"
-             id="use315"
+             id="use273"
              style="stroke-linecap:butt;stroke-linejoin:round"
              x="0"
              y="0"
@@ -1139,53 +985,53 @@
        id="ytick_4"
        style="stroke-linecap:butt;stroke-linejoin:round">
       <g
-         id="line2d_32"
+         id="line2d_26"
          style="stroke-linecap:butt;stroke-linejoin:round">
         <path
            clip-path="url(#p7ff5b81e1d)"
-           d="m 72,191.602 446.4,0"
+           d="m 72,210.914 446.4,0"
            style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:1, 3;stroke-dashoffset:0"
-           id="path319"
+           id="path277"
            inkscape:connector-curvature="0" />
       </g>
       <g
-         id="line2d_33"
+         id="line2d_27"
          style="stroke-linecap:butt;stroke-linejoin:round">
         <g
-           id="g322"
+           id="g280"
            style="stroke-linecap:butt;stroke-linejoin:round">
           <use
              style="stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round"
              x="72"
              xlink:href="#m728421d6d4"
-             y="191.60164"
-             id="use324"
+             y="210.91374"
+             id="use282"
              width="576"
              height="432" />
         </g>
       </g>
       <g
-         id="line2d_34"
+         id="line2d_28"
          style="stroke-linecap:butt;stroke-linejoin:round">
         <g
-           id="g327"
+           id="g285"
            style="stroke-linecap:butt;stroke-linejoin:round">
           <use
              style="stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round"
              x="518.40002"
              xlink:href="#mcb0005524f"
-             y="191.60164"
-             id="use329"
+             y="210.91374"
+             id="use287"
              width="576"
              height="432" />
         </g>
       </g>
       <g
-         id="text_12"
+         id="text_10"
          style="stroke-linecap:butt;stroke-linejoin:round">
         <!-- $3$ -->
         <defs
-           id="defs332">
+           id="defs290">
           <path
              d="m 4.29688,49.9531 3.10937,0 1.79687,5.5781 c 1.09378,3.375 7.39068,6.7657 12.59378,6.7657 6.5,0 11.7969,-5.2813 11.7969,-11.5469 0,-7.4688 -5.8907,-13.75 -13,-13.75 -0.7969,0 -1.8907,0 -3.1876,0.2031 l -1.5,0 -1.2031,-5.2187 0.7031,-0.6094 c 3.7969,1.7188 5.6876,2.2188 8.3907,2.2188 8.2969,0 13.1093,-5.3282 13.1093,-14.5 0,-10.25005 -6.1093,-16.98442 -15.4062,-16.98442 -4.5938,0 -8.7031,1.5 -11.70312,4.3125 C 7.40625,8.64062 6.09375,10.9531 4.20312,16.3906 L 1.5,15.3906 C 3.59375,9.26562 4.40625,5.64062 5,0.609375 10.2969,-1.20312 14.7031,-2 18.4062,-2 c 8,0 17.1876,4.51562 22.6876,11.26562 3.4062,4.10938 5.1093,8.54688 5.1093,13.26558 0,4.8282 -2,9.0626 -5.6093,11.5626 -2.5,1.8124 -4.7969,2.625 -9.7969,3.5156 8,6.1875 11,10.7656 11,16.6406 0,8.875 -7.3907,14.75 -18.5,14.75 C 16.5,69 12,67.1094 7.20312,62.3281 z"
              id="URW_Palladio_L_Roman-51"
@@ -1193,13 +1039,13 @@
              style="stroke-linecap:butt;stroke-linejoin:round" />
         </defs>
         <g
-           transform="matrix(0.2,0,0,-0.2,58.03736,195.92047)"
-           id="g335"
+           transform="matrix(0.2,0,0,-0.2,58.03736,215.23258)"
+           id="g293"
            style="stroke-linecap:butt;stroke-linejoin:round">
           <use
              transform="scale(0.99626401,0.99626401)"
              xlink:href="#URW_Palladio_L_Roman-51"
-             id="use337"
+             id="use295"
              style="stroke-linecap:butt;stroke-linejoin:round"
              x="0"
              y="0"
@@ -1212,53 +1058,53 @@
        id="ytick_5"
        style="stroke-linecap:butt;stroke-linejoin:round">
       <g
-         id="line2d_35"
+         id="line2d_29"
          style="stroke-linecap:butt;stroke-linejoin:round">
         <path
            clip-path="url(#p7ff5b81e1d)"
-           d="m 72,125.869 446.4,0"
+           d="m 72,156.658 446.4,0"
            style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:1, 3;stroke-dashoffset:0"
-           id="path341"
+           id="path299"
            inkscape:connector-curvature="0" />
       </g>
       <g
-         id="line2d_36"
+         id="line2d_30"
          style="stroke-linecap:butt;stroke-linejoin:round">
         <g
-           id="g344"
+           id="g302"
            style="stroke-linecap:butt;stroke-linejoin:round">
           <use
              style="stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round"
              x="72"
              xlink:href="#m728421d6d4"
-             y="125.86886"
-             id="use346"
+             y="156.65764"
+             id="use304"
              width="576"
              height="432" />
         </g>
       </g>
       <g
-         id="line2d_37"
+         id="line2d_31"
          style="stroke-linecap:butt;stroke-linejoin:round">
         <g
-           id="g349"
+           id="g307"
            style="stroke-linecap:butt;stroke-linejoin:round">
           <use
              style="stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round"
              x="518.40002"
              xlink:href="#mcb0005524f"
-             y="125.86886"
-             id="use351"
+             y="156.65764"
+             id="use309"
              width="576"
              height="432" />
         </g>
       </g>
       <g
-         id="text_13"
+         id="text_11"
          style="stroke-linecap:butt;stroke-linejoin:round">
         <!-- $4$ -->
         <defs
-           id="defs354">
+           id="defs312">
           <path
              d="m 28,18 0,-7.4844 C 28,4.51562 26.9062,3.10938 22,3.10938 l -6.2031,0 0,-3.10938 C 29.0938,0 29.0938,0 31.5,0 c 2.4062,0 2.4062,0 15.7031,0 l 0,3.10938 -4.7969,0 c -4.9062,0 -6,1.29687 -6,7.34372 l 0,7.5469 c 5.8907,0 8,0 10.7969,-0.2969 l 0,7.1094 C 42.5,24.4219 40.5938,24.4219 39.0938,24.4219 l -0.2969,0 -2.3907,0 0,13.9687 C 36.4062,56.25 36.5938,64.875 37.0938,69 L 35.9062,69.5 28.5,66.7969 0.203125,20.2969 1.29688,18 z m 0,6.4219 -21.5,0 21.5,35.3593 z"
              id="URW_Palladio_L_Roman-52"
@@ -1266,13 +1112,13 @@
              style="stroke-linecap:butt;stroke-linejoin:round" />
         </defs>
         <g
-           transform="matrix(0.2,0,0,-0.2,58.03736,130.18768)"
-           id="g357"
+           transform="matrix(0.2,0,0,-0.2,58.03736,160.97646)"
+           id="g315"
            style="stroke-linecap:butt;stroke-linejoin:round">
           <use
              transform="scale(0.99626401,0.99626401)"
              xlink:href="#URW_Palladio_L_Roman-52"
-             id="use359"
+             id="use317"
              style="stroke-linecap:butt;stroke-linejoin:round"
              x="0"
              y="0"
@@ -1285,59 +1131,59 @@
        id="ytick_6"
        style="stroke-linecap:butt;stroke-linejoin:round">
       <g
-         id="line2d_38"
+         id="line2d_32"
          style="stroke-linecap:butt;stroke-linejoin:round">
         <path
            clip-path="url(#p7ff5b81e1d)"
-           d="m 72,60.1361 446.4,0"
+           d="m 72,102.402 446.4,0"
            style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:1, 3;stroke-dashoffset:0"
-           id="path363"
+           id="path321"
            inkscape:connector-curvature="0" />
       </g>
       <g
-         id="line2d_39"
+         id="line2d_33"
          style="stroke-linecap:butt;stroke-linejoin:round">
         <g
-           id="g366"
+           id="g324"
            style="stroke-linecap:butt;stroke-linejoin:round">
           <use
              style="stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round"
              x="72"
              xlink:href="#m728421d6d4"
-             y="60.13607"
-             id="use368"
+             y="102.40152"
+             id="use326"
              width="576"
              height="432" />
         </g>
       </g>
       <g
-         id="line2d_40"
+         id="line2d_34"
          style="stroke-linecap:butt;stroke-linejoin:round">
         <g
-           id="g371"
+           id="g329"
            style="stroke-linecap:butt;stroke-linejoin:round">
           <use
              style="stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round"
              x="518.40002"
              xlink:href="#mcb0005524f"
-             y="60.13607"
-             id="use373"
+             y="102.40152"
+             id="use331"
              width="576"
              height="432" />
         </g>
       </g>
       <g
-         id="text_14"
+         id="text_12"
          style="stroke-linecap:butt;stroke-linejoin:round">
         <!-- $5$ -->
         <g
-           transform="matrix(0.2,0,0,-0.2,58.03736,64.454897)"
-           id="g376"
+           transform="matrix(0.2,0,0,-0.2,58.03736,106.72034)"
+           id="g334"
            style="stroke-linecap:butt;stroke-linejoin:round">
           <use
              transform="scale(0.99626401,0.99626401)"
              xlink:href="#URW_Palladio_L_Roman-53"
-             id="use378"
+             id="use336"
              style="stroke-linecap:butt;stroke-linejoin:round"
              x="0"
              y="0"
@@ -1347,11 +1193,84 @@
       </g>
     </g>
     <g
-       id="text_15"
+       id="ytick_7"
+       style="stroke-linecap:butt;stroke-linejoin:round">
+      <g
+         id="line2d_35"
+         style="stroke-linecap:butt;stroke-linejoin:round">
+        <path
+           clip-path="url(#p7ff5b81e1d)"
+           d="m 72,48.1454 446.4,0"
+           style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:1, 3;stroke-dashoffset:0"
+           id="path340"
+           inkscape:connector-curvature="0" />
+      </g>
+      <g
+         id="line2d_36"
+         style="stroke-linecap:butt;stroke-linejoin:round">
+        <g
+           id="g343"
+           style="stroke-linecap:butt;stroke-linejoin:round">
+          <use
+             style="stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round"
+             x="72"
+             xlink:href="#m728421d6d4"
+             y="48.145401"
+             id="use345"
+             width="576"
+             height="432" />
+        </g>
+      </g>
+      <g
+         id="line2d_37"
+         style="stroke-linecap:butt;stroke-linejoin:round">
+        <g
+           id="g348"
+           style="stroke-linecap:butt;stroke-linejoin:round">
+          <use
+             style="stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round"
+             x="518.40002"
+             xlink:href="#mcb0005524f"
+             y="48.145401"
+             id="use350"
+             width="576"
+             height="432" />
+        </g>
+      </g>
+      <g
+         id="text_13"
+         style="stroke-linecap:butt;stroke-linejoin:round">
+        <!-- $6$ -->
+        <defs
+           id="defs353">
+          <path
+             d="m 41.5938,67.3438 -3.6876,1.7031 C 28.2969,65.8438 24.2031,63.8438 19.0938,59.4375 8.79688,50.7188 3.20312,38.5 3.20312,24.7656 3.20312,8.21875 11.2031,-2 24.0938,-2 c 13,0 22.7031,10.3125 22.7031,23.9531 0,11.5313 -6.8907,19.0469 -17.5,19.0469 -5,0 -8,-1.3125 -13.8907,-6.0156 -1.1093,-0.9063 -1.2031,-1 -2.3124,-1.7969 2.1093,18.125 10.5,27.9531 28.5,33.3594 z M 25.5,34.9844 c 7.5938,0 12.7031,-6.6094 12.7031,-16.5313 0,-10.43748 -5.1093,-17.15622 -12.7969,-17.15622 -8.5,0 -13.1093,7.3125 -13.1093,20.76562 0,3.5 0.4062,5.4063 1.5,7.1094 C 16,32.5781 20.7031,34.9844 25.5,34.9844"
+             id="URW_Palladio_L_Roman-54"
+             inkscape:connector-curvature="0"
+             style="stroke-linecap:butt;stroke-linejoin:round" />
+        </defs>
+        <g
+           transform="matrix(0.2,0,0,-0.2,58.03736,52.464226)"
+           id="g356"
+           style="stroke-linecap:butt;stroke-linejoin:round">
+          <use
+             transform="scale(0.99626401,0.99626401)"
+             xlink:href="#URW_Palladio_L_Roman-54"
+             id="use358"
+             style="stroke-linecap:butt;stroke-linejoin:round"
+             x="0"
+             y="0"
+             width="576"
+             height="432" />
+        </g>
+      </g>
+    </g>
+    <g
+       id="text_14"
        style="stroke-linecap:butt;stroke-linejoin:round">
       <!-- SPP decay length (um) -->
       <defs
-         id="defs381">
+         id="defs361">
         <path
            d="m 2.29688,66.5 5.60937,0 c 1.79687,0 2.49995,-1.1094 2.49995,-4.125 l 0,-52.2031 c 0,-6.3594 -0.3124,-7.06252 -3.70308,-7.06252 l -4.60937,0 0,-3.10938 C 12.0938,0 12.0938,0 14.5938,0 c 2.5,0 2.5,0 12.5,0 l 0,3.10938 -4.5938,0 c -3.4062,0 -3.7031,0.70312 -3.7031,7.04682 l 0,62.0469 -0.8907,0.8125 C 13.5,71.3125 10.2031,70.5 2.29688,69.2969 z"
            id="URW_Palladio_L_Roman-108"
@@ -1435,12 +1354,12 @@
       </defs>
       <g
          transform="matrix(0,-0.2,-0.2,0,47.418538,316.03383)"
-         id="g399"
+         id="g379"
          style="stroke-linecap:butt;stroke-linejoin:round">
         <use
            transform="scale(0.99626401,0.99626401)"
            xlink:href="#URW_Palladio_L_Roman-83"
-           id="use401"
+           id="use381"
            style="stroke-linecap:butt;stroke-linejoin:round"
            x="0"
            y="0"
@@ -1449,7 +1368,7 @@
         <use
            transform="matrix(0.99626401,0,0,0.99626401,52.303815,0)"
            xlink:href="#URW_Palladio_L_Roman-80"
-           id="use403"
+           id="use383"
            style="stroke-linecap:butt;stroke-linejoin:round"
            x="0"
            y="0"
@@ -1458,7 +1377,7 @@
         <use
            transform="matrix(0.99626401,0,0,0.99626401,112.47741,0)"
            xlink:href="#URW_Palladio_L_Roman-80"
-           id="use405"
+           id="use385"
            style="stroke-linecap:butt;stroke-linejoin:round"
            x="0"
            y="0"
@@ -1467,7 +1386,7 @@
         <use
            transform="matrix(0.99626401,0,0,0.99626401,197.55761,0)"
            xlink:href="#URW_Palladio_L_Roman-100"
-           id="use407"
+           id="use387"
            style="stroke-linecap:butt;stroke-linejoin:round"
            x="0"
            y="0"
@@ -1476,7 +1395,7 @@
         <use
            transform="matrix(0.99626401,0,0,0.99626401,258.42924,0)"
            xlink:href="#URW_Palladio_L_Roman-101"
-           id="use409"
+           id="use389"
            style="stroke-linecap:butt;stroke-linejoin:round"
            x="0"
            y="0"
@@ -1485,7 +1404,7 @@
         <use
            transform="matrix(0.99626401,0,0,0.99626401,306.14953,0)"
            xlink:href="#URW_Palladio_L_Roman-99"
-           id="use411"
+           id="use391"
            style="stroke-linecap:butt;stroke-linejoin:round"
            x="0"
            y="0"
@@ -1494,7 +1413,7 @@
         <use
            transform="matrix(0.99626401,0,0,0.99626401,350.3831,0)"
            xlink:href="#URW_Palladio_L_Roman-97"
-           id="use413"
+           id="use393"
            style="stroke-linecap:butt;stroke-linejoin:round"
            x="0"
            y="0"
@@ -1503,7 +1422,7 @@
         <use
            transform="matrix(0.99626401,0,0,0.99626401,400.1963,0)"
            xlink:href="#URW_Palladio_L_Roman-121"
-           id="use415"
+           id="use395"
            style="stroke-linecap:butt;stroke-linejoin:round"
            x="0"
            y="0"
@@ -1512,7 +1431,7 @@
         <use
            transform="matrix(0.99626401,0,0,0.99626401,480.49458,0)"
            xlink:href="#URW_Palladio_L_Roman-108"
-           id="use417"
+           id="use397"
            style="stroke-linecap:butt;stroke-linejoin:round"
            x="0"
            y="0"
@@ -1521,7 +1440,7 @@
         <use
            transform="matrix(0.99626401,0,0,0.99626401,509.48494,0)"
            xlink:href="#URW_Palladio_L_Roman-101"
-           id="use419"
+           id="use399"
            style="stroke-linecap:butt;stroke-linejoin:round"
            x="0"
            y="0"
@@ -1530,7 +1449,7 @@
         <use
            transform="matrix(0.99626401,0,0,0.99626401,557.20523,0)"
            xlink:href="#URW_Palladio_L_Roman-110"
-           id="use421"
+           id="use401"
            style="stroke-linecap:butt;stroke-linejoin:round"
            x="0"
            y="0"
@@ -1539,7 +1458,7 @@
         <use
            transform="matrix(0.99626401,0,0,0.99626401,615.1873,0)"
            xlink:href="#URW_Palladio_L_Roman-103"
-           id="use423"
+           id="use403"
            style="stroke-linecap:butt;stroke-linejoin:round"
            x="0"
            y="0"
@@ -1548,7 +1467,7 @@
         <use
            transform="matrix(0.99626401,0,0,0.99626401,670.57897,0)"
            xlink:href="#URW_Palladio_L_Roman-116"
-           id="use425"
+           id="use405"
            style="stroke-linecap:butt;stroke-linejoin:round"
            x="0"
            y="0"
@@ -1557,7 +1476,7 @@
         <use
            transform="matrix(0.99626401,0,0,0.99626401,703.05606,0)"
            xlink:href="#URW_Palladio_L_Roman-104"
-           id="use427"
+           id="use407"
            style="stroke-linecap:butt;stroke-linejoin:round"
            x="0"
            y="0"
@@ -1566,7 +1485,7 @@
         <use
            transform="matrix(0.99626401,0,0,0.99626401,785.94472,0)"
            xlink:href="#URW_Palladio_L_Roman-40"
-           id="use429"
+           id="use409"
            style="stroke-linecap:butt;stroke-linejoin:round"
            x="0"
            y="0"
@@ -1575,7 +1494,7 @@
         <use
            transform="matrix(0.99626401,0,0,0.99626401,819.11995,0)"
            xlink:href="#URW_Palladio_L_Roman-117"
-           id="use431"
+           id="use411"
            style="stroke-linecap:butt;stroke-linejoin:round"
            x="0"
            y="0"
@@ -1584,7 +1503,7 @@
         <use
            transform="matrix(0.99626401,0,0,0.99626401,879.19369,0)"
            xlink:href="#URW_Palladio_L_Roman-109"
-           id="use433"
+           id="use413"
            style="stroke-linecap:butt;stroke-linejoin:round"
            x="0"
            y="0"
@@ -1593,7 +1512,7 @@
         <use
            transform="matrix(0.99626401,0,0,0.99626401,967.16336,0)"
            xlink:href="#URW_Palladio_L_Roman-41"
-           id="use435"
+           id="use415"
            style="stroke-linecap:butt;stroke-linejoin:round"
            x="0"
            y="0"
@@ -1603,12 +1522,12 @@
     </g>
   </g>
   <g
-     id="text_16"
+     id="text_15"
      style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
-     transform="translate(-11.440678,-7.779661)">
+     transform="translate(-12.813559,-9.1525424)">
     <!-- Be -->
     <defs
-       id="defs438">
+       id="defs418">
       <path
          d="M 33.7969,69 C 19.9062,69 19.9062,69 18.4062,69 16.5,69 16.5,69 2.59375,69 l 0,-2.8125 3.60937,-0.2969 c 4.70308,-0.4062 5.09378,-1.1094 5.09378,-8.9687 l 0,-47.25002 C 11.2969,6 10.5,3.79688 9.09375,3.20312 L 6.5,2.20312 6.5,0 c 6.9062,0 9,0 10.9062,0 1.0938,0 2.1876,0 3.3907,0 8,0 8,0 9,0 7.2969,0 13.9062,1.78125 18.4062,5.0625 5.8907,4.15625 9.3907,10.9063 9.3907,17.8594 0,5.0625 -2,9.125 -5.7969,11.8125 C 48,37.5156 44.5938,38.4062 36.9062,39 c 4.8907,0.9844 7.1876,1.8906 10,3.7812 4.7969,3.2657 7.2969,7.5469 7.2969,12.7188 0,8.7344 -6.2969,13.5 -17.9062,13.5 z m -13,-32.7031 c 3.9062,0 4.7969,0 6.7031,0 13.5,0 19.7969,-4.8438 19.7969,-15.4375 0,-10.5156 -6.8907,-16.75002 -18.7969,-16.75002 -2.9062,0 -5.2031,0.20312 -7.7031,0.79687 z m 0,28.0937 c 2.6093,0.5938 4.9062,0.7969 8.1093,0.7969 10.6876,0 15.3907,-3.5937 15.3907,-11.8437 0,-8.6719 -6,-13.3438 -17.3907,-13.3438 -1.7031,0 -3,0 -6.1093,0 z"
          id="URW_Palladio_L_Roman-66"
@@ -1617,12 +1536,12 @@
     </defs>
     <g
        style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
-       transform="matrix(0.2,0,0,-0.2,367.59467,192.18074)"
-       id="g441">
+       transform="matrix(0.2,0,0,-0.2,388.03101,211.39174)"
+       id="g421">
       <use
          transform="scale(0.99626401,0.99626401)"
          xlink:href="#URW_Palladio_L_Roman-66"
-         id="use443"
+         id="use423"
          style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
          x="0"
          y="0"
@@ -1631,7 +1550,44 @@
       <use
          transform="matrix(0.99626401,0,0,0.99626401,60.871631,0)"
          xlink:href="#URW_Palladio_L_Roman-101"
-         id="use445"
+         id="use425"
+         style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
+         x="0"
+         y="0"
+         width="576"
+         height="432" />
+    </g>
+  </g>
+  <g
+     id="text_16"
+     style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
+     transform="translate(-12.813559,-1.8305085)">
+    <!-- Bi -->
+    <defs
+       id="defs428">
+      <path
+         d="m 18.7969,46.7656 -0.8907,0.4063 C 12.7969,45.0625 7.59375,43.6406 2.29688,43.0469 l 0,-2.7969 3.70312,0 c 4,0 4.4062,-0.7031 4.4062,-7.3594 l 0,-22.7187 c 0,-6.3594 -0.3124,-7.06252 -3.70308,-7.06252 l -4.60937,0 0,-3.10938 C 12.0938,0 12.0938,0 14.5938,0 c 2.5,0 2.5,0 12.5,0 l 0,3.10938 -4.5938,0 c -3.4062,0 -3.7031,0.70312 -3.7031,7.06252 z M 14.2031,69 c -3,0 -5.60935,-2.6094 -5.60935,-5.625 0,-2.9062 2.60935,-5.5 5.50005,-5.5 2.9062,0 5.6093,2.5938 5.6093,5.5 0,2.8125 -2.7031,5.625 -5.5,5.625"
+         id="URW_Palladio_L_Roman-105"
+         inkscape:connector-curvature="0"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
+    </defs>
+    <g
+       style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
+       transform="matrix(0.2,0,0,-0.2,275.78594,206.47807)"
+       id="g431">
+      <use
+         transform="scale(0.99626401,0.99626401)"
+         xlink:href="#URW_Palladio_L_Roman-66"
+         id="use433"
+         style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
+         x="0"
+         y="0"
+         width="576"
+         height="432" />
+      <use
+         transform="matrix(0.99626401,0,0,0.99626401,60.871631,0)"
+         xlink:href="#URW_Palladio_L_Roman-105"
+         id="use435"
          style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
          x="0"
          y="0"
@@ -1642,47 +1598,10 @@
   <g
      id="text_17"
      style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
-     transform="translate(-13.271186,0)">
-    <!-- Bi -->
-    <defs
-       id="defs448">
-      <path
-         d="m 18.7969,46.7656 -0.8907,0.4063 C 12.7969,45.0625 7.59375,43.6406 2.29688,43.0469 l 0,-2.7969 3.70312,0 c 4,0 4.4062,-0.7031 4.4062,-7.3594 l 0,-22.7187 c 0,-6.3594 -0.3124,-7.06252 -3.70308,-7.06252 l -4.60937,0 0,-3.10938 C 12.0938,0 12.0938,0 14.5938,0 c 2.5,0 2.5,0 12.5,0 l 0,3.10938 -4.5938,0 c -3.4062,0 -3.7031,0.70312 -3.7031,7.06252 z M 14.2031,69 c -3,0 -5.60935,-2.6094 -5.60935,-5.625 0,-2.9062 2.60935,-5.5 5.50005,-5.5 2.9062,0 5.6093,2.5938 5.6093,5.5 0,2.8125 -2.7031,5.625 -5.5,5.625"
-         id="URW_Palladio_L_Roman-105"
-         inkscape:connector-curvature="0"
-         style="stroke-linecap:butt;stroke-linejoin:round" />
-    </defs>
-    <g
-       style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
-       transform="matrix(0.2,0,0,-0.2,266.7167,186.22769)"
-       id="g451">
-      <use
-         transform="scale(0.99626401,0.99626401)"
-         xlink:href="#URW_Palladio_L_Roman-66"
-         id="use453"
-         style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
-         x="0"
-         y="0"
-         width="576"
-         height="432" />
-      <use
-         transform="matrix(0.99626401,0,0,0.99626401,60.871631,0)"
-         xlink:href="#URW_Palladio_L_Roman-105"
-         id="use455"
-         style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
-         x="0"
-         y="0"
-         width="576"
-         height="432" />
-    </g>
-  </g>
-  <g
-     id="text_18"
-     style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
-     transform="translate(-19.220339,-9.1525425)">
+     transform="translate(-15.559322,-9.6101695)">
     <!-- Co -->
     <defs
-       id="defs458">
+       id="defs438">
       <path
          d="M 27.9062,47 C 13.2969,47 3.20312,36.6719 3.20312,21.75 3.20312,7.60938 12.0938,-2 25,-2 c 15.4062,0 26.4062,10.71875 26.4062,25.75 0,13.5312 -9.8124,23.25 -23.5,23.25 m -1.8124,-3.3125 c 9.2031,0 16,-10.0156 16,-23.6406 C 42.0938,8.51562 37,1.29688 28.9062,1.29688 19.0938,1.29688 12.5,10.9219 12.5,25.1562 c 0,12.0157 4.7969,18.5313 13.5938,18.5313"
          id="URW_Palladio_L_Roman-111"
@@ -1696,12 +1615,12 @@
     </defs>
     <g
        style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
-       transform="matrix(0.2,0,0,-0.2,102.43065,79.939481)"
-       id="g462">
+       transform="matrix(0.2,0,0,-0.2,92.987851,118.74733)"
+       id="g442">
       <use
          transform="scale(0.99626401,0.99626401)"
          xlink:href="#URW_Palladio_L_Roman-67"
-         id="use464"
+         id="use444"
          style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
          x="0"
          y="0"
@@ -1710,7 +1629,44 @@
       <use
          transform="matrix(0.99626401,0,0,0.99626401,70.634793,0)"
          xlink:href="#URW_Palladio_L_Roman-111"
-         id="use466"
+         id="use446"
+         style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
+         x="0"
+         y="0"
+         width="576"
+         height="432" />
+    </g>
+  </g>
+  <g
+     id="text_18"
+     style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
+     transform="translate(14.644068,-2.7457627)">
+    <!-- Cr -->
+    <defs
+       id="defs449">
+      <path
+         d="m 2.29688,40.0781 3.70312,0 c 4,0 4.4062,-0.7031 4.4062,-7.3593 l 0,-22.6719 C 10.4062,3.70312 10.0938,3 6.70312,3 l -4.60937,0 0,-3.109375 c 7.20313,0 9.81245,0 12.31245,0 2,0 2,0 14.2969,0 L 28.7031,3 23.5,3 C 19,3 18.7969,3.29688 18.7969,9.96875 l 0,17.39065 c 0,6.0625 4,11.125 8.9062,11.125 3,0 5.0938,-1.4063 6.7031,-4.5938 l 2.0938,0 0.9062,12 C 36.2969,46.5938 34.5,47 32.7031,47 c -3,0 -6.2031,-1.6094 -8.2969,-4.1094 l -5.6093,-6.6094 0,10.3126 L 17.9062,47 C 12.7969,44.8906 7.59375,43.4844 2.29688,42.8906 z"
+         id="URW_Palladio_L_Roman-114"
+         inkscape:connector-curvature="0"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
+    </defs>
+    <g
+       style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
+       transform="matrix(0.2,0,0,-0.2,361.72302,120.37824)"
+       id="g452">
+      <use
+         transform="scale(0.99626401,0.99626401)"
+         xlink:href="#URW_Palladio_L_Roman-67"
+         id="use454"
+         style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
+         x="0"
+         y="0"
+         width="576"
+         height="432" />
+      <use
+         transform="matrix(0.99626401,0,0,0.99626401,70.634793,0)"
+         xlink:href="#URW_Palladio_L_Roman-114"
+         id="use456"
          style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
          x="0"
          y="0"
@@ -1720,34 +1676,35 @@
   </g>
   <g
      id="text_19"
-     style="stroke-linecap:butt;stroke-linejoin:round">
-    <!-- Cr -->
+     style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
+     transform="translate(-5.4915254,-3.2033898)">
+    <!-- Fe -->
     <defs
-       id="defs469">
+       id="defs459">
       <path
-         d="m 2.29688,40.0781 3.70312,0 c 4,0 4.4062,-0.7031 4.4062,-7.3593 l 0,-22.6719 C 10.4062,3.70312 10.0938,3 6.70312,3 l -4.60937,0 0,-3.109375 c 7.20313,0 9.81245,0 12.31245,0 2,0 2,0 14.2969,0 L 28.7031,3 23.5,3 C 19,3 18.7969,3.29688 18.7969,9.96875 l 0,17.39065 c 0,6.0625 4,11.125 8.9062,11.125 3,0 5.0938,-1.4063 6.7031,-4.5938 l 2.0938,0 0.9062,12 C 36.2969,46.5938 34.5,47 32.7031,47 c -3,0 -6.2031,-1.6094 -8.2969,-4.1094 l -5.6093,-6.6094 0,10.3126 L 17.9062,47 C 12.7969,44.8906 7.59375,43.4844 2.29688,42.8906 z"
-         id="URW_Palladio_L_Roman-114"
+         d="M 21.5938,32.8125 C 24.4062,33 27.4062,33 31.9062,33 39.2969,33 42,32.7188 43.7969,31.875 l 0.7969,-2.3438 0.5,-5.5312 3,0 c -0.2969,9.3125 -0.2969,9.3125 -0.2969,11.1094 0,1.6094 0,1.6094 0.2969,11.625 l -3,0 -0.5,-5.4532 C 44.5,40.3281 44.2031,39.3906 43.7969,38.5469 42,37.7188 39.2031,37.4062 32.5938,37.4062 c -4.1876,0 -7.5938,0 -11,0 l 0,26.9219 C 24.5938,65 26.4062,65 32.2969,65 c 4.7969,0 10.4062,-0.5625 13.5,-1.3125 2.4062,-0.5781 2.7031,-1.0625 2.7031,-3.25 l 0,-6.2969 3.5,0 c 0,5.9063 0.5,10.6406 1.5938,14.9688 -4.8907,0 -7.8907,0 -12.1876,0 l -10.7031,0 c -4.9062,0 -8.4062,0 -10.9062,0 -2.8907,0 -2.8907,0 -17.59378,0 L 2.20312,66 7,66 c 4.5938,0 5.0938,-0.8125 5.0938,-8.7656 l 0,-45.2656 C 12.0938,4 11.5938,3.20312 7,3.20312 l -4.79688,0 0,-3.20312 C 8.09375,0 11.5938,0 16.7969,0 22,0 25.5938,0 31.5,0 l 0,3.20312 -4.7969,0 c -4.6093,0 -5.1093,0.79688 -5.1093,8.76568 z"
+         id="URW_Palladio_L_Roman-70"
          inkscape:connector-curvature="0"
          style="stroke-linecap:butt;stroke-linejoin:round" />
     </defs>
     <g
-       style="fill:#ff0000;stroke-linecap:butt;stroke-linejoin:round"
-       transform="matrix(0.2,0,0,-0.2,343.95089,81.915367)"
-       id="g472">
+       style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
+       transform="matrix(0.2,0,0,-0.2,279.61273,174.2545)"
+       id="g462">
       <use
          transform="scale(0.99626401,0.99626401)"
-         xlink:href="#URW_Palladio_L_Roman-67"
-         id="use474"
-         style="stroke-linecap:butt;stroke-linejoin:round"
+         xlink:href="#URW_Palladio_L_Roman-70"
+         id="use464"
+         style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
          x="0"
          y="0"
          width="576"
          height="432" />
       <use
-         transform="matrix(0.99626401,0,0,0.99626401,70.634793,0)"
-         xlink:href="#URW_Palladio_L_Roman-114"
-         id="use476"
-         style="stroke-linecap:butt;stroke-linejoin:round"
+         transform="matrix(0.99626401,0,0,0.99626401,55.391677,0)"
+         xlink:href="#URW_Palladio_L_Roman-101"
+         id="use466"
+         style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
          x="0"
          y="0"
          width="576"
@@ -1757,47 +1714,10 @@
   <g
      id="text_20"
      style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
-     transform="translate(-7.3220339,-2.2881356)">
-    <!-- Fe -->
-    <defs
-       id="defs479">
-      <path
-         d="M 21.5938,32.8125 C 24.4062,33 27.4062,33 31.9062,33 39.2969,33 42,32.7188 43.7969,31.875 l 0.7969,-2.3438 0.5,-5.5312 3,0 c -0.2969,9.3125 -0.2969,9.3125 -0.2969,11.1094 0,1.6094 0,1.6094 0.2969,11.625 l -3,0 -0.5,-5.4532 C 44.5,40.3281 44.2031,39.3906 43.7969,38.5469 42,37.7188 39.2031,37.4062 32.5938,37.4062 c -4.1876,0 -7.5938,0 -11,0 l 0,26.9219 C 24.5938,65 26.4062,65 32.2969,65 c 4.7969,0 10.4062,-0.5625 13.5,-1.3125 2.4062,-0.5781 2.7031,-1.0625 2.7031,-3.25 l 0,-6.2969 3.5,0 c 0,5.9063 0.5,10.6406 1.5938,14.9688 -4.8907,0 -7.8907,0 -12.1876,0 l -10.7031,0 c -4.9062,0 -8.4062,0 -10.9062,0 -2.8907,0 -2.8907,0 -17.59378,0 L 2.20312,66 7,66 c 4.5938,0 5.0938,-0.8125 5.0938,-8.7656 l 0,-45.2656 C 12.0938,4 11.5938,3.20312 7,3.20312 l -4.79688,0 0,-3.20312 C 8.09375,0 11.5938,0 16.7969,0 22,0 25.5938,0 31.5,0 l 0,3.20312 -4.7969,0 c -4.6093,0 -5.1093,0.79688 -5.1093,8.76568 z"
-         id="URW_Palladio_L_Roman-70"
-         inkscape:connector-curvature="0"
-         style="stroke-linecap:butt;stroke-linejoin:round" />
-    </defs>
-    <g
-       style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
-       transform="matrix(0.2,0,0,-0.2,270.15595,147.18795)"
-       id="g482">
-      <use
-         transform="scale(0.99626401,0.99626401)"
-         xlink:href="#URW_Palladio_L_Roman-70"
-         id="use484"
-         style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
-         x="0"
-         y="0"
-         width="576"
-         height="432" />
-      <use
-         transform="matrix(0.99626401,0,0,0.99626401,55.391677,0)"
-         xlink:href="#URW_Palladio_L_Roman-101"
-         id="use486"
-         style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
-         x="0"
-         y="0"
-         width="576"
-         height="432" />
-    </g>
-  </g>
-  <g
-     id="text_21"
-     style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
-     transform="translate(-19.220339,-11.898305)">
+     transform="translate(-47.59322,-9.1525424)">
     <!-- Graphite -->
     <defs
-       id="defs489">
+       id="defs469">
       <path
          d="m 64.0938,51.6719 3.1093,0 c 0,5.0937 0.5938,9.7969 2,15.2031 C 58.0938,70.0938 53,71 45,71 19.2031,71 2.20312,56.375 2.20312,34.1562 2.20312,24.0312 5.59375,15.0156 11.9062,8.92188 18.7969,2 29.5938,-2 41.2031,-2 c 7.0938,0 14,1.296875 27.5938,5.10938 l 0,16.79682 c 0,3.1094 0.1093,3.3126 1.1093,3.7032 l 2.8907,1.0156 -0.3907,2.4062 c -8.9062,0 -9.2031,0 -12.3124,0 -2.8907,0 -3.5,0 -12.1876,0 l 0,-2.9062 8.2969,-0.6875 c 2.5,-0.2031 3.3907,-1.1094 3.3907,-3.5156 l 0,-10.1094 C 59.5938,7.42188 59.4062,6.21875 59,5.51562 57.9062,3.60938 51.9062,2.20312 45.2969,2.20312 25.5,2.20312 12.9062,15.4219 12.9062,36.2344 c 0,19.3437 10.7969,30.5468 29.5,30.5468 5.1876,0 9.5938,-0.5937 13.3907,-1.7968 5.7969,-1.9063 8.2969,-4.2032 8.2969,-8 z"
          id="URW_Palladio_L_Roman-71"
@@ -1811,12 +1731,12 @@
     </defs>
     <g
        style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
-       transform="matrix(0.2,0,0,-0.2,453.68104,258.16651)"
-       id="g493">
+       transform="matrix(0.2,0,0,-0.2,483.81775,265.85667)"
+       id="g473">
       <use
          transform="scale(0.99626401,0.99626401)"
          xlink:href="#URW_Palladio_L_Roman-71"
-         id="use495"
+         id="use475"
          style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
          x="0"
          y="0"
@@ -1825,7 +1745,7 @@
       <use
          transform="matrix(0.99626401,0,0,0.99626401,76.013746,0)"
          xlink:href="#URW_Palladio_L_Roman-114"
-         id="use497"
+         id="use477"
          style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
          x="0"
          y="0"
@@ -1834,7 +1754,7 @@
       <use
          transform="matrix(0.99626401,0,0,0.99626401,115.36564,0)"
          xlink:href="#URW_Palladio_L_Roman-97"
-         id="use499"
+         id="use479"
          style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
          x="0"
          y="0"
@@ -1843,7 +1763,7 @@
       <use
          transform="matrix(0.99626401,0,0,0.99626401,165.17884,0)"
          xlink:href="#URW_Palladio_L_Roman-112"
-         id="use501"
+         id="use481"
          style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
          x="0"
          y="0"
@@ -1852,7 +1772,7 @@
       <use
          transform="matrix(0.99626401,0,0,0.99626401,225.05324,0)"
          xlink:href="#URW_Palladio_L_Roman-104"
-         id="use503"
+         id="use483"
          style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
          x="0"
          y="0"
@@ -1861,7 +1781,7 @@
       <use
          transform="matrix(0.99626401,0,0,0.99626401,283.0353,0)"
          xlink:href="#URW_Palladio_L_Roman-105"
-         id="use505"
+         id="use485"
          style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
          x="0"
          y="0"
@@ -1870,7 +1790,7 @@
       <use
          transform="matrix(0.99626401,0,0,0.99626401,312.02566,0)"
          xlink:href="#URW_Palladio_L_Roman-116"
-         id="use507"
+         id="use487"
          style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
          x="0"
          y="0"
@@ -1879,7 +1799,44 @@
       <use
          transform="matrix(0.99626401,0,0,0.99626401,344.50275,0)"
          xlink:href="#URW_Palladio_L_Roman-101"
-         id="use509"
+         id="use489"
+         style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
+         x="0"
+         y="0"
+         width="576"
+         height="432" />
+    </g>
+  </g>
+  <g
+     id="text_21"
+     style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
+     transform="translate(-3.2033898,-9.1525424)">
+    <!-- Mo -->
+    <defs
+       id="defs492">
+      <path
+         d="m 73.2031,12.2344 c 0,-7.9219 -0.4062,-8.62502 -5.1093,-9.03128 L 64.7031,2.90625 64.7031,0 c 4.5938,0 7.5938,0 12.7969,0 5.5938,0 9.2031,0 15.0938,0 l 0,3.20312 -4.7969,0 c -4.5938,0 -5.0938,0.79688 -5.0938,8.76568 l 0,45.2656 c 0,7.8594 0.5,8.7656 5.0938,8.7656 L 92,66.5 l 0,2.8125 c -7.5938,0 -7.5938,0 -9.2969,0 -1.5,0 -1.5,0 -9.5,0 L 47,13.8125 l -26.4062,55.5 c -8,0 -8,0 -9.5,0 -1.50005,0 -1.50005,0 -9.50005,0 l 0,-3.1094 4.40625,0 c 4.5938,0 5.0938,-0.9219 5.0938,-8.7969 l 0,-45.4062 c 0,-7.89062 -0.5,-8.79688 -5.0938,-8.79688 l -4.40625,0 0,-3.20312 C 11.5,0 11.5,0 13.2031,0 c 1.5,0 1.5,0 12,0 l 0,3.20312 -4.4062,0 c -4.5938,0 -5.0938,0.89063 -5.0938,8.76568 l 0,46.125 L 43.5938,-1 l 2,0 C 46.2969,0.5 46.9062,2.09375 47.5,3.59375 49.0938,7.5 50.2969,10.2812 51,11.6875 l 17.7969,37.7969 c 1.4062,2.9062 2.6093,5.2031 4.4062,8.6094 z"
+         id="URW_Palladio_L_Roman-77"
+         inkscape:connector-curvature="0"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
+    </defs>
+    <g
+       style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
+       transform="matrix(0.2,0,0,-0.2,419.73823,200.2749)"
+       id="g495">
+      <use
+         transform="scale(0.99626401,0.99626401)"
+         xlink:href="#URW_Palladio_L_Roman-77"
+         id="use497"
+         style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
+         x="0"
+         y="0"
+         width="576"
+         height="432" />
+      <use
+         transform="matrix(0.99626401,0,0,0.99626401,94.246201,0)"
+         xlink:href="#URW_Palladio_L_Roman-111"
+         id="use499"
          style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
          x="0"
          y="0"
@@ -1890,47 +1847,10 @@
   <g
      id="text_22"
      style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
-     transform="translate(3.2033898,-8.2372881)">
-    <!-- Mo -->
-    <defs
-       id="defs512">
-      <path
-         d="m 73.2031,12.2344 c 0,-7.9219 -0.4062,-8.62502 -5.1093,-9.03128 L 64.7031,2.90625 64.7031,0 c 4.5938,0 7.5938,0 12.7969,0 5.5938,0 9.2031,0 15.0938,0 l 0,3.20312 -4.7969,0 c -4.5938,0 -5.0938,0.79688 -5.0938,8.76568 l 0,45.2656 c 0,7.8594 0.5,8.7656 5.0938,8.7656 L 92,66.5 l 0,2.8125 c -7.5938,0 -7.5938,0 -9.2969,0 -1.5,0 -1.5,0 -9.5,0 L 47,13.8125 l -26.4062,55.5 c -8,0 -8,0 -9.5,0 -1.50005,0 -1.50005,0 -9.50005,0 l 0,-3.1094 4.40625,0 c 4.5938,0 5.0938,-0.9219 5.0938,-8.7969 l 0,-45.4062 c 0,-7.89062 -0.5,-8.79688 -5.0938,-8.79688 l -4.40625,0 0,-3.20312 C 11.5,0 11.5,0 13.2031,0 c 1.5,0 1.5,0 12,0 l 0,3.20312 -4.4062,0 c -4.5938,0 -5.0938,0.89063 -5.0938,8.76568 l 0,46.125 L 43.5938,-1 l 2,0 C 46.2969,0.5 46.9062,2.09375 47.5,3.59375 49.0938,7.5 50.2969,10.2812 51,11.6875 l 17.7969,37.7969 c 1.4062,2.9062 2.6093,5.2031 4.4062,8.6094 z"
-         id="URW_Palladio_L_Roman-77"
-         inkscape:connector-curvature="0"
-         style="stroke-linecap:butt;stroke-linejoin:round" />
-    </defs>
-    <g
-       style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
-       transform="matrix(0.2,0,0,-0.2,396.09088,178.71238)"
-       id="g515">
-      <use
-         transform="scale(0.99626401,0.99626401)"
-         xlink:href="#URW_Palladio_L_Roman-77"
-         id="use517"
-         style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
-         x="0"
-         y="0"
-         width="576"
-         height="432" />
-      <use
-         transform="matrix(0.99626401,0,0,0.99626401,94.246201,0)"
-         xlink:href="#URW_Palladio_L_Roman-111"
-         id="use519"
-         style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
-         x="0"
-         y="0"
-         width="576"
-         height="432" />
-    </g>
-  </g>
-  <g
-     id="text_23"
-     style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
-     transform="translate(-2.2881356,-8.6949153)">
+     transform="translate(16.016949,7.779661)">
     <!-- Nb -->
     <defs
-       id="defs522">
+       id="defs502">
       <path
          d="M 15,72.1875 14.0938,73 C 9.70312,71.2969 6.40625,70.4844 -1.5,69.2812 l 0,-2.7968 5.59375,0 c 1.8125,0 2.5,-1.1094 2.5,-4.125 l 0,-46.9063 C 6.59375,9.23438 6.5,6.5 5.79688,-0.515625 L 7.40625,-1.10938 11.4062,2.5 c 4,-2.609375 7.5938,-3.60938 12.8907,-3.60938 3.9062,0 6.5,0.70313 8.6093,2.20313 l 10,7.20313 C 47.2969,11.4844 50.7969,19.7812 50.7969,27.0781 50.7969,38.6875 43.2969,47 32.7031,47 28,47 23.0938,45.1875 20.5,42.5781 L 15,36.9844 z m 0,-41.2969 c 0,1.3906 1,3.1875 2.5938,5 2.8124,2.8906 6.7031,4.5938 10.8124,4.5938 8.3907,0 13.6876,-6.7969 13.6876,-17.4844 0,-11.2031 -6,-19 -14.5,-19 C 22.4062,4 15,7.1875 15,9.39062 z"
          id="URW_Palladio_L_Roman-98"
@@ -1944,12 +1864,12 @@
     </defs>
     <g
        style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
-       transform="matrix(0.2,0,0,-0.2,264.82549,245.35347)"
-       id="g526">
+       transform="matrix(0.2,0,0,-0.2,273.68163,255.28074)"
+       id="g506">
       <use
          transform="scale(0.99626401,0.99626401)"
          xlink:href="#URW_Palladio_L_Roman-78"
-         id="use528"
+         id="use508"
          style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
          x="0"
          y="0"
@@ -1958,7 +1878,36 @@
       <use
          transform="matrix(0.99626401,0,0,0.99626401,82.788907,0)"
          xlink:href="#URW_Palladio_L_Roman-98"
-         id="use530"
+         id="use510"
+         style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
+         x="0"
+         y="0"
+         width="576"
+         height="432" />
+    </g>
+  </g>
+  <g
+     id="text_23"
+     style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
+     transform="translate(-4.5762712,-7.779661)">
+    <!-- Ni -->
+    <g
+       style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
+       transform="matrix(0.2,0,0,-0.2,169.45192,173.6005)"
+       id="g513">
+      <use
+         transform="scale(0.99626401,0.99626401)"
+         xlink:href="#URW_Palladio_L_Roman-78"
+         id="use515"
+         style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
+         x="0"
+         y="0"
+         width="576"
+         height="432" />
+      <use
+         transform="matrix(0.99626401,0,0,0.99626401,82.788907,0)"
+         xlink:href="#URW_Palladio_L_Roman-105"
+         id="use517"
          style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
          x="0"
          y="0"
@@ -1969,25 +1918,25 @@
   <g
      id="text_24"
      style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
-     transform="translate(-5.4915254,-9.6101695)">
-    <!-- Ni -->
+     transform="translate(12.355932,-6.8644068)">
+    <!-- Pt -->
     <g
        style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
-       transform="matrix(0.2,0,0,-0.2,171.15117,146.39561)"
-       id="g533">
+       transform="matrix(0.2,0,0,-0.2,112.64358,116.25708)"
+       id="g520">
       <use
          transform="scale(0.99626401,0.99626401)"
-         xlink:href="#URW_Palladio_L_Roman-78"
-         id="use535"
+         xlink:href="#URW_Palladio_L_Roman-80"
+         id="use522"
          style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
          x="0"
          y="0"
          width="576"
          height="432" />
       <use
-         transform="matrix(0.99626401,0,0,0.99626401,82.788907,0)"
-         xlink:href="#URW_Palladio_L_Roman-105"
-         id="use537"
+         transform="matrix(0.99626401,0,0,0.99626401,60.173595,0)"
+         xlink:href="#URW_Palladio_L_Roman-116"
+         id="use524"
          style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
          x="0"
          y="0"
@@ -1998,25 +1947,33 @@
   <g
      id="text_25"
      style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
-     transform="translate(8.6949153,-8.2372882)">
-    <!-- Pt -->
+     transform="translate(12.813559,8.2372881)">
+    <!-- Ti -->
+    <defs
+       id="defs527">
+      <path
+         d="m 25.5,64.2812 c 0.2969,-3.4062 0.4062,-5.7031 0.4062,-10.0156 l 0,-42.3437 c 0,-7.9219 -0.5,-8.71878 -5.1093,-8.71878 L 16,3.20312 16,0 c 5.9062,0 9.4062,0 14.5938,0 5.2031,0 8.8124,0 14.7031,0 l 0,3.20312 -4.7969,0 c -4.5938,0 -5.0938,0.79688 -5.0938,8.71878 l 0,42.3437 c 0,4.5156 0.0938,6.7188 0.3907,10.0156 l 15.5,0 c 2.7969,0 3.9062,-0.8906 4,-3.2812 l 0.4062,-7.875 3.0938,0 C 58.7969,59.5312 59,63.375 59.5,69 52.2969,69 49,69 46.2031,69 c -3.9062,0 -6.7969,0 -8.2969,0 l -15.8124,0 c -1,0 -6.3907,0 -13.50005,0 L 1.79688,69 C 2.29688,63.375 2.5,59.5312 2.5,53.125 l 3.09375,0 L 6,61 c 0.09375,2.3906 1.20312,3.2812 4,3.2812 z"
+         id="URW_Palladio_L_Roman-84"
+         inkscape:connector-curvature="0"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
+    </defs>
     <g
        style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
-       transform="matrix(0.2,0,0,-0.2,120.09584,76.922464)"
-       id="g540">
+       transform="matrix(0.2,0,0,-0.2,282.52835,189.59813)"
+       id="g530">
       <use
          transform="scale(0.99626401,0.99626401)"
-         xlink:href="#URW_Palladio_L_Roman-80"
-         id="use542"
+         xlink:href="#URW_Palladio_L_Roman-84"
+         id="use532"
          style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
          x="0"
          y="0"
          width="576"
          height="432" />
       <use
-         transform="matrix(0.99626401,0,0,0.99626401,60.173595,0)"
-         xlink:href="#URW_Palladio_L_Roman-116"
-         id="use544"
+         transform="matrix(0.99626401,0,0,0.99626401,55.591109,0)"
+         xlink:href="#URW_Palladio_L_Roman-105"
+         id="use534"
          style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
          x="0"
          y="0"
@@ -2027,33 +1984,24 @@
   <g
      id="text_26"
      style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
-     transform="translate(11.440678,-0.91525424)">
-    <!-- Ti -->
+     transform="translate(15.559322,9.1525424)">
+    <!-- V -->
     <defs
-       id="defs547">
+       id="defs537">
       <path
-         d="m 25.5,64.2812 c 0.2969,-3.4062 0.4062,-5.7031 0.4062,-10.0156 l 0,-42.3437 c 0,-7.9219 -0.5,-8.71878 -5.1093,-8.71878 L 16,3.20312 16,0 c 5.9062,0 9.4062,0 14.5938,0 5.2031,0 8.8124,0 14.7031,0 l 0,3.20312 -4.7969,0 c -4.5938,0 -5.0938,0.79688 -5.0938,8.71878 l 0,42.3437 c 0,4.5156 0.0938,6.7188 0.3907,10.0156 l 15.5,0 c 2.7969,0 3.9062,-0.8906 4,-3.2812 l 0.4062,-7.875 3.0938,0 C 58.7969,59.5312 59,63.375 59.5,69 52.2969,69 49,69 46.2031,69 c -3.9062,0 -6.7969,0 -8.2969,0 l -15.8124,0 c -1,0 -6.3907,0 -13.50005,0 L 1.79688,69 C 2.29688,63.375 2.5,59.5312 2.5,53.125 l 3.09375,0 L 6,61 c 0.09375,2.3906 1.20312,3.2812 4,3.2812 z"
-         id="URW_Palladio_L_Roman-84"
+         d="m 27.4062,66 0,3.0156 c -11,0 -11,0 -13.3124,0 -2.2969,0 -2.2969,0 -13.296925,0 l 0,-2.8125 3.609375,-0.2969 C 6.5,65.7031 7.5,64.7969 8.79688,61.7969 L 27.5938,15.5312 C 30.7031,7.92188 31.9062,4.42188 33.4062,-1 l 5,0 c 1.8907,6.21875 3.0938,9.51562 6.3907,17.5312 l 17.4062,42.1563 c 2.2969,5.4219 3.3907,6.9219 5.3907,7.2187 l 3,0.2969 0,2.8125 -10.7969,0 c -1.7969,0 -4.0938,0 -7,0 -0.5,0 -2.2031,0 -3.7969,0 L 49,66 l 5.2031,0 c 2.2031,0 3.5,-1.0156 3.5,-2.5312 0,-1 -0.2969,-2.4063 -0.9062,-3.9063 L 38.5,12.0156 18.7969,62.9688 c -0.0938,0.4062 -0.2031,0.7187 -0.2031,1.125 0,1.2031 1.2031,1.9062 3.2031,1.9062 z"
+         id="URW_Palladio_L_Roman-86"
          inkscape:connector-curvature="0"
          style="stroke-linecap:butt;stroke-linejoin:round" />
     </defs>
     <g
        style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
-       transform="matrix(0.2,0,0,-0.2,272.7763,165.77718)"
-       id="g550">
+       transform="matrix(0.2,0,0,-0.2,416.44137,219.58992)"
+       id="g540">
       <use
          transform="scale(0.99626401,0.99626401)"
-         xlink:href="#URW_Palladio_L_Roman-84"
-         id="use552"
-         style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
-         x="0"
-         y="0"
-         width="576"
-         height="432" />
-      <use
-         transform="matrix(0.99626401,0,0,0.99626401,55.591109,0)"
-         xlink:href="#URW_Palladio_L_Roman-105"
-         id="use554"
+         xlink:href="#URW_Palladio_L_Roman-86"
+         id="use542"
          style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
          x="0"
          y="0"
@@ -2064,24 +2012,24 @@
   <g
      id="text_27"
      style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
-     transform="translate(11.898305,9.6101695)">
-    <!-- V -->
+     transform="translate(-5.4915254,-8.6949152)">
+    <!-- W -->
     <defs
-       id="defs557">
+       id="defs545">
       <path
-         d="m 27.4062,66 0,3.0156 c -11,0 -11,0 -13.3124,0 -2.2969,0 -2.2969,0 -13.296925,0 l 0,-2.8125 3.609375,-0.2969 C 6.5,65.7031 7.5,64.7969 8.79688,61.7969 L 27.5938,15.5312 C 30.7031,7.92188 31.9062,4.42188 33.4062,-1 l 5,0 c 1.8907,6.21875 3.0938,9.51562 6.3907,17.5312 l 17.4062,42.1563 c 2.2969,5.4219 3.3907,6.9219 5.3907,7.2187 l 3,0.2969 0,2.8125 -10.7969,0 c -1.7969,0 -4.0938,0 -7,0 -0.5,0 -2.2031,0 -3.7969,0 L 49,66 l 5.2031,0 c 2.2031,0 3.5,-1.0156 3.5,-2.5312 0,-1 -0.2969,-2.4063 -0.9062,-3.9063 L 38.5,12.0156 18.7969,62.9688 c -0.0938,0.4062 -0.2031,0.7187 -0.2031,1.125 0,1.2031 1.2031,1.9062 3.2031,1.9062 z"
-         id="URW_Palladio_L_Roman-86"
+         d="m 73.4062,-1 c 0.3907,1.5 0.6876,2.90625 0.7969,3.40625 0.2969,1 1.0938,4.01563 1.8907,6.71875 L 91.4062,63 C 92,64.7969 93,65.7031 95.2031,65.9062 l 3.2031,0.2969 0,2.7969 -10.5,0 c -1,0 -1,0 -10.5,0 l 0,-2.7969 4,-0.2969 c 3.5,-0.2968 4.5938,-0.7968 4.6876,-2.4218 0,-0.2969 0,-0.5938 -0.0938,-0.9063 L 72.7969,13.625 56.4062,59.7812 c -2.2031,6.0157 -2.5,6.8126 -3.3124,10.2188 l -3.1876,0 c -2.1093,-6.2188 -3.8124,-10.7031 -9,-24.1406 L 28.5,14.3281 18.5,59.2969 c -0.2969,1.2031 -0.4062,2.2969 -0.4062,3.2969 0,2.2031 1,3.1093 3.7031,3.3124 L 26,66.2031 26,69 13.4062,69 C 12.7031,69 8.5,69 0.796875,69 l 0,-2.7969 2.796875,-0.2969 C 6.5,65.6094 7.70312,64.5 8.59375,60.8906 L 20.5,9.32812 C 21.7969,3.60938 21.7969,3.51562 22.7969,-1 l 5,0 C 28.7031,2.20312 29.5,4.60938 31.4062,9.32812 L 48.7969,53.5781 61.2969,19.625 C 64.5938,10.7344 64.9062,9.92188 68.4062,-1 z"
+         id="URW_Palladio_L_Roman-87"
          inkscape:connector-curvature="0"
          style="stroke-linecap:butt;stroke-linejoin:round" />
     </defs>
     <g
        style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
-       transform="matrix(0.2,0,0,-0.2,393.12789,202.11306)"
-       id="g560">
+       transform="matrix(0.2,0,0,-0.2,471.66102,225.26989)"
+       id="g548">
       <use
          transform="scale(0.99626401,0.99626401)"
-         xlink:href="#URW_Palladio_L_Roman-86"
-         id="use562"
+         xlink:href="#URW_Palladio_L_Roman-87"
+         id="use550"
          style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
          x="0"
          y="0"
@@ -2092,24 +2040,33 @@
   <g
      id="text_28"
      style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
-     transform="translate(13.271186,9.6101695)">
-    <!-- W -->
+     transform="translate(-7.3220339,-9.1525424)">
+    <!-- Zr -->
     <defs
-       id="defs565">
+       id="defs553">
       <path
-         d="m 73.4062,-1 c 0.3907,1.5 0.6876,2.90625 0.7969,3.40625 0.2969,1 1.0938,4.01563 1.8907,6.71875 L 91.4062,63 C 92,64.7969 93,65.7031 95.2031,65.9062 l 3.2031,0.2969 0,2.7969 -10.5,0 c -1,0 -1,0 -10.5,0 l 0,-2.7969 4,-0.2969 c 3.5,-0.2968 4.5938,-0.7968 4.6876,-2.4218 0,-0.2969 0,-0.5938 -0.0938,-0.9063 L 72.7969,13.625 56.4062,59.7812 c -2.2031,6.0157 -2.5,6.8126 -3.3124,10.2188 l -3.1876,0 c -2.1093,-6.2188 -3.8124,-10.7031 -9,-24.1406 L 28.5,14.3281 18.5,59.2969 c -0.2969,1.2031 -0.4062,2.2969 -0.4062,3.2969 0,2.2031 1,3.1093 3.7031,3.3124 L 26,66.2031 26,69 13.4062,69 C 12.7031,69 8.5,69 0.796875,69 l 0,-2.7969 2.796875,-0.2969 C 6.5,65.6094 7.70312,64.5 8.59375,60.8906 L 20.5,9.32812 C 21.7969,3.60938 21.7969,3.51562 22.7969,-1 l 5,0 C 28.7031,2.20312 29.5,4.60938 31.4062,9.32812 L 48.7969,53.5781 61.2969,19.625 C 64.5938,10.7344 64.9062,9.92188 68.4062,-1 z"
-         id="URW_Palladio_L_Roman-87"
+         d="m 63.7031,66.3281 -0.4062,2.8907 -15.5938,0 -5,0 -18.2031,0 -16.5,0 c 0.20312,-3.6719 0.29688,-5.4376 0.29688,-8.0157 0,-2.5781 -0.09376,-4.3437 -0.29688,-8 l 3.4062,0 L 12,60.2969 C 12.2969,64.2031 15,65 27.2031,65 L 50,65 C 48.5,62.5 47.5,61.0156 45.5,58.5156 44.2031,56.7031 42.7969,55 41.4062,53.2188 L 11.2031,14.4062 C 9.79688,12.5156 7.90625,10.3125 1.5,2.70312 L 1.5,0 32.7031,0 35.5,0 63.2031,0 c 0,8.54688 0.0938,12.0312 0.5938,17.5 l -3.3907,0 -0.6093,-5.6875 C 59.0938,5.21875 57.7031,4.60938 42.4062,4.60938 l -27.3124,0 z"
+         id="URW_Palladio_L_Roman-90"
          inkscape:connector-curvature="0"
          style="stroke-linecap:butt;stroke-linejoin:round" />
     </defs>
     <g
        style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
-       transform="matrix(0.2,0,0,-0.2,442.75542,208.99451)"
-       id="g568">
+       transform="matrix(0.2,0,0,-0.2,210.43839,218.40403)"
+       id="g556">
       <use
          transform="scale(0.99626401,0.99626401)"
-         xlink:href="#URW_Palladio_L_Roman-87"
-         id="use570"
+         xlink:href="#URW_Palladio_L_Roman-90"
+         id="use558"
+         style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
+         x="0"
+         y="0"
+         width="576"
+         height="432" />
+      <use
+         transform="matrix(0.99626401,0,0,0.99626401,66.450031,0)"
+         xlink:href="#URW_Palladio_L_Roman-114"
+         id="use560"
          style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
          x="0"
          y="0"
@@ -2119,47 +2076,10 @@
   </g>
   <g
      id="text_29"
-     style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
-     transform="translate(-3.661017,-8.6949153)">
-    <!-- Zr -->
-    <defs
-       id="defs573">
-      <path
-         d="m 63.7031,66.3281 -0.4062,2.8907 -15.5938,0 -5,0 -18.2031,0 -16.5,0 c 0.20312,-3.6719 0.29688,-5.4376 0.29688,-8.0157 0,-2.5781 -0.09376,-4.3437 -0.29688,-8 l 3.4062,0 L 12,60.2969 C 12.2969,64.2031 15,65 27.2031,65 L 50,65 C 48.5,62.5 47.5,61.0156 45.5,58.5156 44.2031,56.7031 42.7969,55 41.4062,53.2188 L 11.2031,14.4062 C 9.79688,12.5156 7.90625,10.3125 1.5,2.70312 L 1.5,0 32.7031,0 35.5,0 63.2031,0 c 0,8.54688 0.0938,12.0312 0.5938,17.5 l -3.3907,0 -0.6093,-5.6875 C 59.0938,5.21875 57.7031,4.60938 42.4062,4.60938 l -27.3124,0 z"
-         id="URW_Palladio_L_Roman-90"
-         inkscape:connector-curvature="0"
-         style="stroke-linecap:butt;stroke-linejoin:round" />
-    </defs>
-    <g
-       style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
-       transform="matrix(0.2,0,0,-0.2,207.98692,200.67633)"
-       id="g576">
-      <use
-         transform="scale(0.99626401,0.99626401)"
-         xlink:href="#URW_Palladio_L_Roman-90"
-         id="use578"
-         style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
-         x="0"
-         y="0"
-         width="576"
-         height="432" />
-      <use
-         transform="matrix(0.99626401,0,0,0.99626401,66.450031,0)"
-         xlink:href="#URW_Palladio_L_Roman-114"
-         id="use580"
-         style="fill:#0000ff;stroke-linecap:butt;stroke-linejoin:round"
-         x="0"
-         y="0"
-         width="576"
-         height="432" />
-    </g>
-  </g>
-  <g
-     id="text_30"
      style="stroke-linecap:butt;stroke-linejoin:round">
     <!-- 800 nm -->
     <defs
-       id="defs583">
+       id="defs563">
       <path
          d="M 16.7969,34.5469 C 12.7031,32.6562 11,31.5469 8.79688,29.4375 5,25.6406 3,21.125 3,15.9219 3,5.60938 11.2969,-2 22.5938,-2 c 13,0 23.8124,10.21875 23.8124,22.625 0,8.0156 -3.7031,12.3281 -15.1093,17.5312 9.1093,6.2188 12.2969,10.4219 12.2969,16.4219 C 43.5938,63.1875 36.5,69 25.9062,69 14,69 5.29688,61.3906 5.29688,50.8906 5.29688,44.0781 8,40.2656 16.7969,34.5469 m 11.6093,-5 C 34.7031,26.7344 38.5,21.8281 38.5,16.4375 38.5,8.01562 32.2031,1.40625 24.0938,1.40625 c -8.5,0 -14,6.01563 -14,15.32815 0,7.2968 2.9062,11.9062 10.3124,16.4218 z M 22.2969,42.375 c -6.2969,3.0938 -9.5,7.1094 -9.5,12.1094 0,6.6094 4.7969,11.1094 11.9062,11.1094 7.2969,0 12.0938,-4.7969 12.0938,-12.125 0,-5.6876 -2.5,-9.5938 -9,-13.8126 z"
          id="URW_Palladio_L_Roman-56"
@@ -2168,12 +2088,12 @@
     </defs>
     <g
        transform="matrix(0.24,0,0,-0.24,256.76425,38.2)"
-       id="g586"
+       id="g566"
        style="stroke-linecap:butt;stroke-linejoin:round">
       <use
          transform="scale(0.99626401,0.99626401)"
          xlink:href="#URW_Palladio_L_Roman-56"
-         id="use588"
+         id="use568"
          style="stroke-linecap:butt;stroke-linejoin:round"
          x="0"
          y="0"
@@ -2182,7 +2102,7 @@
       <use
          transform="matrix(0.99626401,0,0,0.99626401,49.8132,0)"
          xlink:href="#URW_Palladio_L_Roman-48"
-         id="use590"
+         id="use570"
          style="stroke-linecap:butt;stroke-linejoin:round"
          x="0"
          y="0"
@@ -2191,7 +2111,7 @@
       <use
          transform="matrix(0.99626401,0,0,0.99626401,99.626401,0)"
          xlink:href="#URW_Palladio_L_Roman-48"
-         id="use592"
+         id="use572"
          style="stroke-linecap:butt;stroke-linejoin:round"
          x="0"
          y="0"
@@ -2200,7 +2120,7 @@
       <use
          transform="matrix(0.99626401,0,0,0.99626401,174.3462,0)"
          xlink:href="#URW_Palladio_L_Roman-110"
-         id="use594"
+         id="use574"
          style="stroke-linecap:butt;stroke-linejoin:round"
          x="0"
          y="0"
@@ -2209,7 +2129,7 @@
       <use
          transform="matrix(0.99626401,0,0,0.99626401,232.32826,0)"
          xlink:href="#URW_Palladio_L_Roman-109"
-         id="use596"
+         id="use576"
          style="stroke-linecap:butt;stroke-linejoin:round"
          x="0"
          y="0"
@@ -2226,40 +2146,40 @@
       <path
          d="m 343.128,98.2504 163.272,0 0,-43.0504 -163.272,0 z"
          style="fill:#ffffff;stroke:#000000;stroke-linecap:butt;stroke-linejoin:miter"
-         id="path600"
+         id="path580"
          inkscape:connector-curvature="0" />
     </g>
     <g
-       id="line2d_41"
+       id="line2d_38"
        style="stroke-linecap:butt;stroke-linejoin:round" />
     <g
-       id="line2d_42"
+       id="line2d_39"
        style="stroke-linecap:butt;stroke-linejoin:round">
       <g
-         id="g604"
+         id="g584"
          style="stroke-linecap:butt;stroke-linejoin:round">
         <use
            style="fill:#ff0000;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter"
            x="376.72849"
            xlink:href="#m58aa2fe647"
            y="73.507767"
-           id="use606"
+           id="use586"
            width="576"
            height="432" />
       </g>
     </g>
     <g
-       id="text_31"
+       id="text_30"
        style="stroke-linecap:butt;stroke-linejoin:round">
       <!-- 800 nm -->
       <g
          transform="matrix(0.24,0,0,-0.24,419.92849,81.907767)"
-         id="g609"
+         id="g589"
          style="stroke-linecap:butt;stroke-linejoin:round">
         <use
            transform="scale(0.99626401,0.99626401)"
            xlink:href="#URW_Palladio_L_Roman-56"
-           id="use611"
+           id="use591"
            style="stroke-linecap:butt;stroke-linejoin:round"
            x="0"
            y="0"
@@ -2268,7 +2188,7 @@
         <use
            transform="matrix(0.99626401,0,0,0.99626401,49.8132,0)"
            xlink:href="#URW_Palladio_L_Roman-48"
-           id="use613"
+           id="use593"
            style="stroke-linecap:butt;stroke-linejoin:round"
            x="0"
            y="0"
@@ -2277,7 +2197,7 @@
         <use
            transform="matrix(0.99626401,0,0,0.99626401,99.626401,0)"
            xlink:href="#URW_Palladio_L_Roman-48"
-           id="use615"
+           id="use595"
            style="stroke-linecap:butt;stroke-linejoin:round"
            x="0"
            y="0"
@@ -2286,7 +2206,7 @@
         <use
            transform="matrix(0.99626401,0,0,0.99626401,174.3462,0)"
            xlink:href="#URW_Palladio_L_Roman-110"
-           id="use617"
+           id="use597"
            style="stroke-linecap:butt;stroke-linejoin:round"
            x="0"
            y="0"
@@ -2295,7 +2215,7 @@
         <use
            transform="matrix(0.99626401,0,0,0.99626401,232.32826,0)"
            xlink:href="#URW_Palladio_L_Roman-109"
-           id="use619"
+           id="use599"
            style="stroke-linecap:butt;stroke-linejoin:round"
            x="0"
            y="0"
@@ -2305,7 +2225,7 @@
     </g>
   </g>
   <defs
-     id="defs621">
+     id="defs601">
     <clipPath
        id="p7ff5b81e1d">
       <rect
@@ -2313,7 +2233,7 @@
          width="446.39999"
          x="72"
          y="43.200001"
-         id="rect624"
+         id="rect604"
          style="stroke-linecap:butt;stroke-linejoin:round" />
     </clipPath>
   </defs>

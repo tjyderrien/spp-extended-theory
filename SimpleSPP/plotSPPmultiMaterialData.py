@@ -189,10 +189,10 @@ wavelength = 800e-9
 
 
 ## Choose which material to select
-#query = 'Air'
+query = 'Air'
 #query = 'Au (Palik)'
 #query = 'Ti (Palik)'
-query = 'Ti (Johnson 1974)'
+#query = 'Ti (Johnson 1974)'
 #query= 'SiC (Palik?)'
 #query = 'TiO2 (Devore 1951, e)'
 #query = 'SiO2 (Palik)'

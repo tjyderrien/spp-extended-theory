@@ -21,7 +21,12 @@ SPPdb = GenerateDatabase()
 
 SppOutput = 'SPPactiveInterfaces.dat'
 print "Exporting to "+SppOutput+"..."
+print 
 ExportToTxt(SPPdb, SppOutput)
+# Writing table caption
+f=open(SppOutput, "a")
+f.write("#Material1\tMaterial2\tWavelength\tOldSPPactiveBool\tNewSPPactiveBool\tSPPperiod\tSPPperiodError\tSPPdecayDepth1\tSPPdecayDepth2\tReflectivity\tOpticalPenetration1\tOpticalPenetration2\tSPPdecayLength\teps1.real\teps1.imag\teps2.real\teps2.imag\tSPPdepthImagk1\tSPPdepthImagk2")
+f.close()
 print "Exported. Please open file "+SppOutput+"."
 
 deltaBetaSPP = np.vectorize(deltaBetaSPP)

@@ -59,14 +59,6 @@ def plotDatabasePeriod(database, legend, outputfile, query, metal): #{{{
 EpsilonToIndex = np.vectorize(EpsilonToIndex)
 EffectiveIndex = np.vectorize(EffectiveIndex)
 
-def Swap(eps1, eps2):#{{{
-  eps3 = eps1
-  eps1 = eps2
-  eps2 = eps3
-  del eps3
-  return(eps1, eps2) 
-#}}}
-
 Swap = np.vectorize(Swap)
 
 def plotSeveralWavelengths(database1, database2, reverse, metal):#{{{
@@ -186,7 +178,6 @@ def plotSeveralWavelengths(database1, database2, reverse, metal):#{{{
 
 ## Choose a wavelength
 wavelength = 800e-9
-
 
 ## Choose which material to select
 query = 'Air'

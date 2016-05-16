@@ -15,58 +15,57 @@ from matplotlib import rc
 from scipy.constants import c, epsilon_0, mu_0, pi, e, m_e, h
 from matplotlib.legend_handler import HandlerLine2D
 
-lengthunit=1e-9
+lengthunit = 1e-9
 eta = 5e0 #assumed precision error on the dielectric permittivity
 
 # Settings for matplotlib
 #rc('font',**{'family':'sans-serif','sans-serif':['Helvetica'], 'size':'16'})
 ## for Palatino and other serif fonts use:
-rc('font',**{'family':'serif','serif':['Palatino'], 'size':'20'})
+rc('font', **{'family':'serif', 'serif':['Palatino'], 'size':'20'})
 rc('text', usetex=True)
 mp.rcParams['legend.numpoints'] = 1
 
 # basic wave function
 def omega(wavelength):#{{{
-  return 2.0*pi*c/wavelength
+    return 2.0*pi*c/wavelength
 #}}}
 
 # SPP BASIC FUNCTIONS
 def betaSPP(wavelength, eps1, eps2):#{{{
-  """calculate the SPP wave number on a flat interface
+    """calculate the SPP wave number on a flat interface
     input: wavelength (float), eps1 (complex), eps2(complex)
-  """
-  omega=2.0*pi*c/wavelength
-  try:
-    value = omega/c * cmath.sqrt(eps1 * eps2 / (eps1 + eps2))
-  except: 
-    print "betaSPP: singular case, error code: -1"
-    value = -1e0+0e0j
-    
-  return value
+    """
+    omega = 2.0*pi*c/wavelength
+    try:
+        value = omega/c * cmath.sqrt(eps1 * eps2 / (eps1 + eps2))
+    except: 
+        print "betaSPP: singular case, error code: -1"
+        value = -1e0+0e0j
+    return value
 #}}}
 
 def AsymmetricSPPconditionPos(eps1, eps2):#{{{
-	""" Assume that Re(k1).Re(k2) > 0 and verify the subsequent consequences alltogether.
-	It exists then two sub-modes, let's say a positive one (Im k1<0, Im k2>0), and a negative one (Im k1>0, Im k2<0)
-	This routine is about: Im(k1)>0, Im(k2)<0
-	"""
-	#value = eps1/eps2
-	value = eps1.imag * eps2.real - eps1.real * eps2.imag
-	condition = (value.imag < 0e0)
-	#condition = (eps1.imag / eps2.imag * eps2.real < eps1.real)
-	return condition
+    """ Assume that Re(k1).Re(k2) > 0 and verify the subsequent consequences alltogether.
+    It exists then two sub-modes, let's say a positive one (Im k1<0, Im k2>0), and a negative one (Im k1>0, Im k2<0)
+    This routine is about: Im(k1)>0, Im(k2)<0
+    """
+    #value = eps1/eps2
+    value = eps1.imag * eps2.real - eps1.real * eps2.imag
+    condition = (value.imag < 0e0)
+    #condition = (eps1.imag / eps2.imag * eps2.real < eps1.real)
+    return condition
 #}}}
 
 def AsymmetricSPPconditionNeg(eps1, eps2):#{{{
-	""" Assume that Re(k1).Re(k2) > 0 and verify the subsequent consequences alltogether.
-	It exists then two sub-modes, let's say a positive one (Im k1<0, Im k2>0), and a negative one (Im k1>0, Im k2<0)
-	This routine is about: Im(k1)<0, Im(k2)>0
-	"""
-	#value = eps1/eps2
-	value = eps1.imag * eps2.real - eps1.real * eps2.imag
-	condition = (value.imag > 0e0)
-	#condition = (eps1.imag / eps2.imag * eps2.real < eps1.real)
-	return condition
+    """ Assume that Re(k1).Re(k2) > 0 and verify the subsequent consequences alltogether.
+    It exists then two sub-modes, let's say a positive one (Im k1<0, Im k2>0), and a negative one (Im k1>0, Im k2<0)
+    This routine is about: Im(k1)<0, Im(k2)>0
+    """
+    #value = eps1/eps2
+    value = eps1.imag * eps2.real - eps1.real * eps2.imag
+    condition = (value.imag > 0e0)
+    #condition = (eps1.imag / eps2.imag * eps2.real < eps1.real)
+    return condition
 #}}}
 
 def SPPconditionValue(eps1, eps2):#{{{
@@ -452,7 +451,7 @@ def SPPactiveInterfaces(dbarray, comment):#{{{
 
         # If new or old SPP active condition is true, then show	
         if ((SPPcondition(eps1,eps2)) or (OldSPPcondition(eps1,eps2)) or RegularLIPSScondition):
-	        SPPperiod=(period(betaSPP(wavelength1,eps1, eps2))/lengthunit)
+	        RealEps=(period(betaSPP(wavelength1,eps1, eps2))/lengthunit)
 	        SPPdecayDepth1=(DecayDepth(kzSPP(wavelength1, eps1, eps2))/lengthunit)
 	        SPPdecayDepth2=(DecayDepth(kzSPP(wavelength2, eps2, eps1))/lengthunit)
 	        SPPdecayLength=DecayLengthSPP(betaSPP(wavelength1,eps1, eps2))/lengthunit
@@ -460,16 +459,16 @@ def SPPactiveInterfaces(dbarray, comment):#{{{
 	        SPPdepthImagk1 = kzSPP(wavelength1, eps1, eps2).imag
 	        SPPdepthImagk2 = kzSPP(wavelength2, eps2, eps1).imag
 
-	        SPPperiodError=deltaPeriodSPP(wavelength1, eps1, eps2, eta, eta, eta, eta)/lengthunit
+	        RealEpsError=deltaPeriodSPP(wavelength1, eps1, eps2, eta, eta, eta, eta)/lengthunit
 
         else: 
-	        SPPperiod=0
+	        RealEps=0
 	        SPPdecayDepth1=0
 	        SPPdecayDepth2=0
 	        SPPdecayLength=0
 	        SPPdepthImagk1=0
 	        SPPdepthImagk2=0
-	        SPPperiodError=0
+	        RealEpsError=0
         
         Reflectivity=(reflectivity(eps1, eps2))
         
@@ -479,13 +478,13 @@ def SPPactiveInterfaces(dbarray, comment):#{{{
         
         # Print the table of active SPP interfaces for all cases or only new SPP interfaces					
         #if( not (comment=="new")): 
-        Condition = ExperimentalAchievable and (SPPperiod!=0) 
+        Condition = ExperimentalAchievable and (RealEps!=0) 
         #and (SPPdecayLength < 20000e0) and (abs(eps2.real) < eps2.imag)
         if(Condition):
           counter=counter+1
           #print SPParray.shape
           SPParray = np.vstack((SPParray, [Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, 
-	SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, #10 
+	RealEps, RealEpsError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, #10 
 	OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1.real, eps1.imag, #15
 	eps2.real, eps2.imag, SPPdepthImagk1, SPPdepthImagk2]))
           
@@ -551,11 +550,11 @@ def SPPactiveInterfaces(dbarray, comment):#{{{
 	        #NewSPPactiveBool='No'
         ## If new or old SPP active condition is true, then show	
         #if ((AsymmetricSPPconditionPos(eps1,eps2)) or (OldSPPcondition(eps1,eps2))):
-	        #SPPperiod=(period(betaSPP(wavelength1,eps1, eps2))/lengthunit)
+	        #RealEps=(period(betaSPP(wavelength1,eps1, eps2))/lengthunit)
 	        #SPPdecayDepth1=(DecayDepth(kzSPP(wavelength1, eps1, eps2))/lengthunit)
 	        #SPPdecayDepth2=(DecayDepth(kzSPP(wavelength2, eps2, eps1))/lengthunit)
         #else: 
-	        #SPPperiod=0
+	        #RealEps=0
 	        #SPPdecayDepth1=0
 	        #SPPdecayDepth2=0
         
@@ -567,13 +566,13 @@ def SPPactiveInterfaces(dbarray, comment):#{{{
         
         ## Print the table of active SPP interfaces for all cases or only new SPP interfaces					
         ##if( not (comment=="new")): 
-        #if(ExperimentalAchievable and (SPPperiod!=0)):
+        #if(ExperimentalAchievable and (RealEps!=0)):
           #if (np.mod(counter, 20) == 0): 
             ##show the table line each 20 lines
             #print '{0:30s} {1:30s} {2:15s} {3:12s} {4:12s} {5:11s} {6:16s} {7:16s} {8:12s} {9:19s} {10:19s}'.format("# Substrate", "Layer", "Wavelength (nm)", "OldSPPactive", "NewSPPactive", "Period (nm)", "DecayDepth1 (nm)", "DecayDepth2 (nm)", "Reflectivity", "OpticalPenetration1", "OpticalPenetration2")
           
           #counter=counter+1
-          #print '{0:30s} {1:30s} {2:15f} {3:12s} {4:12s} {5:11f} {6:16f} {7:16f} {8:12f}  {9:19f} {10:19f}'.format(Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2)
+          #print '{0:30s} {1:30s} {2:15f} {3:12s} {4:12s} {5:11f} {6:16f} {7:16f} {8:12f}  {9:19f} {10:19f}'.format(Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, RealEps, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2)
         
   #return 0
 
@@ -636,11 +635,11 @@ def SPPactiveInterfaces(dbarray, comment):#{{{
 	        #NewSPPactiveBool='No'
         ## If new or old SPP active condition is true, then show	
         #if ((AsymmetricSPPconditionNeg(eps1,eps2)) or (OldSPPcondition(eps1,eps2))):
-	        #SPPperiod=(period(betaSPP(wavelength1,eps1, eps2))/lengthunit)
+	        #RealEps=(period(betaSPP(wavelength1,eps1, eps2))/lengthunit)
 	        #SPPdecayDepth1=(DecayDepth(kzSPP(wavelength1, eps1, eps2))/lengthunit)
 	        #SPPdecayDepth2=(DecayDepth(kzSPP(wavelength2, eps2, eps1))/lengthunit)
         #else: 
-	        #SPPperiod=0
+	        #RealEps=0
 	        #SPPdecayDepth1=0
 	        #SPPdecayDepth2=0
         
@@ -652,13 +651,13 @@ def SPPactiveInterfaces(dbarray, comment):#{{{
         
         ## Print the table of active SPP interfaces for all cases or only new SPP interfaces					
         ##if( not (comment=="new")): 
-        #if(ExperimentalAchievable and (SPPperiod!=0)):
+        #if(ExperimentalAchievable and (RealEps!=0)):
           #if (np.mod(counter, 20) == 0): 
             ##show the table line each 20 lines
             #print '{0:30s} {1:30s} {2:15s} {3:12s} {4:12s} {5:11s} {6:16s} {7:16s} {8:12s} {9:19s} {10:19s}'.format("# Substrate", "Layer", "Wavelength (nm)", "OldSPPactive", "NewSPPactive", "Period (nm)", "DecayDepth1 (nm)", "DecayDepth2 (nm)", "Reflectivity", "OpticalPenetration1", "OpticalPenetration2")
           
           #counter=counter+1
-          #print '{0:30s} {1:30s} {2:15f} {3:12s} {4:12s} {5:11f} {6:16f} {7:16f} {8:12f}  {9:19f} {10:19f}'.format(Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2)
+          #print '{0:30s} {1:30s} {2:15f} {3:12s} {4:12s} {5:11f} {6:16f} {7:16f} {8:12f}  {9:19f} {10:19f}'.format(Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, RealEps, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2)
         
   #return 0
 
@@ -715,7 +714,7 @@ def ExportToTxt(dbarray, filename):
       #Material1 = i
       #counter=counter+1
   #print Material1
-      #print '{0:30s} {1:30s} {2:15f} {3:12s} {4:12s} {5:11f} {6:16f} {7:16f} {8:12f}  {9:19f} {10:19f} {11:15f}'.format(Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength)
+      #print '{0:30s} {1:30s} {2:15f} {3:12s} {4:12s} {5:11f} {6:16f} {7:16f} {8:12f}  {9:19f} {10:19f} {11:15f}'.format(Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, RealEps, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength)
   return out
 
 def RealDerivativeByComplex(f,z):
@@ -765,6 +764,12 @@ def FilterDatabase(SPPdb, query, FieldIndex):
   SPPdbFiltered = np.array(SPPdb[SPPdb[:,FieldIndex]==query,:]) #uses a table of booleans to select
   return SPPdbFiltered
 
+def FilterDatabaseContains(SPPdb, query, FieldIndex):
+  """ Filter SPP database using query and returns a smaller database
+  """
+  SPPdbFiltered = SPPdb[np.array(np.core.defchararray.find(SPPdb[:,FieldIndex], query)==0),:]
+  return SPPdbFiltered
+
 def FilterDatabaseLowerThan(SPPdb, query, FieldIndex):
   """ Filter SPP database using query and returns a smaller database
   /!\ content of query cell should be exact
@@ -772,13 +777,27 @@ def FilterDatabaseLowerThan(SPPdb, query, FieldIndex):
   SPPdbFiltered = np.array(SPPdb[SPPdb[:,FieldIndex]<query,:]) #uses a table of booleans to select
   return SPPdbFiltered
 
+def ExtractMaterialData(Database): #TODO: Think how to take data from continuous database directly instead of the ponctual file.
+  # Extract data from database of materials (5 columns)
+  Material1 = Database[:, 0]; BandGap = Database[:,1]; 
+  Wavelength = Database[:, 2]; 
+  RealEps = Database[:,3]; ImagEps = Database[:,4]; 
+  
+  #Converts strings to floats
+  #Material1 = np.asfarray(Material1)
+  #BandGap = np.asfarray(BandGap)
+  #Wavelength = np.asfarray(Wavelength)
+  #RealEps = np.asfarray(RealEps)
+  #ImagEps = np.asfarray(ImagEps)
+  
+  return Material1, BandGap, Wavelength, RealEps, ImagEps
 
 def ExtractDataDb(SPPdbFiltered):
   # Extract data from database
   Material1 = SPPdbFiltered[:, 0]; Material2 = SPPdbFiltered[:,1]; 
   Wavelength = SPPdbFiltered[:, 2]; 
   OldSPPactiveBool = SPPdbFiltered[:,3]; NewSPPactiveBool = SPPdbFiltered[:,4]; 
-  SPPperiod = SPPdbFiltered[:,5]; SPPperiodError = SPPdbFiltered[:,6];
+  RealEps = SPPdbFiltered[:,5]; RealEpsError = SPPdbFiltered[:,6];
   SPPdecayDepth1 = SPPdbFiltered[:,7]; SPPdecayDepth2 = SPPdbFiltered[:,8]; 
   Reflectivity = SPPdbFiltered[:, 9]; OpticalPenetration1 = SPPdbFiltered[:,10]; OpticalPenetration2 = SPPdbFiltered[:,10]; SPPdecayLength = SPPdbFiltered[:,12]
   eps1r = SPPdbFiltered[:, 13]; eps1c = SPPdbFiltered[:,14]; eps2r = SPPdbFiltered[:,15]; eps2c = SPPdbFiltered[:,16]; k1imag = SPPdbFiltered[:,17]; 
@@ -786,8 +805,8 @@ def ExtractDataDb(SPPdbFiltered):
   
   #Converts strings to floats
   Wavelength = np.asfarray(Wavelength)
-  SPPperiod = np.asfarray(SPPperiod)
-  SPPperiodError = np.asfarray(SPPperiodError)
+  RealEps = np.asfarray(RealEps)
+  RealEpsError = np.asfarray(RealEpsError)
   SPPdecayDepth1 = np.asfarray(SPPdecayDepth1)
   SPPdecayDepth2 = np.asfarray(SPPdecayDepth2)
   Reflectivity = np.asfarray(Reflectivity)
@@ -801,7 +820,15 @@ def ExtractDataDb(SPPdbFiltered):
   k1imag = np.asfarray(k1imag)
   k2imag = np.asfarray(k2imag)
 
-  return Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, k1imag, k2imag
+  return Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, RealEps, RealEpsError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, k1imag, k2imag
+
+def Swap(eps1, eps2):#{{{
+  eps3 = eps1
+  eps1 = eps2
+  eps2 = eps3
+  del eps3
+  return(eps1, eps2) 
+#}}}
 
 kzSPP = np.vectorize(kzSPP)
 DecayDepth = np.vectorize(DecayDepth)

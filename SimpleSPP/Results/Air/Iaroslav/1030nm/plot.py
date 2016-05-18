@@ -113,7 +113,7 @@ print "Final list: "+str(DispersionAngle)+", "+str(Lspp)
 print ""
 print "| Plotting the results..."
 plt.errorbar(1E6*Lspp, DispersionAngle, yerr=DispersionAngleError, fmt='o')
-ax.set_xscale('log')
-ax.set_yscale('log')
+#ax.set_xscale('log')
+#ax.set_yscale('log')
 #plt.show()
 plt.savefig('OriginOfRegularity.eps')

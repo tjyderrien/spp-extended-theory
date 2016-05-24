@@ -1,0 +1,16 @@
+# Effect of ripple number and magnification on the FFT measurement
+# Sample	Magnification	NumberLipss	AngleDispersion	Error	Remark
+#Ti	10000	59	23.39	4.39	Non-square
+Ti	10000	50	22.64	3.65	Square
+Ti	10000	40	30.56	5.8	Square
+Ti	10000	30	31.04	4.12	Square
+Ti	10000	20	37.97	7.17	Square
+Ti	10000	10	44	4.38	Square
+#Ti	2000	56	16.60	3.15	Non-square
+Ti	2000	50	26.08	4.69	Square
+Ti	2000	40	27.71	3.86	Square
+Ti	2000	30	29.225	7.0	Square
+Ti	2000	20	23.58	6.6	Square
+Ti	2000	10	29.52	6.23	Square
+#Mo	10000	45	12.80	4.15	Square, right
+#Mo	10000	40	17.22	2.97	Square, right

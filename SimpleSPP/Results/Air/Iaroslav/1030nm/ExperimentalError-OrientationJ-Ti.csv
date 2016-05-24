@@ -1,0 +1,13 @@
+# Effect of ripple number and magnification on the FFT measurement
+# Sample	Magnification	Distance	Angle	AngleDispersion (FWHM)	Remark	Method
+Ti	10000	27.43e-6	56	26.8	Square bottom right	Fourier gradient
+Ti	10000	20e-6	54.8	27.6	Square bottom right	Fourier gradient
+Ti	10000	15e-6	55.2	26.6	Square bottom right	Fourier gradient
+Ti	10000	10e-6	52.0	26.0	Square bottom right	Fourier gradient
+Ti	10000	5e-6	54.0	23.2	Square bottom right	Fourier gradient
+Ti	2000	38.78E-6	0.0	16.8	Square bottom right	Fourier gradient
+Ti	2000	30.0E-6	0.0	16.0	Square bottom right	Fourier gradient
+Ti	2000	25.0E-6	0.4	16.8	Square bottom right	Fourier gradient
+Ti	2000	20.0E-6	0.0	11.6	Square bottom right	Fourier gradient
+Ti	2000	15.0E-6	0.0	15.2	Square bottom right	Fourier gradient
+Ti	2000	10.0E-6	0.8	3.2	Square bottom right	Fourier gradient

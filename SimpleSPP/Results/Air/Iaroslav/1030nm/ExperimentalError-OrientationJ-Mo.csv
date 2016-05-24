@@ -1,0 +1,6 @@
+# Effect of ripple number and magnification on the FFT measurement
+# Sample	Magnification	Distance	Angle	AngleDispersion	Remark	Method
+Mo	10000	27.54E-6	58.8	21.6	Square right	Fourier grad
+Mo	10000	14E-6	60	22.4	Square bottom right	Fourier grad
+Mo	10000	10E-6	58.4	23.6	Square bottom right	Fourier grad
+Mo	10000	5E-6	57.2	21.6	Square bottom right	Fourier grad

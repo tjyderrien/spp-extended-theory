@@ -1,0 +1,7 @@
+# Effect of ripple number and magnification on the FFT measurement
+# Sample	Magnification	Distance	Angle	AngleDispersion	Remark	Method
+Cr	?	21.0E-6	0.8	17.6	Square right	Fourier gradient
+Cr	?	15.0E-6	2.0	18.8	Square bottom right	Fourier gradient
+Cr	?	10.0E-6	1.2	18.4	Square bottom right	Fourier gradient
+Cr	?	5.0E-6	1.2	18.4	Square bottom right	Fourier gradient
+Cr	?	5.0E-6	1.6	22.4	Square bottom right	Fourier gradient

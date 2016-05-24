@@ -21,13 +21,13 @@ MaterialFile1="Air"
 #MaterialFile2="Au-Palik"
 #MaterialFile2="Au-Johnson"
 #MaterialFile2="Ag-Johnson"
-MaterialFile2="SiO2-Palik"
-#MaterialFile2="Ti-Johnson"
+#MaterialFile2="SiO2-Palik"
+MaterialFile2="Ti-Johnson"
 #MaterialFile2="Mo-Palik"
 #MaterialFile2="Si-Palik"
 
 UnitMat1=1e10
-UnitMat2=1e10
+UnitMat2=1e6
 
 # Loading Material dielectric complex permittivity into arrays
 try: 
@@ -140,6 +140,20 @@ plt.legend(loc=2)
 plt.grid(True)
 plt.savefig('Period.eps')
 #plt.show()
+
+print "Plot the SPP mean-free path with wavelength..."
+
+plt.figure()
+plt.xlabel('Wavelength $\lambda$ $(nm)$')
+plt.ylabel('SPP mean-free-path $L_{SPP}$ ($\mu$m)')
+plt.plot(1e9*wavelengths, 1e6 * (0.5E0/kspp.imag), label='Air/Au')
+#plt.title('Period of field at $'+MaterialFile1+'$/$'+MaterialFile2+'$ interface')
+plt.legend(loc=2)
+plt.grid(True)
+plt.savefig('MeanFreePath'+MaterialFile1+MaterialFile2+'.eps')
+#plt.show()
+plt.loglog(1e9*wavelengths, 1e6 * (0.5E0/kspp.imag), label='Air/Au')
+plt.savefig('MeanFreePath'+MaterialFile1+MaterialFile2+'-LogLog.eps')
 
 print "Plot the lifetime with wavelength..."
 #RealDerivativeByComplex = np.vectorize(RealDerivativeByComplex)

@@ -103,7 +103,11 @@ def OldSPPcondition(eps1, eps2):#{{{
 def period(betaSPP):#{{{
   """ Returns the period of the light-SPP field at a given interface
   """
-  return 2.0*pi/betaSPP.real
+  try:
+    result = 2.0*pi/betaSPP.real
+  except: 
+    result = -1e0
+  return result
 #}}}
 
 # Precision over knowledge of period
@@ -219,94 +223,6 @@ def deltaBetaSPP(wavelength, eps1, eps2, deps1r, deps1c, deps2r, deps2c):#{{{
             ((eps1r+eps2r)**2+(eps1c+eps2c)**2)**2*(2*eps1c+2*eps2c)))*deps2c
             
     deltaReBeta = abs(term1) + abs(term2) + abs(term3) + abs(term4)
-    #deltaReBeta = 1e0/2e0*pi*abs(1e0/(2e0*(((eps1r*eps2r-eps1c*eps2c)*(eps1r+eps2r)/((eps1r+eps2r)**2+(eps1c+eps2c)**2) \
-  #+(eps1c*eps2r+eps1r*eps2c)*(eps1c+eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2))**2 \
-  #+((eps1c*eps2r+eps1r*eps2c)*(eps1r+eps2r)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)
-  #-(eps1r*eps2r-eps1c*eps2c)*(eps1c+eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2))**2)**(0.5)
-  #+(2*eps1r*eps2r-2*eps1c*eps2c)*(eps1r+eps2r)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)+(2*eps1c*eps2r
-  #+2*eps1r*eps2c)*(eps1c+eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2))**(0.5)/wavelength
-  #*(1/(((eps1r*eps2r-eps1c*eps2c)*(eps1r+eps2r)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)
-  #+(eps1c*eps2r+eps1r*eps2c)*(eps1c+eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2))**2
-  #+((eps1c*eps2r+eps1r*eps2c)*(eps1r+eps2r)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)
-  #-(eps1r*eps2r-eps1c*eps2c)*(eps1c+eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2))**2)**(0.5)
-  #*(2*((eps1r*eps2r-eps1c*eps2c)*(eps1r+eps2r)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)
-  #+(eps1c*eps2r+eps1r*eps2c)*(eps1c+eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2))*
-  #(eps2r*(eps1r+eps2r)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)+(eps1r*eps2r-eps1c*eps2c)
-  #/((eps1r+eps2r)**2+(eps1c+eps2c)**2)-(eps1r*eps2r-eps1c*eps2c)*(eps1r+eps2r)
-  #/((eps1r+eps2r)**2+(eps1c+eps2c)**2)**2*(2*eps1r+2*eps2r)+eps2c*(eps1c+eps2c)
-  #/((eps1r+eps2r)**2+(eps1c+eps2c)**2)-(eps1c*eps2r+eps1r*eps2c)*(eps1c+eps2c)
-  #/((eps1r+eps2r)**2+(eps1c+eps2c)**2)**2*(2*eps1r+2*eps2r))
-  #+2*((eps1c*eps2r+eps1r*eps2c)*(eps1r+eps2r)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)
-  #-(eps1r*eps2r-eps1c*eps2c)*(eps1c+eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2))*(eps2c*(eps1r+eps2r)
-  #/((eps1r+eps2r)**2+(eps1c+eps2c)**2)+(eps1c*eps2r+eps1r*eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)
-  #-(eps1c*eps2r+eps1r*eps2c)*(eps1r+eps2r)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)**2*(2*eps1r+2*eps2r)
-  #-eps2r*(eps1c+eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)+(eps1r*eps2r-eps1c*eps2c)*(eps1c+eps2c)
-  #/((eps1r+eps2r)**2+(eps1c+eps2c)**2)**2*(2*eps1r+2*eps2r)))+2*eps2r*(eps1r+eps2r)/((eps1r+eps2r)**2
-  #+(eps1c+eps2c)**2)+(2*eps1r*eps2r-2*eps1c*eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)-(2*eps1r*eps2r
-  #-2*eps1c*eps2c)*(eps1r+eps2r)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)**2*(2*eps1r+2*eps2r)+2*eps2c*(eps1c+eps2c)
-  #/((eps1r+eps2r)**2+(eps1c+eps2c)**2)-(2*eps1c*eps2r+2*eps1r*eps2c)*(eps1c+eps2c)/((eps1r+eps2r)**2
-  #+(eps1c+eps2c)**2)**2*(2*eps1r+2*eps2r)))*deps1r+1e0/2e0*pi*abs(1e0/(2e0*(((eps1r*eps2r-eps1c*eps2c)*(eps1r+eps2r)
-  #/((eps1r+eps2r)**2+(eps1c+eps2c)**2)+(eps1c*eps2r+eps1r*eps2c)*(eps1c+eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2))**2
-  #+((eps1c*eps2r+eps1r*eps2c)*(eps1r+eps2r)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)-(eps1r*eps2r-eps1c*eps2c)
-  #*(eps1c+eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2))**2)**(1e0/2e0)+(2*eps1r*eps2r-2*eps1c*eps2c)*(eps1r+eps2r)
-  #/((eps1r+eps2r)**2+(eps1c+eps2c)**2)+(2*eps1c*eps2r+2*eps1r*eps2c)*(eps1c+eps2c)/((eps1r+eps2r)**2
-  #+(eps1c+eps2c)**2))**(1e0/2e0)/wavelength*(1e0/(((eps1r*eps2r-eps1c*eps2c)*(eps1r+eps2r)/((eps1r+eps2r)**2
-  #+(eps1c+eps2c)**2)+(eps1c*eps2r+eps1r*eps2c)*(eps1c+eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2))**2
-  #+((eps1c*eps2r+eps1r*eps2c)*(eps1r+eps2r)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)
-  #-(eps1r*eps2r-eps1c*eps2c)*(eps1c+eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2))**2)**(1e0/2e0)*
-  #(2e0*((eps1r*eps2r-eps1c*eps2c)*(eps1r+eps2r)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)+(eps1c*eps2r+eps1r*eps2c)
-  #*(eps1c+eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2))*(-eps2c*(eps1r+eps2r)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)
-  #-(eps1r*eps2r-eps1c*eps2c)*(eps1r+eps2r)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)**2*(2*eps1c+2*eps2c)+eps2r*(eps1c+eps2c)
-  #/((eps1r+eps2r)**2+(eps1c+eps2c)**2)+(eps1c*eps2r+eps1r*eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)
-  #-(eps1c*eps2r+eps1r*eps2c)*(eps1c+eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)**2*(2*eps1c+2*eps2c))
-  #+2*((eps1c*eps2r+eps1r*eps2c)*(eps1r+eps2r)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)
-  #-(eps1r*eps2r-eps1c*eps2c)*(eps1c+eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2))*(eps2r*(eps1r+eps2r)
-  #/((eps1r+eps2r)**2+(eps1c+eps2c)**2)-(eps1c*eps2r+eps1r*eps2c)*(eps1r+eps2r)/((eps1r+eps2r)**2
-  #+(eps1c+eps2c)**2)**2*(2*eps1c+2*eps2c)+eps2c*(eps1c+eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)
-  #-(eps1r*eps2r-eps1c*eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)+(eps1r*eps2r-eps1c*eps2c)*(eps1c+eps2c)
-  #/((eps1r+eps2r)**2+(eps1c+eps2c)**2)**2*(2*eps1c+2*eps2c)))-2*eps2c*(eps1r+eps2r)/((eps1r+eps2r)**2
-  #+(eps1c+eps2c)**2)-(2*eps1r*eps2r-2*eps1c*eps2c)*(eps1r+eps2r)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)**2
-  #*(2*eps1c+2*eps2c)+2*eps2r*(eps1c+eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)+(2*eps1c*eps2r+2*eps1r*eps2c)
-  #/((eps1r+eps2r)**2+(eps1c+eps2c)**2)-(2*eps1c*eps2r+2*eps1r*eps2c)*(eps1c+eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)**2
-  #*(2*eps1c+2*eps2c)))*deps1c+1e0/2e0*pi*abs(1e0/(2e0*(((eps1r*eps2r-eps1c*eps2c)*(eps1r+eps2r)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)
-  #+(eps1c*eps2r+eps1r*eps2c)*(eps1c+eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2))**2+((eps1c*eps2r+eps1r*eps2c)*(eps1r+eps2r)
-  #/((eps1r+eps2r)**2+(eps1c+eps2c)**2)-(eps1r*eps2r-eps1c*eps2c)*(eps1c+eps2c)/((eps1r+eps2r)**2
-  #+(eps1c+eps2c)**2))**2)**(1e0/2e0)+(2*eps1r*eps2r-2*eps1c*eps2c)*(eps1r+eps2r)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)
-  #+(2*eps1c*eps2r+2*eps1r*eps2c)*(eps1c+eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2))**(1e0/2e0)/wavelength
-  #*(1e0/(((eps1r*eps2r-eps1c*eps2c)*(eps1r+eps2r)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)+(eps1c*eps2r+eps1r*eps2c)
-  #*(eps1c+eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2))**2+((eps1c*eps2r+eps1r*eps2c)*(eps1r+eps2r)/((eps1r+eps2r)**2
-  #+(eps1c+eps2c)**2)-(eps1r*eps2r-eps1c*eps2c)*(eps1c+eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2))**2)**(1e0/2e0)*
-  #(2*((eps1r*eps2r-eps1c*eps2c)*(eps1r+eps2r)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)+(eps1c*eps2r+eps1r*eps2c)
-  #*(eps1c+eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2))*(eps1r*(eps1r+eps2r)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)
-  #+(eps1r*eps2r-eps1c*eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)-(eps1r*eps2r-eps1c*eps2c)*(eps1r+eps2r)/((eps1r+eps2r)**2
-  #+(eps1c+eps2c)**2)**2*(2*eps1r+2*eps2r)+eps1c*(eps1c+eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)-(eps1c*eps2r+eps1r*eps2c)
-  #*(eps1c+eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)**2*(2*eps1r+2*eps2r))+2*((eps1c*eps2r+eps1r*eps2c)*(eps1r+eps2r)
-  #/((eps1r+eps2r)**2+(eps1c+eps2c)**2)-(eps1r*eps2r-eps1c*eps2c)*(eps1c+eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2))
-  #*(eps1c*(eps1r+eps2r)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)+(eps1c*eps2r+eps1r*eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)
-  #-(eps1c*eps2r+eps1r*eps2c)*(eps1r+eps2r)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)**2*(2*eps1r+2*eps2r)-eps1r*(eps1c+eps2c)
-  #/((eps1r+eps2r)**2+(eps1c+eps2c)**2)+(eps1r*eps2r-eps1c*eps2c)*(eps1c+eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)**2*
-  #(2*eps1r+2*eps2r)))+2*eps1r*(eps1r+eps2r)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)+(2*eps1r*eps2r-2*eps1c*eps2c)/((eps1r+eps2r)**2
-  #+(eps1c+eps2c)**2)-(2*eps1r*eps2r-2*eps1c*eps2c)*(eps1r+eps2r)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)**2*(2*eps1r+2*eps2r)
-  #+2*eps1c*(eps1c+eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)-(2*eps1c*eps2r+2*eps1r*eps2c)*(eps1c+eps2c)/((eps1r+eps2r)**2
-  #+(eps1c+eps2c)**2)**2*(2*eps1r+2*eps2r)))*deps2r+1e0/2e0*pi*abs(1e0/(2e0*(((eps1r*eps2r-eps1c*eps2c)*(eps1r+eps2r)/((eps1r+eps2r)**2
-  #+(eps1c+eps2c)**2)+(eps1c*eps2r+eps1r*eps2c)*(eps1c+eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2))**2
-  #+((eps1c*eps2r+eps1r*eps2c)*(eps1r+eps2r)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)-(eps1r*eps2r-eps1c*eps2c)*(eps1c+eps2c)/((eps1r+eps2r)**2
-  #+(eps1c+eps2c)**2))**2)**(1e0/2e0)+(2*eps1r*eps2r-2*eps1c*eps2c)*(eps1r+eps2r)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)
-  #+(2*eps1c*eps2r+2*eps1r*eps2c)*(eps1c+eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2))**(1e0/2e0)/wavelength
-  #*(1e0/(((eps1r*eps2r-eps1c*eps2c)*(eps1r+eps2r)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)+(eps1c*eps2r+eps1r*eps2c)*(eps1c+eps2c)
-  #/((eps1r+eps2r)**2+(eps1c+eps2c)**2))**2+((eps1c*eps2r+eps1r*eps2c)*(eps1r+eps2r)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)
-  #-(eps1r*eps2r-eps1c*eps2c)*(eps1c+eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2))**2)**(1e0/2e0)*(2*((eps1r*eps2r-eps1c*eps2c)
-  #*(eps1r+eps2r)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)+(eps1c*eps2r+eps1r*eps2c)*(eps1c+eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2))
-  #*(-eps1c*(eps1r+eps2r)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)-(eps1r*eps2r-eps1c*eps2c)*(eps1r+eps2r)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)**2
-  #*(2*eps1c+2*eps2c)+eps1r*(eps1c+eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)+(eps1c*eps2r+eps1r*eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)
-  #-(eps1c*eps2r+eps1r*eps2c)*(eps1c+eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)**2*(2*eps1c+2*eps2c))
-  #+2*((eps1c*eps2r+eps1r*eps2c)*(eps1r+eps2r)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)-(eps1r*eps2r-eps1c*eps2c)*(eps1c+eps2c)/((eps1r+eps2r)**2
-  #+(eps1c+eps2c)**2))*(eps1r*(eps1r+eps2r)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)-(eps1c*eps2r+eps1r*eps2c)*(eps1r+eps2r)/((eps1r+eps2r)**2
-  #+(eps1c+eps2c)**2)**2*(2*eps1c+2*eps2c)+eps1c*(eps1c+eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)-(eps1r*eps2r-eps1c*eps2c)/((eps1r+eps2r)**2
-  #+(eps1c+eps2c)**2)+(eps1r*eps2r-eps1c*eps2c)*(eps1c+eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)**2*(2*eps1c+2*eps2c)))
-  #-2*eps1c*(eps1r+eps2r)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)-(2*eps1r*eps2r-2*eps1c*eps2c)*(eps1r+eps2r)/((eps1r+eps2r)**2
-  #+(eps1c+eps2c)**2)**2*(2*eps1c+2*eps2c)+2*eps1r*(eps1c+eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)+(2*eps1c*eps2r+2*eps1r*eps2c)
-  #/((eps1r+eps2r)**2+(eps1c+eps2c)**2)-(2*eps1c*eps2r+2*eps1r*eps2c)*(eps1c+eps2c)/((eps1r+eps2r)**2+(eps1c+eps2c)**2)**2*(2*eps1c+2*eps2c)))*deps2c
   except: 
     deltaReBeta = -1e0
   
@@ -326,6 +242,53 @@ def deltaPeriodSPP(wavelength, eps1, eps2, deps1r, deps1c, deps2r, deps2c): #{{{
   return value.real
 #}}}
 
+def csgn(x, y): #{{{
+  # returns the complex sign, as in maple
+  if(x.real > 0e0 or x.real == 0e0 and x.imag > 0e0):
+    result = 1E0
+  else:
+    if(x.real < 0e0 or x.real == 0 and x.imag < 0e0):
+      result=-1e0
+    else: 
+      result = -1E99
+      print "csgn: Exception case, to be solved."
+#}}}
+
+# Precision over knowledge of period
+def deltaImBetaSPP(wavelength, eps1, eps2, deps1r, deps1c, deps2r, deps2c):#{{{
+  """Calculates the precision over Im(beta) using uncertainty calculations
+  """
+  Er1 = eps1.real; Ec1 = eps1.imag
+  Er2 = eps2.real; Ec2 = eps2.imag
+  
+  try:
+    term1 = Pi*csgn(1e0,(Ec1*Er2**2+Er1**2*Ec2+Ec1**2*Ec2+Ec1*Ec2**2-1E0j*Er1**2*Er2-1E0j*Er1*Er2**2-1E0j*Ec1**2*Er2-1E0j*Er1*Ec2**2)*(Er1**2+2e0*Er1*Er2+Er2**2+Ec1**2+2e0*Ec1*Ec2+Ec2**2))*(2e0*(((Er1*Er2-Ec1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)+(Ec1*Er2+Er1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2))**2+((Ec1*Er2+Er1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)-(Er1*Er2-Ec1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2))**2)**(0.5e0)-(2e0*Er1*Er2-2e0*Ec1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)-(2e0*Ec1*Er2+2e0*Er1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2))**(0.5e0)/wavelength+0.5e0*Pi*csgn((Ec1*Er2**2+Er1**2e0*Ec2+Ec1**2*Ec2+Ec1*Ec2**2-1E0j*Er1**2*Er2-1E0j*Er1*Er2**2-1E0j*Ec1**2*Er2-1E0j*Er1*Ec2**2)*(Er1**2+2e0*Er1*Er2+Er2**2+Ec1**2+2e0*Ec1*Ec2+Ec2**2))/(2e0*(((Er1*Er2-Ec1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)+(Ec1*Er2+Er1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2))**2+((Ec1*Er2+Er1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)-(Er1*Er2-Ec1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2))**2)**(0.5e0)-(2e0*Er1*Er2-2e0*Ec1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)-(2e0*Ec1*Er2+2e0*Er1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2))**(0.5e0)/wavelength*(1E0/(((Er1*Er2-Ec1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)+(Ec1*Er2+Er1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2))**2+((Ec1*Er2+Er1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)-(Er1*Er2-Ec1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2))**2)**(0.5e0)*(2e0*((Er1*Er2-Ec1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)+(Ec1*Er2+Er1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2))*(Er2*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)+(Er1*Er2-Ec1*Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2)-(Er1*Er2-Ec1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)**2*(2e0*Er1+2e0*Er2)+Ec2*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2)-(Ec1*Er2+Er1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2)**2*(2e0*Er1+2e0*Er2))+2e0*((Ec1*Er2+Er1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)-(Er1*Er2-Ec1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2))*(Ec2*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)+(Ec1*Er2+Er1*Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2)-(Ec1*Er2+Er1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)**2*(2e0*Er1+2e0*Er2)-Er2*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2)+(Er1*Er2-Ec1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2)**2*(2e0*Er1+2e0*Er2)))-2e0*Er2*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)-(2e0*Er1*Er2-2e0*Ec1*Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2)+(2e0*Er1*Er2-2e0*Ec1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)**2*(2e0*Er1+2e0*Er2)-2e0*Ec2*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2)+(2e0*Ec1*Er2+2e0*Er1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2)**2*(2e0*Er1+2e0*Er2))
+            
+    term2 = Pi*csgn(1,(Ec1*Er2**2+Er1**2*Ec2+Ec1**2e0*Ec2+Ec1*Ec2**2-1E0j*Er1**2*Er2-1E0j*Er1*Er2**2-1E0j*Ec1**2*Er2-1E0j*Er1*Ec2**2)*(Er1**2+2e0*Er1*Er2+Er2**2+Ec1**2+2e0*Ec1*Ec2+Ec2**2))*(2e0*(((Er1*Er2-Ec1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)+(Ec1*Er2+Er1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2))**2+((Ec1*Er2+Er1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)-(Er1*Er2-Ec1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2))**2)**(0.5e0)-(2e0*Er1*Er2-2e0*Ec1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)-(2e0*Ec1*Er2+2e0*Er1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2))**(0.5e0)/wavelength+0.5e0*Pi*csgn((Ec1*Er2**2+Er1**2*Ec2+Ec1**2*Ec2+Ec1*Ec2**2-1E0j*Er1**2*Er2-1E0j*Er1*Er2**2-1E0j*Ec1**2*Er2-1E0j*Er1*Ec2**2)*(Er1**2+2e0*Er1*Er2+Er2**2+Ec1**2+2e0*Ec1*Ec2+Ec2**2))/(2e0*(((Er1*Er2-Ec1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)+(Ec1*Er2+Er1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2))**2+((Ec1*Er2+Er1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)-(Er1*Er2-Ec1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2))**2)**(0.5e0)-(2e0*Er1*Er2-2e0*Ec1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)-(2e0*Ec1*Er2+2e0*Er1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2))**(0.5e0)/wavelength*(1E0/(((Er1*Er2-Ec1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)+(Ec1*Er2+Er1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2))**2+((Ec1*Er2+Er1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)-(Er1*Er2-Ec1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2))**2)**(0.5e0)*(2e0*((Er1*Er2-Ec1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)+(Ec1*Er2+Er1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2))*(-Ec2*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)-(Er1*Er2-Ec1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)**2*(2e0*Ec1+2e0*Ec2)+Er2*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2)+(Ec1*Er2+Er1*Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2)-(Ec1*Er2+Er1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2)**2*(2e0*Ec1+2e0*Ec2))+2e0*((Ec1*Er2+Er1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)-(Er1*Er2-Ec1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2))*(Er2*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)-(Ec1*Er2+Er1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)**2*(2e0*Ec1+2e0*Ec2)+Ec2*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2)-(Er1*Er2-Ec1*Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2)+(Er1*Er2-Ec1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2)**2*(2e0*Ec1+2e0*Ec2)))+2e0*Ec2*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)+(2e0*Er1*Er2-2e0*Ec1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)**2*(2e0*Ec1+2e0*Ec2)-2e0*Er2*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2)-(2e0*Ec1*Er2+2e0*Er1*Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2)+(2e0*Ec1*Er2+2e0*Er1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2)**2*(2e0*Ec1+2e0*Ec2))
+            
+    term3 = Pi*csgn(1,(Ec1*Er2**2+Er1**2*Ec2+Ec1**2*Ec2+Ec1*Ec2**2-1E0j*Er1**2*Er2-1E0j*Er1*Er2**2-1E0j*Ec1**2*Er2-1E0j*Er1*Ec2**2)*(Er1**2+2e0*Er1*Er2+Er2**2+Ec1**2+2e0*Ec1*Ec2+Ec2**2))*(2e0*(((Er1*Er2-Ec1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)+(Ec1*Er2+Er1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2))**2+((Ec1*Er2+Er1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)-(Er1*Er2-Ec1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2))**2)**(0.5e0)-(2e0*Er1*Er2-2e0*Ec1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)-(2e0*Ec1*Er2+2e0*Er1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2))**(0.5e0)/wavelength+0.5e0*Pi*csgn((Ec1*Er2**2+Er1**2*Ec2+Ec1**2*Ec2+Ec1*Ec2**2-1E0j*Er1**2*Er2-1E0j*Er1*Er2**2-1E0j*Ec1**2*Er2-1E0j*Er1*Ec2**2)*(Er1**2+2e0*Er1*Er2+Er2**2+Ec1**2+2e0*Ec1*Ec2+Ec2**2))/(2e0*(((Er1*Er2-Ec1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)+(Ec1*Er2+Er1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2))**2+((Ec1*Er2+Er1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)-(Er1*Er2-Ec1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2))**2)**(0.5e0)-(2e0*Er1*Er2-2e0*Ec1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)-(2e0*Ec1*Er2+2e0*Er1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2))**(0.5e0)/wavelength*(1E0/(((Er1*Er2-Ec1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)+(Ec1*Er2+Er1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2))**2+((Ec1*Er2+Er1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)-(Er1*Er2-Ec1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2))**2)**(0.5e0)*(2e0*((Er1*Er2-Ec1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)+(Ec1*Er2+Er1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2))*(Er1*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)+(Er1*Er2-Ec1*Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2)-(Er1*Er2-Ec1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)**2*(2e0*Er1+2e0*Er2)+Ec1*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2)-(Ec1*Er2+Er1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2)**2*(2e0*Er1+2e0*Er2))+2e0*((Ec1*Er2+Er1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)-(Er1*Er2-Ec1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2))*(Ec1*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)+(Ec1*Er2+Er1*Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2)-(Ec1*Er2+Er1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)**2*(2e0*Er1+2e0*Er2)-Er1*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2)+(Er1*Er2-Ec1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2)**2*(2e0*Er1+2e0*Er2)))-2e0*Er1*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)-(2e0*Er1*Er2-2e0*Ec1*Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2)+(2e0*Er1*Er2-2e0*Ec1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)**2*(2e0*Er1+2e0*Er2)-2e0*Ec1*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2)+(2e0*Ec1*Er2+2e0*Er1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2)**2*(2e0*Er1+2e0*Er2))
+            
+    term4 = Pi*csgn(1,(Ec1*Er2**2+Er1**2*Ec2+Ec1**2*Ec2+Ec1*Ec2**2-1E0j*Er1**2*Er2-1E0j*Er1*Er2**2-1E0j*Ec1**2*Er2-1E0j*Er1*Ec2**2)*(Er1**2+2e0*Er1*Er2+Er2**2+Ec1**2+2e0*Ec1*Ec2+Ec2**2))*(2e0*(((Er1*Er2-Ec1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)+(Ec1*Er2+Er1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2))**2+((Ec1*Er2+Er1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)-(Er1*Er2-Ec1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2))**2)**(0.5e0)-(2e0*Er1*Er2-2e0*Ec1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)-(2e0*Ec1*Er2+2e0*Er1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2))**(0.5e0)/wavelength+0.5e0*Pi*csgn((Ec1*Er2**2+Er1**2*Ec2+Ec1**2*Ec2+Ec1*Ec2**2-1E0j*Er1**2*Er2-1E0j*Er1*Er2**2-1E0j*Ec1**2*Er2-1E0j*Er1*Ec2**2)*(Er1**2+2e0*Er1*Er2+Er2**2+Ec1**2+2e0*Ec1*Ec2+Ec2**2))/(2e0*(((Er1*Er2-Ec1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)+(Ec1*Er2+Er1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2))**2+((Ec1*Er2+Er1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)-(Er1*Er2-Ec1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2))**2)**(0.5e0)-(2e0*Er1*Er2-2e0*Ec1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)-(2e0*Ec1*Er2+2e0*Er1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2))**(0.5e0)/wavelength*(1E0/(((Er1*Er2-Ec1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)+(Ec1*Er2+Er1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2))**2+((Ec1*Er2+Er1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)-(Er1*Er2-Ec1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2))**2)**(0.5e0)*(2e0*((Er1*Er2-Ec1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)+(Ec1*Er2+Er1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2))*(-Ec1*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)-(Er1*Er2-Ec1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)**2*(2e0*Ec1+2e0*Ec2)+Er1*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2)+(Ec1*Er2+Er1*Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2)-(Ec1*Er2+Er1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2)**2*(2e0*Ec1+2e0*Ec2))+2e0*((Ec1*Er2+Er1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)-(Er1*Er2-Ec1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2))*(Er1*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)-(Ec1*Er2+Er1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)**2*(2e0*Ec1+2e0*Ec2)+Ec1*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2)-(Er1*Er2-Ec1*Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2)+(Er1*Er2-Ec1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2)**2*(2e0*Ec1+2e0*Ec2)))+2e0*Ec1*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)+(2e0*Er1*Er2-2e0*Ec1*Ec2)*(Er1+Er2)/((Er1+Er2)**2+(Ec1+Ec2)**2)**2*(2e0*Ec1+2e0*Ec2)-2e0*Er1*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2)-(2e0*Ec1*Er2+2e0*Er1*Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2)+(2e0*Ec1*Er2+2e0*Er1*Ec2)*(Ec1+Ec2)/((Er1+Er2)**2+(Ec1+Ec2)**2)**2*(2e0*Ec1+2e0*Ec2))
+            
+    deltaImBeta = abs(term1*deps1r) + abs(term2*deps1c) + abs(term3*deps2r) + abs(term4*deps2c)
+  except: 
+    deltaImBeta = -1e0
+  
+  return deltaImBeta
+#}}}
+
+def deltaLspp(wavelength, eps1, eps2, deps1r, deps1c, deps2r, deps2c): #{{{
+  ## returns the absolute uncertainty on the SPP mean free path.
+  deltaBeta = deltaImBetaSPP(wavelength, eps1, eps2, deps1r, deps1c, deps2r, deps2c)
+  beta = betaSPP(wavelength, eps1, eps2)
+  beta = beta.imag
+  try: 
+    value = 0.5e0*abs(deltaBeta)/abs(beta)**2
+  except:
+    value = -1e0
+  return value.real
+
+
 ### SPP decay depth
 def DecayDepth(kzSPP):#{{{
   return 2e0*pi/kzSPP.real
@@ -336,9 +299,13 @@ def kzSPP(wavelength,eps1,eps2):#{{{
 #}}}
 
 def DecayLengthSPP(beta):#{{{
-	"""Return the coherent length of SPPs
-	"""
-	return 1e0/(2e0*beta.imag)
+    """Return the coherent length of SPPs
+    """
+    try:
+      result = 1e0/(2e0*beta.imag)
+    except: 
+      result = -1
+    return result
 #}}}
   
 # OPTICAL FUNCTIONS
@@ -353,7 +320,7 @@ def Drude(wavelength, ne, epsilon, nu):#{{{
   """
   omegap2=ne * e**2 / (m_e * meffe * epsilon_0)
   omega=2.0*pi*c/wavelength
-  return epsilon - omegap2/(omega*omega) * 1/(1+1j*nu/omega)
+  return epsilon - omegap2/(omega*omega) * 1e0/(1e0+1e0j*nu/omega)
 #}}}
 
 def reflectivity(eps1, eps2):#{{{
@@ -395,7 +362,7 @@ def SPPactiveInterfaces(dbarray, comment):#{{{
   #sizeOfArray = sizeDatabase**2
   #print sizeOfArray	
 
-  SPParray = np.empty((0,19)) #, dtype='|S30')
+  SPParray = np.empty((0,20)) #, dtype='|S30')
   
   # double loop to test all configurations (brute-forcing...)
   for i in dbarray:
@@ -411,7 +378,7 @@ def SPPactiveInterfaces(dbarray, comment):#{{{
         gap2=float(k[1]); 
       except: 
         gap2=10;
-      RegularLIPSScondition = (eps2.imag > 1e0*abs(eps1.real))  
+      RegularLIPSScondition = False #(eps2.imag > 1e0*abs(eps1.real))  
       #ConditionOnGap=(gap1<0.1)
       ConditionOnGap=True #always true to avoid selection
       
@@ -451,7 +418,7 @@ def SPPactiveInterfaces(dbarray, comment):#{{{
 
         # If new or old SPP active condition is true, then show	
         if ((SPPcondition(eps1,eps2)) or (OldSPPcondition(eps1,eps2)) or RegularLIPSScondition):
-	        RealEps=(period(betaSPP(wavelength1,eps1, eps2))/lengthunit)
+	        Period=(period(betaSPP(wavelength1,eps1, eps2))/lengthunit)
 	        SPPdecayDepth1=(DecayDepth(kzSPP(wavelength1, eps1, eps2))/lengthunit)
 	        SPPdecayDepth2=(DecayDepth(kzSPP(wavelength2, eps2, eps1))/lengthunit)
 	        SPPdecayLength=DecayLengthSPP(betaSPP(wavelength1,eps1, eps2))/lengthunit
@@ -459,18 +426,19 @@ def SPPactiveInterfaces(dbarray, comment):#{{{
 	        SPPdepthImagk1 = kzSPP(wavelength1, eps1, eps2).imag
 	        SPPdepthImagk2 = kzSPP(wavelength2, eps2, eps1).imag
 
-	        RealEpsError=deltaPeriodSPP(wavelength1, eps1, eps2, eta, eta, eta, eta)/lengthunit
+	        PeriodError=deltaPeriodSPP(wavelength1, eps1, eps2, eta, eta, eta, eta)/lengthunit
 
         else: 
-	        RealEps=0
+	        Period=0
 	        SPPdecayDepth1=0
 	        SPPdecayDepth2=0
 	        SPPdecayLength=0
 	        SPPdepthImagk1=0
 	        SPPdepthImagk2=0
-	        RealEpsError=0
+	        PeriodError=0
         
         Reflectivity=(reflectivity(eps1, eps2))
+        deltaLsppValues=deltaLspp(wavelength1,eps1,eps2,eta,eta,eta,eta)/lengthunit
         
         # Print only the experimentally possible cases: SPP active depth must be smaller than absorption depth. 
         # ensure that SPPdecayDepth is smaller than layer thickness, to avoid shift of dispersion relation
@@ -478,15 +446,15 @@ def SPPactiveInterfaces(dbarray, comment):#{{{
         
         # Print the table of active SPP interfaces for all cases or only new SPP interfaces					
         #if( not (comment=="new")): 
-        Condition = ExperimentalAchievable and (RealEps!=0) 
+        Condition = ExperimentalAchievable and (Period!=0) 
         #and (SPPdecayLength < 20000e0) and (abs(eps2.real) < eps2.imag)
         if(Condition):
           counter=counter+1
           #print SPParray.shape
           SPParray = np.vstack((SPParray, [Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, 
-	RealEps, RealEpsError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, #10 
+	Period, PeriodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, #10 
 	OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1.real, eps1.imag, #15
-	eps2.real, eps2.imag, SPPdepthImagk1, SPPdepthImagk2]))
+	eps2.real, eps2.imag, SPPdepthImagk1, SPPdepthImagk2, deltaLsppValues.real]))
           
   return SPParray
 #}}}
@@ -802,6 +770,7 @@ def ExtractDataDb(SPPdbFiltered):
   Reflectivity = SPPdbFiltered[:, 9]; OpticalPenetration1 = SPPdbFiltered[:,10]; OpticalPenetration2 = SPPdbFiltered[:,10]; SPPdecayLength = SPPdbFiltered[:,12]
   eps1r = SPPdbFiltered[:, 13]; eps1c = SPPdbFiltered[:,14]; eps2r = SPPdbFiltered[:,15]; eps2c = SPPdbFiltered[:,16]; k1imag = SPPdbFiltered[:,17]; 
   k2imag = SPPdbFiltered[:,18]
+  DeltaLsppValue = SPPdbFiltered[:,19]
   
   #Converts strings to floats
   Wavelength = np.asfarray(Wavelength)
@@ -819,8 +788,9 @@ def ExtractDataDb(SPPdbFiltered):
   eps2c = np.asfarray(eps2c)
   k1imag = np.asfarray(k1imag)
   k2imag = np.asfarray(k2imag)
+  DeltaLsppValue = np.asfarray(DeltaLsppValue)
 
-  return Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, RealEps, RealEpsError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, k1imag, k2imag
+  return Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, RealEps, RealEpsError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, k1imag, k2imag, DeltaLsppValue
 
 def Swap(eps1, eps2):#{{{
   eps3 = eps1

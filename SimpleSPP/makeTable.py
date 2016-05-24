@@ -31,6 +31,7 @@ print "Exported. Please open file "+SppOutput+"."
 
 deltaBetaSPP = np.vectorize(deltaBetaSPP)
 deltaPeriodSPP = np.vectorize(deltaPeriodSPP)
+deltaLspp = np.vectorize(deltaLspp)
 
 ##  plot precision of Lambda over precision of epsilon
 

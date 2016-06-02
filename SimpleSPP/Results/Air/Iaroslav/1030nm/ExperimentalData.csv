@@ -1,4 +1,5 @@
 #Property of Iaroslav Gnilitskyi and Prof. Leonardo Orazi, UNIMORE Italy. 
+# This file will be used with ./plot.py to automatically generate the correlation between LSPP and LIPSS regularity
 #Material 	Aperture (deg)	dAngle (deg)  	Wavelength (nm)	Pulse (fs)	Fluence(J/cm2)	Repetition(kHz)	Scanning(m/s)	SpotDiam(um)	References	Source
 Mo	11.4	2.3	1030	270 	3.53	600	1.7	6.0	This work	Ordal 1988
 #Mo	20.5	5.0	800	50	0.07	1 	0.0004	30-40	[Cong2015]	Ordal

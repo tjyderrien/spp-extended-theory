@@ -179,8 +179,18 @@
 </node>
 </node>
 </node>
+<node COLOR="#00b439" CREATED="1464864903240" ID="ID_1174023438" MODIFIED="1464864909729" TEXT="Theory vs Exp analysis">
+<edge STYLE="bezier" WIDTH="thin"/>
+<font NAME="SansSerif" SIZE="16"/>
+<node COLOR="#990000" CREATED="1464864910334" ID="ID_266336572" MODIFIED="1464864927581" TEXT="plotErrorBar.gnu">
+<font NAME="SansSerif" SIZE="14"/>
 </node>
-<node COLOR="#0033ff" CREATED="1463420970119" ID="ID_1078524174" MODIFIED="1463420972893" POSITION="right" TEXT="Non-linear refraction">
+<node COLOR="#990000" CREATED="1464864928442" ID="ID_194677248" MODIFIED="1464864928443" TEXT="">
+<font NAME="SansSerif" SIZE="14"/>
+</node>
+</node>
+</node>
+<node COLOR="#0033ff" CREATED="1463420970119" FOLDED="true" ID="ID_1078524174" MODIFIED="1464864768592" POSITION="right" TEXT="Non-linear refraction">
 <edge STYLE="sharp_bezier" WIDTH="8"/>
 <font NAME="SansSerif" SIZE="18"/>
 <node COLOR="#00b439" CREATED="1463420973489" ID="ID_1515153131" MODIFIED="1463420992570" TEXT="Numerical data to be generalized in Python">
@@ -192,7 +202,7 @@
 <edge STYLE="sharp_bezier" WIDTH="8"/>
 <font NAME="SansSerif" SIZE="18"/>
 </node>
-<node COLOR="#0033ff" CREATED="1463059268889" ID="ID_361534380" MODIFIED="1463059349807" POSITION="left" TEXT="Databases">
+<node COLOR="#0033ff" CREATED="1463059268889" FOLDED="true" ID="ID_361534380" MODIFIED="1464864763290" POSITION="left" TEXT="Databases">
 <edge STYLE="sharp_bezier" WIDTH="8"/>
 <font NAME="SansSerif" SIZE="18"/>
 <node COLOR="#00b439" CREATED="1463059272065" ID="ID_1065234883" MODIFIED="1463059349808" TEXT="DISCRETE: Few wavelengths, many materials">

@@ -1,14 +1,18 @@
 # How to match experimental data directly with L_spp ?
 
-1. Select a paper, extract the SEM pictures
+1. Select a paper, extract the SEM pictures using "Capture" tool in Linux. 
 
-2. Set the scale (ImageJ manual ? Python auto? --> Scripted Python-ImageJ interfaced)
+2. In ImageJ: set the scale using "Analyse > Set scale."
 
-3. Capture the thickness of orientation distribution. 
+3. Installing the plugin OrientationJ (http://bigwww.epfl.ch/demo/orientation/).
 
-4. Get metadata: magnification, distance / area of measurement, laser wavelength, material
+4. Using OrientationJ > Orientation-Distribution tool, using the Fourier Gradient, capture the thickness of orientation distribution. 
 
-5. Add the detailed data in ExperimentalData.csv files. 
+5.  
+
+6. Get metadata: magnification, distance / area of measurement, laser wavelength, material
+
+7. Add the detailed data in ExperimentalData.csv files. 
 
 TODO: put everything in one single file. Script will separate them per material for plotting (current GNUplot script). Change to Python. 
 

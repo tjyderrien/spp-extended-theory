@@ -217,7 +217,7 @@ def plotSeveralWavelengths(database1, database2, reverse, metal):#{{{
 # =======================================================
 
 ## Choose a wavelength
-wavelength = 400e-9
+wavelength = 1030e-9
 print "** Operating wavelength = "+str(wavelength*1E9)+"nm."
 
 ## Choose which material to select
@@ -311,8 +311,8 @@ epsilon2 = np.add(eps2rM,np.multiply(1e0j, eps2cM))
 
 print "Plot the period 2D as function of dielectric permittivity"
 
-noise = 5e0 #Lack of knowledge on dielectric permittivity
-precision = 1e0 #Precision for meshing
+noise = eta #Lack of knowledge on dielectric permittivity
+precision = 0.25e0 #Precision for meshing
 
 period = np.vectorize(period)
 betaSPP = np.vectorize(betaSPP)
@@ -322,12 +322,12 @@ deltaPeriodSPP = np.vectorize(deltaPeriodSPP)
 deltaLspp = np.vectorize(deltaLspp)
 
 print "*** Testing the basic functions"
-print "Period = "+str(period(betaSPP(wavelength, 1e0+0e0j, 1.1e0+1.1e0j)))+" m"
-print "DeltaBetaSPP = "+str(deltaBetaSPP(wavelength, 1e0+0e0j, 1.1e0+1.1e0j, noise, noise, noise, noise))+" m-1"
-print "Decay Length SPP = "+str(DecayLengthSPP(betaSPP(wavelength, 1e0+0e0j, 1.1e0+1.1e0j)))+" m"
-print "DeltaPeriodSPP = "+str(deltaPeriodSPP(wavelength, 1e0+0e0j, 1.1e0+1.1e0j, noise, noise, noise, noise))+" m"
-print "DeltaLspp = "+str(deltaLspp(wavelength, 1e0+0e0j, 1.1e0+1.1e0j, noise, noise, noise, noise))+" m"
-
+print "Period = "+str(period(betaSPP(wavelength, 1e0+0e0j, -49.5738812793e0+3.81282698968e0j)))+" m"
+print "DeltaBetaSPP = "+str(deltaBetaSPP(wavelength, 1e0+0e0j, -49.5738812793e0+3.81282698968e0j, 0e0, 0e0, noise, noise))+" m-1"
+print "Decay Length SPP = "+str(DecayLengthSPP(betaSPP(wavelength, 1e0+0e0j, -49.5738812793e0+3.81282698968e0j)))+" m"
+print "DeltaPeriodSPP = "+str(deltaPeriodSPP(wavelength, 1e0+0e0j, -49.5738812793e0+3.81282698968e0j, 0e0, 0e0, noise, noise))+" m"
+print "DeltaLspp = "+str(deltaLspp(wavelength, 1e0+0e0j, -49.5738812793e0+3.81282698968e0j, 0e0, 0e0, noise, noise))+" m"
+#exit()
 print "** Knowledge over dielectric permittivity: +/- "+str(noise)+"."
 
 print "Mesh generation..."
@@ -406,7 +406,7 @@ print "Plotting the Lspp as function of Re eps, Im eps."
 plotDatabaseMaterials(SPPdb, 'Database (1030 nm)', 'MaterialDatabase'+str(wavelength)+'nm.eps', 'Database (1030 nm)', metal)
 plotDatabaseLspp(SPPdb, title, 'Database'+title+'.eps', title, metal)
 LsppTable = 1e6*DecayLengthSPP(betaSPP(wavelength, 1e0, eps2r+eps2c*1e0j))
-deltaLsppTable = (deltaLspp(wavelength, 1e0, eps2r+eps2c*1e0j, 0e0, 0e0, noise, noise))/lengthunit
+deltaLsppTable = 1e6*(deltaLspp(wavelength, 1e0, eps2r+eps2c*1e0j, 0e0, 0e0, noise, noise))
 
 plt.figure()
 levels = [5, 10, 20, 30, 40, 50, 100, 200] #um
@@ -440,7 +440,7 @@ plt.show()
 #print "deltaLsppTable = "+str(deltaLsppTable)
 
 #print "delta Lspp min = "+str(deltaLsppTable.min())+", max = "+str(deltaLsppTable.max())+"."
-levels = [1, 5, 10, 20, 30, 40, 50] #nm
+levels = [1, 5, 10, 20, 30, 40, 50] #um
 #levels = MaxNLocator(nbins=15).tick_values(0e0, deltaLsppTable.max())
 
 plt.figure()
@@ -465,7 +465,7 @@ else:
 #plt.clabel(CS, inline=1, fontsize=20)
 #plt.legend(pos=1)
 plt.colorbar(CS)
-plt.title(r'SPP mean-free-path fluctuations $\delta L_{SPP}$ (nm), $\lambda=$'+niceWavelength+' nm.')
+plt.title(r'SPP mean-free-path fluctuations $\delta L_{SPP}$ ($\mu$m), $\lambda=$'+niceWavelength+' nm.')
 plt.savefig('deltaLspp'+niceWavelength+'.eps')
 plt.savefig('deltaLspp'+niceWavelength+'.png')
 plt.show()

@@ -46,6 +46,7 @@ plt.ylabel(r'$\delta \theta$ (deg)')
 
 #print "Size="+str(Materials.size)
 Lspp = np.zeros(0)
+DeltaLspp = np.zeros(0)
 errorX = np.zeros(len(Materials))
 
 for i in np.arange(0, Materials.size, 1):
@@ -105,15 +106,18 @@ for i in np.arange(0, Materials.size, 1):
   #print "Debug: wavelength2 = ", wavelength2
   
   NewLspp = DecayLengthSPP(betaSPP(float(wavelength)/unit, eps1, eps2))
+  NewDeltaLspp = deltaLspp(float(wavelength)/unit, eps1, eps2, 0e0, 0e0, eta, eta)
   Lspp = np.append(Lspp, NewLspp)
-  print Material2, eps2, NewLspp
+  DeltaLspp = np.append(DeltaLspp, NewDeltaLspp)
+  print "[New entry] Material: "+str(Material2)+", eps2="+str(eps2)+", Lspp="+str(NewLspp)+", dLspp="+str(NewDeltaLspp)
 
 print "" 
 print "Final list: "+str(DispersionAngle)+", "+str(Lspp)
 print ""
 print "| Plotting the results..."
-plt.errorbar(1E6*Lspp, DispersionAngle, yerr=DispersionAngleError, fmt='o')
-#ax.set_xscale('log')
+#plt.errorbar(1E6*Lspp, DispersionAngle, yerr=DispersionAngleError, fmt='o')
+plt.errorbar(1E6*Lspp, DispersionAngle, xerr=1e6*DeltaLspp, yerr=DispersionAngleError, fmt='o')
+ax.set_xscale('log')
 #ax.set_yscale('log')
 #plt.show()
 plt.savefig('OriginOfRegularity.eps')

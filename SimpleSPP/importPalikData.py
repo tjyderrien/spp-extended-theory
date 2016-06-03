@@ -271,7 +271,8 @@ def importFromTables(wavelength, folder, filename, plotting): #{{{
 #==============================
 folder = "Database/"
 #filename = "Au-Johnson"
-filename = "Au-Palik"
+#filename = "Fe-Palik"
+#filename = "Ni-Palik"
 #filename = "a-Si-Palik"
 #filename = "Si-Palik"
 #filename = "SiC-Palik"
@@ -280,7 +281,7 @@ filename = "Au-Palik"
 #filename = "Ti-Johnson"
 #filename = "SiO2-Palik"
 #filename = "W-Palik"
-#filename = "Cr-Palik"
+filename = "Cr-Johnson"
 #filename = "BK7"
 plotting = True
 
@@ -295,15 +296,14 @@ plotting = True
 print "Material: "+filename+"."
 
 #==========================================
-print "Lambda = 3000 nm"
-importFromTables(3000e-9, folder, filename, plotting=True)
-
+#print "Lambda = 3000 nm"
+#importFromTables(3000e-9, folder, filename, plotting=True)
 #print "Lambda = 1064 nm"
 #importFromTables(1064e-9, folder, filename, plotting=True)
 #print "Lambda = 1060 nm"
 #importFromTables(1060e-9, folder, filename, plotting)
-#print "Lambda = 1030 nm"
-#importFromTables(1030e-9, folder, filename, plotting)
+print "Lambda = 1030 nm"
+importFromTables(1030e-9, folder, filename, plotting)
 #print "Lambda = 800 nm"
 #importFromTables(800e-9, folder, filename, plotting)
 #print "Lambda = 795 nm"

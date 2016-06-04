@@ -2,13 +2,13 @@
 
 1. Select a paper, extract the SEM pictures using "Capture" tool in Linux. 
 
-2. In ImageJ: set the scale using "Analyse > Set scale."
+2. In ImageJ: set the scale using "Analyse > Set scale." Better to put in nm, then we get more precisions in the given numbers. 
 
 3. Installing the plugin OrientationJ (http://bigwww.epfl.ch/demo/orientation/).
 
-4. Using OrientationJ > Orientation-Distribution tool, using the Fourier Gradient, capture the thickness of orientation distribution. 
+4. Using OrientationJ > Orientation-Distribution tool, NOT using the Fourier Gradient, capture the thickness of orientation distribution. Reitzle is advised. 
 
-5.  
+5. At the FWHM of a peak, capture the min and the max of orientation angle. Calculate (theta_max - theta_min)/2 to get the angular dispersion. Make another measurement to get an error bar. 
 
 6. Get metadata: magnification, distance / area of measurement, laser wavelength, material
 

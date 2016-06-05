@@ -1,0 +1,4 @@
+													
+Material	material above the condiered material (air, water, oxide layer...)	Reference (  Journal name Volume pages (year)  )	Number of the Fig used	sub numbering (a,b, c, d, …)	wavelength (nm)	spot size (microns)	Regularity						
+							Magnification/area used for dispersion analysis (umxum)	Method 	Max value	Max/2	Theta min	Theta max	Dispersion angulaire
+Cu	Air	Laser Phys. 25  056103 (2015)	4	a	800	???	14.77x13.12	Cubic Spline Gradient	139775.55	69887.775	-4.951	3.261	4.106

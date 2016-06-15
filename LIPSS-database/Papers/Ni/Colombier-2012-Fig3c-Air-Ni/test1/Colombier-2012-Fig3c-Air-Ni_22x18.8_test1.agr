@@ -1,0 +1,1937 @@
+# Grace project file
+#
+@version 50123
+@page size 792, 612
+@page scroll 5%
+@page inout 5%
+@link page off
+@map font 8 to "Courier", "Courier"
+@map font 10 to "Courier-Bold", "Courier-Bold"
+@map font 11 to "Courier-BoldOblique", "Courier-BoldOblique"
+@map font 9 to "Courier-Oblique", "Courier-Oblique"
+@map font 14 to "Courier-Regular", "Courier-Regular"
+@map font 15 to "Dingbats-Regular", "Dingbats-Regular"
+@map font 4 to "Helvetica", "Helvetica"
+@map font 6 to "Helvetica-Bold", "Helvetica-Bold"
+@map font 7 to "Helvetica-BoldOblique", "Helvetica-BoldOblique"
+@map font 5 to "Helvetica-Oblique", "Helvetica-Oblique"
+@map font 20 to "NimbusMonoL-Bold", "NimbusMonoL-Bold"
+@map font 21 to "NimbusMonoL-BoldOblique", "NimbusMonoL-BoldOblique"
+@map font 22 to "NimbusMonoL-Regular", "NimbusMonoL-Regular"
+@map font 23 to "NimbusMonoL-RegularOblique", "NimbusMonoL-RegularOblique"
+@map font 24 to "NimbusRomanNo9L-Medium", "NimbusRomanNo9L-Medium"
+@map font 25 to "NimbusRomanNo9L-MediumItalic", "NimbusRomanNo9L-MediumItalic"
+@map font 26 to "NimbusRomanNo9L-Regular", "NimbusRomanNo9L-Regular"
+@map font 27 to "NimbusRomanNo9L-RegularItalic", "NimbusRomanNo9L-RegularItalic"
+@map font 28 to "NimbusSansL-Bold", "NimbusSansL-Bold"
+@map font 29 to "NimbusSansL-BoldCondensed", "NimbusSansL-BoldCondensed"
+@map font 30 to "NimbusSansL-BoldCondensedItalic", "NimbusSansL-BoldCondensedItalic"
+@map font 31 to "NimbusSansL-BoldItalic", "NimbusSansL-BoldItalic"
+@map font 32 to "NimbusSansL-Regular", "NimbusSansL-Regular"
+@map font 33 to "NimbusSansL-RegularCondensed", "NimbusSansL-RegularCondensed"
+@map font 34 to "NimbusSansL-RegularCondensedItalic", "NimbusSansL-RegularCondensedItalic"
+@map font 35 to "NimbusSansL-RegularItalic", "NimbusSansL-RegularItalic"
+@map font 36 to "StandardSymbolsL-Regular", "StandardSymbolsL-Regular"
+@map font 12 to "Symbol", "Symbol"
+@map font 38 to "Symbol-Regular", "Symbol-Regular"
+@map font 2 to "Times-Bold", "Times-Bold"
+@map font 3 to "Times-BoldItalic", "Times-BoldItalic"
+@map font 1 to "Times-Italic", "Times-Italic"
+@map font 0 to "Times-Roman", "Times-Roman"
+@map font 43 to "URWBookmanL-DemiBold", "URWBookmanL-DemiBold"
+@map font 44 to "URWBookmanL-DemiBoldItalic", "URWBookmanL-DemiBoldItalic"
+@map font 45 to "URWBookmanL-Light", "URWBookmanL-Light"
+@map font 46 to "URWBookmanL-LightItalic", "URWBookmanL-LightItalic"
+@map font 47 to "URWChanceryL-MediumItalic", "URWChanceryL-MediumItalic"
+@map font 48 to "URWGothicL-Book", "URWGothicL-Book"
+@map font 49 to "URWGothicL-BookOblique", "URWGothicL-BookOblique"
+@map font 50 to "URWGothicL-Demi", "URWGothicL-Demi"
+@map font 51 to "URWGothicL-DemiOblique", "URWGothicL-DemiOblique"
+@map font 52 to "URWPalladioL-Bold", "URWPalladioL-Bold"
+@map font 53 to "URWPalladioL-BoldItalic", "URWPalladioL-BoldItalic"
+@map font 54 to "URWPalladioL-Italic", "URWPalladioL-Italic"
+@map font 55 to "URWPalladioL-Roman", "URWPalladioL-Roman"
+@map font 56 to "Utopia-Bold", "Utopia-Bold"
+@map font 57 to "Utopia-BoldItalic", "Utopia-BoldItalic"
+@map font 58 to "Utopia-Italic", "Utopia-Italic"
+@map font 59 to "Utopia-Regular", "Utopia-Regular"
+@map font 13 to "ZapfDingbats", "ZapfDingbats"
+@map color 0 to (255, 255, 255), "white"
+@map color 1 to (0, 0, 0), "black"
+@map color 2 to (255, 0, 0), "red"
+@map color 3 to (0, 255, 0), "green"
+@map color 4 to (0, 0, 255), "blue"
+@map color 5 to (255, 255, 0), "yellow"
+@map color 6 to (188, 143, 143), "brown"
+@map color 7 to (220, 220, 220), "grey"
+@map color 8 to (148, 0, 211), "violet"
+@map color 9 to (0, 255, 255), "cyan"
+@map color 10 to (255, 0, 255), "magenta"
+@map color 11 to (255, 165, 0), "orange"
+@map color 12 to (114, 33, 188), "indigo"
+@map color 13 to (103, 7, 72), "maroon"
+@map color 14 to (64, 224, 208), "turquoise"
+@map color 15 to (0, 139, 0), "green4"
+@reference date 0
+@date wrap off
+@date wrap year 1950
+@default linewidth 1.0
+@default linestyle 1
+@default color 1
+@default pattern 1
+@default font 0
+@default char size 1.000000
+@default symbol size 1.000000
+@default sformat "%.8g"
+@background color 0
+@page background fill on
+@timestamp off
+@timestamp 0.03, 0.03
+@timestamp color 1
+@timestamp rot 0
+@timestamp font 0
+@timestamp char size 1.000000
+@timestamp def "Tue Jun 14 18:29:55 2016"
+@r0 off
+@link r0 to g0
+@r0 type above
+@r0 linestyle 1
+@r0 linewidth 1.0
+@r0 color 1
+@r0 line 0, 0, 0, 0
+@r1 off
+@link r1 to g0
+@r1 type above
+@r1 linestyle 1
+@r1 linewidth 1.0
+@r1 color 1
+@r1 line 0, 0, 0, 0
+@r2 off
+@link r2 to g0
+@r2 type above
+@r2 linestyle 1
+@r2 linewidth 1.0
+@r2 color 1
+@r2 line 0, 0, 0, 0
+@r3 off
+@link r3 to g0
+@r3 type above
+@r3 linestyle 1
+@r3 linewidth 1.0
+@r3 color 1
+@r3 line 0, 0, 0, 0
+@r4 off
+@link r4 to g0
+@r4 type above
+@r4 linestyle 1
+@r4 linewidth 1.0
+@r4 color 1
+@r4 line 0, 0, 0, 0
+@g0 on
+@g0 hidden false
+@g0 type XY
+@g0 stacked false
+@g0 bar hgap 0.000000
+@g0 fixedpoint off
+@g0 fixedpoint type 0
+@g0 fixedpoint xy 0.000000, 0.000000
+@g0 fixedpoint format general general
+@g0 fixedpoint prec 6, 6
+@with g0
+@    world -90, 0, 90, 30000
+@    stack world 0, 0, 0, 0
+@    znorm 1
+@    view 0.150000, 0.150000, 1.150000, 0.850000
+@    title ""
+@    title font 0
+@    title size 1.500000
+@    title color 1
+@    subtitle ""
+@    subtitle font 0
+@    subtitle size 1.000000
+@    subtitle color 1
+@    xaxes scale Normal
+@    yaxes scale Normal
+@    xaxes invert off
+@    yaxes invert off
+@    xaxis  on
+@    xaxis  type zero false
+@    xaxis  offset 0.000000 , 0.000000
+@    xaxis  bar on
+@    xaxis  bar color 1
+@    xaxis  bar linestyle 1
+@    xaxis  bar linewidth 1.0
+@    xaxis  label ""
+@    xaxis  label layout para
+@    xaxis  label place auto
+@    xaxis  label char size 1.000000
+@    xaxis  label font 0
+@    xaxis  label color 1
+@    xaxis  label place normal
+@    xaxis  tick on
+@    xaxis  tick major 50
+@    xaxis  tick minor ticks 1
+@    xaxis  tick default 6
+@    xaxis  tick place rounded true
+@    xaxis  tick in
+@    xaxis  tick major size 1.000000
+@    xaxis  tick major color 1
+@    xaxis  tick major linewidth 1.0
+@    xaxis  tick major linestyle 1
+@    xaxis  tick major grid off
+@    xaxis  tick minor color 1
+@    xaxis  tick minor linewidth 1.0
+@    xaxis  tick minor linestyle 1
+@    xaxis  tick minor grid off
+@    xaxis  tick minor size 0.500000
+@    xaxis  ticklabel on
+@    xaxis  ticklabel format general
+@    xaxis  ticklabel prec 5
+@    xaxis  ticklabel formula ""
+@    xaxis  ticklabel append ""
+@    xaxis  ticklabel prepend ""
+@    xaxis  ticklabel angle 0
+@    xaxis  ticklabel skip 0
+@    xaxis  ticklabel stagger 0
+@    xaxis  ticklabel place normal
+@    xaxis  ticklabel offset auto
+@    xaxis  ticklabel offset 0.000000 , 0.010000
+@    xaxis  ticklabel start type auto
+@    xaxis  ticklabel start 0.000000
+@    xaxis  ticklabel stop type auto
+@    xaxis  ticklabel stop 0.000000
+@    xaxis  ticklabel char size 1.000000
+@    xaxis  ticklabel font 0
+@    xaxis  ticklabel color 1
+@    xaxis  tick place both
+@    xaxis  tick spec type none
+@    yaxis  on
+@    yaxis  type zero false
+@    yaxis  offset 0.000000 , 0.000000
+@    yaxis  bar on
+@    yaxis  bar color 1
+@    yaxis  bar linestyle 1
+@    yaxis  bar linewidth 1.0
+@    yaxis  label ""
+@    yaxis  label layout para
+@    yaxis  label place auto
+@    yaxis  label char size 1.000000
+@    yaxis  label font 0
+@    yaxis  label color 1
+@    yaxis  label place normal
+@    yaxis  tick on
+@    yaxis  tick major 5000
+@    yaxis  tick minor ticks 1
+@    yaxis  tick default 6
+@    yaxis  tick place rounded true
+@    yaxis  tick in
+@    yaxis  tick major size 1.000000
+@    yaxis  tick major color 1
+@    yaxis  tick major linewidth 1.0
+@    yaxis  tick major linestyle 1
+@    yaxis  tick major grid off
+@    yaxis  tick minor color 1
+@    yaxis  tick minor linewidth 1.0
+@    yaxis  tick minor linestyle 1
+@    yaxis  tick minor grid off
+@    yaxis  tick minor size 0.500000
+@    yaxis  ticklabel on
+@    yaxis  ticklabel format general
+@    yaxis  ticklabel prec 5
+@    yaxis  ticklabel formula ""
+@    yaxis  ticklabel append ""
+@    yaxis  ticklabel prepend ""
+@    yaxis  ticklabel angle 0
+@    yaxis  ticklabel skip 0
+@    yaxis  ticklabel stagger 0
+@    yaxis  ticklabel place normal
+@    yaxis  ticklabel offset auto
+@    yaxis  ticklabel offset 0.000000 , 0.010000
+@    yaxis  ticklabel start type auto
+@    yaxis  ticklabel start 0.000000
+@    yaxis  ticklabel stop type auto
+@    yaxis  ticklabel stop 0.000000
+@    yaxis  ticklabel char size 1.000000
+@    yaxis  ticklabel font 0
+@    yaxis  ticklabel color 1
+@    yaxis  tick place both
+@    yaxis  tick spec type none
+@    altxaxis  off
+@    altyaxis  off
+@    legend on
+@    legend loctype view
+@    legend 0.85, 0.8
+@    legend box color 1
+@    legend box pattern 1
+@    legend box linewidth 1.0
+@    legend box linestyle 1
+@    legend box fill color 0
+@    legend box fill pattern 1
+@    legend font 0
+@    legend char size 1.000000
+@    legend color 1
+@    legend length 4
+@    legend vgap 1
+@    legend hgap 1
+@    legend invert false
+@    frame type 0
+@    frame linestyle 1
+@    frame linewidth 1.0
+@    frame color 1
+@    frame pattern 1
+@    frame background color 0
+@    frame background pattern 0
+@    s0 hidden false
+@    s0 type xy
+@    s0 symbol 0
+@    s0 symbol size 1.000000
+@    s0 symbol color 1
+@    s0 symbol pattern 1
+@    s0 symbol fill color 1
+@    s0 symbol fill pattern 0
+@    s0 symbol linewidth 1.0
+@    s0 symbol linestyle 1
+@    s0 symbol char 65
+@    s0 symbol char font 0
+@    s0 symbol skip 0
+@    s0 line type 1
+@    s0 line linestyle 1
+@    s0 line linewidth 2.0
+@    s0 line color 1
+@    s0 line pattern 1
+@    s0 baseline type 0
+@    s0 baseline off
+@    s0 dropline off
+@    s0 fill type 0
+@    s0 fill rule 0
+@    s0 fill color 1
+@    s0 fill pattern 1
+@    s0 avalue off
+@    s0 avalue type 2
+@    s0 avalue char size 1.000000
+@    s0 avalue font 0
+@    s0 avalue color 1
+@    s0 avalue rot 0
+@    s0 avalue format general
+@    s0 avalue prec 3
+@    s0 avalue prepend ""
+@    s0 avalue append ""
+@    s0 avalue offset 0.000000 , 0.000000
+@    s0 errorbar on
+@    s0 errorbar place both
+@    s0 errorbar color 1
+@    s0 errorbar pattern 1
+@    s0 errorbar size 1.000000
+@    s0 errorbar linewidth 1.0
+@    s0 errorbar linestyle 1
+@    s0 errorbar riser linewidth 1.0
+@    s0 errorbar riser linestyle 1
+@    s0 errorbar riser clip off
+@    s0 errorbar riser clip length 0.100000
+@    s0 comment "Cols 1:2"
+@    s0 legend  "Riesz"
+@    s1 hidden false
+@    s1 type xy
+@    s1 symbol 0
+@    s1 symbol size 1.000000
+@    s1 symbol color 2
+@    s1 symbol pattern 1
+@    s1 symbol fill color 2
+@    s1 symbol fill pattern 0
+@    s1 symbol linewidth 1.0
+@    s1 symbol linestyle 1
+@    s1 symbol char 65
+@    s1 symbol char font 0
+@    s1 symbol skip 0
+@    s1 line type 1
+@    s1 line linestyle 1
+@    s1 line linewidth 2.0
+@    s1 line color 2
+@    s1 line pattern 1
+@    s1 baseline type 0
+@    s1 baseline off
+@    s1 dropline off
+@    s1 fill type 0
+@    s1 fill rule 0
+@    s1 fill color 1
+@    s1 fill pattern 1
+@    s1 avalue off
+@    s1 avalue type 2
+@    s1 avalue char size 1.000000
+@    s1 avalue font 0
+@    s1 avalue color 1
+@    s1 avalue rot 0
+@    s1 avalue format general
+@    s1 avalue prec 3
+@    s1 avalue prepend ""
+@    s1 avalue append ""
+@    s1 avalue offset 0.000000 , 0.000000
+@    s1 errorbar on
+@    s1 errorbar place both
+@    s1 errorbar color 2
+@    s1 errorbar pattern 1
+@    s1 errorbar size 1.000000
+@    s1 errorbar linewidth 1.0
+@    s1 errorbar linestyle 1
+@    s1 errorbar riser linewidth 1.0
+@    s1 errorbar riser linestyle 1
+@    s1 errorbar riser clip off
+@    s1 errorbar riser clip length 0.100000
+@    s1 comment "Cols 1:2"
+@    s1 legend  "Gauss"
+@    s2 hidden false
+@    s2 type xy
+@    s2 symbol 0
+@    s2 symbol size 1.000000
+@    s2 symbol color 4
+@    s2 symbol pattern 1
+@    s2 symbol fill color 4
+@    s2 symbol fill pattern 0
+@    s2 symbol linewidth 1.0
+@    s2 symbol linestyle 1
+@    s2 symbol char 65
+@    s2 symbol char font 0
+@    s2 symbol skip 0
+@    s2 line type 1
+@    s2 line linestyle 1
+@    s2 line linewidth 2.0
+@    s2 line color 4
+@    s2 line pattern 1
+@    s2 baseline type 0
+@    s2 baseline off
+@    s2 dropline off
+@    s2 fill type 0
+@    s2 fill rule 0
+@    s2 fill color 1
+@    s2 fill pattern 1
+@    s2 avalue off
+@    s2 avalue type 2
+@    s2 avalue char size 1.000000
+@    s2 avalue font 0
+@    s2 avalue color 1
+@    s2 avalue rot 0
+@    s2 avalue format general
+@    s2 avalue prec 3
+@    s2 avalue prepend ""
+@    s2 avalue append ""
+@    s2 avalue offset 0.000000 , 0.000000
+@    s2 errorbar on
+@    s2 errorbar place both
+@    s2 errorbar color 4
+@    s2 errorbar pattern 1
+@    s2 errorbar size 1.000000
+@    s2 errorbar linewidth 1.0
+@    s2 errorbar linestyle 1
+@    s2 errorbar riser linewidth 1.0
+@    s2 errorbar riser linestyle 1
+@    s2 errorbar riser clip off
+@    s2 errorbar riser clip length 0.100000
+@    s2 comment "Cols 1:2"
+@    s2 legend  "Finite Diff"
+@    s3 hidden false
+@    s3 type xy
+@    s3 symbol 0
+@    s3 symbol size 1.000000
+@    s3 symbol color 6
+@    s3 symbol pattern 1
+@    s3 symbol fill color 6
+@    s3 symbol fill pattern 0
+@    s3 symbol linewidth 1.0
+@    s3 symbol linestyle 1
+@    s3 symbol char 65
+@    s3 symbol char font 0
+@    s3 symbol skip 0
+@    s3 line type 1
+@    s3 line linestyle 1
+@    s3 line linewidth 2.0
+@    s3 line color 6
+@    s3 line pattern 1
+@    s3 baseline type 0
+@    s3 baseline off
+@    s3 dropline off
+@    s3 fill type 0
+@    s3 fill rule 0
+@    s3 fill color 1
+@    s3 fill pattern 1
+@    s3 avalue off
+@    s3 avalue type 2
+@    s3 avalue char size 1.000000
+@    s3 avalue font 0
+@    s3 avalue color 1
+@    s3 avalue rot 0
+@    s3 avalue format general
+@    s3 avalue prec 3
+@    s3 avalue prepend ""
+@    s3 avalue append ""
+@    s3 avalue offset 0.000000 , 0.000000
+@    s3 errorbar on
+@    s3 errorbar place both
+@    s3 errorbar color 6
+@    s3 errorbar pattern 1
+@    s3 errorbar size 1.000000
+@    s3 errorbar linewidth 1.0
+@    s3 errorbar linestyle 1
+@    s3 errorbar riser linewidth 1.0
+@    s3 errorbar riser linestyle 1
+@    s3 errorbar riser clip off
+@    s3 errorbar riser clip length 0.100000
+@    s3 comment "Cols 1:2"
+@    s3 legend  "CubicSpline"
+@    s4 hidden true
+@    s4 type xy
+@    s4 symbol 0
+@    s4 symbol size 1.000000
+@    s4 symbol color 1
+@    s4 symbol pattern 1
+@    s4 symbol fill color 1
+@    s4 symbol fill pattern 0
+@    s4 symbol linewidth 1.0
+@    s4 symbol linestyle 1
+@    s4 symbol char 65
+@    s4 symbol char font 0
+@    s4 symbol skip 0
+@    s4 line type 1
+@    s4 line linestyle 1
+@    s4 line linewidth 1.0
+@    s4 line color 1
+@    s4 line pattern 1
+@    s4 baseline type 0
+@    s4 baseline off
+@    s4 dropline off
+@    s4 fill type 0
+@    s4 fill rule 0
+@    s4 fill color 1
+@    s4 fill pattern 1
+@    s4 avalue off
+@    s4 avalue type 2
+@    s4 avalue char size 1.000000
+@    s4 avalue font 0
+@    s4 avalue color 1
+@    s4 avalue rot 0
+@    s4 avalue format general
+@    s4 avalue prec 3
+@    s4 avalue prepend ""
+@    s4 avalue append ""
+@    s4 avalue offset 0.000000 , 0.000000
+@    s4 errorbar on
+@    s4 errorbar place both
+@    s4 errorbar color 1
+@    s4 errorbar pattern 1
+@    s4 errorbar size 1.000000
+@    s4 errorbar linewidth 1.0
+@    s4 errorbar linestyle 1
+@    s4 errorbar riser linewidth 1.0
+@    s4 errorbar riser linestyle 1
+@    s4 errorbar riser clip off
+@    s4 errorbar riser clip length 0.100000
+@    s4 comment "Y minima of graph 0"
+@    s4 legend  ""
+@    s5 hidden true
+@    s5 type xy
+@    s5 symbol 0
+@    s5 symbol size 1.000000
+@    s5 symbol color 6
+@    s5 symbol pattern 1
+@    s5 symbol fill color 6
+@    s5 symbol fill pattern 0
+@    s5 symbol linewidth 1.0
+@    s5 symbol linestyle 1
+@    s5 symbol char 65
+@    s5 symbol char font 0
+@    s5 symbol skip 0
+@    s5 line type 1
+@    s5 line linestyle 1
+@    s5 line linewidth 1.0
+@    s5 line color 6
+@    s5 line pattern 1
+@    s5 baseline type 0
+@    s5 baseline off
+@    s5 dropline off
+@    s5 fill type 0
+@    s5 fill rule 0
+@    s5 fill color 1
+@    s5 fill pattern 1
+@    s5 avalue off
+@    s5 avalue type 2
+@    s5 avalue char size 1.000000
+@    s5 avalue font 0
+@    s5 avalue color 1
+@    s5 avalue rot 0
+@    s5 avalue format general
+@    s5 avalue prec 3
+@    s5 avalue prepend ""
+@    s5 avalue append ""
+@    s5 avalue offset 0.000000 , 0.000000
+@    s5 errorbar on
+@    s5 errorbar place both
+@    s5 errorbar color 6
+@    s5 errorbar pattern 1
+@    s5 errorbar size 1.000000
+@    s5 errorbar linewidth 1.0
+@    s5 errorbar linestyle 1
+@    s5 errorbar riser linewidth 1.0
+@    s5 errorbar riser linestyle 1
+@    s5 errorbar riser clip off
+@    s5 errorbar riser clip length 0.100000
+@    s5 comment "Y maxima of graph 0"
+@    s5 legend  ""
+@    s6 hidden false
+@    s6 type xy
+@    s6 symbol 0
+@    s6 symbol size 1.000000
+@    s6 symbol color 1
+@    s6 symbol pattern 1
+@    s6 symbol fill color 1
+@    s6 symbol fill pattern 0
+@    s6 symbol linewidth 1.0
+@    s6 symbol linestyle 1
+@    s6 symbol char 65
+@    s6 symbol char font 0
+@    s6 symbol skip 0
+@    s6 line type 1
+@    s6 line linestyle 1
+@    s6 line linewidth 1.0
+@    s6 line color 1
+@    s6 line pattern 1
+@    s6 baseline type 0
+@    s6 baseline off
+@    s6 dropline off
+@    s6 fill type 0
+@    s6 fill rule 0
+@    s6 fill color 1
+@    s6 fill pattern 1
+@    s6 avalue off
+@    s6 avalue type 2
+@    s6 avalue char size 1.000000
+@    s6 avalue font 0
+@    s6 avalue color 1
+@    s6 avalue rot 0
+@    s6 avalue format general
+@    s6 avalue prec 3
+@    s6 avalue prepend ""
+@    s6 avalue append ""
+@    s6 avalue offset 0.000000 , 0.000000
+@    s6 errorbar on
+@    s6 errorbar place both
+@    s6 errorbar color 1
+@    s6 errorbar pattern 1
+@    s6 errorbar size 1.000000
+@    s6 errorbar linewidth 1.0
+@    s6 errorbar linestyle 1
+@    s6 errorbar riser linewidth 1.0
+@    s6 errorbar riser linestyle 1
+@    s6 errorbar riser clip off
+@    s6 errorbar riser clip length 0.100000
+@    s6 comment ""
+@    s6 legend  "Riesz"
+@    s7 hidden false
+@    s7 type xy
+@    s7 symbol 0
+@    s7 symbol size 1.000000
+@    s7 symbol color 2
+@    s7 symbol pattern 1
+@    s7 symbol fill color 2
+@    s7 symbol fill pattern 0
+@    s7 symbol linewidth 1.0
+@    s7 symbol linestyle 1
+@    s7 symbol char 65
+@    s7 symbol char font 0
+@    s7 symbol skip 0
+@    s7 line type 1
+@    s7 line linestyle 1
+@    s7 line linewidth 1.0
+@    s7 line color 2
+@    s7 line pattern 1
+@    s7 baseline type 0
+@    s7 baseline off
+@    s7 dropline off
+@    s7 fill type 0
+@    s7 fill rule 0
+@    s7 fill color 1
+@    s7 fill pattern 1
+@    s7 avalue off
+@    s7 avalue type 2
+@    s7 avalue char size 1.000000
+@    s7 avalue font 0
+@    s7 avalue color 1
+@    s7 avalue rot 0
+@    s7 avalue format general
+@    s7 avalue prec 3
+@    s7 avalue prepend ""
+@    s7 avalue append ""
+@    s7 avalue offset 0.000000 , 0.000000
+@    s7 errorbar on
+@    s7 errorbar place both
+@    s7 errorbar color 2
+@    s7 errorbar pattern 1
+@    s7 errorbar size 1.000000
+@    s7 errorbar linewidth 1.0
+@    s7 errorbar linestyle 1
+@    s7 errorbar riser linewidth 1.0
+@    s7 errorbar riser linestyle 1
+@    s7 errorbar riser clip off
+@    s7 errorbar riser clip length 0.100000
+@    s7 comment ""
+@    s7 legend  "Gauss"
+@    s8 hidden false
+@    s8 type xy
+@    s8 symbol 0
+@    s8 symbol size 1.000000
+@    s8 symbol color 4
+@    s8 symbol pattern 1
+@    s8 symbol fill color 4
+@    s8 symbol fill pattern 0
+@    s8 symbol linewidth 1.0
+@    s8 symbol linestyle 1
+@    s8 symbol char 65
+@    s8 symbol char font 0
+@    s8 symbol skip 0
+@    s8 line type 1
+@    s8 line linestyle 1
+@    s8 line linewidth 1.0
+@    s8 line color 4
+@    s8 line pattern 1
+@    s8 baseline type 0
+@    s8 baseline off
+@    s8 dropline off
+@    s8 fill type 0
+@    s8 fill rule 0
+@    s8 fill color 1
+@    s8 fill pattern 1
+@    s8 avalue off
+@    s8 avalue type 2
+@    s8 avalue char size 1.000000
+@    s8 avalue font 0
+@    s8 avalue color 1
+@    s8 avalue rot 0
+@    s8 avalue format general
+@    s8 avalue prec 3
+@    s8 avalue prepend ""
+@    s8 avalue append ""
+@    s8 avalue offset 0.000000 , 0.000000
+@    s8 errorbar on
+@    s8 errorbar place both
+@    s8 errorbar color 4
+@    s8 errorbar pattern 1
+@    s8 errorbar size 1.000000
+@    s8 errorbar linewidth 1.0
+@    s8 errorbar linestyle 1
+@    s8 errorbar riser linewidth 1.0
+@    s8 errorbar riser linestyle 1
+@    s8 errorbar riser clip off
+@    s8 errorbar riser clip length 0.100000
+@    s8 comment ""
+@    s8 legend  "Finite Differnce"
+@    s9 hidden false
+@    s9 type xy
+@    s9 symbol 0
+@    s9 symbol size 1.000000
+@    s9 symbol color 6
+@    s9 symbol pattern 1
+@    s9 symbol fill color 6
+@    s9 symbol fill pattern 0
+@    s9 symbol linewidth 1.0
+@    s9 symbol linestyle 1
+@    s9 symbol char 65
+@    s9 symbol char font 0
+@    s9 symbol skip 0
+@    s9 line type 1
+@    s9 line linestyle 1
+@    s9 line linewidth 1.0
+@    s9 line color 6
+@    s9 line pattern 1
+@    s9 baseline type 0
+@    s9 baseline off
+@    s9 dropline off
+@    s9 fill type 0
+@    s9 fill rule 0
+@    s9 fill color 1
+@    s9 fill pattern 1
+@    s9 avalue off
+@    s9 avalue type 2
+@    s9 avalue char size 1.000000
+@    s9 avalue font 0
+@    s9 avalue color 1
+@    s9 avalue rot 0
+@    s9 avalue format general
+@    s9 avalue prec 3
+@    s9 avalue prepend ""
+@    s9 avalue append ""
+@    s9 avalue offset 0.000000 , 0.000000
+@    s9 errorbar on
+@    s9 errorbar place both
+@    s9 errorbar color 6
+@    s9 errorbar pattern 1
+@    s9 errorbar size 1.000000
+@    s9 errorbar linewidth 1.0
+@    s9 errorbar linestyle 1
+@    s9 errorbar riser linewidth 1.0
+@    s9 errorbar riser linestyle 1
+@    s9 errorbar riser clip off
+@    s9 errorbar riser clip length 0.100000
+@    s9 comment ""
+@    s9 legend  "Cubic"
+@target G0.S0
+@type xy
+-90 38.8047
+-89 30.2016
+-88 64.5302
+-87 102.0024
+-86 70.1904
+-85 138.5832
+-84 126.4045
+-83 55.6133
+-82 112.4321
+-81 36.3445
+-80 95.8
+-79 41.1035
+-78 150.6838
+-77 147.1797
+-76 104.6853
+-75 132.4726
+-74 200.8742
+-73 217.1426
+-72 247.0051
+-71 236.2607
+-70 291.4707
+-69 319.0383
+-68 359.3987
+-67 419.0202
+-66 502.5703
+-65 475.7343
+-64 502.927
+-63 483.9331
+-62 559.1286
+-61 677.8677
+-60 764.6645
+-59 759.0263
+-58 926.2339
+-57 938.0625
+-56 1036.5283
+-55 1073.9677
+-54 1231.4424
+-53 1274.0249
+-52 1407.6465
+-51 1458.3037
+-50 1505.7143
+-49 1613.5346
+-48 1774.3051
+-47 1899.4936
+-46 2052.8237
+-45 2180.8554
+-44 2142.3315
+-43 2345.4707
+-42 2482.1211
+-41 2630.5468
+-40 2882.2783
+-39 2976.8735
+-38 3182.0395
+-37 3302.5385
+-36 3458.8047
+-35 3698.0742
+-34 3861.0561
+-33 4082.7021
+-32 4181.916
+-31 4383.52
+-30 4586.7192
+-29 4918.0669
+-28 5123.9516
+-27 5339.2915
+-26 5690.6733
+-25 5807.0337
+-24 6152.9555
+-23 6440.7446
+-22 6895.3647
+-21 7105.5366
+-20 7391.1811
+-19 7654.3374
+-18 8090.3413
+-17 8467.7466
+-16 8591.31
+-15 8816.9653
+-14 8958.7544
+-13 9342.2329
+-12 9706.3471
+-11 10190.805
+-10 10417.911
+-9 10748.812
+-8 11113.81
+-7 11236.747
+-6 11522.497
+-5 11646.772
+-4 11697.069
+-3 11777.441
+-2 11889.423
+-1 11924.772
+0 11975.655
+1 12043.697
+2 11908.187
+3 11874.023
+4 11814.385
+5 11614.174
+6 11451.421
+7 11412.477
+8 11294.503
+9 11130.447
+10 10893.957
+11 10482.334
+12 10240.359
+13 9904.9311
+14 9288.5005
+15 9059.561
+16 8847.9116
+17 8604.1284
+18 8235.2446
+19 7863.2026
+20 7495.6762
+21 7166.1577
+22 6876.3725
+23 6627.1762
+24 6297.3022
+25 6220.7348
+26 5950.9956
+27 5493.4077
+28 5196.6958
+29 5000.8218
+30 4786.9507
+31 4571.7915
+32 4381.9253
+33 4099.25
+34 3961.7632
+35 3566.8642
+36 3380.0063
+37 3208.5034
+38 3117.9936
+39 2798.1543
+40 2613.6572
+41 2368.6089
+42 2131.2988
+43 2104.4057
+44 1968.2412
+45 1830.3071
+46 1656.1577
+47 1502.8462
+48 1457.0644
+49 1356.688
+50 1300.3408
+51 1339.9448
+52 1197.9267
+53 1042.7636
+54 1018.4839
+55 931.1709
+56 920.5932
+57 923.2343
+58 892.2007
+59 759.0415
+60 622.0796
+61 547.4074
+62 568.4206
+63 497.0659
+64 522.0254
+65 396.7341
+66 282.7568
+67 241.5049
+68 211.6989
+69 138.9973
+70 129.7375
+71 89.9194
+72 27.9892
+73 20.2719
+74 92.094
+75 68.6819
+76 103.1865
+77 47.218
+78 64.209
+79 94.8745
+80 129.9001
+81 146.9331
+82 81.4565
+83 101.9094
+84 124.2204
+85 38.2217
+86 8.602
+87 9.0163
+88 4.5474735e-13
+89 51.5176
+&
+@target G0.S1
+@type xy
+-90 793.915
+-89 799.935
+-88 789.5337
+-87 733.4956
+-86 780.1333
+-85 804.936
+-84 797.7163
+-83 781.4101
+-82 702.0156
+-81 661.5893
+-80 647.5693
+-79 644.0561
+-78 517.2822
+-77 448.1128
+-76 405.9402
+-75 384.4853
+-74 297.6599
+-73 260.5298
+-72 251.6411
+-71 230.9248
+-70 216.53
+-69 148.4475
+-68 166.2636
+-67 182.2807
+-66 127.3803
+-65 89.8308
+-64 140.782
+-63 248.0234
+-62 164.1135
+-61 206.2737
+-60 143.1257
+-59 183.594
+-58 171.3703
+-57 235.0593
+-56 154.1252
+-55 196.1396
+-54 270.5161
+-53 354.3171
+-52 376.8071
+-51 421.4966
+-50 388.3667
+-49 511.3222
+-48 549.9565
+-47 493.8457
+-46 617.4765
+-45 649.3091
+-44 742.2138
+-43 739.5942
+-42 928.1108
+-41 985.5962
+-40 1100.4057
+-39 1191.6172
+-38 1245.8501
+-37 1434.561
+-36 1545.0923
+-35 1611.4443
+-34 1753.7446
+-33 1939.5464
+-32 2142.8193
+-31 2329.978
+-30 2537.0742
+-29 2665.1425
+-28 2936.4487
+-27 3113.1289
+-26 3329.6279
+-25 3546.9502
+-24 3759.8818
+-23 3993.3369
+-22 4354.955
+-21 4623.4555
+-20 4896.1919
+-19 5088.895
+-18 5498.7729
+-17 5921.313
+-16 6287.9741
+-15 6600.1821
+-14 7016.103
+-13 7358.9721
+-12 7943.0688
+-11 8230.7026
+-10 8477.188
+-9 8943.8452
+-8 9232.437
+-7 9428.9028
+-6 9430.4594
+-5 9812.9448
+-4 9890.7466
+-3 10126.811
+-2 10353.626
+-1 10271.638
+0 10357.739
+1 10197.753
+2 10181.082
+3 10182.441
+4 10019.598
+5 9785.5786
+6 9693.895
+7 9477.9926
+8 9338.3882
+9 8830.9975
+10 8239.3803
+11 7838.9712
+12 7692.3237
+13 7414.0766
+14 7080.6645
+15 6671.7954
+16 6502.8061
+17 6087.7475
+18 5798.4467
+19 5402.6801
+20 5281.145
+21 4801.771
+22 4596.0874
+23 4338.0927
+24 4110.1967
+25 3721.5664
+26 3528.6548
+27 3305.4521
+28 3068.5996
+29 2740.6626
+30 2636.9804
+31 2502.208
+32 2375.3911
+33 2074.622
+34 1901.3423
+35 1839.8579
+36 1744.6386
+37 1517.5625
+38 1410.9585
+39 1291.1235
+40 1161.0703
+41 1095.3305
+42 941.8701
+43 789.9585
+44 730.6211
+45 675.7304
+46 556.9497
+47 546.395
+48 473.7231
+49 368.6577
+50 351.3166
+51 302.3752
+52 203.5996
+53 184.0027
+54 139.6379
+55 204.1316
+56 182.1208
+57 115.04
+58 57.334
+59 0
+60 14.8679
+61 82.1284
+62 93.6579
+63 89.8535
+64 62.7585
+65 116.29
+66 113.4485
+67 51.2534
+68 126.9746
+69 107.0559
+70 84.9636
+71 240.5815
+72 251.7268
+73 225.2475
+74 320.9778
+75 287.6872
+76 323.7566
+77 436.7312
+78 512.4643
+79 481.435
+80 567.6142
+81 559.5429
+82 609.313
+83 654.8471
+84 727.2007
+85 766.6216
+86 891.3891
+87 763.3462
+88 838.9414
+89 807.5512
+&
+@target G0.S2
+@type xy
+-90 4050.6563
+-89 4018.6739
+-88 3936.9893
+-87 3964.0884
+-86 3801.0787
+-85 3659.1192
+-84 3555.1656
+-83 3277.4986
+-82 3016.7247
+-81 2772.7505
+-80 2616.5289
+-79 2475.1368
+-78 2123.3916
+-77 2017.5787
+-76 1822.8089
+-75 1662.1109
+-74 1529.502
+-73 1375.1123
+-72 1262.8643
+-71 1063.4212
+-70 1009.8033
+-69 931.3106
+-68 801.1853
+-67 752.1849
+-66 627.2361
+-65 526.149
+-64 481.4851
+-63 472.8269
+-62 343.2972
+-61 318.8914
+-60 312.2769
+-59 170.7039
+-58 200.4644
+-57 115.7798
+-56 117.357
+-55 98.4251
+-54 89.0271
+-53 79.7334
+-52 98.2854
+-51 61.7832
+-50 82.4231
+-49 35.2571
+-48 29.5237
+-47 67.5347
+-46 82.7085
+-45 132.2381
+-44 106.5945
+-43 223.0779
+-42 225.1016
+-41 269.9559
+-40 279.0049
+-39 411.208
+-38 464.5364
+-37 541.7703
+-36 548.6534
+-35 640.9168
+-34 747.1954
+-33 869.6502
+-32 1084.0445
+-31 1159.1255
+-30 1298.7015
+-29 1484.6861
+-28 1649.0008
+-27 1859.3616
+-26 2062.3633
+-25 2294.6397
+-24 2591.3164
+-23 2841.7774
+-22 3118.5674
+-21 3532.2662
+-20 3976.3008
+-19 4281.2105
+-18 4756.2994
+-17 5176.8706
+-16 5863.9576
+-15 6483.6407
+-14 6975.5362
+-13 7688.4844
+-12 8460.1602
+-11 9178.3077
+-10 10163.643
+-9 11145.13
+-8 11989.095
+-7 12766.904
+-6 13493.912
+-5 14198.798
+-4 14945.685
+-3 15547.581
+-2 16024.21
+-1 16264.038
+0 16222.144
+1 16181.948
+2 15888.812
+3 15497.857
+4 15070.81
+5 14606.72
+6 13691.735
+7 12734.776
+8 11696.077
+9 10886.336
+10 10087.683
+11 9348.1934
+12 8635.3682
+13 7988.4327
+14 7273.6836
+15 6555.2403
+16 5957.2417
+17 5516.8526
+18 5011.5391
+19 4521.1075
+20 4132.9351
+21 3723.8658
+22 3280.605
+23 2972.0455
+24 2699.4649
+25 2366.2574
+26 2149.7261
+27 1924.8511
+28 1751.389
+29 1576.0769
+30 1421.9976
+31 1227.1853
+32 1124.0943
+33 941.9832
+34 837.4349
+35 755.0332
+36 610.2024
+37 523.5628
+38 467.1409
+39 406.8189
+40 341.9593
+41 246.8277
+42 239.5464
+43 183.7857
+44 134.5501
+45 93.1897
+46 82.0125
+47 56.7718
+48 69.3147
+49 39.315
+50 50.9002
+51 4.5474735e-13
+52 42.3589
+53 30.4544
+54 53.1983
+55 50.7808
+56 41.7215
+57 66.1788
+58 107.9327
+59 148.0271
+60 160.4432
+61 216.1995
+62 340.8033
+63 381.014
+64 454.2317
+65 500.2601
+66 518.9117
+67 582.1185
+68 774.1101
+69 845.6619
+70 969.9346
+71 1013.5115
+72 1171.2063
+73 1384.1636
+74 1445.8052
+75 1617.5186
+76 1796.5318
+77 1966.8208
+78 2170.0284
+79 2437.8223
+80 2455.4493
+81 2740.0918
+82 3017.7413
+83 3245.4673
+84 3280.9629
+85 3495.0796
+86 3791.001
+87 3958.106
+88 4022.2676
+89 4072.7085
+&
+@target G0.S3
+@type xy
+-90 8308.9563
+-89 8250.6995
+-88 8148.9475
+-87 7787.6175
+-86 7143.4661
+-85 6544.2127
+-84 5845.3738
+-83 5291.573
+-82 4765.8342
+-81 4238.4622
+-80 3815.2659
+-79 3360.9275
+-78 2977.241
+-77 2672.2498
+-76 2311.7249
+-75 2092.3882
+-74 1802.2847
+-73 1556.2483
+-72 1409.2818
+-71 1284.3474
+-70 1136.6226
+-69 1015.44
+-68 852.3599
+-67 739.9782
+-66 651.956
+-65 582.9857
+-64 518.5712
+-63 392.9905
+-62 327.4468
+-61 284.6558
+-60 269.7512
+-59 210.8685
+-58 199.1771
+-57 155.1583
+-56 120.4695
+-55 83.766
+-54 80.582
+-53 51.7509
+-52 23.5885
+-51 21.5291
+-50 21.0087
+-49 3.2706
+-48 0
+-47 16.4628
+-46 23.642
+-45 25.4043
+-44 47.8467
+-43 45.3932
+-42 73.7243
+-41 68.3107
+-40 93.8563
+-39 126.6245
+-38 172.6476
+-37 215.6748
+-36 245.6006
+-35 284.9965
+-34 332.5235
+-33 395.1129
+-32 457.4119
+-31 519.4719
+-30 618.9299
+-29 747.8143
+-28 831.5902
+-27 944.2238
+-26 1087.3648
+-25 1231.011
+-24 1431.395
+-23 1613.6587
+-22 1865.2962
+-21 2188.5261
+-20 2396.5044
+-19 2758.5261
+-18 3153.7361
+-17 3644.4739
+-16 4167.8386
+-15 4837.8836
+-14 5584.8455
+-13 6379.7044
+-12 7436.4475
+-11 8572.6223
+-10 9782.7122
+-9 11293.521
+-8 13067.09
+-7 15209.585
+-6 17438.651
+-5 19549.514
+-4 21749.84
+-3 24099.899
+-2 25650.799
+-1 26943.416
+0 27184.071
+1 26810.342
+2 25719.965
+3 24419.073
+4 22109.18
+5 19609.307
+6 17280.086
+7 15157.43
+8 13247.949
+9 11624.944
+10 10091.192
+11 8759.2747
+12 7599.7151
+13 6631.8084
+14 5772.4592
+15 4917.7376
+16 4323.1726
+17 3780.1487
+18 3300.2258
+19 2895.1267
+20 2476.8672
+21 2186.8052
+22 1947.909
+23 1652.8696
+24 1429.6172
+25 1288.282
+26 1078.7854
+27 1012.0966
+28 836.3034
+29 770.0325
+30 639.9578
+31 541.3501
+32 425.5239
+33 398.3797
+34 370.7208
+35 283.965
+36 222.4713
+37 219.3423
+38 146.1747
+39 106.2522
+40 80.9466
+41 70.6094
+42 49.7556
+43 39.7272
+44 20.1609
+45 34.7219
+46 11.3581
+47 10.6234
+48 0.8343
+49 10.846
+50 20.9561
+51 31.2633
+52 30.0855
+53 40.7451
+54 71.4033
+55 72.132
+56 120.3419
+57 117.1668
+58 138.609
+59 210.5025
+60 235.9398
+61 271.8739
+62 328.2483
+63 377.4269
+64 436.2129
+65 525.1403
+66 594.1547
+67 701.7243
+68 786.0601
+69 948.9523
+70 1060.0386
+71 1177.2
+72 1390.0552
+73 1581.584
+74 1749.5481
+75 1992.7249
+76 2289.1597
+77 2547.8552
+78 2904.8076
+79 3315.8089
+80 3767.8943
+81 4199.9529
+82 4655.7283
+83 5242.7044
+84 5794.22
+85 6484.7288
+86 6888.1292
+87 7590.1438
+88 8153.4563
+89 8357.9651
+&
+@target G0.S4
+@type xy
+0 4.5474735e-13
+1 0
+2 4.5474735e-13
+3 0
+4 0
+5 3629.2554
+6 6021.8485
+7 5178.8695
+8 8132.019
+&
+@target G0.S5
+@type xy
+0 12043.697
+1 10357.739
+2 16264.038
+3 27184.071
+4 3629.2554
+&
+@target G0.S6
+@type xy
+-90 6021.8485
+-88.181818 6021.8485
+-86.363636 6021.8485
+-84.545455 6021.8485
+-82.727273 6021.8485
+-80.909091 6021.8485
+-79.090909 6021.8485
+-77.272727 6021.8485
+-75.454545 6021.8485
+-73.636364 6021.8485
+-71.818182 6021.8485
+-70 6021.8485
+-68.181818 6021.8485
+-66.363636 6021.8485
+-64.545455 6021.8485
+-62.727273 6021.8485
+-60.909091 6021.8485
+-59.090909 6021.8485
+-57.272727 6021.8485
+-55.454545 6021.8485
+-53.636364 6021.8485
+-51.818182 6021.8485
+-50 6021.8485
+-48.181818 6021.8485
+-46.363636 6021.8485
+-44.545455 6021.8485
+-42.727273 6021.8485
+-40.909091 6021.8485
+-39.090909 6021.8485
+-37.272727 6021.8485
+-35.454545 6021.8485
+-33.636364 6021.8485
+-31.818182 6021.8485
+-30 6021.8485
+-28.181818 6021.8485
+-26.363636 6021.8485
+-24.545455 6021.8485
+-22.727273 6021.8485
+-20.909091 6021.8485
+-19.090909 6021.8485
+-17.272727 6021.8485
+-15.454545 6021.8485
+-13.636364 6021.8485
+-11.818182 6021.8485
+-10 6021.8485
+-8.1818182 6021.8485
+-6.3636364 6021.8485
+-4.5454545 6021.8485
+-2.7272727 6021.8485
+-0.90909091 6021.8485
+0.90909091 6021.8485
+2.7272727 6021.8485
+4.5454545 6021.8485
+6.3636364 6021.8485
+8.1818182 6021.8485
+10 6021.8485
+11.818182 6021.8485
+13.636364 6021.8485
+15.454545 6021.8485
+17.272727 6021.8485
+19.090909 6021.8485
+20.909091 6021.8485
+22.727273 6021.8485
+24.545455 6021.8485
+26.363636 6021.8485
+28.181818 6021.8485
+30 6021.8485
+31.818182 6021.8485
+33.636364 6021.8485
+35.454545 6021.8485
+37.272727 6021.8485
+39.090909 6021.8485
+40.909091 6021.8485
+42.727273 6021.8485
+44.545455 6021.8485
+46.363636 6021.8485
+48.181818 6021.8485
+50 6021.8485
+51.818182 6021.8485
+53.636364 6021.8485
+55.454545 6021.8485
+57.272727 6021.8485
+59.090909 6021.8485
+60.909091 6021.8485
+62.727273 6021.8485
+64.545455 6021.8485
+66.363636 6021.8485
+68.181818 6021.8485
+70 6021.8485
+71.818182 6021.8485
+73.636364 6021.8485
+75.454545 6021.8485
+77.272727 6021.8485
+79.090909 6021.8485
+80.909091 6021.8485
+82.727273 6021.8485
+84.545455 6021.8485
+86.363636 6021.8485
+88.181818 6021.8485
+90 6021.8485
+&
+@target G0.S7
+@type xy
+-90 5178.8695
+-88.181818 5178.8695
+-86.363636 5178.8695
+-84.545455 5178.8695
+-82.727273 5178.8695
+-80.909091 5178.8695
+-79.090909 5178.8695
+-77.272727 5178.8695
+-75.454545 5178.8695
+-73.636364 5178.8695
+-71.818182 5178.8695
+-70 5178.8695
+-68.181818 5178.8695
+-66.363636 5178.8695
+-64.545455 5178.8695
+-62.727273 5178.8695
+-60.909091 5178.8695
+-59.090909 5178.8695
+-57.272727 5178.8695
+-55.454545 5178.8695
+-53.636364 5178.8695
+-51.818182 5178.8695
+-50 5178.8695
+-48.181818 5178.8695
+-46.363636 5178.8695
+-44.545455 5178.8695
+-42.727273 5178.8695
+-40.909091 5178.8695
+-39.090909 5178.8695
+-37.272727 5178.8695
+-35.454545 5178.8695
+-33.636364 5178.8695
+-31.818182 5178.8695
+-30 5178.8695
+-28.181818 5178.8695
+-26.363636 5178.8695
+-24.545455 5178.8695
+-22.727273 5178.8695
+-20.909091 5178.8695
+-19.090909 5178.8695
+-17.272727 5178.8695
+-15.454545 5178.8695
+-13.636364 5178.8695
+-11.818182 5178.8695
+-10 5178.8695
+-8.1818182 5178.8695
+-6.3636364 5178.8695
+-4.5454545 5178.8695
+-2.7272727 5178.8695
+-0.90909091 5178.8695
+0.90909091 5178.8695
+2.7272727 5178.8695
+4.5454545 5178.8695
+6.3636364 5178.8695
+8.1818182 5178.8695
+10 5178.8695
+11.818182 5178.8695
+13.636364 5178.8695
+15.454545 5178.8695
+17.272727 5178.8695
+19.090909 5178.8695
+20.909091 5178.8695
+22.727273 5178.8695
+24.545455 5178.8695
+26.363636 5178.8695
+28.181818 5178.8695
+30 5178.8695
+31.818182 5178.8695
+33.636364 5178.8695
+35.454545 5178.8695
+37.272727 5178.8695
+39.090909 5178.8695
+40.909091 5178.8695
+42.727273 5178.8695
+44.545455 5178.8695
+46.363636 5178.8695
+48.181818 5178.8695
+50 5178.8695
+51.818182 5178.8695
+53.636364 5178.8695
+55.454545 5178.8695
+57.272727 5178.8695
+59.090909 5178.8695
+60.909091 5178.8695
+62.727273 5178.8695
+64.545455 5178.8695
+66.363636 5178.8695
+68.181818 5178.8695
+70 5178.8695
+71.818182 5178.8695
+73.636364 5178.8695
+75.454545 5178.8695
+77.272727 5178.8695
+79.090909 5178.8695
+80.909091 5178.8695
+82.727273 5178.8695
+84.545455 5178.8695
+86.363636 5178.8695
+88.181818 5178.8695
+90 5178.8695
+&
+@target G0.S8
+@type xy
+-90 8132.019
+-88.181818 8132.019
+-86.363636 8132.019
+-84.545455 8132.019
+-82.727273 8132.019
+-80.909091 8132.019
+-79.090909 8132.019
+-77.272727 8132.019
+-75.454545 8132.019
+-73.636364 8132.019
+-71.818182 8132.019
+-70 8132.019
+-68.181818 8132.019
+-66.363636 8132.019
+-64.545455 8132.019
+-62.727273 8132.019
+-60.909091 8132.019
+-59.090909 8132.019
+-57.272727 8132.019
+-55.454545 8132.019
+-53.636364 8132.019
+-51.818182 8132.019
+-50 8132.019
+-48.181818 8132.019
+-46.363636 8132.019
+-44.545455 8132.019
+-42.727273 8132.019
+-40.909091 8132.019
+-39.090909 8132.019
+-37.272727 8132.019
+-35.454545 8132.019
+-33.636364 8132.019
+-31.818182 8132.019
+-30 8132.019
+-28.181818 8132.019
+-26.363636 8132.019
+-24.545455 8132.019
+-22.727273 8132.019
+-20.909091 8132.019
+-19.090909 8132.019
+-17.272727 8132.019
+-15.454545 8132.019
+-13.636364 8132.019
+-11.818182 8132.019
+-10 8132.019
+-8.1818182 8132.019
+-6.3636364 8132.019
+-4.5454545 8132.019
+-2.7272727 8132.019
+-0.90909091 8132.019
+0.90909091 8132.019
+2.7272727 8132.019
+4.5454545 8132.019
+6.3636364 8132.019
+8.1818182 8132.019
+10 8132.019
+11.818182 8132.019
+13.636364 8132.019
+15.454545 8132.019
+17.272727 8132.019
+19.090909 8132.019
+20.909091 8132.019
+22.727273 8132.019
+24.545455 8132.019
+26.363636 8132.019
+28.181818 8132.019
+30 8132.019
+31.818182 8132.019
+33.636364 8132.019
+35.454545 8132.019
+37.272727 8132.019
+39.090909 8132.019
+40.909091 8132.019
+42.727273 8132.019
+44.545455 8132.019
+46.363636 8132.019
+48.181818 8132.019
+50 8132.019
+51.818182 8132.019
+53.636364 8132.019
+55.454545 8132.019
+57.272727 8132.019
+59.090909 8132.019
+60.909091 8132.019
+62.727273 8132.019
+64.545455 8132.019
+66.363636 8132.019
+68.181818 8132.019
+70 8132.019
+71.818182 8132.019
+73.636364 8132.019
+75.454545 8132.019
+77.272727 8132.019
+79.090909 8132.019
+80.909091 8132.019
+82.727273 8132.019
+84.545455 8132.019
+86.363636 8132.019
+88.181818 8132.019
+90 8132.019
+&
+@target G0.S9
+@type xy
+-90 13592.035
+-88.181818 13592.035
+-86.363636 13592.035
+-84.545455 13592.035
+-82.727273 13592.035
+-80.909091 13592.035
+-79.090909 13592.035
+-77.272727 13592.035
+-75.454545 13592.035
+-73.636364 13592.035
+-71.818182 13592.035
+-70 13592.035
+-68.181818 13592.035
+-66.363636 13592.035
+-64.545455 13592.035
+-62.727273 13592.035
+-60.909091 13592.035
+-59.090909 13592.035
+-57.272727 13592.035
+-55.454545 13592.035
+-53.636364 13592.035
+-51.818182 13592.035
+-50 13592.035
+-48.181818 13592.035
+-46.363636 13592.035
+-44.545455 13592.035
+-42.727273 13592.035
+-40.909091 13592.035
+-39.090909 13592.035
+-37.272727 13592.035
+-35.454545 13592.035
+-33.636364 13592.035
+-31.818182 13592.035
+-30 13592.035
+-28.181818 13592.035
+-26.363636 13592.035
+-24.545455 13592.035
+-22.727273 13592.035
+-20.909091 13592.035
+-19.090909 13592.035
+-17.272727 13592.035
+-15.454545 13592.035
+-13.636364 13592.035
+-11.818182 13592.035
+-10 13592.035
+-8.1818182 13592.035
+-6.3636364 13592.035
+-4.5454545 13592.035
+-2.7272727 13592.035
+-0.90909091 13592.035
+0.90909091 13592.035
+2.7272727 13592.035
+4.5454545 13592.035
+6.3636364 13592.035
+8.1818182 13592.035
+10 13592.035
+11.818182 13592.035
+13.636364 13592.035
+15.454545 13592.035
+17.272727 13592.035
+19.090909 13592.035
+20.909091 13592.035
+22.727273 13592.035
+24.545455 13592.035
+26.363636 13592.035
+28.181818 13592.035
+30 13592.035
+31.818182 13592.035
+33.636364 13592.035
+35.454545 13592.035
+37.272727 13592.035
+39.090909 13592.035
+40.909091 13592.035
+42.727273 13592.035
+44.545455 13592.035
+46.363636 13592.035
+48.181818 13592.035
+50 13592.035
+51.818182 13592.035
+53.636364 13592.035
+55.454545 13592.035
+57.272727 13592.035
+59.090909 13592.035
+60.909091 13592.035
+62.727273 13592.035
+64.545455 13592.035
+66.363636 13592.035
+68.181818 13592.035
+70 13592.035
+71.818182 13592.035
+73.636364 13592.035
+75.454545 13592.035
+77.272727 13592.035
+79.090909 13592.035
+80.909091 13592.035
+82.727273 13592.035
+84.545455 13592.035
+86.363636 13592.035
+88.181818 13592.035
+90 13592.035
+&

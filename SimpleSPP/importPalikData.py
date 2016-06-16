@@ -3,6 +3,7 @@
 
 # IMPORT LIBRARIES
 from SimpleSPProutines import *
+import sys
 
 # Importing data from Palik book using graphs. 
 # Optical data are given in csv files, created using Engauge-digitizer software. 
@@ -226,8 +227,11 @@ def importFromAbsorptionData(wavelength, folder, filename, plotting): #{{{
 def importFromTables(wavelength, folder, filename, plotting): #{{{
   # interpolate palik data from tables of Palik
 
-  unit1 = 1E-10 #Palik data
-  #unit1 = 1E-6 #Other data
+  # Look for Palik into the name
+  if(filename.find("Palik") > 0):
+    unit1 = 1E-10 #Palik data
+  else:
+    unit1 = 1E-6 #Other data
  
   # Fetch data
   DataFile = folder+filename
@@ -266,11 +270,30 @@ def importFromTables(wavelength, folder, filename, plotting): #{{{
 	plt.legend(loc=2)
 	plt.savefig('PalikData.eps')
 	plt.show()
+	
+  return epsilon
 #}}}
 
 #==============================
+
+if(len(sys.argv)<2):
+  print "Usage: ./importPalikData.py <Name of the material (Be, Au, ...)> <wavelength (nm)> <Source for data: Palik or name of the 1st author>"
+  print "Example: ./importPalikData.py Au 800 Palik"
+  exit()
+ 
+material = sys.argv[1]
+wavelength = float(sys.argv[2])
+try:
+  source = sys.argv[3]
+except:
+  print "No data source given: using DEFAULT=Palik"
+  source = "Palik"
+  
+filename = material+"-"+source
+  
 folder = "Database/"
-#filename = "Au-Johnson"
+#filename = "Au-Palik"
+#filename = "Be-Palik"
 #filename = "Fe-Palik"
 #filename = "Ni-Palik"
 #filename = "a-Si-Palik"
@@ -281,8 +304,9 @@ folder = "Database/"
 #filename = "Ti-Johnson"
 #filename = "SiO2-Palik"
 #filename = "W-Palik"
-filename = "Cr-Johnson"
+#filename = "Cr-Johnson"
 #filename = "BK7"
+#filename = "Al-Palik"
 plotting = True
 
 #folder = "Database/PalikGraph/"
@@ -293,8 +317,16 @@ plotting = True
 
 #=========================================
 
-print "Material: "+filename+"."
-
+try: 
+  print "Material: "+filename+"."
+  print "Wavelength = "+str(wavelength)+" nm"
+  epsilon = importFromTables(wavelength*1e-9, folder, filename, plotting)
+  print epsilon
+  print "You can add the following directly inside 'MaterialOpticalDatabaseForPlasmonics.csv'"
+  print filename+"\t"+"?"+"\t"+str(wavelength)+"\t"+str(epsilon.real)+"\t"+str(epsilon.imag)+"\t?\t?\t?\t?\t?"
+except:
+  print "Failed to import "+filename+"!"
+  
 #==========================================
 #print "Lambda = 3000 nm"
 #importFromTables(3000e-9, folder, filename, plotting=True)
@@ -302,8 +334,8 @@ print "Material: "+filename+"."
 #importFromTables(1064e-9, folder, filename, plotting=True)
 #print "Lambda = 1060 nm"
 #importFromTables(1060e-9, folder, filename, plotting)
-print "Lambda = 1030 nm"
-importFromTables(1030e-9, folder, filename, plotting)
+#print "Lambda = 1030 nm"
+#importFromTables(1030e-9, folder, filename, plotting)
 #print "Lambda = 800 nm"
 #importFromTables(800e-9, folder, filename, plotting)
 #print "Lambda = 795 nm"
@@ -313,6 +345,8 @@ importFromTables(1030e-9, folder, filename, plotting)
 #importFromTables(625e-9, folder, filename, plotting)
 #print "Lambda = 532 nm"
 #importFromTables(532e-9, folder, filename, plotting)
+#print "Lambda = 515 nm"
+#importFromTables(515e-9, folder, filename, plotting)
 #print "Lambda = 400 nm"
 #importFromTables(400e-9, folder, filename, plotting)
 

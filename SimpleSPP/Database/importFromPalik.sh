@@ -51,11 +51,14 @@ cat << EOF > ${filename}.1
 # Lambda (A) n k
 EOF
 
+echo "[Building] Formatting data file..."
+awk '{ print $1" "$2" "$3 }' Palik/${datafile} > ${filename}.2
+
 echo "[Building] Stacking header and n,k file..."
-cat ${filename}.1 Palik/${datafile} > ${filename}
+cat ${filename}.1 ${filename}.2 > ${filename}
 
 echo "[Cleaning]"
-rm ${filename}.1
+rm ${filename}.1 ${filename}.2
 
 ls -lhtr ${filename}
 

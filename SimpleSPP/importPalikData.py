@@ -85,7 +85,7 @@ def importFromPalikGraph(wavelength, folder, filename, plotting=1):#{{{
   plt.grid()
   plt.legend(loc=1)
   plt.savefig('PalikData.eps')
-  return 0
+  return epsilon
   #plt.show()
 #}}}
 
@@ -276,7 +276,7 @@ def importFromTables(wavelength, folder, filename, plotting): #{{{
 
 #==============================
 
-if(len(sys.argv)<2):
+if(len(sys.argv)<=2):
   print "Usage: ./importPalikData.py <Name of the material (Be, Au, ...)> <wavelength (nm)> <Source for data: Palik or name of the 1st author>"
   print "Example: ./importPalikData.py Au 800 Palik"
   exit()
@@ -291,7 +291,6 @@ except:
   
 filename = material+"-"+source
   
-folder = "Database/"
 #filename = "Au-Palik"
 #filename = "Be-Palik"
 #filename = "Fe-Palik"
@@ -318,14 +317,25 @@ plotting = True
 #=========================================
 
 try: 
-  print "Material: "+filename+"."
-  print "Wavelength = "+str(wavelength)+" nm"
-  epsilon = importFromTables(wavelength*1e-9, folder, filename, plotting)
-  print epsilon
-  print "You can add the following directly inside 'MaterialOpticalDatabaseForPlasmonics.csv'"
-  print filename+"\t"+"?"+"\t"+str(wavelength)+"\t"+str(epsilon.real)+"\t"+str(epsilon.imag)+"\t?\t?\t?\t?\t?"
+  if(source == "Palik"):
+    folder = "Database/"
+    print "Material: "+filename+"."
+    print "Wavelength = "+str(wavelength)+" nm"
+    epsilon = importFromTables(wavelength*1e-9, folder, filename, plotting)
+    print epsilon
+    print "You can add the following directly inside 'MaterialOpticalDatabaseForPlasmonics.csv'"
+    print filename+"\t"+"?"+"\t"+str(int(wavelength))+"\t"+str(epsilon.real)+"\t"+str(epsilon.imag)+"\t?\t?\t?\t?\t?"
+  else:
+    folder = "Database/PalikGraph/"
+    print "Material: "+filename+"."
+    print "Wavelength = "+str(wavelength)+" nm"
+    epsilon=importFromPalikGraph(wavelength*1e-9, folder, filename)
+    print epsilon
+    print "You can add the following directly inside 'MaterialOpticalDatabaseForPlasmonics.csv'"
+    print filename+"\t"+"?"+"\t"+str(int(wavelength))+"\t"+str(epsilon.real)+"\t"+str(epsilon.imag)+"\t?\t?\t?\t?\t?"
 except:
   print "Failed to import "+filename+"!"
+  print "Goto Database/importPalikData.sh for finding other sources."
   
 #==========================================
 #print "Lambda = 3000 nm"

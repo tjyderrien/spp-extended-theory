@@ -1,0 +1,9 @@
+#Property of Iaroslav Gnilitskyi and Prof. Leonardo Orazi, UNIMORE Italy. 
+#Material 	Aperture (deg)	dAngle (deg)  	Wavelength (nm)	Pulse (fs)	Fluence(J/cm2)	Repetition(kHz)	Scanning(m/s)	SpotDiam(um)	References	Source
+Mo	7.0	1.8	1030	270 	3.53	600	1.7	6.0	This work	Ordal 1988
+#Mo	20.5	5.0	800	50	0.07	1 	0.0004	30-40	[Cong2015]	Ordal
+Ti	15.0	4.5	1030	213	1.47	600 	1.7 	6.0	This work	Johnson
+#Ti	11.9	3.4	1060	100	0.1	1000 	2-8 1E6 	~12	[Oektem2013]	Johnson
+Cr	3.4	1.8	1030	500	0.038	250 	1.5	80 	[RuizdelaCruz2014]	Palik
+Al	63.8	5	1030	270?	?	?	?	6.0	This work	Palik
+#Au	15.4	3	1030	?	?	?	?	6.0	This work	Palik

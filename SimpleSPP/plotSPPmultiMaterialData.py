@@ -215,13 +215,30 @@ def plotSeveralWavelengths(database1, database2, reverse, metal):#{{{
   return 0
 #}}}
 # =======================================================
+if(len(sys.argv)<=2):
+  print "Usage: ./plotSPPmultiMaterialData.py           \ "
+  print "    <Name of the substrate (Air, Be, Au, ...)> \ "
+  print "    <wavelength (nm)>                          \ "
+  print "    <Source for data: Palik or name of the 1st author>"
+  print "Example: ./plotSPPmultiMaterialData.py Au 800 Palik"
+  exit()
+  
+query = sys.argv[1]
+wavelength = 1E-9*float(sys.argv[2])
+try:
+  source = "("+sys.argv[3]+")"
+except:
+  source = ""
+
+query = query+source
 
 ## Choose a wavelength
-wavelength = 1030e-9
+#wavelength = 1030e-9
+print "** Selected substrate = "+query+"."
 print "** Operating wavelength = "+str(wavelength*1E9)+"nm."
 
 ## Choose which material to select
-query = 'Air'
+#query = 'Air'
 #query = 'Au (Palik)'
 #query = 'Ti (Palik)'
 #query = 'Ti (Johnson 1974)'

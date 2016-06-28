@@ -3,7 +3,6 @@
 
 # IMPORT LIBRARIES
 from SimpleSPProutines import *
-import sys
 
 # Importing data from Palik book using graphs. 
 # Optical data are given in csv files, created using Engauge-digitizer software. 

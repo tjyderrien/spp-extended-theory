@@ -1,0 +1,4 @@
+# Effect of ripple number and magnification on the FFT measurement
+# Wavelength = 800 nm
+# Sample	Magnification	Distance	Angle	AngleDispersion	Remark	Method	Reference
+Ni	8000		90	14.6		FourierJ	Opex Yao 2015

@@ -1,5 +1,9 @@
  #!/usr/bin/gnuplot -persist
 
+ 
+SPPpath=system("echo $SPPextPath")
+localPath=SPPpath."/MultilayerSPP/DerrienBonse-JAP2014"
+
 ############# plot a contour map
 
 reset
@@ -7,8 +11,8 @@ reset
 # set output '20130701-Contour.eps'
 # set terminal postscript eps enhanced color font 'Helvetica, 26'
 
-load '/media/PHD/Travail/Berlin/Calculs/SingleSPPfile.gnu'
-load '/media/PHD/Travail/Berlin/Codes/GNUplot/try2.plt'
+load localPath.'/SingleSPPfile.gnu'
+load localPath.'/try2.plt'
 
 set style increment userstyles
 set contour surface
@@ -56,14 +60,14 @@ reset
 set output '20130730-ValidationMyaji1.eps'
 set terminal postscript eps enhanced monochrome font 'Helvetica, 26'
 
-# load '/media/PHD/Travail/Berlin/Codes/GNUplot/try2.plt'
+# load localPath.'/try2.plt'
 
 # set style increment userstyles
 # set log cb
 # set pm3d interpolate 8,8
 # set style fill solid
 
-load '/media/PHD/Travail/Berlin/Calculs/SingleSPPfile.gnu'
+load localPath.'/SingleSPPfile.gnu'
 
 #set xrange [4:100]
 
@@ -88,8 +92,8 @@ plot "Result.awked.tmp" u ($1/scale):(period( beta( epsilonWater, epsilon( $1, e
 ##################### SINGLE SPP periodicity considering SPP conditions ######################
 reset
 
-load '/media/PHD/Travail/Berlin/Codes/GNUplot/try2.plt'
-load '/media/PHD/Travail/Berlin/Calculs/SingleSPPfile.gnu'
+load localPath.'/try2.plt'
+load localPath.'/SingleSPPfile.gnu'
 
 set style increment userstyles
 
@@ -178,8 +182,8 @@ reset
 set output '20130731-SPPperiodSiExcitedWater.eps'
 set terminal postscript eps enhanced monochrome font 'Helvetica, 26'
 
-load '/media/PHD/Travail/Berlin/Calculs/SingleSPPfile.gnu'
-load '/media/PHD/Travail/Berlin/Codes/GNUplot/try2.plt'
+load localPath.'/SingleSPPfile.gnu'
+load localPath.'/try2.plt'
 
 set style increment userstyles
 set key inside bottom right font 'Helvetica, 16' spacing 0.7
@@ -218,8 +222,8 @@ lambda=790e-9
 set output '20130731-SPPperiodSiExcitedSi.eps'
 set terminal postscript eps enhanced monochrome font 'Helvetica, 26'
 
-load '/media/PHD/Travail/Berlin/Calculs/SingleSPPfile.gnu'
-load '/media/PHD/Travail/Berlin/Codes/GNUplot/try2.plt'
+load localPath.'/SingleSPPfile.gnu'
+load localPath.'/try2.plt'
 
 set style increment userstyles
 # set key left Left font 'Helvetica, 10' spacing 0.8
@@ -279,8 +283,8 @@ reset
 set output '20130731-SPPperiodSiExcitedSi.eps'
 set terminal postscript eps enhanced color font 'Helvetica, 26'
 
-load '/media/PHD/Travail/Berlin/Calculs/SingleSPPfile.gnu'
-load '/media/PHD/Travail/Berlin/Codes/GNUplot/try2.plt'
+load localPath.'/SingleSPPfile.gnu'
+load localPath.'/try2.plt'
 
 lambda=790e-9
 
@@ -350,8 +354,8 @@ reset
 set output '20130731-SPPperiodSiExcitedSi.eps'
 set terminal postscript eps enhanced color font 'Helvetica, 26'
 
-load '/media/PHD/Travail/Berlin/Calculs/SingleSPPfile.gnu'
-load '/media/PHD/Travail/Berlin/Codes/GNUplot/try2.plt'
+load localPath.'/SingleSPPfile.gnu'
+load localPath.'/try2.plt'
 
 lambda=800e-9
 
@@ -402,8 +406,8 @@ reset
 set output '20130731-SPPperiodSiExcitedSiO2.eps'
 set terminal postscript eps enhanced monochrome font 'Times, 26'
 
-load '/media/PHD/Travail/Berlin/Calculs/SingleSPPfile.gnu'
-load '/media/PHD/Travail/Berlin/Codes/GNUplot/try2.plt'
+load localPath.'/SingleSPPfile.gnu'
+load localPath.'/try2.plt'
 
 lambda=790e-9
 
@@ -444,8 +448,8 @@ reset
 set output '20130731-SPPperiodSiExcitedWater.eps'
 set terminal postscript eps enhanced monochrome font 'Times, 26' size 20cm, 10cm
 
-load '/media/PHD/Travail/Berlin/Calculs/SingleSPPfile.gnu'
-load '/media/PHD/Travail/Berlin/Codes/GNUplot/try2.plt'
+load localPath.'/SingleSPPfile.gnu'
+load localPath.'/try2.plt'
 
 set style increment userstyles
 # set key bottom left Left font 'Times, 16' spacing 0.6
@@ -509,8 +513,8 @@ reset
 set output '20131127-SPPperiodExcitedSiExcitedWater.eps'
 set terminal postscript eps enhanced monochrome font 'Helvetica, 26'
 
-load '/media/PHD/Travail/Berlin/Calculs/SingleSPPfile.gnu'
-load '/media/PHD/Travail/Berlin/Codes/GNUplot/try2.plt'
+load localPath.'/SingleSPPfile.gnu'
+load localPath.'/try2.plt'
 
 lambda=790e-9
 
@@ -608,8 +612,8 @@ reset
 set output '20130731-SPPperiodTiExcitedTiO2.eps'
 set terminal postscript eps enhanced monochrome font 'Times, 26'
 
-load '/media/PHD/Travail/Berlin/Calculs/SingleSPPfile.gnu'
-load '/media/PHD/Travail/Berlin/Codes/GNUplot/try2.plt'
+load localPath.'/SingleSPPfile.gnu'
+load localPath.'/try2.plt'
 
 set style increment userstyles
 set key bottom right font 'Times, 16' spacing 0.6
@@ -649,8 +653,8 @@ reset
 set output '20130731-SPPperiodTiExcitedWater.eps'
 set terminal postscript eps enhanced monochrome font 'Times, 26'
 
-load '/media/PHD/Travail/Berlin/Calculs/SingleSPPfile.gnu'
-load '/media/PHD/Travail/Berlin/Codes/GNUplot/try2.plt'
+load localPath.'/SingleSPPfile.gnu'
+load localPath.'/try2.plt'
 
 set style increment userstyles
 set key bottom right font 'Times, 16' spacing 0.6

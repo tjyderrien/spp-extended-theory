@@ -6,8 +6,8 @@ from SimpleSPProutines import *
 print "==== Plot the exp. LIPSS regularity as function of theoretical Lspp... ===="
 
 print "| Reading the experimental file..."
-database = "ExperimentalData.csv"
-ExpData = loadtxt(database, dtype='str', delimiter='\t')
+database = "Iaroslav/ExperimentalData_1030nm_Yoann.csv"
+ExpData = loadtxt(database, dtype='str', delimiter='\t', skiprows=4)
 
 #print ExpData
 print "" 
@@ -18,6 +18,8 @@ Sources = ExpData[:,10];
 print "|| Materials = "+str(Materials)
 print "|| Sources = "+str(Sources)
 print "" 
+
+#TODO: make 2 object: (i) Literature (ii) Iaroslav points. 
 
 print "| Extracting the dispersion of available exp. data..."
 DispersionAngle = np.asfarray(ExpData[:,1]);
@@ -35,7 +37,7 @@ print "| Grabbing the available theoretical database..."
 unit = 1E9
 
 # Select database
-database="../../../../MaterialOpticalDatabaseForPlasmonics.csv"
+database="../../SimpleSPP/MaterialOpticalDatabaseForPlasmonics.csv"
 dbarray = loadtxt(database, dtype='str', delimiter='\t')
 
 plt.figure()
@@ -68,12 +70,12 @@ for i in np.arange(0, Materials.size, 1):
   
   DataMaterial2 = FilterDatabaseContains(dbarray, str(material), 0)
   print "** Material2 ("+str(material)+") filtering #"+str(i)+" returned "+str(len(DataMaterial2))+" entries."
-  print DataMaterial2
+  #print DataMaterial2
   print ""
   
   DataMaterial2 = FilterDatabase(DataMaterial2, str(int(wavelength)), 2)
   print "** Wavelength ("+str(int(wavelength))+") filtering returned "+str(len(DataMaterial2))+" entries."
-  print DataMaterial2
+  #print DataMaterial2
   # Check that number of solutions is one for each research. 
   
   #DataMaterial2 = FilterDatabaseContains(DataMaterial2, str(source), 0)
@@ -81,10 +83,10 @@ for i in np.arange(0, Materials.size, 1):
   #print DataMaterial2
   #print ""
   
-  print "|| Material 2 data = "+str(DataMaterial2)
+  #print "|| Material 2 data = "+str(DataMaterial2)
 
   print "|| Extracting epsilons..."
-  print DataMaterial1
+  #print DataMaterial1
   Material1=DataMaterial1[0,0]
   BandGap1=DataMaterial1[0,1] 
   wavelength1=DataMaterial1[0,2]
@@ -112,12 +114,16 @@ for i in np.arange(0, Materials.size, 1):
   print "[New entry] Material: "+str(Material2)+", eps2="+str(eps2)+", Lspp="+str(NewLspp)+", dLspp="+str(NewDeltaLspp)
 
 print "" 
-print "Final list: "+str(DispersionAngle)+", "+str(Lspp)
+print "====== FINAL RESULTS ======"
+print "Dispersion angle: "+str(DispersionAngle)
+print "Lspp: "+str(Lspp)
+print "dLspp: "+str(DeltaLspp)
 print ""
 print "| Plotting the results..."
 #plt.errorbar(1E6*Lspp, DispersionAngle, yerr=DispersionAngleError, fmt='o')
 plt.errorbar(1E6*Lspp, DispersionAngle, xerr=1e6*DeltaLspp, yerr=DispersionAngleError, fmt='o')
 ax.set_xscale('log')
+#ax.view([])
 #ax.set_yscale('log')
 #plt.show()
 plt.savefig('OriginOfRegularity.eps')

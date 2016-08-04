@@ -1,0 +1,68 @@
+
+	\usepackage[T1]{fontenc}
+	\usepackage[utf8]{inputenc}
+	\usepackage[english]{babel}
+	\usepackage{graphicx}
+	\usepackage{geometry}
+	\usepackage{multirow}
+	\usepackage{tabularx}			% pour des tableau d'une largeur (totale) définie
+	\usepackage{calc}    			% pour calcul d'expressions dans les implément. de longueurs ou compteurs
+	\usepackage{dcolumn}
+	\usepackage{bm}
+	\usepackage[usenames,dvipsnames,table]{xcolor}
+	\usepackage{wrapfig}
+	\usepackage{fancyhdr}
+	\usepackage{array}				% pr tableaux - usuels, e.g. alignemt particulier dans une colonne de type p.
+	\usepackage{amsmath}
+	\usepackage{amsthm}
+	\usepackage{amssymb}
+	\usepackage{amstext}
+	\usepackage{lastpage}			% To get the last page number
+	\usepackage{listings}			% pour utiliser des affichages verbatim améliorés
+	\usepackage{authblk}	            % pour les authors dans les abstracts 
+%	\usepackage{bbding}  			% pour afficher une icone téléphone
+%	\usepackage{wasysym} 			% pour afficher une autre icone téléphone
+	\usepackage{marvosym} 			% pour afficher une autre icone téléphone et Email
+%	\usepackage{ifsym}   			% pour afficher une icone lettre
+	\usepackage{gensymb}				% to display degree symbols \degree
+	\usepackage{ifpdf}
+	
+	% ---- PACKAGE HYPERREF
+	
+	% ---- CAS PDF
+	% *************
+	\ifpdf
+		% ---- Paramétrage du package hyperref dans ce cas
+		\usepackage[%dvips,ps2pdf,hypertex,
+		pdftex, 								% Paramétrage de la navigation
+		%bookmarks = true, 						% Signets
+		%bookmarksnumbered = true, 				% Signets numérotés
+		%pdfpagemode = UseNone, 				% None, UseThumbs, UseOutlines, Fullscreen
+		%pdfstartview = FitH, 					% FitH, FitV, FitR, FitB, FitBH, FitBV, Fit
+		%pdfpagelayout = OneColumn, 			% SinglePage, OneColumn, TwoColumnLeft, TwoColumnRight
+		colorlinks = true, 						% Liens en couleur
+		linkcolor = blue,
+		urlcolor=blue, 
+		citecolor = blue,						% Couleur des liens externes
+		pdfnewwindow = true						% pour ouvrir les liens vers d'autre pdf dans une nvelle fenêtre
+		%pdfborder = {0 0 0} 					% Style de bordure : ici, rien
+		]{hyperref}
+		%
+		%\hypersetup{ 									
+		%pdfauthor = {}, 							% Auteurs
+		%pdftitle = {}, 							% Titre du document
+		%pdfsubject = {}, 							% Sujet
+		%pdfkeywords = {}, 							% Mots-clefs
+		%pdfcreator = {}, 							% Logiciel qui a crée le document
+		%pdfproducer = {} 							% Société avec produit le logiciel
+		%plainpages = false}
+		%\usepackage{pdfpages}
+		%
+	
+	% ---- CAS DVI
+	% *************
+	\else
+		\usepackage{graphicx}
+		\newcommand{\url}[1]{\texttt{#1}}
+		\newcommand{\href}[2]{\textcolor{blue}{#2}[1]}
+	\fi

@@ -146,13 +146,13 @@ print "Plot the SPP mean-free path with wavelength..."
 plt.figure()
 plt.xlabel('Wavelength $\lambda$ $(nm)$')
 plt.ylabel('SPP mean-free-path $L_{SPP}$ ($\mu$m)')
-plt.plot(1e9*wavelengths, 1e6 * (0.5E0/kspp.imag), label='Air/Au')
+plt.plot(1e9*wavelengths, 1e6 * (0.5E0/kspp.imag), label=MaterialFile1+'/'+MaterialFile2)
 #plt.title('Period of field at $'+MaterialFile1+'$/$'+MaterialFile2+'$ interface')
 plt.legend(loc=2)
 plt.grid(True)
 plt.savefig('MeanFreePath'+MaterialFile1+MaterialFile2+'.eps')
 #plt.show()
-plt.loglog(1e9*wavelengths, 1e6 * (0.5E0/kspp.imag), label='Air/Au')
+plt.loglog(1e9*wavelengths, 1e6 * (0.5E0/kspp.imag), label=MaterialFile1+'/'+MaterialFile2)
 plt.savefig('MeanFreePath'+MaterialFile1+MaterialFile2+'-LogLog.eps')
 
 print "Plot the lifetime with wavelength..."

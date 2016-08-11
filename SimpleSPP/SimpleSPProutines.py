@@ -17,7 +17,7 @@ from matplotlib.legend_handler import HandlerLine2D
 import sys
 
 lengthunit = 1e-9
-eta = 1e-1 #assumed precision error on the dielectric permittivity
+eta = 5e0 #assumed precision error on the dielectric permittivity
 
 # Settings for matplotlib
 #rc('font',**{'family':'sans-serif','sans-serif':['Helvetica'], 'size':'16'})
@@ -360,6 +360,7 @@ def ExperimentallyAchievable(OpticalPenetrationDepth, DecayDepth):#{{{
 def SPPactiveInterfaces(dbarray, comment):#{{{
   """Print all the SPP-active interfaces available in database
   CONSIDERS ONLY SYMMETRIC CASES
+  TODO: rewrite this function to control better the conditional parameters (ExperimentallyAchievable, Period!=0, and SPPcondition.). 
   If comment=="new", old SPP-active interfaces are removed from the table
   """
   counter=0

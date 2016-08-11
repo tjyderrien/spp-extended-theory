@@ -457,7 +457,7 @@ plt.show()
 #print "deltaLsppTable = "+str(deltaLsppTable)
 
 #print "delta Lspp min = "+str(deltaLsppTable.min())+", max = "+str(deltaLsppTable.max())+"."
-levels = [1, 5, 10, 20, 30, 40, 50] #um
+levels = [1, 5, 10, 20, 30, 40, 50, 100, 200] #um
 #levels = MaxNLocator(nbins=15).tick_values(0e0, deltaLsppTable.max())
 
 plt.figure()

@@ -168,7 +168,8 @@ print np.shape(SPPgroupVelocity)
 SPPgroupVelocityPlot = np.clip(SPPgroupVelocity.real, 0, 1000E8)
 
 #print SPPgroupVelocity.real
-
+#TODO: Group velocity can be negative, and it designates another regime of propagation! 
+#See [Hohenau and JR Krenn, PRB 78, 155405 (2008)]
 plt.figure()
 plt.xlabel(r'Wavelength $\lambda$ (nm)')
 plt.ylabel(r'Velocity $v$ ($\mu$m/ps)')
@@ -180,15 +181,15 @@ plt.plot(1e9*2*pi*c/omegaspp, 1E-6*SPPphaseVelocity, 'r--', label=r'$v_{\phi}$')
 #plt.title(MaterialFile1+'/'+MaterialFile2+' interface')
 plt.legend(loc=4)
 plt.xticks(np.arange(0, 2500, 500))
-plt.axis([200,2000,0,300])
+plt.axis([200,2000,-300,300])
 plt.savefig('Velocities.eps')
 plt.savefig('Velocities.png')
 #plt.show()
 
 print "Plot SPP lifetime with wavelength..."
 LifeTimeOld = LifeTimeRaether(kspp[1:], eps1new[1:], eps2new[1:])
-LifeTimeNew = LifeTimeDerrien(kspp[1:], SPPgroupVelocity.real)
-LifeTimePhase = LifeTimeDerrien(kspp[1:], SPPphaseVelocity[1:].real)
+LifeTimeNew = LifeTimeDerrien(kspp[1:], abs(SPPgroupVelocity.real))
+LifeTimePhase = LifeTimeDerrien(kspp[1:], abs(SPPphaseVelocity[1:].real))
 LifeTimeApprox = 2e0*(eps2new.real)**2 /( omegaspp * eps1new.real**2 * eps2new.imag)
 
 print "Lifetime approx."

@@ -710,6 +710,7 @@ def LifeTimeRaether(beta, eps2, eps1):
 
 def SPPlength(beta): #{{{
   length = 1e0/(2e0 * beta.imag) #Maier formula
+  #According to [R. Krenn et al, PRB 78, 155405 (2008)], this formula considers the 1/e decay of I_spp. 
   return length
 #}}}
 

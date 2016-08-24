@@ -692,6 +692,15 @@ def ExportToTxt(dbarray, filename):
       #print '{0:30s} {1:30s} {2:15f} {3:12s} {4:12s} {5:11f} {6:16f} {7:16f} {8:12f}  {9:19f} {10:19f} {11:15f}'.format(Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, RealEps, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength)
   return out
 
+def HohenauGroupVelocity(omega, k): 
+  #calculates group velocity for a set of dispersion curves neglecting complex space
+  #applies to:
+  # (<array of omegas>, array of k) -> <array of group velocities>
+  # 
+  #vg = c/(nspp - wavelength * dnspp / dwavelength)
+  vg = np.diff(omega) / np.diff(k)
+  return vg
+
 def RealDerivativeByComplex(f,z):
   """Complex derivative a real-valued function by a complex-number
   Input:
@@ -699,13 +708,14 @@ def RealDerivativeByComplex(f,z):
     z: z complex-valued numbers
   Output:
     df/dz according to Wirtinger complex derivatives formula
+  Careful: Wirtinger formula contain a 1/2 usually, but it was removed here to obtain consistent results with Hohenau lifetime and Raether lifetime. 
   """
-  return 0.5e0 * (np.diff(f)/np.diff(z.real) - 1j*(np.diff(f)/np.diff(z.imag))) #original
+  return (np.diff(f)/np.diff(z.real) - 1j*(np.diff(f)/np.diff(z.imag))) #2 x original
 
 def LifeTimeRaether(beta, eps2, eps1):
 	omegasppimag=beta.real * c * eps1.imag/(2e0*eps1.real**2) * (eps1.real * eps2.real)/(eps1.real + eps2.real)
-	# lifetime=2e0*pi/omegasppimag #Raether formula
-	lifetime=1e0/omegasppimag #modified Raether formula to match with complex group velocity approach
+	lifetime=2e0*pi/omegasppimag #Raether formula
+	#lifetime=1e0/omegasppimag #modified Raether formula to match with complex group velocity approach
 	return lifetime
 
 def SPPlength(beta): #{{{
@@ -714,7 +724,8 @@ def SPPlength(beta): #{{{
   return length
 #}}}
 
-def LifeTimeDerrien(beta, vg):
+def LifeTimeDerrien(beta, vg): 
+  # Uses a lifetime based on group velocity
   length = SPPlength(beta)
   lifetime = length * (vg)**(-1e0)
   return lifetime

@@ -11,7 +11,8 @@ if(len(sys.argv)<=2):
   print "Usage: ./plotMultiwavelength.py           \ "
   print "    <Name of the substrate (Air, Be, Au, ...)> \ "
   print "    <Source for data: Palik or name of the 1st author> \ "
-  print "    [<precision>: 1E-9 by default>]"
+  print "    [<precision>: 1E-9 by default>] \ "
+  print "    [--no-show]"
   print "Example: ./plotMultiwavelength.py Au Johnson"
   exit()
 
@@ -46,15 +47,29 @@ try:
 except:
   print "** Warning: precision was choosed by default: 1E-9 m"
 
+# Command line option for avoiding the visual plotting...
+try:
+  if(sys.argv[4] == "--no-show"):
+    ShowPictures = False
+  else:
+    ShowPictures = True
+except: 
+  print "** Warning: No-show command was not defined."
+  print sys.argv[4]
+    
+
 MaterialFile2 = query+source
 
 # Managing source files units (quite artificial...)
 UnitMat1=1e10
-if(source == "Palik"):
+if(source == "-Palik"):
+  UnitMat2=1e10
+  #print "** Warning: Palik optical data selected..."
+elif(source == "-Johnson"):
   UnitMat2=1e6
 else:
-  UnitMat2=1e10
-  
+  print "** Warning: Rare source of optical data was selected..."
+  UnitMat2=1e6
 
 # Loading Material dielectric complex permittivity into arrays
 try: 
@@ -184,7 +199,7 @@ plt.plot(1e9*wavelengths, 1e6 * (0.5E0/kspp.imag), label=MaterialFile1+'/'+Mater
 #plt.title('Period of field at $'+MaterialFile1+'$/$'+MaterialFile2+'$ interface')
 plt.legend(loc=2)
 plt.grid(True)
-plt.savefig('MeanFreePath'+MaterialFile1+MaterialFile2+'.eps')
+plt.savefig(MaterialFile1+MaterialFile2+'MeanFreePath.eps')
 #plt.show()
 plt.loglog(1e9*wavelengths, 1e6 * (0.5E0/kspp.imag), label=MaterialFile1+'/'+MaterialFile2)
 plt.savefig(MaterialFile1+MaterialFile2+'MeanFreePath-LogLog.eps')
@@ -226,9 +241,9 @@ plt.savefig(MaterialFile1+MaterialFile2+'Velocities.png')
 
 print "Plot SPP lifetime with wavelength..."
 LifeTimeOld = LifeTimeRaether(kspp[1:], eps1new[1:], eps2new[1:])
-LifeTimeNew = LifeTimeDerrien(kspp[1:], (SPPgroupVelocity.real))
-LifeTimeRe = LifeTimeDerrien(kspp[1:], (SPPgroupVelocityHohenau))
-LifeTimePhase = LifeTimeDerrien(kspp[1:], (SPPphaseVelocity[1:].real))
+LifeTimeNew = LifeTimeVg(kspp[1:], (SPPgroupVelocity.real))
+LifeTimeRe = LifeTimeVg(kspp[1:], (SPPgroupVelocityHohenau))
+LifeTimePhase = LifeTimeVg(kspp[1:], (SPPphaseVelocity[1:].real))
 LifeTimeApprox = 2e0*(eps2new.real)**2 /( omegaspp * eps1new.real**2 * eps2new.imag) #TODO: origin of this formula ?
 
 print "Lifetime approx."
@@ -246,9 +261,9 @@ LifeTimeApprox = np.clip(LifeTimeApprox, 0, 1)
 plt.figure()
 plt.xlabel('Wavelength $\lambda$ (nm)')
 plt.ylabel(r'SPP lifetime $\tau_{\mbox{SPP}}$ (ps)')
-plt.plot(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeOld, 'k--', label=r'Raether, $\omega \in \mathbb{C}$, $\beta \in \mathbb{R}$')
-plt.plot(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeNew, 'r-', label=r'$\tau=L_{SPP}/v_g$, $\omega \in \mathbb{R}$, $\beta \in \mathbb{C}$')
-plt.plot(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeRe, 'k-', label=r'$\tau=L_{SPP}/Re(v_g)$, $\omega \in \mathbb{R}$, $\beta \in \mathbb{R}$')
+plt.plot(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeOld, 'b-', label=r'Raether, $\omega \in \mathbb{C}$, $\beta \in \mathbb{R}$')
+plt.plot(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeRe, 'k-', label=r'$\tau=L_{SPP}/v_g$, PMA, $\omega \in \mathbb{R}$, $\beta \in \mathbb{R}$')
+plt.plot(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeNew, 'r--', label=r'$\tau=L_{SPP}/v_g$, Wirtinger formula, $\omega \in \mathbb{R}$, $\beta \in \mathbb{C}$')
 #plt.plot(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimePhase, 'r--', label=r'Phase, real $\omega$, complex $\beta$')
 #plt.plot(1e9*2*pi*c/omegaspp, 1E12*LifeTimeApprox, 'b--', label=r'Phase, approx.')
 #plt.title(MaterialFile1+'/'+MaterialFile2+' interface')
@@ -277,5 +292,7 @@ plt.legend(loc=1)
 #plt.axis([200,2000,0,10e0])
 plt.savefig(MaterialFile1+MaterialFile2+'SppDecayDepth.eps')
 plt.savefig(MaterialFile1+MaterialFile2+'SppDecayDepth.png')
-plt.show()
+
+if(ShowPictures == True):
+  plt.show()
 

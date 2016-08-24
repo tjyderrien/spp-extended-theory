@@ -724,7 +724,7 @@ def SPPlength(beta): #{{{
   return length
 #}}}
 
-def LifeTimeDerrien(beta, vg): 
+def LifeTimeVg(beta, vg): 
   # Uses a lifetime based on group velocity
   length = SPPlength(beta)
   lifetime = length * (vg)**(-1e0)

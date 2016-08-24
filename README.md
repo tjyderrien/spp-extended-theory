@@ -24,11 +24,12 @@
 
 # Purpose of this project
 
-You may find a collection of programs aiming to develop control over the excitation of Surface Plasmon Polaritons (SPPs). SPPs can be used with light to enhance local power density, but also to induce Laser-Induced Periodic Surface Structures (LIPSS). 
+You may find a collection of programs aiming to develop control over the excitation of Surface Plasmon Polaritons (SPPs). 
+SPPs can be used with light to enhance local power density, but also to induce Laser-Induced Periodic Surface Structures (LIPSS). 
 
 ## Concept
 
-This code contains optical data for many materials on large range of wavelength. These databasis were tabulated from Palik (Handbook of optical constants, Academic Press 1985), and refractiveindex.info databasis. 
+This code contains optical data for many materials on a large range of wavelengths. These databasis were tabulated from Palik (Handbook of optical constants, Academic Press 1985), and refractiveindex.info databases. 
 
 ## Contents
 
@@ -50,7 +51,7 @@ For each of these data, the following theories can be applied.
 
 * Write message in the forum
 
-* Develop / correct a part of the program
+* Develop / correct a part of the program. Please document your contributions using dOyxgen style (see https://www.stack.nl/~dimitri/doxygen/manual/docblocks.html#pythonblocks).
 
 * Point out some mistakes. Suggest corrections. 
 

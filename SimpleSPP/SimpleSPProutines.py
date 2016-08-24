@@ -22,7 +22,7 @@ eta = 5e0 #assumed precision error on the dielectric permittivity
 # Settings for matplotlib
 #rc('font',**{'family':'sans-serif','sans-serif':['Helvetica'], 'size':'16'})
 ## for Palatino and other serif fonts use:
-rc('font', **{'family':'serif', 'serif':['Palatino'], 'size':'20'})
+rc('font', **{'family':'serif', 'serif':['Palatino'], 'size':'18'})
 rc('text', usetex=True)
 mp.rcParams['legend.numpoints'] = 1
 
@@ -698,7 +698,7 @@ def HohenauGroupVelocity(omega, k):
   # (<array of omegas>, array of k) -> <array of group velocities>
   # 
   #vg = c/(nspp - wavelength * dnspp / dwavelength)
-  vg = np.diff(omega) / np.diff(k)
+  vg = np.diff(omega) / np.diff(k.real)
   return vg
 
 def RealDerivativeByComplex(f,z):
@@ -714,8 +714,9 @@ def RealDerivativeByComplex(f,z):
 
 def LifeTimeRaether(beta, eps2, eps1):
 	omegasppimag=beta.real * c * eps1.imag/(2e0*eps1.real**2) * (eps1.real * eps2.real)/(eps1.real + eps2.real)
-	lifetime=2e0*pi/omegasppimag #Raether formula
-	#lifetime=1e0/omegasppimag #modified Raether formula to match with complex group velocity approach
+	#lifetime=2e0*pi/omegasppimag #Raether original formula
+	#lifetime=2e0/omegasppimag #Raether modified formula, we just dropped the pi. 
+	lifetime=0.5e0/omegasppimag #modified Raether formula to match with complex group velocity approach
 	return lifetime
 
 def SPPlength(beta): #{{{

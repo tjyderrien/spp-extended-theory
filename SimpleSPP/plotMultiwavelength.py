@@ -55,7 +55,7 @@ try:
     ShowPictures = True
 except: 
   print "** Warning: No-show command was not defined."
-  print sys.argv[4]
+  ShowPictures = True
     
 
 MaterialFile2 = query+source
@@ -263,14 +263,21 @@ plt.xlabel('Wavelength $\lambda$ (nm)')
 plt.ylabel(r'SPP lifetime $\tau_{\mbox{SPP}}$ (ps)')
 plt.plot(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeOld, 'b-', label=r'Raether, $\omega \in \mathbb{C}$, $\beta \in \mathbb{R}$')
 plt.plot(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeRe, 'k-', label=r'$\tau=L_{SPP}/v_g$, PMA, $\omega \in \mathbb{R}$, $\beta \in \mathbb{R}$')
-plt.plot(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeNew, 'r--', label=r'$\tau=L_{SPP}/v_g$, Wirtinger formula, $\omega \in \mathbb{R}$, $\beta \in \mathbb{C}$')
+plt.plot(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeNew, 'r--', label=r'$\tau=L_{SPP}/v_g$, Wirtinger, $\omega \in \mathbb{R}$, $\beta \in \mathbb{C}$')
 #plt.plot(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimePhase, 'r--', label=r'Phase, real $\omega$, complex $\beta$')
 #plt.plot(1e9*2*pi*c/omegaspp, 1E12*LifeTimeApprox, 'b--', label=r'Phase, approx.')
 #plt.title(MaterialFile1+'/'+MaterialFile2+' interface')
 plt.legend(loc=2)
 #plt.xticks(np.arange(0, 2500, 500))
-#plt.axis([300,2000,0,0.1])
+if(query == "Ti"):
+  maxLifeTime=0.1
+elif (query == "Ag"):
+  maxLifeTime=10
+else:
+  maxLifeTime=10
+plt.axis([300,2000,0,maxLifeTime])
 plt.savefig(MaterialFile1+MaterialFile2+'Lifetime.eps')
+plt.savefig(MaterialFile1+MaterialFile2+'Lifetime.png')
 #plt.show()
 
 

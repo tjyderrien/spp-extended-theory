@@ -1,0 +1,6 @@
+makeTable.py:""" TODO: interface with HTML for publication on the web. 
+plotMultiwavelength.py:#TODO: Group velocity can be negative, and it designates another regime of propagation! 
+plotSipe.py:# TODO 
+plotSPPmultiMaterialData.py:# Select the material of interface 1 #TODO: This selector may be not clear for users. 
+SimpleSPProutines.py:  TODO: rewrite this function to control better the conditional parameters (ExperimentallyAchievable, Period!=0, and SPPcondition.). 
+SimpleSPProutines.py:def ExtractMaterialData(Database): #TODO: Think how to take data from continuous database directly instead of the ponctual file.

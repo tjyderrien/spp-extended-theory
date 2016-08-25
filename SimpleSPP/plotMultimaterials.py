@@ -101,9 +101,12 @@ EffectiveIndex = np.vectorize(EffectiveIndex)
 
 Swap = np.vectorize(Swap)
 
-def plotSeveralWavelengths(database1, database2, reverse, metal):#{{{
+def plotSeveralWavelengths(database1, database2, reverse, metal, query):#{{{
   """
-  Plot period as function of materials for two wavelengths
+  Plot period as function of materials for two wavelengths. 
+  Two types of data are included: 
+  - Points: 1 point per material. 
+  - Lines : the continuum calculation.
   """
   # Extract data for 800 nm
   Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, k1imag, k2imag, DeltaLsppValue = ExtractDataDb(database1)
@@ -113,7 +116,7 @@ def plotSeveralWavelengths(database1, database2, reverse, metal):#{{{
   else: 
     Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, k1imag, k2imag, DeltaLsppValue = ExtractDataDb(database1)
     
-  # Calculation of refractive index
+  # Calculation of refractive index array
   eps1r=np.asfarray(eps1r)
   eps1c=np.asfarray(eps1c)
   eps2r=np.asfarray(eps2r)
@@ -131,23 +134,23 @@ def plotSeveralWavelengths(database1, database2, reverse, metal):#{{{
   plt.ylabel('SPP period $\Lambda$ (nm)')
   plt.plot(eps2r, SPPperiod, 'or', label='800 nm', markersize=8)
   
-  eps2range = np.arange(0e0,40e0,0.1e0)
+  eps2range = np.arange(-70,0e0,0.1e0)
+  eps1range = 1. #use external index
   
   if(not metal): 
     refractiveindex1 = EpsilonToIndex(epsilon1)
   else: 
     refractiveindex1 = EpsilonToIndex(epsilon2)
-    #refractiveindex1 = EpsilonToIndex(eps2range)
-    #Radiation1=Wavelength/refractiveindex1.real
-    #Radiation1=np.sort(Radiation1)
-    #plt.plot(eps2range, Radiation1, 'r-')
     
   Radiation1=Wavelength/refractiveindex1.real
   Radiation1=np.sort(Radiation1)
-  plt.plot(np.sort(eps2r), Radiation1[::-1], 'r-')
+  LambdaPMA=Wavelength[1]/np.sqrt(np.multiply(eps1range, eps2range)/(np.add(eps1range, eps2range)))
+  
+  plt.plot(np.sort(eps2r), Radiation1[::-1], 'r--')
+  plt.plot(eps2range, LambdaPMA, 'r-')
   
   # Extract (again) for 400 nm
-  
+  #TODO: use a function here! code is repeated! 
   if(reverse): #swap eps1 and eps2
     Material2, Material1, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth2, SPPdecayDepth1, Reflectivity, OpticalPenetration2, OpticalPenetration1, SPPdecayLength, eps2r, eps2c, eps1r, eps1c, k2imag, k1imag, DeltaLsppValue = ExtractDataDb(database2)
   else: 
@@ -161,32 +164,54 @@ def plotSeveralWavelengths(database1, database2, reverse, metal):#{{{
 
   epsilon1 = np.add(eps1r,np.multiply(1e0j, eps1c))
   epsilon2 = np.add(eps2r,np.multiply(1e0j, eps2c))
-
+  
+  # Continuous plots
+  eps2range = np.arange(-70,0e0,0.1e0)
+  eps1range = 1. #use external index
+  
   if(not metal): 
     refractiveindex1 = EpsilonToIndex(epsilon1)
   else: 
     refractiveindex1 = EpsilonToIndex(epsilon2)
-    
+  
+  #TODO: make a function here! Some code is repeated! 
+  #This is the lambda/n continuous curve - n: sqrt(epsilon) of material1
   Radiation1=Wavelength/refractiveindex1.real
   Radiation1=np.sort(Radiation1)
+  
+  #This is rather to plot lambda_PMA
+  LambdaPMA=Wavelength[1]/np.sqrt(np.multiply(eps1range, eps2range)/(np.add(eps1range, eps2range)))
 
   #plt.figure()
   plt.plot(eps2r, SPPperiod, 'bs', label='400 nm', markersize=8)
   plt.plot(np.sort(eps2r), Radiation1[::-1], 'b--')
+  plt.plot(eps2range, LambdaPMA, 'b-') #TODO: plot using a full range, not eps2r
 
   #print eps1r
+  #TODO simplify + combine the 3 following tests
   if(metal):
-    #plt.axis([0,25,0,900]) ##KEEP 900 please #good for Au
-    plt.axis([0,20,0,900]) ##KEEP 900 please #good for Ti
-  else:
+    if(query=="Au-Johnson"):
+      plt.axis([0,25,0,900]) ##KEEP 900 please #good for Au
+    elif(query=="Ti-Johnson"):
+      plt.axis([0,20,0,900]) ##KEEP 900 please #good for Ti
+    else:
+      print "** Error: this query is not a planned case. Query="+query
+      exit()
+  else: #non-metal
     plt.axis([-70,0,0,900]) ##KEEP 900 please
+    
   plt.axis()
   plt.yticks([0,200,400,600,800])
   #plt.axis([0,35,0,1000])
   if(not metal): 
-    #plt.legend(loc=4) #Good for Air
-    plt.legend(loc=2) #Good for SiO_2
-  else: 
+    if(query=="Air"):
+      plt.legend(loc=4) #Good for Air
+    elif(query=="SiO2-Palik"):
+      plt.legend(loc=2) #Good for SiO_2
+    else:
+      print "** Error: this query is not a planned case. Query="+query
+      exit()
+  else: #metal case
     plt.legend(loc=1)
   #plt.legend(handler_map={line1: HandlerLine2D(numpoints=1)})
   #plt.legend(handler_map={line2: HandlerLine2D(numpoints=1)})
@@ -195,14 +220,19 @@ def plotSeveralWavelengths(database1, database2, reverse, metal):#{{{
   
   if(not metal): 
     #a = plt.axes([-70,300,-40,700], axisbg='g')
-    a = plt.axes([0.2,0.17,0.35,0.35], axisbg='w') #Good for SiO2
-    #a = plt.axes([0.2,0.2,0.35,0.35], axisbg='w') #Good for Air
+    if(query=="SiO2-Palik"):
+      a = plt.axes([0.2,0.17,0.35,0.35], axisbg='w') #Good for SiO2
+      plt.axis([-6,0,250,290]) #Good for SiO2
+      plt.yticks([250,270,290]) #Good for SiO2
+    elif (query=="Air"):
+      a = plt.axes([0.2,0.2,0.35,0.35], axisbg='w') #Good for Air
+      plt.axis([-6,0,380,410]) #Good for Air
+      plt.yticks([380,390,400,410])
+    else: #TODO: set a general case
+      a = plt.axes([0.2,0.2,0.35,0.35], axisbg='w')
 
     plt.xticks([-6,-4,-2,0])
-    plt.axis([-6,0,250,290]) #Good for SiO2
-    #plt.axis([-6,0,380,410]) #Good for Air
-    plt.yticks([250,270,290]) #Good for SiO2
-    #plt.yticks([380,390,400,410]) #Good for Air
+    
     plt.grid()
     plt.plot(eps2r, SPPperiod, 'bs', markersize=8)
     plt.plot(np.sort(eps2r), Radiation1[::-1], 'b--')
@@ -216,11 +246,11 @@ def plotSeveralWavelengths(database1, database2, reverse, metal):#{{{
 #}}}
 # =======================================================
 if(len(sys.argv)<=2):
-  print "Usage: ./plotSPPmultiMaterialData.py           \ "
+  print "Usage: ./plotMultimaterials.py           \ "
   print "    <Name of the substrate (Air, Be, Au, ...)> \ "
   print "    <wavelength (nm)>                          \ "
   print "    <Source for data: Palik or name of the 1st author>"
-  print "Example: ./plotSPPmultiMaterialData.py Au 800 Palik"
+  print "Example: ./plotMultimaterials.py Au 800 Palik"
   exit()
   
 query = sys.argv[1]
@@ -234,8 +264,8 @@ query = query+source
 
 ## Choose a wavelength
 #wavelength = 1030e-9
-print "** Selected substrate = "+query+"."
-print "** Operating wavelength = "+str(wavelength*1E9)+"nm."
+print "Selected substrate = "+query+"."
+print "Operating wavelength = "+str(wavelength*1E9)+"nm."
 
 ## Choose which material to select
 #query = 'Air'
@@ -250,14 +280,14 @@ reverse = False #reverse eps1 and eps2 for plotting
 metal = False
 
 thickness=500e-9
-print "** Interface 1: "+query
+print "Interface 1: "+query
 
 ## Generate the database
 SPPdb = GenerateDatabase()
-print "SPP database has "+str(len(SPPdb))+" entries."
+print "** Info: SPP database has "+str(len(SPPdb))+" entries."
 
-print "Full Database:"
-print SPPdb
+#print "Full Database:"
+#print SPPdb
 
 # Select the material of interface 1 #TODO: This selector may be not clear for users. 
 if (not metal):
@@ -276,10 +306,10 @@ title = niceWavelength+' nm'
 
 try: 
   SPPdb = FilterDatabase(SPPdb, selectWavelength, 2)
-  print "** Filter on wavelength: SPP database "+title+" has "+str(len(SPPdb))+" entries."
+  print "Filter on wavelength: SPP database "+title+" has "+str(len(SPPdb))+" entries."
   plotDatabasePeriod(SPPdb, title, 'Period'+niceWavelength+'nm.eps', title, metal)
 except:
-  print "!!!! Exception: no optical data is available for "+query+" at "+title+"."
+  print "Warning: no optical data is available for "+query+" at "+title+"."
 
 # Plot the double plot for publication
 try: 
@@ -288,7 +318,7 @@ try:
   #print "Filter on wavelength: SPP database "+title+" has "+str(len(SPPdb1))+" entries."
   #plotDatabasePeriod(SPPdb1, '800 nm', 'Period'+localWavelength+'nm.eps', title, metal)
 except:
-  print "!!!! Exception: no optical data is available for "+query+" at "+title+"."
+  print "** Warning: no optical data is available for "+query+" at "+title+"."
   
 try: 
   localWavelength = '400.0'
@@ -296,9 +326,10 @@ try:
   #print "Filter on wavelength: SPP database "+title+" has "+str(len(SPPdb1))+" entries."
   #plotDatabasePeriod(SPPdb2, '400 nm', 'Period'+localWavelength+'nm.eps', title, metal)
 except:
-  print "!!!! Exception: no optical data is available for "+query+" at "+title+"."
+  print "** Warning: no optical data is available for "+query+" at "+title+"."
     
-#plotSeveralWavelengths(SPPdb1, SPPdb2, reverse, metal)
+# This line is for the paper figure. 
+plotSeveralWavelengths(SPPdb1, SPPdb2, reverse, metal, query)
 
 # ===== PLOTTING the Lspp quantity as function of materials
 
@@ -338,14 +369,14 @@ deltaBetaSPP = np.vectorize(deltaBetaSPP)
 deltaPeriodSPP = np.vectorize(deltaPeriodSPP)
 deltaLspp = np.vectorize(deltaLspp)
 
-print "*** Testing the basic functions"
+print "== Testing the basic functions"
 print "Period = "+str(period(betaSPP(wavelength, 1e0+0e0j, -49.5738812793e0+3.81282698968e0j)))+" m"
 print "DeltaBetaSPP = "+str(deltaBetaSPP(wavelength, 1e0+0e0j, -49.5738812793e0+3.81282698968e0j, 0e0, 0e0, noise, noise))+" m-1"
 print "Decay Length SPP = "+str(DecayLengthSPP(betaSPP(wavelength, 1e0+0e0j, -49.5738812793e0+3.81282698968e0j)))+" m"
 print "DeltaPeriodSPP = "+str(deltaPeriodSPP(wavelength, 1e0+0e0j, -49.5738812793e0+3.81282698968e0j, 0e0, 0e0, noise, noise))+" m"
 print "DeltaLspp = "+str(deltaLspp(wavelength, 1e0+0e0j, -49.5738812793e0+3.81282698968e0j, 0e0, 0e0, noise, noise))+" m"
 #exit()
-print "** Knowledge over dielectric permittivity: +/- "+str(noise)+"."
+print "== Knowledge over dielectric permittivity: +/- "+str(noise)+"."
 
 print "Mesh generation..."
 epsr = np.arange(-100e0,15e0, precision)
@@ -353,7 +384,7 @@ epsc = np.arange(0e0,60e0, precision)
 
 eps2r, eps2c = np.meshgrid(epsr, epsc)
 
-print "** Multimaterial mode: calculating period of SPP and their uncertainty..."
+print "== Multimaterial mode: calculating period of SPP and their uncertainty..."
 Period = (period(betaSPP(wavelength, 1e0+0e0j, eps2r+eps2c*1e0j))/lengthunit)
 deltaPeriod = 1e9*(deltaPeriodSPP(wavelength, 1e0, eps2r+eps2c*1e0j, 0e0, 0e0, noise, noise))
 
@@ -384,7 +415,7 @@ plt.colorbar(CS)
 plt.title(r"Period $\Lambda_{SPP}$, $\lambda =$"+niceWavelength+" nm.")
 plt.savefig('Period2d'+niceWavelength+'.eps')
 plt.savefig('Period2d'+niceWavelength+'.png')
-plt.show()
+#plt.show()
 
 ##### "** Plotting 2D DeltaPeriod(Re eps, Im eps)..."
 #levels = MaxNLocator(nbins=15).tick_values(0e0, deltaPeriod.max())
@@ -414,9 +445,9 @@ else:
 plt.colorbar(CS)
 plt.title("")
 plt.title(r"Period fluctuations $\delta \Lambda_{SPP}$ (nm), $\lambda =$"+niceWavelength+" nm.")
-plt.savefig('deltaPeriod'+niceWavelength+'.eps')
-plt.savefig('deltaPeriod'+niceWavelength+'.png')
-plt.show()
+plt.savefig(query+'deltaPeriod'+niceWavelength+'.eps')
+plt.savefig(query+'deltaPeriod'+niceWavelength+'.png')
+#plt.show()
 
 ####################################
 print "Plotting the Lspp as function of Re eps, Im eps."
@@ -451,7 +482,7 @@ plt.colorbar(CS)
 plt.title(r'SPP mean-free-path $L_{SPP}$ ($\mu$m), $\lambda=$'+niceWavelength+' nm.')
 plt.savefig('Lspp2d'+niceWavelength+'.eps')
 plt.savefig('Lspp2d'+niceWavelength+'.png')
-plt.show()
+#plt.show()
 
 ####### "Plotting the Lspp uncertainty due to dispersion over dielectric permittivity."
 #print "deltaLsppTable = "+str(deltaLsppTable)

@@ -18,7 +18,7 @@ Yellow="YellowZone.csv"
 Green="GreenZone.csv"
 Norm1=9000
 Norm2=9000
-Norm3=37000
+Norm3=38000
 
 plot Cyan u 1:($2/Norm1) w l lt 1 lc 7 lw 3 notitle, \
 Yellow u 1:($2/Norm2) w l lt 2 lc 1 lw 3 notitle, \

@@ -2,14 +2,14 @@
 
 reset
 
-set output 'MeasuredArea.eps'
-set terminal postscript eps enhanced color font 'Helvetica, 24'
+# set output 'MeasuredArea.eps'
+# set terminal postscript eps enhanced color font 'Helvetica, 24'
 
 set xlabel 'Angle {/Symbol t} (deg)'
 set ylabel 'Intensity (u.a.)'
 
 set xrange [-50:50]
-
+set grid
 # set key out center top
 unset key
 

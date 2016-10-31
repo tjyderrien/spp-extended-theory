@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
 
+#TODO: To verify coupling efficiency factor from Sipe theory: plot the efficiency factor maximum as function of the laser wavelength, and correlate with papers such as Endriz and Spicer, PRB 4, 4144 (1971); Benneth and Porteus, JOSA 51, 123 (1961)
+
 # IMPORT LIBRARIES
 from SimpleSPProutines import *
 #from plotGraph import *
@@ -107,6 +109,7 @@ kappax = 4e0 ; kappay = 0e0*kappax; #test values
 #for kappax in meshkappa:
 
 #ftab = np.arange(0, 1, 0.1)
+print "Info: Generating the mesh..."
 kapparange = np.arange(0.1,4,0.1)
 #for wavelength in wavelengths
 #for f in ftab:
@@ -142,10 +145,11 @@ kapparange = np.arange(0.1,4,0.1)
 
 query = 'Air'
 #query2= 'InP (Bonse 2005)'
-query2= 'Mo (Ordal 1988)'
-# /!\ Carefull: the expression must be exactly the one of MaterialDatabase.csv ...
+#query2= 'Mo (Ordal 1988)'
+query2= 'Cu (Palik)'
+print "Caution: the expression must be exactly the one of MaterialDatabase.csv."
 
-wavelength = 1030
+wavelength = 355
 select = str(wavelength)
 unit = 1E-9
 wavelength = wavelength * unit
@@ -190,7 +194,7 @@ if(len(SPPdb)==0):
   exit()
   
 # Extract materials from database
-Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1rM, eps1cM, eps2rM, eps2cM, k1imag, k2imag = ExtractDataDb(SPPdb)
+Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1rM, eps1cM, eps2rM, eps2cM, k1imag, k2imag, DeltaLsppValue = ExtractDataDb(SPPdb)
 
 # Calculation of refractive index
 eps1rM=np.asfarray(eps1rM)

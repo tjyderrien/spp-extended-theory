@@ -1,0 +1,24 @@
+# Optical constants for molten Cu 
+# Jane C. Miller 'Optical properties of liquid metals at high temperatures', Philosophical Magazine, 20:168, 1115-1132 (1969). 
+# Re Eps is obtained by adding 1 to the digitize black points from Fig. 2 that represents measures from Miller for Cu of Re(epsilon)-1. 
+# Im(Eps) is obtained from the black dots of the conductivity (in esu) of Fig. 2, assuming that: Im(eps) = 4pi[esu]sigma[esu]/omega[esu] =(4pi*sigma[esu])/(omega[SI]) since omega[SI] should be = omega[esu]
+# Note also: the data have been digitized and abscissa (wavelengths) are not same for ReEps and ImEps.
+# Lambda(A) Re_epsilon 	   	Lambda(A) Im_epsilon  
+15563.8	-109.527		16119.5	37.38242     
+12365.6	-75.5667		12713.9	23.69298     
+9919.71	-49.0442		10030.0	14.03181     
+8849.93	-41.0957		8937.58	10.98558     
+6312.53	-14.0759		6402.09	4.66315	     
+5978.09	-11.4327		5899.95	4.76956	     
+5405.34	-7.73918		5437.91	5.12229	     
+5042.98	-6.16377		4987.26	5.54167	     
+4776.16	-6.70933		4726.14	5.79867	     
+4446.77	-6.19877		4491.01	6.07025	     
+4198.57	-6.21628		4218.19	6.03896	     
+3994.21	-6.23233		4011.97	5.13393	     
+3745.62	-5.19226		3745.62	5.02563	     
+3406.39	-5.75824		3393.58	4.30892	     
+3178.50	-4.19304		3212.43	4.42177	     
+2969.39	-4.75318		2989.05	3.63258	     
+2624.11	-3.21861		2654.98	3.95867	     
+2493.63	-3.24487		2493.63	3.31613        

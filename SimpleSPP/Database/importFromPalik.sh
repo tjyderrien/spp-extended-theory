@@ -6,6 +6,7 @@ material=$1
 
 if [ -z ${material} ]; then
 	echo "Usage: ./importFromPalik.sh <Material symbol to include (Si, Be, ...) >"
+	echo "Description: Search and build a code-compatible database from a locally available Palik table, found in the subfolders."
 	exit
 else 
 	echo "Ok let's add material $1 to our databasis."

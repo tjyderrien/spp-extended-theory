@@ -91,7 +91,7 @@ def importFromNKtable(wavelength, folder, filename, plotting=1):#{{{
   #plt.show()
 #}}}
 
-def importFromEpsilonTable(wavelength, folder, filename, plotting): #{{{
+def importFromEpsilonTable(wavelength, folder, filename, plotting=True): #{{{
   """This routine is made to import data captured using a software like Engauge Digitizer. 
   Input: (epsReal, epsImag) discretized on DIFFERENT MESHES. 
   Output: (n,k, epsilon) discretized on the same mesh. 
@@ -99,80 +99,67 @@ def importFromEpsilonTable(wavelength, folder, filename, plotting): #{{{
   NOTE: Warning: the data produced by this method are rather unprecise. SPP spectoscopy requires precision to 1E-3. 
   This method gives a precision worst then 1E0. Use only in case no other data are available. 
   """
-  nfile = folder+filename+"-epsR.csv"
-  kfile = folder+filename+"-epsC.csv"
-
+  nfile = folder+filename+"-epsR.csv" #TODO: rename nfile to ReEpsFile
+  kfile = folder+filename+"-epsC.csv" #TODO: rename kfile to ImEpsFile
+  
+  print "** Info: opening "+nfile+" and "+kfile+"."
   narray = loadtxt(nfile, delimiter="\t", skiprows=1)
   karray = loadtxt(kfile, delimiter="\t", skiprows=1)
   
-  unit = 1E-6
+  unit = 1E-10 #Unit of the wavelength found in databases <nfile> and <kfile>. 
   
-  # import wavelength, n and k from Palik
+  # import wavelength, epsilonR, epsilonC
   wavelength1 = narray[:,0]*unit
   wavelength2 = karray[:,0]*unit
   n = narray[:,1]
-  k = karray[:,1]
-  numrows = 10000
+  kk = karray[:,1]
+  numrows = 10000 #Number of rows to interpolate the data on. 
   base = 10
-  # interpolate n and k on new wavelength mesh
+  # interpolate on new wavelength mesh using 1st order
   order=1
   #wavelengths = np.arange(np.amin(wavelength2),np.amax(wavelength2), precision) #regular mesh, AWFUL for memory
-  print "Generating new wavelength mesh: ("+str(np.amin(wavelength2))+", "+str(np.amax(wavelength2))+")"
+  print "** Info: Generating the new wavelength mesh: ("+str(np.amin(wavelength2))+", "+str(np.amax(wavelength2))+")"
   wavelengths = np.logspace(np.amin(np.log10(wavelength2)), np.amax(np.log10(wavelength2)), num=numrows, base=base, endpoint = True)
 
   print "New wavelength mesh has "+str(numrows)+" rows."
   #print wavelengths
   
+  print "** Info: definition of interpolation functions..."
+  wavelength1=np.sort(wavelength1)
+  wavelength2=np.sort(wavelength2)
+    
   fni = InterpolatedUnivariateSpline(wavelength1, n, k=order)
-  fki = InterpolatedUnivariateSpline(wavelength2, k, k=order)
-
-  #Interpolated one optical constants
-  try: 
-	ni = fni(wavelength); ki = fki(wavelength)
-	epsilon = (ni+1j*ki) #we are picking up the epsRe, and epsIm directly here
-	print "Interpolated permittivity at "+str(wavelength*1e9)+" nm = "+str(epsilon)
+  fki = InterpolatedUnivariateSpline(wavelength2, kk, k=order)
+  
+  #Interpolation for one optical constant
+  try:
+    ni = fni(wavelength); ki = fki(wavelength)
+    #print wavelength, ni, ki
+    epsilon = (ni+1j*ki) #NOTE: we are picking up the epsRe, and epsIm directly here
+    print "" 
+    print "Interpolated permittivity at "+str(wavelength*1E9)+" nm = "+str(epsilon)
   except: 
-	  print "Interpolation for "+str(wavelength*1E9)+" nm failed."
+    print "Interpolation for "+str(wavelength*1E9)+" nm failed."
 	  
-  #try:
-	#wavelength = 532e-9
-	#ni = fni(wavelength); ki = fki(wavelength)
-	#epsilon = (ni+1j*ki)
-	#print "Interpolated permittivity at "+str(wavelength*1e9)+" nm = "+str(epsilon)
-  #except: 
-	  #print "Interpolation for "+str(wavelength*1E9)+" nm failed."
-  #try:
-	#wavelength = 400e-9
-	#ni = fni(wavelength); ki = fki(wavelength)
-	#epsilon = (ni+1j*ki)
-	#print "Interpolated permittivity at "+str(wavelength*1e9)+" nm = "+str(epsilon)
-  #except: 
-	  #print "Interpolation for "+str(wavelength*1E9)+" nm failed."
-  #try:
-	#wavelength = 930e-9
-	#ni = fni(wavelength); ki = fki(wavelength)
-	#epsilon = (ni+1j*ki)
-	#print "Interpolated permittivity at "+str(wavelength*1e9)+" nm = "+str(epsilon)
-  #except: 
-	  #print "Interpolation for "+str(wavelength*1E9)+" nm failed."
-
-  # defining the new n and k on a common mesh
+  # defining the new epsR and epsC on a common mesh
   ni = fni(wavelengths)
-  ki = fki(wavelengths)
+  ki = fki(wavelengths)  
 
   if(plotting):
-	  plt.figure()
-	  plt.xlabel(r'$\mathcal{R}e(\varepsilon)$ (nm)')
-	  plt.ylabel('n, k')
-	  plt.semilogx(wavelength1*1e9, n, 'bs', label='n Palik')
-	  plt.semilogx(wavelength2*1e9, k, 'rs', label='k Palik')
-	  plt.semilogx(wavelengths*1e9, ni, 'b-', label='n interp')
-	  plt.semilogx(wavelengths*1e9, ki, 'r-', label='k interp')
-	  plt.grid()
-	  plt.legend(loc=1)
-	  plt.savefig('GraphData.eps')
-  return 0
-  #plt.show()
+    plt.figure()
+    plt.xlabel(r'$\mathcal{R}e(\varepsilon)$ (nm)')
+    plt.ylabel('n, k')
+    plt.semilogx(wavelength1*1e9, n, 'bs', label='Re(eps) data')
+    plt.semilogx(wavelength2*1e9, kk, 'rs', label='Im(eps) data')
+    plt.semilogx(wavelengths*1e9, ni, 'b-', label='Re(eps) interp')
+    plt.semilogx(wavelengths*1e9, ki, 'r-', label='Im(eps) interp')
+    plt.grid()
+    plt.legend(loc=1)
+    plt.savefig('GraphData.eps')
+    plt.show()
+
+  return epsilon
+  
 #}}}
 
 def importFromAbsorptionData(wavelength, folder, filename, plotting): #{{{
@@ -294,11 +281,16 @@ if(len(sys.argv)<=2):
   exit()
  
 material = sys.argv[1]
-wavelength = float(sys.argv[2])
+try:
+  wavelength = float(sys.argv[2])
+except: 
+  print "** Error: command line must have the hape: <Material symbol> <Wavelength (nm)> <Publication author>"
+  exit()
+  
 try:
   source = sys.argv[3]
 except:
-  print "No data source given: using DEFAULT=Palik"
+  print "** Warning: no data source given: using DEFAULT=Palik"
   source = "Palik"
   
 filename = material+"-"+source
@@ -337,6 +329,13 @@ try:
     print epsilon
     print "You can add the following directly inside 'MaterialOpticalDatabaseForPlasmonics.csv'"
     print filename+"\t"+"?"+"\t"+str(int(wavelength))+"\t"+str(epsilon.real)+"\t"+str(epsilon.imag)+"\t?\t?\t?\t?\t?"
+  elif(source == "Miller"):
+    folder = "Database/LiquidMetals/"
+    filename = "l-Cu-Miller"
+    epsilon = importFromEpsilonTable(wavelength*1E-9, folder, filename, plotting)
+    print epsilon
+    print "You can add the following directly inside 'MaterialOpticalDatabaseForPlasmonics.csv'"
+    print filename+"\t"+"?"+"\t"+str(int(wavelength))+"\t"+str(epsilon.real)+"\t"+str(epsilon.imag)+"\t?\t?\t?\t?\t?"
   else:
     folder = "Database/PalikGraph/"
     print "Material: "+filename+"."
@@ -346,7 +345,7 @@ try:
     print "You can add the following directly inside 'MaterialOpticalDatabaseForPlasmonics.csv'"
     print filename+"\t"+"?"+"\t"+str(int(wavelength))+"\t"+str(epsilon.real)+"\t"+str(epsilon.imag)+"\t?\t?\t?\t?\t?"
 except:
-  print "Failed to import "+filename+"!"
+  print "Failed to import "+folder+filename+"!"
   print "Goto Database/importPalikData.sh for finding other sources."
   
 #==========================================
@@ -377,7 +376,7 @@ except:
 #print "Lambda = 3000 nm"
 #importFromNKtable(3000e-9, folder, filename)
 
-#importFromEpsilonTable(515e-9, folder, filename, plotting=True)
+#importFromEpsilonTable(wavelength, folder, filename, plotting=True)
 #===========================================
 #print "Lambda = 515 nm"
 #importFromAbsorptionData(515e-9, folder, filename, plotting=True)

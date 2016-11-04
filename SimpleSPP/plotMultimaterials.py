@@ -107,11 +107,15 @@ def plotSeveralWavelengths(database1, database2, reverse, metal, query):#{{{
   Two types of data are included: 
   - Points: 1 point per material. 
   - Lines : the continuum calculation.
+  
+  Metal mode: enable for materials found metallic on most of the wavelengths
+  Reverse mode: invert the material indices from the SPP database. Useful some metallic materials. 
+  
   """
   # Extract data for 800 nm
   Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, k1imag, k2imag, DeltaLsppValue = ExtractDataDb(database1)
   
-  if(reverse): #swap eps1 and eps2
+  if(metal): #swap eps1 and eps2
     Material2, Material1, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth2, SPPdecayDepth1, Reflectivity, OpticalPenetration2, OpticalPenetration1, SPPdecayLength, eps2r, eps2c, eps1r, eps1c, k2imag, k1imag, DeltaLsppValue = ExtractDataDb(database1)
   else: 
     Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, k1imag, k2imag, DeltaLsppValue = ExtractDataDb(database1)
@@ -131,12 +135,16 @@ def plotSeveralWavelengths(database1, database2, reverse, metal, query):#{{{
   else:
     plt.xlabel(r'Dielectric permittivity: $\mathcal{R}e(\varepsilon_1)$')
   
+  # Discontinuous plotting
   plt.ylabel('SPP period $\Lambda$ (nm)')
   plt.plot(eps2r, SPPperiod, 'or', label='800 nm', markersize=8)
   
+  # Continuous plotting
+  eps1range = epsilon1[0] #use external index
   eps2range = np.arange(-70,0e0,0.1e0)
-  eps1range = 1. #use external index
   
+  # Use only one object
+  # TODO: reprogram the whole function with switches in function arguments
   if(not metal): 
     refractiveindex1 = EpsilonToIndex(epsilon1)
   else: 
@@ -151,7 +159,7 @@ def plotSeveralWavelengths(database1, database2, reverse, metal, query):#{{{
   
   # Extract (again) for 400 nm
   #TODO: use a function here! code is repeated! 
-  if(reverse): #swap eps1 and eps2
+  if(metal): #swap eps1 and eps2
     Material2, Material1, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth2, SPPdecayDepth1, Reflectivity, OpticalPenetration2, OpticalPenetration1, SPPdecayLength, eps2r, eps2c, eps1r, eps1c, k2imag, k1imag, DeltaLsppValue = ExtractDataDb(database2)
   else: 
     Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, k1imag, k2imag, DeltaLsppValue = ExtractDataDb(database2)
@@ -166,8 +174,12 @@ def plotSeveralWavelengths(database1, database2, reverse, metal, query):#{{{
   epsilon2 = np.add(eps2r,np.multiply(1e0j, eps2c))
   
   # Continuous plots
+  #if(metal):
+    #eps1range = np.arange(-70,0e0,0.1e0)
+    #eps2range = epsilon1[0] #TODO: use external index
+  #else:
+  eps1range = epsilon1[0]
   eps2range = np.arange(-70,0e0,0.1e0)
-  eps1range = 1. #use external index
   
   if(not metal): 
     refractiveindex1 = EpsilonToIndex(epsilon1)
@@ -190,13 +202,13 @@ def plotSeveralWavelengths(database1, database2, reverse, metal, query):#{{{
   #print eps1r
   #TODO simplify + combine the 3 following tests
   if(metal):
-    if(query=="Au-Johnson"):
+    if(query=="Au (Palik)"):
       plt.axis([0,25,0,900]) ##KEEP 900 please #good for Au
-    elif(query=="Ti-Johnson"):
+    elif(query=="Ti (Johnson)"):
       plt.axis([0,20,0,900]) ##KEEP 900 please #good for Ti
     else:
       print "** Error: this query is not a planned case. Query="+query
-      exit()
+      #exit()
   else: #non-metal
     plt.axis([-70,0,0,900]) ##KEEP 900 please
     
@@ -205,11 +217,12 @@ def plotSeveralWavelengths(database1, database2, reverse, metal, query):#{{{
   #plt.axis([0,35,0,1000])
   if(not metal): 
     if(query=="Air"):
-      plt.legend(loc=4) #Good for Air
-    elif(query=="SiO2-Palik"):
+      #plt.legend(loc=4) #Good for Air
+      plt.legend(bbox_to_anchor=(0.95, 0.05), loc=4, borderaxespad=0.)
+    elif(query=="SiO2 (Palik)"):
       plt.legend(loc=2) #Good for SiO_2
     else:
-      print "** Error: this query is not a planned case. Query="+query
+      #print "** Error: this query is not a planned case. Query="+query
       exit()
   else: #metal case
     plt.legend(loc=1)
@@ -218,14 +231,16 @@ def plotSeveralWavelengths(database1, database2, reverse, metal, query):#{{{
   #plt.title(query)
   plt.grid()
   
+  # Adding a sub-plot
   if(not metal): 
     #a = plt.axes([-70,300,-40,700], axisbg='g')
-    if(query=="SiO2-Palik"):
-      a = plt.axes([0.2,0.17,0.35,0.35], axisbg='w') #Good for SiO2
+    if(query=="SiO2 (Palik)"):
+      a = plt.axes([0.2,0.18,0.35,0.35], axisbg='w') #Good for SiO2
       plt.axis([-6,0,250,290]) #Good for SiO2
       plt.yticks([250,270,290]) #Good for SiO2
     elif (query=="Air"):
-      a = plt.axes([0.2,0.2,0.35,0.35], axisbg='w') #Good for Air
+      # Position of the plot
+      a = plt.axes([0.2,0.17,0.35,0.35], axisbg='w') #Good for Air
       plt.axis([-6,0,380,410]) #Good for Air
       plt.yticks([380,390,400,410])
     else: #TODO: set a general case
@@ -256,7 +271,7 @@ if(len(sys.argv)<=2):
 query = sys.argv[1]
 wavelength = 1E-9*float(sys.argv[2])
 try:
-  source = "("+sys.argv[3]+")"
+  source = " ("+sys.argv[3]+")"
 except:
   source = ""
 
@@ -277,7 +292,7 @@ print "Operating wavelength = "+str(wavelength*1E9)+"nm."
 #query = 'SiO2 (Palik)'
 
 reverse = False #reverse eps1 and eps2 for plotting
-metal = False
+metal = True
 
 thickness=500e-9
 print "Interface 1: "+query

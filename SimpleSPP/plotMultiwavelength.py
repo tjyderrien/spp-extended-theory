@@ -35,6 +35,7 @@ MaterialFile1="Air"
 #MaterialFile2="Mo-Palik"
 #MaterialFile2="Si-Palik"
 
+#============ Manage the command line input =================
 query = sys.argv[1]
 #wavelength = 1E-9*float(sys.argv[2])
 try:
@@ -71,7 +72,7 @@ else:
   print "** Warning: Rare source of optical data was selected..."
   UnitMat2=1e6
 
-# Loading Material dielectric complex permittivity into arrays
+#================ Loading Material dielectric complex permittivity into arrays ====================
 try: 
 	MaterialArray2 = loadtxt(MaterialFolder+'/'+MaterialFile2, delimiter='\t', skiprows=4)
 except: 
@@ -257,25 +258,28 @@ LifeTimePhase = np.clip(LifeTimePhase, 0, 1)
 LifeTimeApprox = np.clip(LifeTimeApprox, 0, 1)
 
 # Plotting the SPP lifetime
-
+HohenauLabel=17
+RaetherLabel=18
 plt.figure()
 plt.xlabel('Wavelength $\lambda$ (nm)')
 plt.ylabel(r'SPP lifetime $\tau_{\mbox{SPP}}$ (ps)')
-plt.plot(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeOld, 'b-', label=r'Raether, $\omega \in \mathbb{C}$, $\beta \in \mathbb{R}$')
-plt.plot(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeRe, 'k-', label=r'$\tau=L_{SPP}/v_g$, PMA, $\omega \in \mathbb{R}$, $\beta \in \mathbb{R}$')
-plt.plot(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeNew, 'r--', label=r'$\tau=L_{SPP}/v_g$, Wirtinger, $\omega \in \mathbb{R}$, $\beta \in \mathbb{C}$')
+line2,=plt.plot(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeRe, 'r--', label=r'Eq. (17)')
+line1,=plt.plot(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeOld, 'k-', label=r'Eq. (18)')
+#line3,=plt.plot(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeNew, 'r--', label=r'$\tau_{SPP}=L_{SPP}/v_g$, Eq. (Wirtinger), $\omega \in \mathbb{R}$, $\beta \in \mathbb{C}$')
 #plt.plot(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimePhase, 'r--', label=r'Phase, real $\omega$, complex $\beta$')
 #plt.plot(1e9*2*pi*c/omegaspp, 1E12*LifeTimeApprox, 'b--', label=r'Phase, approx.')
 #plt.title(MaterialFile1+'/'+MaterialFile2+' interface')
+# change style of lines
+plt.setp(line1, linewidth=3); plt.setp(line2, linewidth=3); #plt.setp(line3, linewidth=3); 
 plt.legend(loc=2)
-#plt.xticks(np.arange(0, 2500, 500))
+plt.xticks(np.arange(0, 2500, 500))
 if(query == "Ti"):
-  maxLifeTime=0.1
+  maxLifeTime=0.05
 elif (query == "Ag"):
-  maxLifeTime=10
+  maxLifeTime=7
 else:
   maxLifeTime=10
-plt.axis([300,2000,0,maxLifeTime])
+plt.axis([343,2000,0,maxLifeTime])
 plt.savefig(MaterialFile1+MaterialFile2+'Lifetime.eps')
 plt.savefig(MaterialFile1+MaterialFile2+'Lifetime.png')
 #plt.show()

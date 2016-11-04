@@ -1,11 +1,11 @@
 # 2016 Oct 22nd			
 # Analysis of Cu period for several pulse durations and wavelengths			
 #			
-#Wavelength (nm)	SPP condition at air-Cu interface	Simple SPP period (nm)	Sipe SPP period (nm)
-1064	Satisfied	1049	1037
-1030	Satisfied	1019	999.8
-800	Satisfied	784	779.8
-532	Satisfied	509	508.3
-400	Satisfied	384	377.1
-355	Satisfied	355	330
+#Wavelength (nm)	SPP condition at air-Cu interface	Simple SPP period (nm)	Sipe SPP period (nm)	SPP liquid Cu period (nm)
+1064	Satisfied	1049	1037	996.98
+1030	Satisfied	1019	999.8	964.37
+800	Satisfied	784	779.8	?
+532	Satisfied	509	508.3	508.36
+400	Satisfied	384	377.1	?
+355	Satisfied	355	330	342.77
 #Calculation references	Journal of Optics 18, 115007 (2016)		J. Appl. Phys. 97, 013538 (2005)

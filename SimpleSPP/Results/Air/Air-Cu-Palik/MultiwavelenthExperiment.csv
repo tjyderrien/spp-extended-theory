@@ -1,0 +1,8 @@
+# Property of E. Gurevich, Bochum University
+# Experimental data
+# LIPSS Period for various wavelengths
+
+# Wavelength (nm)	Period	ErrorBar
+1064	580	70
+532	360	20
+355	260	20

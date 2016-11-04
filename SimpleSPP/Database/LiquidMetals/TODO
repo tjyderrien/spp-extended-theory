@@ -1,0 +1,3 @@
+1. Interpolate ReEps and ImEps on the same grid. 
+2. Convert (ReEps, ImEps) to (n,k)
+3. Compute the SPP period.

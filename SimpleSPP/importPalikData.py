@@ -6,11 +6,14 @@ from SimpleSPProutines import *
 
 # Importing data from Palik book using graphs. 
 # Optical data are given in csv files, created using Engauge-digitizer software. 
+# OUTPUTS: 
 
-def importFromPalikGraph(wavelength, folder, filename, plotting=1):#{{{
-  """This routine is made to import data captured using Engauge Digitizer. 
-  Be very careful! The data produced by this method are very unprecise. SPP spectoscopy requires precision to 1E-3. 
-  This method gives a precision worst then 1E0. Then, it is only in case we have no other data. 
+def importFromNKtable(wavelength, folder, filename, plotting=1):#{{{
+  """This routine is made to import data captured using a software like Engauge Digitizer. 
+  This leads to obtain (n,k) discretized on DIFFERENT MESHES. 
+  
+  NOTE: Warning: the data produced by this method are rather unprecise. SPP spectoscopy requires precision to 1E-3. 
+  This method gives a precision worst then 1E0. Use only in case no other data are available. 
   """
   nfile = folder+filename+"-n.csv"
   kfile = folder+filename+"-k.csv"
@@ -88,10 +91,13 @@ def importFromPalikGraph(wavelength, folder, filename, plotting=1):#{{{
   #plt.show()
 #}}}
 
-def importFromEpsGraph(wavelength, folder, filename, plotting): #{{{
-  """This routine is made to import data captured using Engauge Digitizer. 
-  Be very careful! The data produced by this method are very unprecise. SPP spectoscopy requires precision to 1E-3. 
-  This method gives a precision worst then 1E0. Then, it is only in case we have no other data. 
+def importFromEpsilonTable(wavelength, folder, filename, plotting): #{{{
+  """This routine is made to import data captured using a software like Engauge Digitizer. 
+  Input: (epsReal, epsImag) discretized on DIFFERENT MESHES. 
+  Output: (n,k, epsilon) discretized on the same mesh. 
+  
+  NOTE: Warning: the data produced by this method are rather unprecise. SPP spectoscopy requires precision to 1E-3. 
+  This method gives a precision worst then 1E0. Use only in case no other data are available. 
   """
   nfile = folder+filename+"-epsR.csv"
   kfile = folder+filename+"-epsC.csv"
@@ -170,7 +176,7 @@ def importFromEpsGraph(wavelength, folder, filename, plotting): #{{{
 #}}}
 
 def importFromAbsorptionData(wavelength, folder, filename, plotting): #{{{
-  """This routine is made to import data captured using Engauge Digitized. 
+  """This routine is made to import data captured using sofware such as Engauge Digitized. 
   Be very careful! The data produced by this method are very unprecise. SPP spectroscopy requires precision to 1E-3. 
   This method gives a precision worst then 1E0. Then, it is only in case we have no other data. 
   """
@@ -223,9 +229,16 @@ def importFromAbsorptionData(wavelength, folder, filename, plotting): #{{{
   #plt.show()
 #}}}
 
-def importFromTables(wavelength, folder, filename, plotting): #{{{
-  # interpolate palik data from tables of Palik
-
+def importFromTable(wavelength, folder, filename, plotting): #{{{
+  """ Description: Simply plots the optical data taken from a prepared database, 
+  and interpolate palik data from tables of Palik at the given wavelength. 
+  Useful to add one set of (ReEps, ImEps) for ONE wavelength in MaterialOpticalDatabaseForPlasmonics.csv. 
+  INPUT
+  - wavelength: (float) value of desired output wavelength
+  - folder: (str) name of the folder were database can be found
+  - filename: (str) name of the material file
+  - plotting: (boolean) plot the full data if True
+  """
   # Look for Palik into the name
   if(filename.find("Palik") > 0):
     unit1 = 1E-10 #Palik data
@@ -320,7 +333,7 @@ try:
     folder = "Database/"
     print "Material: "+filename+"."
     print "Wavelength = "+str(wavelength)+" nm"
-    epsilon = importFromTables(wavelength*1e-9, folder, filename, plotting)
+    epsilon = importFromTable(wavelength*1e-9, folder, filename, plotting)
     print epsilon
     print "You can add the following directly inside 'MaterialOpticalDatabaseForPlasmonics.csv'"
     print filename+"\t"+"?"+"\t"+str(int(wavelength))+"\t"+str(epsilon.real)+"\t"+str(epsilon.imag)+"\t?\t?\t?\t?\t?"
@@ -328,7 +341,7 @@ try:
     folder = "Database/PalikGraph/"
     print "Material: "+filename+"."
     print "Wavelength = "+str(wavelength)+" nm"
-    epsilon=importFromPalikGraph(wavelength*1e-9, folder, filename)
+    epsilon=importFromNKtable(wavelength*1e-9, folder, filename)
     print epsilon
     print "You can add the following directly inside 'MaterialOpticalDatabaseForPlasmonics.csv'"
     print filename+"\t"+"?"+"\t"+str(int(wavelength))+"\t"+str(epsilon.real)+"\t"+str(epsilon.imag)+"\t?\t?\t?\t?\t?"
@@ -338,33 +351,33 @@ except:
   
 #==========================================
 #print "Lambda = 3000 nm"
-#importFromTables(3000e-9, folder, filename, plotting=True)
+#importFromTable(3000e-9, folder, filename, plotting=True)
 #print "Lambda = 1064 nm"
-#importFromTables(1064e-9, folder, filename, plotting=True)
+#importFromTable(1064e-9, folder, filename, plotting=True)
 #print "Lambda = 1060 nm"
-#importFromTables(1060e-9, folder, filename, plotting)
+#importFromTable(1060e-9, folder, filename, plotting)
 #print "Lambda = 1030 nm"
-#importFromTables(1030e-9, folder, filename, plotting)
+#importFromTable(1030e-9, folder, filename, plotting)
 #print "Lambda = 800 nm"
-#importFromTables(800e-9, folder, filename, plotting)
+#importFromTable(800e-9, folder, filename, plotting)
 #print "Lambda = 795 nm"
-#importFromTables(795e-9, folder, filename, plotting)
+#importFromTable(795e-9, folder, filename, plotting)
 #plotting = False
 #print "Lambda = 625 nm"
-#importFromTables(625e-9, folder, filename, plotting)
+#importFromTable(625e-9, folder, filename, plotting)
 #print "Lambda = 532 nm"
-#importFromTables(532e-9, folder, filename, plotting)
+#importFromTable(532e-9, folder, filename, plotting)
 #print "Lambda = 515 nm"
-#importFromTables(515e-9, folder, filename, plotting)
+#importFromTable(515e-9, folder, filename, plotting)
 #print "Lambda = 400 nm"
-#importFromTables(400e-9, folder, filename, plotting)
+#importFromTable(400e-9, folder, filename, plotting)
 
 #===========================================
-#importFromPalikGraph(folder, filename)
+#importFromNKtable(folder, filename)
 #print "Lambda = 3000 nm"
-#importFromPalikGraph(3000e-9, folder, filename)
+#importFromNKtable(3000e-9, folder, filename)
 
-#importFromEpsGraph(515e-9, folder, filename, plotting=True)
+#importFromEpsilonTable(515e-9, folder, filename, plotting=True)
 #===========================================
 #print "Lambda = 515 nm"
 #importFromAbsorptionData(515e-9, folder, filename, plotting=True)

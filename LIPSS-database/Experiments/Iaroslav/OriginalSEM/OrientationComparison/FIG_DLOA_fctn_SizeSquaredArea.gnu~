@@ -1,0 +1,25 @@
+#! gnuplot
+
+unset multiplot
+
+reset
+set terminal postscript eps enhanced color font "Helvetica, 24" size 3.5, 2.62
+
+
+# ---- Params ----
+
+
+
+#		# --------------------------------------#
+#     	  	# --------------------------------------#
+#     	  	#					#
+#     		#                FILES         		#
+#     		#					#
+#     		# --------------------------------------#
+#     		# --------------------------------------#
+
+
+
+DLOA_Ti_OrigSEM  = "/home/yo/WORK/HiLASE/STUDIES/SPP-Extended-Theory/spp-extended-theory/LIPSS-database/Experiments/Iaroslav/OriginalSEM/OrientationComparison/Al_DLOA_SizeSquaredArea.dat"
+
+DLOA_Al_OrigSEM  = "/home/yo/WORK/HiLASE/STUDIES/SPP-Extended-Theory/spp-extended-theory/LIPSS-database/Experiments/Iaroslav/OriginalSEM/OrientationComparison/Ti_DLOA_SizeSquaredArea.dat"

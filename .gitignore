@@ -1,2 +1,5 @@
-#Ignore all these files
+*.pdf
+*.tar
 *.pyc
+*.tmp
+*.dat

@@ -1,7 +1,11 @@
 
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
-
+""" @package SimpleSPP 
+Module SimpleSPP explores the SPP theory at a single interface between 
+two semi-infinite media. The formal model is presented in 
+T.J.-Y. Derrien et al, Journal of Optics 18, 115007 (2016)
+"""
 # IMPORT LIBRARIES
 import numpy as np
 from numpy import genfromtxt, loadtxt, chararray
@@ -33,7 +37,7 @@ def omega(wavelength):#{{{
 
 # SPP BASIC FUNCTIONS
 def betaSPP(wavelength, eps1, eps2):#{{{
-    """calculate the SPP wave number on a flat interface
+    """ Calculate the SPP wave number on a flat interface
     input: wavelength (float), eps1 (complex), eps2(complex)
     """
     omega = 2.0*pi*c/wavelength

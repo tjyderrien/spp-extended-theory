@@ -2,12 +2,13 @@
 
 # Concept
 
-This set of Python functions allow to predict possibilities of SPP on various materials, and for various wavelengths.
+This set of Python functions is aiming at performing calculations to predict spectroscopical features of laser-matter interaction. In particular, emphasis is put on prediction of Surface Plasmon Polaritons on various materials, and for various wavelengths. 
 
-The content of the SimpleSPP folder is limited to two semi-infinite materials sharing one interface. For more advanced model, check other folders. 
+# Note
 
+SimpleSPP folder is limited to two semi-infinite materials sharing one interface. 
 
-# List of executable files
+# Description of executable files
 
 ## plotSPPmultiMaterialData.py: 
 

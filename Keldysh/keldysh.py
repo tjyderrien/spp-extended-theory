@@ -104,22 +104,26 @@ print "** Loading Keldysh module [Keldysh, Sov. J. Exp. Th. Phys. 47, 5 (1964)].
 print "** TODO: Correct formula using [Gruzdev, Optical Engineering 53, 122515 (2014)"
 Egap = 1.12e0*e; meff=0.18e0; Efield=1E9; wavelength = 800e-9
 
-print ""
-print "** Vectorizing functions..."
+## This section can consume GB of RAM. Do not use. #{{{ 
+#print ""
+#print "** Vectorizing functions..."
 gammaKeldysh = np.vectorize(gammaKeldysh)
 Keldysh1 = np.vectorize(Keldysh1)
 Keldysh2 = np.vectorize(Keldysh2)
 EffectiveGap=np.vectorize(EffectiveGap)
-#IonizationRate=np.vectorize(IonizationRate)
+KeldyshFunction=np.vectorize(KeldyshFunction)
+IonizationRate=np.vectorize(IonizationRate)
+#}}}
 
 print ""
 print "** Generating mesh..."
-Efield = np.arange(1E8,1E9,2)
+Efield = 1E8*np.arange(1,100,1)
 
 print ""
 print "Computing gamma..."
 gamma = gammaKeldysh(Egap, meff, Efield, wavelength) #valid
-exit()
+#print gamma
+
 print "Computing Keldysh1, Keldysh2..."
 k1 = Keldysh1(gamma); k2 = Keldysh2(gamma) #valid
 EgapEff = EffectiveGap(Egap, k1, k2) #Warning: scipy.special.ellipe (https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.ellipe.html#scipy.special.ellipe) uses a different convention than Maple, Wikipedia or mpmath.
@@ -134,3 +138,10 @@ print ""
 KeldyshFunctionResult = KeldyshFunction( k1, k2, EgapEff, order, wavelength )
 wPI = IonizationRate(k1, k2, KeldyshFunctionResult, EgapEff, wavelength)
 print "w_PI until order "+str(order)+" = ", wPI
+
+plt.figure()
+plt.xlabel("Field (V/m)")
+plt.ylabel("Excitation rate w_{PI} (m^{-3} s^{-1})")
+plt.plot(Efield, wPI, label="w_{PI}")
+#plt.loglog(Efield, gamma, label="gamma")
+plt.show()

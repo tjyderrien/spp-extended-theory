@@ -96,10 +96,9 @@ def plotDatabaseDeltaLspp(database, legend, outputfile, query, metal): #{{{
   return 0
 #}}}
 
-EpsilonToIndex = np.vectorize(EpsilonToIndex)
-EffectiveIndex = np.vectorize(EffectiveIndex)
+#EpsilonToIndex = np.vectorize(EpsilonToIndex)
 
-Swap = np.vectorize(Swap)
+#Swap = np.vectorize(Swap)
 
 def plotSeveralWavelengths(database1, database2, reverse, metal, query):#{{{
   """
@@ -291,8 +290,9 @@ print "Operating wavelength = "+str(wavelength*1E9)+"nm."
 #query = 'TiO2 (Devore 1951, e)'
 #query = 'SiO2 (Palik)'
 
+# TODO: THIS VARIABLE MUST BE NOT DEFINED BY HAND !!! O_O
 reverse = False #reverse eps1 and eps2 for plotting
-metal = True
+metal = False
 
 thickness=500e-9
 print "Interface 1: "+query

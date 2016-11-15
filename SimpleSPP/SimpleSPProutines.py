@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
-## @package SimpleSPP 
+## @package SimpleSPProutines
 # Module SimpleSPP explores the SPP theory at a single interface between 
 # two semi-infinite media. The formal model is presented in 
 # T.J.-Y. Derrien et al, Journal of Optics 18, 115007 (2016)
@@ -19,7 +19,11 @@ from scipy.constants import c, epsilon_0, mu_0, pi, e, m_e, h
 from matplotlib.legend_handler import HandlerLine2D
 import sys
 
-import libKeldysh
+from libKeldysh import *
+from libDatabase import *
+from libLaser import *
+from libMaterials import *
+from libMath import *
 
 lengthunit = 1e-9
 eta = 5e0 #assumed precision error on the dielectric permittivity
@@ -31,10 +35,10 @@ rc('font', **{'family':'serif', 'serif':['Palatino'], 'size':'18'})
 rc('text', usetex=True)
 mp.rcParams['legend.numpoints'] = 1
 
-# basic wave function
-def omega(wavelength):#{{{
-    return 2.0*pi*c/wavelength
-#}}}
+## basic wave function
+#def omega(wavelength):#{{{
+    #return 2.0*pi*c/wavelength
+##}}}
 
 # SPP BASIC FUNCTIONS
 def betaSPP(wavelength, eps1, eps2):#{{{
@@ -248,17 +252,17 @@ def deltaPeriodSPP(wavelength, eps1, eps2, deps1r, deps1c, deps2r, deps2c): #{{{
   return value.real
 #}}}
 
-def csgn(x, y): #{{{
-  # returns the complex sign, as in maple
-  if(x.real > 0e0 or x.real == 0e0 and x.imag > 0e0):
-    result = 1E0
-  else:
-    if(x.real < 0e0 or x.real == 0 and x.imag < 0e0):
-      result=-1e0
-    else: 
-      result = -1E99
-      print "csgn: Exception case, to be solved."
-#}}}
+#def csgn(x, y): #{{{
+  ## returns the complex sign, as in maple
+  #if(x.real > 0e0 or x.real == 0e0 and x.imag > 0e0):
+    #result = 1E0
+  #else:
+    #if(x.real < 0e0 or x.real == 0 and x.imag < 0e0):
+      #result=-1e0
+    #else: 
+      #result = -1E99
+      #print "csgn: Exception case, to be solved."
+##}}}
 
 # Precision over knowledge of period
 def deltaImBetaSPP(wavelength, eps1, eps2, deps1r, deps1c, deps2r, deps2c):#{{{
@@ -317,33 +321,6 @@ def DecayLengthSPP(beta):#{{{
     except: 
       result = -1
     return result
-#}}}
-  
-# OPTICAL FUNCTIONS
-def Drude(wavelength, ne, epsilon, nu):#{{{
-  """Return the value of dielectric function based on simplified Drude model
-  Input:
-    wavelength (float)
-    ne (float)
-    epsilon (complex): dielectric permittivity under wavelength, without excitation
-    nu (float): collision frequency
-  Output: complex-valued dielectric permittivity
-  """
-  omegap2=ne * e**2 / (m_e * meffe * epsilon_0)
-  omega=2.0*pi*c/wavelength
-  return epsilon - omegap2/(omega*omega) * 1e0/(1e0+1e0j*nu/omega)
-#}}}
-
-def reflectivity(eps1, eps2):#{{{
-  """Return Fresnel reflectivity 
-  Input:
-    eps1: complex-valued permittivity 1+j0
-    eps2: idem, for medium2
-  Output: 
-    interface reflectivity (float) R
-  """
-  R=abs(((eps1**0.5e0-eps2**0.5e0)/(eps1**0.5e0+eps2**0.5e0))**2)
-  return R
 #}}}
   
 ## More elaborated functions
@@ -670,32 +647,32 @@ def GenerateDatabase():
   return SPPactiveInterfacesArray
 
 
-def ExportToTxt(dbarray, filename):
-  """
-  Export an SPP array to a CSV file
-  SPP array must be produced with one of the SPPactiveInterfaces functions
-  """
-  try: 
-    np.savetxt(filename, dbarray, fmt="%s", delimiter='\t', newline='\n',comments='#')
-    out = 0
-  except: 
-    print "Could not output SPP database into a file"
-    out = 1
+#def ExportToTxt(dbarray, filename):
+  #"""
+  #Export an SPP array to a CSV file
+  #SPP array must be produced with one of the SPPactiveInterfaces functions
+  #"""
+  #try: 
+    #np.savetxt(filename, dbarray, fmt="%s", delimiter='\t', newline='\n',comments='#')
+    #out = 0
+  #except: 
+    #print "Could not output SPP database into a file"
+    #out = 1
   
-  #counter=0
+  ##counter=0
   
-  #for i in dbarray:
-    #for k in dbarray:
-      #if (np.mod(counter, 20) == 0):
-	#show the table line each 20 lines, but also put it in a table
-	#if (comment):
-	#print '{0:30s} {1:30s} {2:15s} {3:12s} {4:12s} {5:11s} {6:16s} {7:16s} {8:12s} {9:19s} {10:19s} {11:15s}'.format("# Substrate", "Layer", "Wavelength (nm)", "OldSPPactive", "NewSPPactive", "Period (nm)", "DecayDepth1 (nm)", "DecayDepth2 (nm)", "Reflectivity", "OpticalPenetration1", "OpticalPenetration2", "DecayLength")
-      #print dbarray[counter,:]
-      #Material1 = i
-      #counter=counter+1
-  #print Material1
-      #print '{0:30s} {1:30s} {2:15f} {3:12s} {4:12s} {5:11f} {6:16f} {7:16f} {8:12f}  {9:19f} {10:19f} {11:15f}'.format(Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, RealEps, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength)
-  return out
+  ##for i in dbarray:
+    ##for k in dbarray:
+      ##if (np.mod(counter, 20) == 0):
+	##show the table line each 20 lines, but also put it in a table
+	##if (comment):
+	##print '{0:30s} {1:30s} {2:15s} {3:12s} {4:12s} {5:11s} {6:16s} {7:16s} {8:12s} {9:19s} {10:19s} {11:15s}'.format("# Substrate", "Layer", "Wavelength (nm)", "OldSPPactive", "NewSPPactive", "Period (nm)", "DecayDepth1 (nm)", "DecayDepth2 (nm)", "Reflectivity", "OpticalPenetration1", "OpticalPenetration2", "DecayLength")
+      ##print dbarray[counter,:]
+      ##Material1 = i
+      ##counter=counter+1
+  ##print Material1
+      ##print '{0:30s} {1:30s} {2:15f} {3:12s} {4:12s} {5:11f} {6:16f} {7:16f} {8:12f}  {9:19f} {10:19f} {11:15f}'.format(Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, RealEps, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength)
+  #return out
 
 def HohenauGroupVelocity(omega, k): 
   #calculates group velocity for a set of dispersion curves neglecting complex space
@@ -706,16 +683,16 @@ def HohenauGroupVelocity(omega, k):
   vg = np.diff(omega) / np.diff(k.real)
   return vg
 
-def RealDerivativeByComplex(f,z):
-  """Complex derivative a real-valued function by a complex-number
-  Input:
-    f: z->f(z)
-    z: z complex-valued numbers
-  Output:
-    df/dz according to Wirtinger complex derivatives formula
-  Careful: Wirtinger formula contain a 1/2 usually, but it was removed here to obtain consistent results with Hohenau lifetime and Raether lifetime. 
-  """
-  return (np.diff(f)/np.diff(z.real) - 1j*(np.diff(f)/np.diff(z.imag))) #2 x original
+#def RealDerivativeByComplex(f,z):
+  #"""Complex derivative a real-valued function by a complex-number
+  #Input:
+    #f: z->f(z)
+    #z: z complex-valued numbers
+  #Output:
+    #df/dz according to Wirtinger complex derivatives formula
+  #Careful: Wirtinger formula contain a 1/2 usually, but it was removed here to obtain consistent results with Hohenau lifetime and Raether lifetime. 
+  #"""
+  #return (np.diff(f)/np.diff(z.real) - 1j*(np.diff(f)/np.diff(z.imag))) #2 x original
 
 def LifeTimeRaether(beta, eps2, eps1):
 	omegasppimag=beta.real * c * eps1.imag/(2e0*eps1.real**2) * (eps1.real * eps2.real)/(eps1.real + eps2.real)
@@ -736,13 +713,13 @@ def LifeTimeVg(beta, vg):
   lifetime = length * (vg)**(-1e0)
   return lifetime
               
-def EpsilonToIndex(eps):
-  #returns the complex refractive index
-  return cmath.sqrt(eps)
+#def EpsilonToIndex(eps):
+  ##returns the complex refractive index
+  #return cmath.sqrt(eps)
 
-def IndexToEpsilon(n):
-  #returns the complex permittivity from optical index
-  return n*n
+#def IndexToEpsilon(n):
+  ##returns the complex permittivity from optical index
+  #return n*n
 
 def EffectiveIndex(eps1, eps2): 
   #returns effective optical index of SPP
@@ -750,81 +727,82 @@ def EffectiveIndex(eps1, eps2):
   return cmath.sqrt( eps1*eps2 / (eps1+eps2) )
 
 
-def FilterDatabase(SPPdb, query, FieldIndex):
-  """ Filter SPP database using query and returns a smaller database
-  /!\ content of query cell should be exact
-  """
-  SPPdbFiltered = np.array(SPPdb[SPPdb[:,FieldIndex]==query,:]) #uses a table of booleans to select
-  return SPPdbFiltered
+#def FilterDatabase(SPPdb, query, FieldIndex):
+  #""" Filter SPP database using query and returns a smaller database
+  #/!\ content of query cell should be exact
+  #"""
+  #SPPdbFiltered = np.array(SPPdb[SPPdb[:,FieldIndex]==query,:]) #uses a table of booleans to select
+  #return SPPdbFiltered
 
-def FilterDatabaseContains(SPPdb, query, FieldIndex):
-  """ Filter SPP database using query and returns a smaller database
-  """
-  SPPdbFiltered = SPPdb[np.array(np.core.defchararray.find(SPPdb[:,FieldIndex], query)==0),:]
-  return SPPdbFiltered
+#def FilterDatabaseContains(SPPdb, query, FieldIndex):
+  #""" Filter SPP database using query and returns a smaller database
+  #"""
+  #SPPdbFiltered = SPPdb[np.array(np.core.defchararray.find(SPPdb[:,FieldIndex], query)==0),:]
+  #return SPPdbFiltered
 
-def FilterDatabaseLowerThan(SPPdb, query, FieldIndex):
-  """ Filter SPP database using query and returns a smaller database
-  /!\ content of query cell should be exact
-  """
-  SPPdbFiltered = np.array(SPPdb[SPPdb[:,FieldIndex]<query,:]) #uses a table of booleans to select
-  return SPPdbFiltered
+#def FilterDatabaseLowerThan(SPPdb, query, FieldIndex):
+  #""" Filter SPP database using query and returns a smaller database
+  #/!\ content of query cell should be exact
+  #"""
+  #SPPdbFiltered = np.array(SPPdb[SPPdb[:,FieldIndex]<query,:]) #uses a table of booleans to select
+  #return SPPdbFiltered
 
-def ExtractMaterialData(Database): #TODO: Think how to take data from continuous database directly instead of the ponctual file.
-  # Extract data from database of materials (5 columns)
-  Material1 = Database[:, 0]; BandGap = Database[:,1]; 
-  Wavelength = Database[:, 2]; 
-  RealEps = Database[:,3]; ImagEps = Database[:,4]; 
+#def ExtractMaterialData(Database): #TODO: Think how to take data from continuous database directly instead of the ponctual file.
+  ## Extract data from database of materials (5 columns)
+  #Material1 = Database[:, 0]; BandGap = Database[:,1]; 
+  #Wavelength = Database[:, 2]; 
+  #RealEps = Database[:,3]; ImagEps = Database[:,4]; 
   
-  #Converts strings to floats
-  #Material1 = np.asfarray(Material1)
-  #BandGap = np.asfarray(BandGap)
+  ##Converts strings to floats
+  ##Material1 = np.asfarray(Material1)
+  ##BandGap = np.asfarray(BandGap)
+  ##Wavelength = np.asfarray(Wavelength)
+  ##RealEps = np.asfarray(RealEps)
+  ##ImagEps = np.asfarray(ImagEps)
+  
+  #return Material1, BandGap, Wavelength, RealEps, ImagEps
+
+#def ExtractDataDb(SPPdbFiltered):
+  ## Extract data from database
+  #Material1 = SPPdbFiltered[:, 0]; Material2 = SPPdbFiltered[:,1]; 
+  #Wavelength = SPPdbFiltered[:, 2]; 
+  #OldSPPactiveBool = SPPdbFiltered[:,3]; NewSPPactiveBool = SPPdbFiltered[:,4]; 
+  #RealEps = SPPdbFiltered[:,5]; RealEpsError = SPPdbFiltered[:,6];
+  #SPPdecayDepth1 = SPPdbFiltered[:,7]; SPPdecayDepth2 = SPPdbFiltered[:,8]; 
+  #Reflectivity = SPPdbFiltered[:, 9]; OpticalPenetration1 = SPPdbFiltered[:,10]; OpticalPenetration2 = SPPdbFiltered[:,10]; SPPdecayLength = SPPdbFiltered[:,12]
+  #eps1r = SPPdbFiltered[:, 13]; eps1c = SPPdbFiltered[:,14]; eps2r = SPPdbFiltered[:,15]; eps2c = SPPdbFiltered[:,16]; k1imag = SPPdbFiltered[:,17]; 
+  #k2imag = SPPdbFiltered[:,18]
+  #DeltaLsppValue = SPPdbFiltered[:,19]
+  
+  ##Converts strings to floats
   #Wavelength = np.asfarray(Wavelength)
   #RealEps = np.asfarray(RealEps)
-  #ImagEps = np.asfarray(ImagEps)
-  
-  return Material1, BandGap, Wavelength, RealEps, ImagEps
+  #RealEpsError = np.asfarray(RealEpsError)
+  #SPPdecayDepth1 = np.asfarray(SPPdecayDepth1)
+  #SPPdecayDepth2 = np.asfarray(SPPdecayDepth2)
+  #Reflectivity = np.asfarray(Reflectivity)
+  #OpticalPenetration1 = np.asfarray(OpticalPenetration1)
+  #OpticalPenetration2 = np.asfarray(OpticalPenetration2)
+  #SPPdecayLength = np.asfarray(SPPdecayLength)
+  #eps1r = np.asfarray(eps1r)
+  #eps1c = np.asfarray(eps1c)
+  #eps2r = np.asfarray(eps2r)
+  #eps2c = np.asfarray(eps2c)
+  #k1imag = np.asfarray(k1imag)
+  #k2imag = np.asfarray(k2imag)
+  #DeltaLsppValue = np.asfarray(DeltaLsppValue)
 
-def ExtractDataDb(SPPdbFiltered):
-  # Extract data from database
-  Material1 = SPPdbFiltered[:, 0]; Material2 = SPPdbFiltered[:,1]; 
-  Wavelength = SPPdbFiltered[:, 2]; 
-  OldSPPactiveBool = SPPdbFiltered[:,3]; NewSPPactiveBool = SPPdbFiltered[:,4]; 
-  RealEps = SPPdbFiltered[:,5]; RealEpsError = SPPdbFiltered[:,6];
-  SPPdecayDepth1 = SPPdbFiltered[:,7]; SPPdecayDepth2 = SPPdbFiltered[:,8]; 
-  Reflectivity = SPPdbFiltered[:, 9]; OpticalPenetration1 = SPPdbFiltered[:,10]; OpticalPenetration2 = SPPdbFiltered[:,10]; SPPdecayLength = SPPdbFiltered[:,12]
-  eps1r = SPPdbFiltered[:, 13]; eps1c = SPPdbFiltered[:,14]; eps2r = SPPdbFiltered[:,15]; eps2c = SPPdbFiltered[:,16]; k1imag = SPPdbFiltered[:,17]; 
-  k2imag = SPPdbFiltered[:,18]
-  DeltaLsppValue = SPPdbFiltered[:,19]
-  
-  #Converts strings to floats
-  Wavelength = np.asfarray(Wavelength)
-  RealEps = np.asfarray(RealEps)
-  RealEpsError = np.asfarray(RealEpsError)
-  SPPdecayDepth1 = np.asfarray(SPPdecayDepth1)
-  SPPdecayDepth2 = np.asfarray(SPPdecayDepth2)
-  Reflectivity = np.asfarray(Reflectivity)
-  OpticalPenetration1 = np.asfarray(OpticalPenetration1)
-  OpticalPenetration2 = np.asfarray(OpticalPenetration2)
-  SPPdecayLength = np.asfarray(SPPdecayLength)
-  eps1r = np.asfarray(eps1r)
-  eps1c = np.asfarray(eps1c)
-  eps2r = np.asfarray(eps2r)
-  eps2c = np.asfarray(eps2c)
-  k1imag = np.asfarray(k1imag)
-  k2imag = np.asfarray(k2imag)
-  DeltaLsppValue = np.asfarray(DeltaLsppValue)
+  #return Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, RealEps, RealEpsError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, k1imag, k2imag, DeltaLsppValue
 
-  return Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, RealEps, RealEpsError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, k1imag, k2imag, DeltaLsppValue
-
-def Swap(eps1, eps2):#{{{
-  eps3 = eps1
-  eps1 = eps2
-  eps2 = eps3
-  del eps3
-  return(eps1, eps2) 
-#}}}
+#def Swap(eps1, eps2):#{{{
+  #eps3 = eps1
+  #eps1 = eps2
+  #eps2 = eps3
+  #del eps3
+  #return(eps1, eps2) 
+##}}}
 
 kzSPP = np.vectorize(kzSPP)
 DecayDepth = np.vectorize(DecayDepth)
-omega = np.vectorize(omega) 
+EffectiveIndex = np.vectorize(EffectiveIndex)
+#omega = np.vectorize(omega) 

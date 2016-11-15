@@ -45,15 +45,18 @@ print "Egap = "+str(Egap/e)+" eV, Ueff = "+str(EgapEff/e)+" eV."
 print ""
 
 KeldyshFunctionResult = KeldyshFunction( k1, k2, EgapEff, order, wavelength )
+KeldyshFunctionResultG = KeldyshFunction_Gruzdev( k1, k2, EgapEff, order, wavelength )
 wPI = IonizationRate(k1, k2, KeldyshFunctionResult, EgapEff, wavelength)
+wPIg= IonizationRate_Gruzdev(k1, k2, KeldyshFunctionResultG, EgapEff, wavelength)
 print "w_PI until order "+str(order)+" = ", wPI
 
 plt.figure()
 plt.subplot(311)
 plt.xlabel("Field (V/m)")
 plt.ylabel("Excitation rate w_{PI} (m^{-3} s^{-1})")
-plt.loglog(Efield, wPI, linestyle="-", color="k", label="w_{PI}")
-plt.legend()
+plt.loglog(Efield, wPI, linestyle="-", color="r", label="w_{PI} original")
+plt.loglog(Efield, wPIg, linestyle="-", color="b", label="w_{PI} corrected")
+plt.legend(loc=2)
 
 plt.subplot(312)
 plt.xlabel("Field (V/m)")
@@ -61,12 +64,14 @@ plt.ylabel("Adiabadicity parameter")
 plt.loglog(Efield, gamma, color="k", linestyle="-", label="gamma")
 # plt.loglog(Efield, 0.1, label="Tunnelling limit")
 # plt.loglog(Efield, 10.*np.ones(), label="MPI limit")
-plt.legend()
+plt.legend(loc=3)
 
 plt.subplot(313)
 plt.xlabel("Intensity (W/m^{2})") #Field (V/m)")
 # plt.xlabel("Field (V/m)")
 plt.ylabel("Density estimation (m^{-3})")
-plt.loglog(FieldToIntensity(Efield), wPI*tau)
+plt.loglog(FieldToIntensity(Efield), wPI*tau, label="n_e estim.")
+plt.loglog(FieldToIntensity(Efield), wPIg*tau, label="n_e estim. corrected")
+plt.legend(loc=2)
 plt.savefig("KeldyshAnalytic.eps")
 plt.show()

@@ -106,9 +106,9 @@ def KeldyshFunction_Gruzdev(Keldysh1, Keldysh2, Ueff, nmax, wavelength): #{{{
 # This function is known to contain mistakes. 
 def IonizationRate(Keldysh1, Keldysh2, KeldyshFunctionResult, Ueff, wavelength):
   omegaLaser = 2.*pi*c/wavelength
-  IonizationRate=2.*omegaLaser/(9.*pi)*((omegaLaser*m_e)/(hbar*Keldysh1))**(1.5)*KeldyshFunctionResult*np.exp(-pi*np.trunc(Ueff/hbar/omegaLaser+1)*((ellipk(Keldysh1**2)-ellipe(Keldysh1**2))/(ellipe(Keldysh2**2))))
+  result = 2.*omegaLaser/(9.*pi)*((omegaLaser*m_e)/(hbar*Keldysh1))**(1.5)*KeldyshFunctionResult*np.exp(-pi*np.trunc(Ueff/hbar/omegaLaser+1)*((ellipk(Keldysh1**2)-ellipe(Keldysh1**2))/(ellipe(Keldysh2**2))))
   
-  return IonizationRate
+  return result
 
 ## Corrected Keldysh photoionization probability according to Vitaly Gruzdev (see Ref in details). 
 # Kane direct band gap structure
@@ -117,10 +117,10 @@ def IonizationRate(Keldysh1, Keldysh2, KeldyshFunctionResult, Ueff, wavelength):
 # inside. 
 def IonizationRate_Gruzdev(Keldysh1, Keldysh2, KeldyshFunctionResult, Ueff, wavelength):
   omegaLaser = 2.*pi*c/wavelength
-  IonizationRate=2. * IonizationRate(Keldysh1, Keldysh2, KeldyshFunctionResult, Ueff, wavelength)
+  result =2. * IonizationRate(Keldysh1, Keldysh2, KeldyshFunctionResult, Ueff, wavelength)
   #2.*omegaLaser/(9.*pi)*((omegaLaser*m_e)/(hbar*Keldysh1))**(1.5)*KeldyshFunctionResult*np.exp(-pi*np.trunc(Ueff/hbar/omegaLaser+1)*((ellipk(Keldysh1**2)-ellipe(Keldysh1**2))/(ellipe(Keldysh2**2))))
   
-  return IonizationRate
+  return result
 
 ## Conversion between field and intensity (SI units)
 # TODO: As it is absorbed field, it should multiplied by real(optical index)
@@ -128,8 +128,8 @@ def IonizationRate_Gruzdev(Keldysh1, Keldysh2, KeldyshFunctionResult, Ueff, wave
 # 1. Value at rest (can be taken in "MaterialOpticalDatabase.dat" 
 # 2. Value with excitation using a Drude model, associated with some effective mass and collision frequency. 
 def FieldToIntensity(Field, permittivity=1):
-  intensity = 0.5 * c * epsilon_0 * real(sqrt(permittivity)) * Field**2
-  return intensity
+  intensity = 0.5 * c * epsilon_0 * np.sqrt(permittivity) * Field**2
+  return intensity.real
 
 ## This section can consume GB of RAM. Do not use. #{{{ 
 #print ""

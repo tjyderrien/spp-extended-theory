@@ -1,11 +1,10 @@
-
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
-""" @package SimpleSPP 
-Module SimpleSPP explores the SPP theory at a single interface between 
-two semi-infinite media. The formal model is presented in 
-T.J.-Y. Derrien et al, Journal of Optics 18, 115007 (2016)
-"""
+## @package SimpleSPP 
+# Module SimpleSPP explores the SPP theory at a single interface between 
+# two semi-infinite media. The formal model is presented in 
+# T.J.-Y. Derrien et al, Journal of Optics 18, 115007 (2016)
+
 # IMPORT LIBRARIES
 import numpy as np
 from numpy import genfromtxt, loadtxt, chararray
@@ -19,6 +18,8 @@ from matplotlib import rc
 from scipy.constants import c, epsilon_0, mu_0, pi, e, m_e, h
 from matplotlib.legend_handler import HandlerLine2D
 import sys
+
+import libKeldysh
 
 lengthunit = 1e-9
 eta = 5e0 #assumed precision error on the dielectric permittivity

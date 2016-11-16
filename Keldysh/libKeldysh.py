@@ -17,6 +17,9 @@ from matplotlib import rc
 from scipy.constants import c, epsilon_0, mu_0, pi, e, m_e, h, hbar
 #from matplotlib.legend_handler import HandlerLine2D
 #import sys
+rc('font', **{'family':'serif', 'serif':['Palatino'], 'size':'24'})
+rc('text', usetex=True)
+mp.rcParams['legend.numpoints'] = 1
 
 ## Computes the adiabadicity parameter
 #@param gamma: Adiabadicity parameter (non-dimensional number)
@@ -25,7 +28,7 @@ from scipy.constants import c, epsilon_0, mu_0, pi, e, m_e, h, hbar
 # * gammaKeldysh > 10: multi-photon excitation effect is dominant. 
 def gammaKeldysh(Egap, meff, Efield, wavelength): #{{{
   
-  #print Egap, meff, Efield	
+  #print Egap, meff, Efield
   omegaLaser=2.*pi*c/wavelength
   if (Efield != 0e0):
     result = omegaLaser*np.sqrt(m_e*meff*Egap)/e/Efield
@@ -131,10 +134,41 @@ def FieldToIntensity(Field, permittivity=1):
   intensity = 0.5 * c * epsilon_0 * np.sqrt(permittivity) * Field**2
   return intensity.real
 
-## This section can consume GB of RAM. Do not use. #{{{ 
-#print ""
+## Converts intensity to electric field amplitude
+def IntensityToField(intensity, permittivity=1):
+  Field = np.sqrt(2.0 * intensity / c / epsilon_0 / np.sqrt(permittivity))
+  if (Field.imag != 0): 
+    print "** Error: unexpected imaginary part in the conversion from Intensity to Field!"
+    exit(-1)
+  return Field.real
+
+## Builds Gaussian thickness from FWHM (in time or space)
+def sigmaFWHM(FWHM):
+  sigma = FWHM/(2.*np.sqrt(2.*np.log(2.)))
+  return sigma
+
+## Pulse shape with time
+# Defines the temporal shape of the laser pulse using a Gaussian law. 
+# @param t: instant to output (can be a table)
+# @param tau: pulse duration (s)
+# @param intensity: peak intensity (W/m^2)
+# @param t0: instant for the peak intensity (t0=0 by default)
+def PulseGaussianTemporalShape(t, tau, PeakIntensity, t0=0):
+  sigmaTau = sigmaFWHM(tau)
+  #PeakIntensity = fluence/tau 
+  #TODO: Missing coefficient on peak intensity ? 
+  intensity = PeakIntensity * np.exp(-0.5 * ((t-t0)/(sigmaTau))**2 )
+  return intensity
+
+## Calculate the time-dependent excited electron density for a given pulse shape
+# @param IntensityShape: function describing the temporal enveloppe of the pulse
+# @param 
+#def TimeDependentDensityKeldysh(IntensityShape, tau, intensity):
+  #%IntensityShape(
+
 #print "** Vectorizing functions..."
 FieldToIntensity = np.vectorize(FieldToIntensity)
+IntensityToField = np.vectorize(IntensityToField)
 gammaKeldysh = np.vectorize(gammaKeldysh)
 Keldysh1 = np.vectorize(Keldysh1)
 Keldysh2 = np.vectorize(Keldysh2)
@@ -142,3 +176,4 @@ EffectiveGap=np.vectorize(EffectiveGap)
 KeldyshFunction=np.vectorize(KeldyshFunction)
 KeldyshFunction_Gruzdev=np.vectorize(KeldyshFunction_Gruzdev)
 IonizationRate_Gruzdev=np.vectorize(IonizationRate_Gruzdev)
+PulseGaussianTemporalShape = np.vectorize(PulseGaussianTemporalShape)

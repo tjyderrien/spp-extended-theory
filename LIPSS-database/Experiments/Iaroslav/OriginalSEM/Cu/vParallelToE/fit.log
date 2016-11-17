@@ -1,0 +1,260 @@
+
+
+*******************************************************************************
+Thu Nov 17 22:09:49 2016
+
+
+FIT:    data read from fileThibs u 1:2
+        format = x:z
+        #datapoints = 180
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+fitted parameters initialized with current variable values
+
+
+
+ Iteration 0
+ WSSR        : 9.38248e+08       delta(WSSR)/WSSR   : 0
+ delta(WSSR) : 0                 limit for stopping : 1e-05
+ lambda	  : 377.792
+
+initial set of free parameter values
+
+angleZero       = 0.01
+amplitude       = 6800
+deltaAngle      = 1
+off             = 1
+
+After 11 iterations the fit converged.
+final sum of squares of residuals : 1.23904e+06
+rel. change during last iteration : -1.29023e-06
+
+degrees of freedom    (FIT_NDF)                        : 176
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 83.9048
+variance of residuals (reduced chisquare) = WSSR/ndf   : 7040.02
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+
+angleZero       = 9.45494          +/- 0.1148       (1.214%)
+amplitude       = 3768.24          +/- 17.81        (0.4727%)
+deltaAngle      = 27.7256          +/- 0.1782       (0.6428%)
+off             = 699.782          +/- 11.26        (1.609%)
+
+
+correlation matrix of the fit parameters:
+
+               angleZ amplit deltaA off    
+angleZero       1.000 
+amplitude      -0.001  1.000 
+deltaAngle     -0.001 -0.097  1.000 
+off             0.002 -0.451 -0.652  1.000 
+
+
+*******************************************************************************
+Thu Nov 17 22:10:33 2016
+
+
+FIT:    data read from fileThibs u 1:2
+        format = x:z
+        #datapoints = 180
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+fitted parameters initialized with current variable values
+
+
+
+ Iteration 0
+ WSSR        : 9.38248e+08       delta(WSSR)/WSSR   : 0
+ delta(WSSR) : 0                 limit for stopping : 1e-05
+ lambda	  : 377.792
+
+initial set of free parameter values
+
+angleZero       = 0.01
+amplitude       = 6800
+deltaAngle      = 1
+off             = 1
+
+After 11 iterations the fit converged.
+final sum of squares of residuals : 1.23904e+06
+rel. change during last iteration : -1.29023e-06
+
+degrees of freedom    (FIT_NDF)                        : 176
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 83.9048
+variance of residuals (reduced chisquare) = WSSR/ndf   : 7040.02
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+
+angleZero       = 9.45494          +/- 0.1148       (1.214%)
+amplitude       = 3768.24          +/- 17.81        (0.4727%)
+deltaAngle      = 27.7256          +/- 0.1782       (0.6428%)
+off             = 699.782          +/- 11.26        (1.609%)
+
+
+correlation matrix of the fit parameters:
+
+               angleZ amplit deltaA off    
+angleZero       1.000 
+amplitude      -0.001  1.000 
+deltaAngle     -0.001 -0.097  1.000 
+off             0.002 -0.451 -0.652  1.000 
+
+
+*******************************************************************************
+Thu Nov 17 22:10:45 2016
+
+
+FIT:    data read from fileThibs u 1:2
+        format = x:z
+        #datapoints = 180
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+fitted parameters initialized with current variable values
+
+
+
+ Iteration 0
+ WSSR        : 9.38248e+08       delta(WSSR)/WSSR   : 0
+ delta(WSSR) : 0                 limit for stopping : 1e-05
+ lambda	  : 377.792
+
+initial set of free parameter values
+
+angleZero       = 0.01
+amplitude       = 6800
+deltaAngle      = 1
+off             = 1
+
+After 11 iterations the fit converged.
+final sum of squares of residuals : 1.23904e+06
+rel. change during last iteration : -1.29023e-06
+
+degrees of freedom    (FIT_NDF)                        : 176
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 83.9048
+variance of residuals (reduced chisquare) = WSSR/ndf   : 7040.02
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+
+angleZero       = 9.45494          +/- 0.1148       (1.214%)
+amplitude       = 3768.24          +/- 17.81        (0.4727%)
+deltaAngle      = 27.7256          +/- 0.1782       (0.6428%)
+off             = 699.782          +/- 11.26        (1.609%)
+
+
+correlation matrix of the fit parameters:
+
+               angleZ amplit deltaA off    
+angleZero       1.000 
+amplitude      -0.001  1.000 
+deltaAngle     -0.001 -0.097  1.000 
+off             0.002 -0.451 -0.652  1.000 
+
+
+*******************************************************************************
+Thu Nov 17 22:10:51 2016
+
+
+FIT:    data read from fileThibs u 1:2
+        format = x:z
+        #datapoints = 180
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+fitted parameters initialized with current variable values
+
+
+
+ Iteration 0
+ WSSR        : 9.38248e+08       delta(WSSR)/WSSR   : 0
+ delta(WSSR) : 0                 limit for stopping : 1e-05
+ lambda	  : 377.792
+
+initial set of free parameter values
+
+angleZero       = 0.01
+amplitude       = 6800
+deltaAngle      = 1
+off             = 1
+
+After 11 iterations the fit converged.
+final sum of squares of residuals : 1.23904e+06
+rel. change during last iteration : -1.29023e-06
+
+degrees of freedom    (FIT_NDF)                        : 176
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 83.9048
+variance of residuals (reduced chisquare) = WSSR/ndf   : 7040.02
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+
+angleZero       = 9.45494          +/- 0.1148       (1.214%)
+amplitude       = 3768.24          +/- 17.81        (0.4727%)
+deltaAngle      = 27.7256          +/- 0.1782       (0.6428%)
+off             = 699.782          +/- 11.26        (1.609%)
+
+
+correlation matrix of the fit parameters:
+
+               angleZ amplit deltaA off    
+angleZero       1.000 
+amplitude      -0.001  1.000 
+deltaAngle     -0.001 -0.097  1.000 
+off             0.002 -0.451 -0.652  1.000 
+
+
+*******************************************************************************
+Thu Nov 17 22:11:11 2016
+
+
+FIT:    data read from fileThibs u 1:2
+        format = x:z
+        #datapoints = 180
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+fitted parameters initialized with current variable values
+
+
+
+ Iteration 0
+ WSSR        : 9.38248e+08       delta(WSSR)/WSSR   : 0
+ delta(WSSR) : 0                 limit for stopping : 1e-05
+ lambda	  : 377.792
+
+initial set of free parameter values
+
+angleZero       = 0.01
+amplitude       = 6800
+deltaAngle      = 1
+off             = 1
+
+After 11 iterations the fit converged.
+final sum of squares of residuals : 1.23904e+06
+rel. change during last iteration : -1.29023e-06
+
+degrees of freedom    (FIT_NDF)                        : 176
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 83.9048
+variance of residuals (reduced chisquare) = WSSR/ndf   : 7040.02
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+
+angleZero       = 9.45494          +/- 0.1148       (1.214%)
+amplitude       = 3768.24          +/- 17.81        (0.4727%)
+deltaAngle      = 27.7256          +/- 0.1782       (0.6428%)
+off             = 699.782          +/- 11.26        (1.609%)
+
+
+correlation matrix of the fit parameters:
+
+               angleZ amplit deltaA off    
+angleZero       1.000 
+amplitude      -0.001  1.000 
+deltaAngle     -0.001 -0.097  1.000 
+off             0.002 -0.451 -0.652  1.000 

@@ -1,0 +1,12 @@
+# All automatic measurement
+# Reisze filter using OrientationJ
+# Gaussian fit using GNUplot
+
+# Materials	Delta(angle)	Error	Comment
+Mo	5.25213	0.02946
+Ti	9.17408	0.05311	Different value from oriented LIPSS. Must be a different sample.
+Steel	9.23947	0.07405
+Al	25.9481	0.2473
+Cu	23.815	0.1451	v perp. E
+Cu	27.7256	0.1782	v para. E
+Au	43.0978	1.017	

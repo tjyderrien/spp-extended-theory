@@ -26,7 +26,7 @@ from libMaterials import *
 from libMath import *
 
 lengthunit = 1e-9
-eta = 5e0 #assumed precision error on the dielectric permittivity
+eta = 1e-1 #assumed precision error on the dielectric permittivity
 
 # Settings for matplotlib
 #rc('font',**{'family':'sans-serif','sans-serif':['Helvetica'], 'size':'16'})

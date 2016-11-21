@@ -2,8 +2,8 @@
 
 reset
 
-fileThibs='Thibs/50um.txt'
-fileYoann='Yoann/20161114_Cu_vPerpToE_Square_50.00um.txt'
+fileThibs='18um.txt'
+fileYoann='' #'10um.txt'
 
 set terminal postscript eps enhanced color font 'Helvetica, 24'
 set output 'Repeat.eps'
@@ -25,7 +25,7 @@ f(x) = amplitude*exp(-0.5e0*((x-angleZero)/(2e0*deltaAngle / (2e0*sqrt(2e0*log(2
 fit f(x) fileThibs u 1:2 via angleZero, amplitude, deltaAngle, off
 # fit try(x) fileThibs u 1:2 via angleZero, amplitude, deltaAngle, offset 
 
-plot fileYoann u 1:2 w l t 'Yoann', \
-fileThibs u 1:2 w l t 'Thibs', \
+plot fileYoann u 1:2 w l t '10 um', \
+fileThibs u 1:2 w l t '35 um', \
 f(x) w l lw 3 t 'Fit'
 

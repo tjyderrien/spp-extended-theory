@@ -6,7 +6,7 @@ from SimpleSPProutines import *
 print "==== Plot the exp. LIPSS regularity as function of theoretical Lspp... ===="
 
 print "| Reading the experimental file..."
-database = "Iaroslav/ExperimentalData_1030nm_Yoann.csv"
+database = "Iaroslav/ExperimentalData_1030nm_GaussianFit.csv"
 ExpData = loadtxt(database, dtype='str', delimiter='\t', skiprows=4)
 
 #print ExpData

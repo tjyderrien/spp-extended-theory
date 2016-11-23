@@ -1,17 +1,17 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
 
-"""
-Example of creating a radar chart (a.k.a. a spider or star chart) [1]_.
+## @package LaserParameters
+# Example of creating a radar chart (a.k.a. a spider or star chart) [1]_.
+# 
+# Although this example allows a frame of either 'circle' or 'polygon', polygon
+# frames don't have proper gridlines (the lines are circles instead of polygons).
+# It's possible to get a polygon grid by setting GRIDLINE_INTERPOLATION_STEPS in
+# matplotlib.axis to the desired number of vertices, but the orientation of the
+# polygon is not aligned with the radial axes.
+# 
+# .. [1] http://en.wikipedia.org/wiki/Radar_chart
 
-Although this example allows a frame of either 'circle' or 'polygon', polygon
-frames don't have proper gridlines (the lines are circles instead of polygons).
-It's possible to get a polygon grid by setting GRIDLINE_INTERPOLATION_STEPS in
-matplotlib.axis to the desired number of vertices, but the orientation of the
-polygon is not aligned with the radial axes.
-
-.. [1] http://en.wikipedia.org/wiki/Radar_chart
-"""
 import numpy as np
 
 import matplotlib.pyplot as plt
@@ -21,19 +21,17 @@ from matplotlib.projections.polar import PolarAxes
 from matplotlib.projections import register_projection
 
 
+## Create a radar chart with `num_vars` axes.
+#
+#    This function creates a RadarAxes projection and registers it.
+#
+#    Parameters
+#    ----------
+#    num_vars : int
+#        Number of variables for radar chart.
+#    frame : {'circle' | 'polygon'}
+#        Shape of frame surrounding axes.
 def radar_factory(num_vars, frame='circle'):
-    """Create a radar chart with `num_vars` axes.
-
-    This function creates a RadarAxes projection and registers it.
-
-    Parameters
-    ----------
-    num_vars : int
-        Number of variables for radar chart.
-    frame : {'circle' | 'polygon'}
-        Shape of frame surrounding axes.
-
-    """
     # calculate evenly-spaced axis angles
     theta = np.linspace(0, 2*np.pi, num_vars, endpoint=False)
     # rotate theta such that the first axis is at the top
@@ -105,11 +103,11 @@ def radar_factory(num_vars, frame='circle'):
     return theta
 
 
+## Return vertices of polygon for subplot axes.
+# 
+# This polygon is circumscribed by a unit circle centered at (0.5, 0.5)
+#
 def unit_poly_verts(theta):
-    """Return vertices of polygon for subplot axes.
-
-    This polygon is circumscribed by a unit circle centered at (0.5, 0.5)
-    """
     x0, y0, r = [0.5] * 3
     verts = [(r*np.cos(t) + x0, r*np.sin(t) + y0) for t in theta]
     return verts
@@ -118,43 +116,17 @@ def unit_poly_verts(theta):
 def example_data():
     # The following data is from the Denver Aerosol Sources and Health study.
     # See  doi:10.1016/j.atmosenv.2008.12.017
-    #
-    # The data are pollution source profile estimates for five modeled
-    # pollution sources (e.g., cars, wood-burning, etc) that emit 7-9 chemical
-    # species. The radar charts are experimented with here to see if we can
-    # nicely visualize how the modeled source profiles change across four
-    # scenarios:
-    #  1) No gas-phase species present, just seven particulate counts on
-    #     Sulfate
-    #     Nitrate
-    #     Elemental Carbon (EC)
-    #     Organic Carbon fraction 1 (OC)
-    #     Organic Carbon fraction 2 (OC2)
-    #     Organic Carbon fraction 3 (OC3)
-    #     Pyrolized Organic Carbon (OP)
-    #  2)Inclusion of gas-phase specie carbon monoxide (CO)
-    #  3)Inclusion of gas-phase specie ozone (O3).
-    #  4)Inclusion of both gas-phase speciesis present...
+    #  4 different datasets are plotted here. We only need one for laser parameters. 
+    #  Each dataset contains X fields (cols) and Y samples (rows)
     data = [
-        ['Pulse duration', 'Wavelength', 'Energy per pulse', 'Repetition rate', 'Angle of incidence', 'Ellipticity', 'Polarization', 'CO', 'O3'],
-        ('Basecase', [
-            [0.88, 0.01, 0.03, 0.03, 0.00, 0.06, 0.01, 0.00, 0.00],
-            [0.07, 0.95, 0.04, 0.05, 0.00, 0.02, 0.01, 0.00, 0.00],
-            [0.01, 0.02, 0.85, 0.19, 0.05, 0.10, 0.00, 0.00, 0.00],
-            [0.02, 0.01, 0.07, 0.01, 0.21, 0.12, 0.98, 0.00, 0.00],
-            [0.01, 0.01, 0.02, 0.71, 0.74, 0.70, 0.00, 0.00, 0.00]]) #,
-        #('With CO', [
-            #[0.88, 0.02, 0.02, 0.02, 0.00, 0.05, 0.00, 0.05, 0.00],
-            #[0.08, 0.94, 0.04, 0.02, 0.00, 0.01, 0.12, 0.04, 0.00],
-            #[0.01, 0.01, 0.79, 0.10, 0.00, 0.05, 0.00, 0.31, 0.00],
-            #[0.00, 0.02, 0.03, 0.38, 0.31, 0.31, 0.00, 0.59, 0.00],
-            #[0.02, 0.02, 0.11, 0.47, 0.69, 0.58, 0.88, 0.00, 0.00]]),
-        #('With O3', [
-            #[0.89, 0.01, 0.07, 0.00, 0.00, 0.05, 0.00, 0.00, 0.03],
-            #[0.07, 0.95, 0.05, 0.04, 0.00, 0.02, 0.12, 0.00, 0.00],
-            #[0.01, 0.02, 0.86, 0.27, 0.16, 0.19, 0.00, 0.00, 0.00],
-            #[0.01, 0.03, 0.00, 0.32, 0.29, 0.27, 0.00, 0.00, 0.95],
-            #[0.02, 0.00, 0.03, 0.37, 0.56, 0.47, 0.87, 0.00, 0.00]]),
+        ['Pulse duration (ps)', 'Wavelength (um)', 'Energy per pulse (mJ)', 'Repetition rate (kHz)', 'Angle of incidence (deg)', 'Ellipticity', 'Polarization', 'CEP'],
+        ('Laser pulse', [
+            [0.10, 0.8, 1., 1., 0.00, 0.06, 0.01, 0.00],
+            [0.20, 0.4, 1., 1., 0.00, 0.06, 0.01, 0.00],
+            #[0.01, 0.02, 0.85, 0.19, 0.05, 0.10, 0.00, 0.00, 0.00],
+            #[0.02, 0.01, 0.07, 0.01, 0.21, 0.12, 0.98, 0.00, 0.00],
+            #[0.01, 0.01, 0.02, 0.71, 0.74, 0.70, 0.00, 0.00, 0.00]
+            ]) #,
         #('CO & O3', [
             #[0.87, 0.01, 0.08, 0.00, 0.00, 0.04, 0.00, 0.00, 0.01],
             #[0.09, 0.95, 0.02, 0.03, 0.00, 0.01, 0.13, 0.06, 0.00],
@@ -166,7 +138,7 @@ def example_data():
 
 
 if __name__ == '__main__':
-    N = 9 #TODO: make automatic based on the example_data
+    N = 8 #TODO: make automatic based on the example_data
     theta = radar_factory(N, frame='polygon')
 
     data = example_data()
@@ -189,10 +161,10 @@ if __name__ == '__main__':
 
     # add legend relative to top-left plot
     plt.subplot(2, 2, 1)
-    labels = ('Factor 1', 'Factor 2', 'Factor 3', 'Factor 4', 'Factor 5')
+    labels = ('Best LIPSS ever', 'Factor 2', 'Factor 3', 'Factor 4', 'Factor 5')
     legend = plt.legend(labels, loc=(0.9, .95), labelspacing=0.1)
     plt.setp(legend.get_texts(), fontsize='small')
 
-    plt.figtext(0.5, 0.965, '5-Factor Solution Profiles Across Four Scenarios',
+    plt.figtext(0.5, 0.965, 'Title',
                 ha='center', color='black', weight='bold', size='large')
     plt.show()

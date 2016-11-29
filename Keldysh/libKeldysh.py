@@ -22,15 +22,21 @@ rc('text', usetex=True)
 mp.rcParams['legend.numpoints'] = 1
 
 ## Computes the adiabadicity parameter
-#@param gamma: Adiabadicity parameter (non-dimensional number)
+# @param gamma: Adiabadicity parameter (non-dimensional number)
+# @param Egap: band gap energy (in Joules)
+# @param meff: effective mass (in Arb. Units, as it is multiplied by electron mass)
+# @param Efield: peak amplitude of the electric field (in V/m)
+# @param wavelength: wavelength of the photon (in meters)
 # 
 # * gammaKeldysh < 0.1: means tunneling effect is dominant, 
 # * gammaKeldysh > 10: multi-photon excitation effect is dominant. 
+# 
+# Warning: Don't use this function if Efield is too small (< 1 V/m), as it leads to divergence. 
 def gammaKeldysh(Egap, meff, Efield, wavelength): #{{{
   
   #print Egap, meff, Efield
   omegaLaser=2.*pi*c/wavelength
-  if (Efield != 0e0):
+  if (abs(Efield) > 1e0):
     result = omegaLaser*np.sqrt(m_e*meff*Egap)/e/Efield
   else:
     print "gamma(): Divergence, as field equals = 0. Singular case of Keldysh functions. Should give w_PI = 0 then..."
@@ -147,7 +153,8 @@ def sigmaFWHM(FWHM):
   sigma = FWHM/(2.*np.sqrt(2.*np.log(2.)))
   return sigma
 
-## Pulse shape with time
+## Pulse shape [table of peak_intensity(time)] evolution with time
+#
 # Defines the temporal shape of the laser pulse using a Gaussian law. 
 # @param t: instant to output (can be a table)
 # @param tau: pulse duration (s)

@@ -15,6 +15,9 @@ print ""
 print "** Loading Keldysh module [Keldysh, Sov. J. Exp. Th. Phys. 47, 5 (1964)]..."
 print "** Loading Gruzdev formula [Gruzdev, Optical Engineering 53, 122515 (2014)]"
 
+ShortRefKeldysh = "[Keldysh (1965)]"
+ShortRefGruzdev = "[Gruzdev (2014)]"
+
 print "Defining material parameters..."
 Egap = 2.58e0*e; #LDA band gap of Si: 2.58 eV. #1.12e0*e for indirect band gap; 
 #EgapEff = Egap; #starting before iterating to check convergence
@@ -31,7 +34,7 @@ PeakIntensity = PeakFluence/tau #scalar
 
 tmin = -3.5*tau
 tmax = 3.5*tau
-dt = 5E-16
+dt = 1E-17
 print "** Info: Number of time steps = "+str(int((tmax-tmin)/dt))+"."
 instants=np.arange(tmin,tmax,dt)
 
@@ -86,14 +89,16 @@ print ""
 print "** Warning: results may be not converged."
 print "            Reduce dt, and increase order until convergence."
 print ""
-print "Maximum density N_ex (Keldysh) = "+str(N_excited_Keldysh.max())+"."
-print "Maximum density N_ex (Keldysh) = "+str(N_excited_Gruzdev.max())+"."
+print "Maximum density N_ex "+ShortRefKeldysh+" = "+str(N_excited_Keldysh.max())+"."
+print "Maximum density N_ex "+ShortRefGruzdev+" = "+str(N_excited_Gruzdev.max())+"."
 
-xunit = 1E12
+xunit = 1E15
+timeunit = "fs"
 
 plt.figure()
-plt.title(r"$\lambda=$"+str(wavelength*1E9)+" nm, $\tau=$"+str(tau*1E12)+" ps")
+
 plt.subplot(311)
+plt.title(r"Gap = "+str(Egap/e)+" eV, $\lambda=$ "+str(wavelength*1E9)+r" nm, $\tau=$"+str(tau*xunit)+" "+timeunit+", "+r"$F_{max}=$"+str(PeakFluence/1E4)+" J/cm"+r"$^{2}$")
 #plt.xlabel("Field (V/m)")
 #plt.xlabel("Time (ps)")
 plt.ylabel("Adiabadicity $\gamma$")
@@ -107,19 +112,21 @@ plt.subplot(312)
 #plt.xlabel("Field (V/m)")
 #plt.xlabel("Time (ps)")
 plt.ylabel("$w_{PI}$ (m$^{-3}$ s$^{-1}$)")
-plt.semilogy(instants*xunit, wPI, linestyle="-", color="r", label=r"$w_{PI}$ [Keldysh]")
-plt.semilogy(instants*xunit, wPIg, linestyle="-", color="b", label=r"$w_{PI}$ [Gruzdev]")
+plt.plot(instants*xunit, wPI, linestyle="-", color="r", label=r"$w_{PI}$ "+ShortRefKeldysh)
+plt.plot(instants*xunit, wPIg, linestyle="-", color="b", label=r"$w_{PI}$ "+ShortRefGruzdev)
 plt.grid()
 plt.legend(loc=2)
 
 plt.subplot(313)
 plt.xlabel("Intensity (W/m$^{2}$)")
-plt.xlabel("Time (ps)")
+plt.xlabel("Time ("+timeunit+")")
 # plt.xlabel("Field (V/m)")
 plt.ylabel("Density (m$^{-3}$)")
-plt.plot(instants*xunit, N_excited_Keldysh, color="r", label="$n_e$ [Keldysh 1965]")
-plt.plot(instants*xunit, N_excited_Gruzdev, color="b", label="$n_e$ [Gruzdev 2014]")
+plt.plot(instants*xunit, N_excited_Keldysh, color="r", label="$n_e$ "+ShortRefKeldysh)
+plt.plot(instants*xunit, N_excited_Gruzdev, color="b", label="$n_e$ "+ShortRefGruzdev)
 plt.grid()
 plt.legend(loc=2)
 plt.savefig("KeldyshAnalytic.eps")
 plt.show()
+
+#TODO: print "Exporting density to a table for ZnO optical index calculations."

@@ -160,7 +160,7 @@ def sigmaFWHM(FWHM):
 # @param tau: pulse duration (s)
 # @param intensity: peak intensity (W/m^2)
 # @param t0: instant for the peak intensity (t0=0 by default)
-def PulseGaussianTemporalShape(t, tau, PeakIntensity, t0=0):
+def PulseGaussianTemporalShape(t, tau, PeakIntensity, t0=0.):
   sigmaTau = sigmaFWHM(tau)
   #PeakIntensity = fluence/tau 
   #TODO: Missing coefficient on peak intensity ? 
@@ -213,7 +213,7 @@ def generateWpiTables(Egap = 2.58e0*e, meff = 0.18e0, wavelength = 800e-9, tau =
 # @param PeakFluence (J/m2): maximum fluence of the pulse
 # @param dt (seconds): precision of the temporal envelope
 # @param order (adim): order of the integration (default: 50).
-def plotPulseToDensity(Egap = 2.58e0*e, meff = 0.18e0, wavelength = 800e-9, tau = 10e-15, PeakFluence = 100e-3*1E4, dt = 1E-17, order = 50, ShowPlot=False): #{{{
+def plotPulseToDensity(Egap = 2.58e0*e, meff = 0.18e0, wavelength = 800e-9, tau = 10e-15, PeakFluence = 100e-3*1E4, dt = 1E-17, order = 50, ShowPlot=False, t0=0.): #{{{
 
   ShortRefKeldysh = "[Keldysh (1964)]"
   ShortRefGruzdev = "[Gruzdev (2014)]"
@@ -221,13 +221,13 @@ def plotPulseToDensity(Egap = 2.58e0*e, meff = 0.18e0, wavelength = 800e-9, tau 
   print "Defining the laser pulse..."
   PeakIntensity = PeakFluence/tau #scalar
 
-  tmin = -3.5*tau
-  tmax = 3.5*tau
+  tmin = -3.5*tau+t0
+  tmax = 3.5*tau+t0
   #dt = 1E-17
   print "** Info: Number of time steps = "+str(int((tmax-tmin)/dt))+"."
   instants=np.arange(tmin,tmax,dt)
 
-  PulseEnvelope=PulseGaussianTemporalShape(instants, tau, PeakIntensity)
+  PulseEnvelope=PulseGaussianTemporalShape(instants, tau, PeakIntensity, t0)
   print "** Info: Peak intensity = "+str(PulseEnvelope.max())+" W/m^2."
   print "** Info: Peak field amplitude = "+str(IntensityToField(PulseEnvelope).max()/1E9)+" V/nm."
 

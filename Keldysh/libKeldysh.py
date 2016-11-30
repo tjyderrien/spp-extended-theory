@@ -199,7 +199,7 @@ def generateWpiTables(Egap = 2.58e0*e, meff = 0.18e0, wavelength = 800e-9, tau =
   wPI = IonizationRate(k1, k2, KeldyshFunctionResult, EgapEff, wavelength)
   wPIg = IonizationRate_Gruzdev(k1, k2, KeldyshFunctionResultG, EgapEff, wavelength)
   print "w_PI until order "+str(order)+" = ", wPI.max()
-
+  
   print "Exporting the tables..."
   
   # compute wPI for 
@@ -280,7 +280,7 @@ def plotPulseToDensity(Egap = 2.58e0*e, meff = 0.18e0, wavelength = 800e-9, tau 
   print "Maximum density N_ex "+ShortRefKeldysh+" = "+str(N_excited_Keldysh.max())+"."
   print "Maximum density N_ex "+ShortRefGruzdev+" = "+str(N_excited_Gruzdev.max())+"."
   print ""
-  
+#  return N_excited_Gruzdev 
   if(ShowPlot): 
     print "Plotting..."
 
@@ -318,7 +318,7 @@ def plotPulseToDensity(Egap = 2.58e0*e, meff = 0.18e0, wavelength = 800e-9, tau 
     plt.plot(instants*xunit, N_excited_Gruzdev, color="b", label="$n_e$ "+ShortRefGruzdev)
     plt.grid()
     plt.legend(loc=2)
-    plt.savefig("KeldyshAnalytic.eps")
-    plt.show()
+    plt.savefig("KeldyshAnalytic.eps") 
   
+  return instants, N_excited_Keldysh, N_excited_Gruzdev
 #}}}

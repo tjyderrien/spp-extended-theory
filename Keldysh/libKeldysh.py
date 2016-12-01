@@ -17,7 +17,7 @@ from matplotlib import rc
 from scipy.constants import c, epsilon_0, mu_0, pi, e, m_e, h, hbar
 #from matplotlib.legend_handler import HandlerLine2D
 #import sys
-rc('font', **{'family':'serif', 'serif':['Palatino'], 'size':'24'})
+rc('font', **{'family':'serif', 'serif':['Palatino'], 'size':'18'})
 rc('text', usetex=True)
 mp.rcParams['legend.numpoints'] = 1
 
@@ -213,7 +213,7 @@ def generateWpiTables(Egap = 2.58e0*e, meff = 0.18e0, wavelength = 800e-9, tau =
 # @param PeakFluence (J/m2): maximum fluence of the pulse
 # @param dt (seconds): precision of the temporal envelope
 # @param order (adim): order of the integration (default: 50).
-def plotPulseToDensity(Egap = 2.58e0*e, meff = 0.18e0, wavelength = 800e-9, tau = 10e-15, PeakFluence = 100e-3*1E4, dt = 1E-17, order = 50, ShowPlot=False, t0=0.): #{{{
+def plotPulseToDensity(Egap = 2.58e0*e, meff = 0.18e0, wavelength = 800e-9, tau = 10e-15, PeakFluence = 100e-3*1E4, dt = 1E-17, order = 50, ShowPlot=False, t0=0., N_total=5E28): #{{{
 
   ShortRefKeldysh = "[Keldysh (1964)]"
   ShortRefGruzdev = "[Gruzdev (2014)]"
@@ -264,15 +264,27 @@ def plotPulseToDensity(Egap = 2.58e0*e, meff = 0.18e0, wavelength = 800e-9, tau 
 
   print ""
   print "Temporal integration..."
-
-  # Just multiply array of w_PI by dt, and calculate cumsum().
+  
+  # Temporal integration without limiter
+  
+  # Just multiply array of w_PI by dt, with limited to Ntotal
+  #N_excited_Keldysh = dN_excited_Keldysh.cumsum()
+  #N_excited_Gruzdev = dN_excited_Gruzdev.cumsum()
+  
+  # Temporal integration with limiter
   dN_excited_Keldysh = np.multiply(wPI, dt)
   dN_excited_Gruzdev = np.multiply(wPIg, dt)
-
-  # Temporal integration
-  N_excited_Keldysh = dN_excited_Keldysh.cumsum()
-  N_excited_Gruzdev = dN_excited_Gruzdev.cumsum()
-
+  
+  # Initial number of electrons in conduction band
+  N_initial = np.zeros(wPI.shape)
+  
+  ExpArg_Keldysh = np.divide(dN_excited_Keldysh.cumsum(), N_total)
+  ExpArg_Gruzdev = np.divide(dN_excited_Gruzdev.cumsum(), N_total)
+  
+  N_excited_Keldysh = np.multiply( np.exp(-ExpArg_Keldysh), N_total * np.exp(ExpArg_Keldysh) - N_total + N_initial)
+  
+  N_excited_Gruzdev = np.multiply( np.exp(-ExpArg_Gruzdev), N_total * np.exp(ExpArg_Gruzdev) - N_total + N_initial)
+  
   print ""
   print "** Warning: results may be not converged."
   print "            Reduce dt, and increase order until convergence."
@@ -287,8 +299,8 @@ def plotPulseToDensity(Egap = 2.58e0*e, meff = 0.18e0, wavelength = 800e-9, tau 
     xunit = 1E15
     timeunit = "fs"
 
-    plt.figure()
-
+    #plt.figure()
+    plt.figure(figsize=(15,15))
     plt.subplot(311)
     plt.title(r"Gap = "+str(Egap/e)+" eV, $\lambda=$ "+str(wavelength*1E9)+r" nm, $\tau=$"+str(tau*xunit)+" "+timeunit+", "+r"$F_{max}=$"+str(PeakFluence/1E4)+" J/cm"+r"$^{2}$")
     #plt.xlabel("Field (V/m)")

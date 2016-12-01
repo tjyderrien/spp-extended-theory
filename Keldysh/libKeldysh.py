@@ -7,7 +7,7 @@
 import numpy as np
 from numpy import genfromtxt, loadtxt, chararray
 #from scipy.optimize import fsolve, root
-from scipy.special import ellipk, ellipe, dawsn
+from scipy.special import ellipk, ellipe, dawsn, factorial2, factorial
 #import cmath
 import matplotlib as mp
 import matplotlib.pyplot as plt
@@ -173,6 +173,21 @@ def PulseGaussianTemporalShape(t, tau, PeakIntensity, t0=0.):
 #def TimeDependentDensityKeldysh(IntensityShape, tau, intensity):
   #%IntensityShape(
 
+## Two-photon absorption probability from Bristow and Van Driel, 
+# Applied Physics Letters 90, 191104 (2007)
+def BristowLaw(wavelength, Egap):#{{{
+  constant = 43E-11
+  #Ep = 21. * e #plasmon peak for Si
+  #Egap = 1.12 * e #gap of Si at 300 K
+  
+  ## Private function used in BristowLaw
+  def F2(n, x): #{{{
+    return ( pi*factorial2(2*n+1)/(2**(n+2)*factorial(n+2)) ) * (2.*x)**(-5) * (2.*x-1)**(n+2)
+  #}}}
+  beta = 2. * constant * F2(n, hbar*omega/Egap)
+  return beta
+#}}}
+
 #print "** Vectorizing functions..."
 FieldToIntensity = np.vectorize(FieldToIntensity)
 IntensityToField = np.vectorize(IntensityToField)
@@ -184,6 +199,7 @@ KeldyshFunction=np.vectorize(KeldyshFunction)
 KeldyshFunction_Gruzdev=np.vectorize(KeldyshFunction_Gruzdev)
 IonizationRate_Gruzdev=np.vectorize(IonizationRate_Gruzdev)
 PulseGaussianTemporalShape = np.vectorize(PulseGaussianTemporalShape)
+BristowLaw = np.vectorize(BristowLaw)
 
 def generateWpiTables(Egap = 2.58e0*e, meff = 0.18e0, wavelength = 800e-9, tau = 10e-15, PeakFluence = 100e-3*1E4, dt = 1E-17, order = 50): #{{{
   print "Meshing grids for intuitive calculations..."
@@ -274,6 +290,7 @@ def plotPulseToDensity(Egap = 2.58e0*e, meff = 0.18e0, wavelength = 800e-9, tau 
   # Temporal integration with limiter
   dN_excited_Keldysh = np.multiply(wPI, dt)
   dN_excited_Gruzdev = np.multiply(wPIg, dt)
+  #dN_excited_Bristow = np.multiply(BristowLaw(wavelength, Egap)*intensity**2/(2*hbar*omega)), dt)
   
   # Initial number of electrons in conduction band
   N_initial = np.zeros(wPI.shape)

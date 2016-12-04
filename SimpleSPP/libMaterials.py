@@ -5,18 +5,19 @@
 
 import numpy as np
 import cmath
+from libLaser import *
 
 # OPTICAL FUNCTIONS
-def Drude(wavelength, ne, epsilon, nu):#{{{
-  """Return the value of dielectric function based on simplified Drude model
-  Input:
-    wavelength (float)
-    ne (float)
-    epsilon (complex): dielectric permittivity under wavelength, without excitation
-    nu (float): collision frequency
-  Output: complex-valued dielectric permittivity
-  """
-  omegap2=ne * e**2 / (m_e * meffe * epsilon_0)
+
+## Return the value of dielectric function based on simplified Drude model
+# Input:
+# @param wavelength (float)
+# @param ne (float)
+# @epsilon (complex): dielectric permittivity under wavelength, without excitation
+# @nu (float): collision frequency
+# Output: complex-valued dielectric permittivity
+def Drude(wavelength, ne, epsilon, nu, meff=1.0):#{{{
+  omegap2=ne * e**2 / (m_e * meff * epsilon_0)
   omega=2.0*pi*c/wavelength
   return epsilon - omegap2/(omega*omega) * 1e0/(1e0+1e0j*nu/omega)
 #}}}

@@ -6,23 +6,23 @@
 import numpy as np
 from numpy import genfromtxt, loadtxt, chararray
 
+## Filter the SPP database using query and returns a smaller database
+# /!\ content of query cell should be exact
+#
 def FilterDatabase(SPPdb, query, FieldIndex):
-  """ Filter SPP database using query and returns a smaller database
-  /!\ content of query cell should be exact
-  """
   SPPdbFiltered = np.array(SPPdb[SPPdb[:,FieldIndex]==query,:]) #uses a table of booleans to select
   return SPPdbFiltered
 
+## Filters the SPP database using query and returns a smaller database
+# 
 def FilterDatabaseContains(SPPdb, query, FieldIndex):
-  """ Filter SPP database using query and returns a smaller database
-  """
   SPPdbFiltered = SPPdb[np.array(np.core.defchararray.find(SPPdb[:,FieldIndex], query)==0),:]
   return SPPdbFiltered
 
+## Filter the SPP database via comparing value(FieldIndex) < query and returns the matching database
+# /!\ content of query cell should be exact
+#
 def FilterDatabaseLowerThan(SPPdb, query, FieldIndex):
-  """ Filter SPP database using query and returns a smaller database
-  /!\ content of query cell should be exact
-  """
   SPPdbFiltered = np.array(SPPdb[SPPdb[:,FieldIndex]<query,:]) #uses a table of booleans to select
   return SPPdbFiltered
 

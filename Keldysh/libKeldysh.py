@@ -33,9 +33,13 @@ mp.rcParams['legend.numpoints'] = 1
 # 
 # Warning: Don't use this function if Efield is too small (< 1 V/m), as it leads to divergence. 
 def gammaKeldysh(Egap, meff, Efield, wavelength): #{{{
-  
   #print Egap, meff, Efield
   omegaLaser=2.*pi*c/wavelength
+  # Validity limit
+  if (Egap < hbar * omegaLaser ): 
+    print "** Validity range error: the Keldysh model is not valid for linear absorption. INVALID RESULT..."
+    print "** Error details: "+str(int(wavelength*1E9))+" nm wavelength is too small for the gap "+str(float(Egap)/e)+"."
+    #exit() #Avoid to quit, so that octopus still compare its results. 
   if (abs(Efield) > 1e0):
     result = omegaLaser*np.sqrt(m_e*meff*Egap)/e/Efield
   else:
@@ -201,42 +205,23 @@ IonizationRate_Gruzdev=np.vectorize(IonizationRate_Gruzdev)
 PulseGaussianTemporalShape = np.vectorize(PulseGaussianTemporalShape)
 BristowLaw = np.vectorize(BristowLaw)
 
-def generateWpiTables(Egap = 2.58e0*e, meff = 0.18e0, wavelength = 800e-9, tau = 10e-15, PeakFluence = 100e-3*1E4, dt = 1E-17, order = 50): #{{{
-  print "Meshing grids for intuitive calculations..."
-  Efield = 1E8*np.arange(1,100,0.25) #array for simple calculations
-  gamma = gammaKeldysh(Egap, meff, Efield, wavelength)
-  
-  print "** Info: Adiabadicity parameter = "+str(gamma.min())+"."
-  
-  k1 = Keldysh1(gamma); k2 = Keldysh2(gamma) #valid
-  EgapEff = EffectiveGap(Egap, k1, k2) # Original formula from Keldysh. Warning: scipy.special.ellipe
-  
-  print "Computes w_PI (Keldysh), and w_PIg (Gruzdev) for the pulse envelope..."
-  wPI = IonizationRate(k1, k2, KeldyshFunctionResult, EgapEff, wavelength)
-  wPIg = IonizationRate_Gruzdev(k1, k2, KeldyshFunctionResultG, EgapEff, wavelength)
-  print "w_PI until order "+str(order)+" = ", wPI.max()
-  
-  print "Exporting the tables..."
-  
-  # compute wPI for 
-#}}}
-
-## Compute and plot density evolution with time using the specific parameters.
-# @param Egap (Joules): direct band gap of the modeled material
-# @param meff (adim): effective mass of the conduction band
-# @param wavelength (meters): photon wavelength of the excitation
-# @param tau (seconds): duration of the Gaussian pulse (FWHM)
-# @param PeakFluence (J/m2): maximum fluence of the pulse
-# @param dt (seconds): precision of the temporal envelope
-# @param order (adim): order of the integration (default: 50).
-def plotPulseToDensity(Egap = 2.58e0*e, meff = 0.18e0, wavelength = 800e-9, tau = 10e-15, PeakFluence = 100e-3*1E4, dt = 1E-17, order = 50, ShowPlot=False, t0=0., N_total=5E28): #{{{
-
+## Generate Keldysh tables for a laser pulse
+# Input: 
+# @param Egap: scalar (J)
+# @param meff: scalar (no unit)
+# @param wavelength: laser wavelength (scalar, meters)
+# @param tau: pulse duration (scalar, seconds)
+# @param PeakFluence: peak fluence of the laser (scalar, J/m2)
+# @param dt: precision (scalar, seconds)
+# @param order: integration order for Keldysh model (integer, no unit)
+# @N_total: limiter for the ionizable number of electrons (float, m^{-3})
+def generateWpiTables(Egap = 2.58e0*e, meff = 0.18e0, wavelength = 800e-9, tau = 10e-15, PeakFluence = 100e-3*1E4, dt = 1E-17, order = 50, N_total=5E28): #{{{
   ShortRefKeldysh = "[Keldysh (1964)]"
   ShortRefGruzdev = "[Gruzdev (2014)]"
   
   print "Defining the laser pulse..."
-  PeakIntensity = PeakFluence/tau #scalar
-
+  PeakIntensity = PeakFluence/tau #scalar, TODO: isn't it multiplied by sqrt(4 ln 2 / Pi) ? 
+  t0 = 0e0
   tmin = -3.5*tau+t0
   tmax = 3.5*tau+t0
   #dt = 1E-17
@@ -301,6 +286,25 @@ def plotPulseToDensity(Egap = 2.58e0*e, meff = 0.18e0, wavelength = 800e-9, tau 
   N_excited_Keldysh = np.multiply( np.exp(-ExpArg_Keldysh), N_total * np.exp(ExpArg_Keldysh) - N_total + N_initial)
   
   N_excited_Gruzdev = np.multiply( np.exp(-ExpArg_Gruzdev), N_total * np.exp(ExpArg_Gruzdev) - N_total + N_initial)
+  return instants, N_excited_Keldysh, N_excited_Gruzdev
+#}}}
+
+#generateWpiTables = np.vectorize(generateWpiTables)
+
+## Compute and plot density evolution with time using the specific parameters.
+# @param Egap (Joules): direct band gap of the modeled material
+# @param meff (adim): effective mass of the conduction band
+# @param wavelength (meters): photon wavelength of the excitation
+# @param tau (seconds): duration of the Gaussian pulse (FWHM)
+# @param PeakFluence (J/m2): maximum fluence of the pulse
+# @param dt (seconds): precision of the temporal envelope
+# @param order (adim): order of the integration (default: 50).
+def plotPulseToDensity(Egap = 2.58e0*e, meff = 0.18e0, wavelength = 800e-9, tau = 10e-15, PeakFluence = 100e-3*1E4, dt = 1E-17, order = 50, ShowPlot=False, t0=0., N_total=5E28): #{{{
+
+  ShortRefKeldysh = "[Keldysh (1964)]"
+  ShortRefGruzdev = "[Gruzdev (2014)]"
+  
+  instants, N_excited_Keldysh, N_excited_Gruzdev = generateWpiTables(Egap, meff, wavelength, dt, order)
   
   print ""
   print "** Warning: results may be not converged."

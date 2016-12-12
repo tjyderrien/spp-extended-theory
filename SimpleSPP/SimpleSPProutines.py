@@ -435,8 +435,7 @@ def SPPactiveInterfaces(dbarray, comment):#{{{
         
         # Print the table of active SPP interfaces for all cases or only new SPP interfaces					
         #if( not (comment=="new")): 
-        Condition = ExperimentalAchievable and (Period!=0) 
-        #and (SPPdecayLength < 20000e0) and (abs(eps2.real) < eps2.imag)
+        Condition = ExperimentalAchievable and (Period!=0) #and (SPPdecayLength < 20000e0) #and (abs(eps2.real) < eps2.imag)
         if(Condition):
           counter=counter+1
           #print SPParray.shape

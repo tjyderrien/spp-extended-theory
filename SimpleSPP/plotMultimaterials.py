@@ -344,7 +344,7 @@ except:
   print "** Warning: no optical data is available for "+query+" at "+title+"."
     
 # This line is for the paper figure. 
-plotSeveralWavelengths(SPPdb1, SPPdb2, reverse, metal, query)
+#plotSeveralWavelengths(SPPdb1, SPPdb2, reverse, metal, query)
 
 # ===== PLOTTING the Lspp quantity as function of materials
 
@@ -394,7 +394,7 @@ print "DeltaLspp = "+str(deltaLspp(wavelength, 1e0+0e0j, -49.5738812793e0+3.8128
 print "== Knowledge over dielectric permittivity: +/- "+str(noise)+"."
 
 print "Mesh generation..."
-epsr = np.arange(-100e0,15e0, precision)
+epsr = np.arange(-120e0,15e0, precision)
 epsc = np.arange(0e0,60e0, precision)
 
 eps2r, eps2c = np.meshgrid(epsr, epsc)

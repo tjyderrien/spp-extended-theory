@@ -18,11 +18,12 @@ if(len(sys.argv)<=2):
 
 MaterialFolder="Database"
 
-MaterialFile1="Air"
+#MaterialFile1="Air"
 #MaterialFile1="Al2O3-Palik"
 #MaterialFile1="SiO2-Palik"
 #MaterialFile1="TiO2-Palik"
 #MaterialFile1="Si-Palik"
+MaterialFile1="ZnO-Bond"
 
 #MaterialFile2="Al-Palik"
 #MaterialFile2="Ti-Palik"
@@ -234,8 +235,8 @@ plt.plot(1e9*2*pi*c/omegaspp, 1E-6*SPPphaseVelocity, 'r--', label=r'$v_{\phi}$')
 #plt.plot(omega(wavelengths)/c, omega(np.add(np.multiply(wavelengths,0e0), 800e-9)), label=r'$c$')
 #plt.title(MaterialFile1+'/'+MaterialFile2+' interface')
 plt.legend(loc=4)
-plt.xticks(np.arange(0, 2500, 500))
-plt.axis([200,2000,-300,300])
+plt.xticks(np.arange(0, 3500, 500))
+plt.axis([500,3500,-300,300])
 plt.savefig(MaterialFile1+MaterialFile2+'Velocities.eps')
 plt.savefig(MaterialFile1+MaterialFile2+'Velocities.png')
 #plt.show()
@@ -272,14 +273,16 @@ line1,=plt.plot(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeOld, 'k-', label=r'Eq. (18
 # change style of lines
 plt.setp(line1, linewidth=3); plt.setp(line2, linewidth=3); #plt.setp(line3, linewidth=3); 
 plt.legend(loc=2)
-plt.xticks(np.arange(0, 2500, 500))
+plt.xticks(np.arange(0, 3500, 500))
 if(query == "Ti"):
   maxLifeTime=0.05
 elif (query == "Ag"):
   maxLifeTime=7
+elif (query == "Au"):
+  maxLifeTime=10
 else:
   maxLifeTime=10
-plt.axis([343,2000,0,maxLifeTime])
+plt.axis([500,3500,0,maxLifeTime])
 plt.savefig(MaterialFile1+MaterialFile2+'Lifetime.eps')
 plt.savefig(MaterialFile1+MaterialFile2+'Lifetime.png')
 #plt.show()

@@ -1,6 +1,31 @@
-makeTable.py:""" TODO: interface with HTML for publication on the web. 
-plotMultiwavelength.py:#TODO: Group velocity can be negative, and it designates another regime of propagation! 
-plotSipe.py:# TODO 
-plotSPPmultiMaterialData.py:# Select the material of interface 1 #TODO: This selector may be not clear for users. 
-SimpleSPProutines.py:  TODO: rewrite this function to control better the conditional parameters (ExperimentallyAchievable, Period!=0, and SPPcondition.). 
-SimpleSPProutines.py:def ExtractMaterialData(Database): #TODO: Think how to take data from continuous database directly instead of the ponctual file.
+Keldysh/keldysh.py:#TODO: print "Exporting density to a table for ZnO optical index calculations."
+Keldysh/libKeldysh.py:# TODO: As it is absorbed field, it should multiplied by real(optical index)
+Keldysh/libKeldysh.py:  #TODO: Missing coefficient on peak intensity ? 
+Keldysh/libKeldysh.py:  PeakIntensity = PeakFluence/tau #scalar, TODO: isn't it multiplied by sqrt(4 ln 2 / Pi) ? 
+LaserParameters/plotRadar.py:    N = 8 #TODO: make automatic based on the example_data
+SimpleSPP/Excitation.py:# Missing materials properties (TODO: to be added in database!)
+SimpleSPP/Excitation.py:collisionRate = 1E15 #TODO: arbitrary
+SimpleSPP/Excitation.py:#TODO: shall we compute N_exc(t) for each pulse intensity? or make a simple law? Rather compute the whole thing. 
+SimpleSPP/importPalikData.py:  nfile = folder+filename+"-epsR.csv" #TODO: rename nfile to ReEpsFile
+SimpleSPP/importPalikData.py:  kfile = folder+filename+"-epsC.csv" #TODO: rename kfile to ImEpsFile
+SimpleSPP/libDatabase.py:def ExtractMaterialData(Database): #TODO: Think how to take data from continuous database directly instead of the ponctual file.
+SimpleSPP/libKeldysh.py:# TODO: As it is absorbed field, it should multiplied by real(optical index)
+SimpleSPP/libKeldysh.py:  #TODO: Missing coefficient on peak intensity ? 
+SimpleSPP/libKeldysh.py:  PeakIntensity = PeakFluence/tau #scalar, TODO: isn't it multiplied by sqrt(4 ln 2 / Pi) ? 
+SimpleSPP/makeTable.py:""" TODO: interface with HTML for publication on the web. 
+SimpleSPP/plotMultimaterials.py:  # TODO: reprogram the whole function with switches in function arguments
+SimpleSPP/plotMultimaterials.py:  #TODO: use a function here! code is repeated! 
+SimpleSPP/plotMultimaterials.py:    #eps2range = epsilon1[0] #TODO: use external index
+SimpleSPP/plotMultimaterials.py:  #TODO: make a function here! Some code is repeated! 
+SimpleSPP/plotMultimaterials.py:  plt.plot(eps2range, LambdaPMA, 'b-') #TODO: plot using a full range, not eps2r
+SimpleSPP/plotMultimaterials.py:  #TODO simplify + combine the 3 following tests
+SimpleSPP/plotMultimaterials.py:    else: #TODO: set a general case
+SimpleSPP/plotMultimaterials.py:# TODO: THIS VARIABLE MUST BE NOT DEFINED BY HAND !!! O_O
+SimpleSPP/plotMultimaterials.py:# Select the material of interface 1 #TODO: This selector may be not clear for users. 
+SimpleSPP/plotMultiwavelength.py:# TODO: Error on results when taking Palik data on wide spectrum! 
+SimpleSPP/plotMultiwavelength.py:#TODO: Group velocity can be negative, and it designates another regime of propagation! 
+SimpleSPP/plotMultiwavelength.py:LifeTimeApprox = 2e0*(eps2new.real)**2 /( omegaspp * eps1new.real**2 * eps2new.imag) #TODO: origin of this formula ?
+SimpleSPP/plotSipe.py:#TODO: To verify coupling efficiency factor from Sipe theory: plot the efficiency factor maximum as function of the laser wavelength, and correlate with papers such as Endriz and Spicer, PRB 4, 4144 (1971); Benneth and Porteus, JOSA 51, 123 (1961)
+SimpleSPP/plotSipe.py:# TODO 
+SimpleSPP/SimpleSPProutines.py:  TODO: rewrite this function to control better the conditional parameters (ExperimentallyAchievable, Period!=0, and SPPcondition.). 
+SimpleSPP/SimpleSPProutines.py:#def ExtractMaterialData(Database): #TODO: Think how to take data from continuous database directly instead of the ponctual file.

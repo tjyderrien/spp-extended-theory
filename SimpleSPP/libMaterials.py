@@ -60,3 +60,12 @@ def MaxwellGarnett2(eps1, eps2, fraction):
 
 EpsilonToIndex = np.vectorize(EpsilonToIndex)
 MaxwellGarnett2 = np.vectorize(MaxwellGarnett2)
+
+#print "Attempt to use Maxwell-Garnett."
+
+#print "Import Material 1"
+#print "Import Material 2"
+#print "Define a wavelength."
+#print "Define a ratio of Material 1 (Material 2 = 1 - ratio)."
+
+#MaxwellGarnett2(eps1, eps2, ratio)

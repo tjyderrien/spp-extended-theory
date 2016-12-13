@@ -3,6 +3,8 @@
 
 # IMPORT LIBRARIES
 from SimpleSPProutines import *
+from libMaterials import *
+
 precision = 1E-9
 # Now, we shall construct database for SPP lifetimes. Actually, SPP lifetime require the knowledge of all spectrum of response to be known. 
 
@@ -23,14 +25,16 @@ MaterialFolder="Database"
 #MaterialFile1="SiO2-Palik"
 #MaterialFile1="TiO2-Palik"
 #MaterialFile1="Si-Palik"
-MaterialFile1="ZnO-Bond"
+#MaterialFile1="ZnO-Bond"
+
+MaterialFile1="Ag-Johnson"
 
 #MaterialFile2="Al-Palik"
 #MaterialFile2="Ti-Palik"
 #MaterialFile2="Ag-Palik"
 #MaterialFile2="Au-Palik"
 #MaterialFile2="Au-Johnson"
-#MaterialFile2="Ag-Johnson"
+
 #MaterialFile2="SiO2-Palik"
 #MaterialFile2="Ti-Johnson"
 #MaterialFile2="Mo-Palik"
@@ -142,6 +146,8 @@ print "Interpolating on Wavelength mesh size = "+str(wavelengths.size)
 
 eps1new=np.add(feps1r(wavelengths),np.multiply(1.0j, feps1i(wavelengths)))
 eps2new=np.add(feps2r(wavelengths),np.multiply(1.0j, feps2i(wavelengths)))
+
+#========= Multiwavelength data: DATA ARE NOW READY ======
 
 print "Checking quality of interpolation for the dielectric function..."
 plt.figure()
@@ -259,8 +265,8 @@ LifeTimePhase = np.clip(LifeTimePhase, 0, 1)
 LifeTimeApprox = np.clip(LifeTimeApprox, 0, 1)
 
 # Plotting the SPP lifetime
-HohenauLabel=17
-RaetherLabel=18
+HohenauLabel="Hohenau formula"#17
+RaetherLabel="Raether formula" #18
 plt.figure()
 plt.xlabel('Wavelength $\lambda$ (nm)')
 plt.ylabel(r'SPP lifetime $\tau_{\mbox{SPP}}$ (ps)')
@@ -306,6 +312,18 @@ plt.legend(loc=1)
 #plt.axis([200,2000,0,10e0])
 plt.savefig(MaterialFile1+MaterialFile2+'SppDecayDepth.eps')
 plt.savefig(MaterialFile1+MaterialFile2+'SppDecayDepth.png')
+
+fraction = 12.5/100.
+EffectivePermittivity = MaxwellGarnett2(eps1new, eps2new, 1.-fraction)
+print "Plotting Maxwell-Garnett 2-material mixing."
+plt.figure()
+plt.title('Mixture: '+MaterialFile1+'('+str(int(100.*fraction))+' perc.)'+'/'+MaterialFile2)
+plt.xlabel(r'Wavelength $\lambda$ (nm)')
+plt.plot(1e9*wavelengths, EffectivePermittivity.real, 'b-', label=r'$Re(\varepsilon_{eff})$')
+plt.plot(1e9*wavelengths, EffectivePermittivity.imag, 'r-', label=r'$Im(\varepsilon_{eff})$')
+plt.legend(loc=1)
+plt.savefig(MaterialFile1+MaterialFile2+'Garnett.eps')
+plt.savefig(MaterialFile1+MaterialFile2+'Garnett.png')
 
 if(ShowPictures == True):
   plt.show()

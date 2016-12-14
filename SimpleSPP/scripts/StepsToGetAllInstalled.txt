@@ -1,0 +1,18 @@
+# Download anaconda (big (>400Mb) file .sh)
+
+# Install the anaconda
+sudo bash <name of the downloaded bash file>
+
+# Install scipy, numpy and others
+sudo apt-get install python-numpy python-scipy python-matplotlib ipython ipython-notebook python-pandas python-sympy python-nose
+
+# Be sure that the version of scipy is above 0.16
+# For that, type ipython to open the interactive iPython. Then type
+In [1]: import scipy
+In [2]: scipy.__version__
+
+# edit the file  ~/.bashrc
+# Add the path for the python libraries:
+PYTHONPATH=$PYTHONPATH:/usr/local/lib/python2.7/dist-packages
+
+source .bashrc

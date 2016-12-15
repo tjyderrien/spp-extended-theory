@@ -1,0 +1,128 @@
+
+
+*******************************************************************************
+Thu Dec 15 16:26:15 2016
+
+
+FIT:    data read from fileThibs u 1:2
+        format = x:z
+        #datapoints = 180
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+fitted parameters initialized with current variable values
+
+
+
+ Iteration 0
+ WSSR        : 1.96587e+08       delta(WSSR)/WSSR   : 0
+ delta(WSSR) : 0                 limit for stopping : 1e-05
+ lambda	  : 377.792
+
+initial set of free parameter values
+
+angleZero       = 0.01
+amplitude       = 6800
+deltaAngle      = 1
+off             = 1
+
+After 7 iterations the fit converged.
+final sum of squares of residuals : 1.00322e+08
+rel. change during last iteration : -4.10244e-10
+
+degrees of freedom    (FIT_NDF)                        : 176
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 754.99
+variance of residuals (reduced chisquare) = WSSR/ndf   : 570010
+
+BREAK:          Singular matrix in Invert_RtR
+
+
+
+*******************************************************************************
+Thu Dec 15 16:28:17 2016
+
+
+FIT:    data read from fileThibs u 1:2
+        format = x:z
+        #datapoints = 180
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+fitted parameters initialized with current variable values
+
+
+
+ Iteration 0
+ WSSR        : 1.96587e+08       delta(WSSR)/WSSR   : 0
+ delta(WSSR) : 0                 limit for stopping : 1e-05
+ lambda	  : 377.792
+
+initial set of free parameter values
+
+angleZero       = 0.01
+amplitude       = 6800
+deltaAngle      = 1
+off             = 1
+
+After 7 iterations the fit converged.
+final sum of squares of residuals : 1.00322e+08
+rel. change during last iteration : -4.10244e-10
+
+degrees of freedom    (FIT_NDF)                        : 176
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 754.99
+variance of residuals (reduced chisquare) = WSSR/ndf   : 570010
+
+BREAK:          Singular matrix in Invert_RtR
+
+
+
+*******************************************************************************
+Thu Dec 15 16:31:44 2016
+
+
+FIT:    data read from fileThibs u 1:2
+        format = x:z
+        #datapoints = 180
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+fitted parameters initialized with current variable values
+
+
+
+ Iteration 0
+ WSSR        : 1.11099e+08       delta(WSSR)/WSSR   : 0
+ delta(WSSR) : 0                 limit for stopping : 1e-05
+ lambda	  : 194.452
+
+initial set of free parameter values
+
+angleZero       = 45
+amplitude       = 3500
+deltaAngle      = 1
+off             = 1
+
+After 9 iterations the fit converged.
+final sum of squares of residuals : 1.28805e+06
+rel. change during last iteration : -3.25026e-06
+
+degrees of freedom    (FIT_NDF)                        : 176
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 85.5482
+variance of residuals (reduced chisquare) = WSSR/ndf   : 7318.49
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+
+angleZero       = 49.716           +/- 0.07967      (0.1602%)
+amplitude       = 3031.41          +/- 30.04        (0.9909%)
+deltaAngle      = 8.31549          +/- 0.09784      (1.177%)
+off             = 102.133          +/- 7.168        (7.019%)
+
+
+correlation matrix of the fit parameters:
+
+               angleZ amplit deltaA off    
+angleZero       1.000 
+amplitude       0.004  1.000 
+deltaAngle     -0.003 -0.497  1.000 
+off             0.000 -0.169 -0.284  1.000 

@@ -1,5 +1,8 @@
-#Property of Iaroslav Gnilitskyi and Prof. Leonardo Orazi, UNIMORE Italy. 																	
-#Method to measure: ImageJ > OrientationJ > Distribution > Reitz filter																	
+#Property of Iaroslav Gnilitskyi and Prof. Leonardo Orazi, UNIMORE Italy. 
+# Analyzed by Dr. Thibault J.-Y. Derrien and Dr. Yoann Levy. HiLASE, Institute of Physics, Czech Republic.
+
+#Method to measure: ImageJ > OrientationJ > Distribution > Reitz filter	
+# TODO: error bars were modified by hand in order to account for the statistical error on the number of pixels. Least-mean-square fit provided too small error bars. 
 #This file will be used with ./plot.py to automatically generate the correlation between LSPP and LIPSS regularity												Measurements					Remark
 #Material 	Aperture (deg)	dAngle (deg)  	Wavelength (nm)	Pulse (fs)	Fluence(J/cm2)	Repetition(kHz)	Scanning(m/s)	SpotDiam(um)	References	Source	Magnification	Min	Max	Min2	Max2		
 ##Au	44.8	2.2	266	?	?	?	?	?	[Yadavali]	Palik	?	70	155.2	64.4	158.4		DC voltage
@@ -11,15 +14,15 @@
 #Cu	22.073	0.7946	800	35	?	?	?	?	[Xie2015]	Palik	?	61.2	108	58.8	110		
 ##Ag	49.1	13.3	800	120	?	?	?	?	[Chang2011]	Palik	?	-8.8	62.8	-47.6	77.2		
 #W	25.9491	0.1641	800	150	0.77	?	0	70	[Colombier2012]	?	?	?	?	?	?		
-Mo	5.25213	0.02946	1030	213	3.53	600	1.7	6	This work	Ordal 1988	10000						
+Mo	5.25213	0.5	1030	213	3.53	600	1.7	6	This work	Ordal 1988	10000						
 #Mo	30.0	0.4	1030	500?	0.795?	100	0.05	40	[Torres2013]	?							
-Ti	9.17408	0.05311	1030	213	1.47	600	1.7	6	This work	Johnson	10000	46.8	70	46.4	70		
-Cr	13.0472	0.1	1030	500	0.038	250	1.5	80	[Ruiz2014]	Palik	?	-11.6	14	-11.2	14		
-Steel	9.23947	0.07405	1030	?	?	?	?	6.0?	This work	Iaroslav	10000	-9.6	18	-10.8	20		
+Ti	9.17408	0.5	1030	213	1.47	600	1.7	6	This work	Johnson	10000	46.8	70	46.4	70		
+Cr	13.0472	1.0	1030	500	0.038	250	1.5	80	[Ruiz2014]	Palik	?	-11.6	14	-11.2	14		
+Steel	9.23947	0.5	1030	?	?	?	?	6.0?	This work	Iaroslav	10000	-9.6	18	-10.8	20		
 #Cr	18.5615	0.2577	1030	500	0.038	250	1.5	80	[Ruiz2014]	Palik	>> 10000	-20.4	18	-22	18.8		
-Ni	20.0058	0.9502	1030	232	?	?	?	?	[Dostovalov]	Palik	?	-27.6	23.2	-25.2	22.4		1026 nm
-Al	25.9481	0.2473	1030	270?	?	?	?	6.0?	This work	Palik	10000	15.2	75.6	12	78.4		
-Cu	23.815	0.1451	1030	?	?	?	?	6.0?	This work	Palik	10000	-24.8	46.8	-27.6	55.6		
-Au	43.0978	1.017	1030	?	?	?	?	6.0?	This work	Palik	10000	-16.8	84	-13.6	84.4		
+Ni	20.0058	0.5	1030	232	?	?	?	?	[Dostovalov]	Palik	?	-27.6	23.2	-25.2	22.4		1026 nm
+Al	25.9481	0.5	1030	270?	?	?	?	6.0?	This work	Palik	10000	15.2	75.6	12	78.4		
+Cu	23.815	0.5	1030	?	?	?	?	6.0?	This work	Palik	10000	-24.8	46.8	-27.6	55.6		
+Au	43.0978	1.0	1030	?	?	?	?	6.0?	This work	Palik	10000	-16.8	84	-13.6	84.4		
 #Ti	3.6	0.2	1060	100	0.1	1000	2-8 1E6 	~12	[Oektem2013]	Johnson	>> 10000	-3.6	3.2	-4	3.6		
 #Cu	26.6	1.6	?	?	?	?	?	?	[Tan]	Palik	?	-30.8	19.2	-32.8	23.6		

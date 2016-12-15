@@ -41,7 +41,8 @@ def EpsilonToIndex(eps):
 def IndexToEpsilon(n):
   return n*n
 
-## Calculate effective dielectric permittivity for 2-mediums using Maxwell-Garnett method
+## Maxwell-Garnett method for mixing 2 materials together. 
+# Returns the effective dielectric permittivity of 2-mixed materials. 
 # @param eps1: dielectric permittivity (epsilon <complex>) of first medium
 # @param eps2: dielectric permittivity (epsilon <complex>) of second medium
 # @param fraction: fraction of epsilon2 mixed with (1.-fraction)*epsilon1 medium
@@ -58,8 +59,13 @@ def MaxwellGarnett2(eps1, eps2, fraction):
   epsilon_effective = epsilon_effective_real + 1.0j*epsilon_effective_imag
   return epsilon_effective
 
+## Lorentz-Lorenz method: see the Maxwell-Garnett model ( MaxwellGarnett2() function ).
+def LorentzLorenz2(eps1, eps2, fraction):
+  return MaxwellGarnett2(eps1, esp2, fraction)
+
 EpsilonToIndex = np.vectorize(EpsilonToIndex)
 MaxwellGarnett2 = np.vectorize(MaxwellGarnett2)
+LorentzLorenz2 = np.vectorize(LorentzLorenz2)
 
 #print "Attempt to use Maxwell-Garnett."
 

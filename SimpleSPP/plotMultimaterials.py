@@ -375,7 +375,7 @@ epsilon2 = np.add(eps2rM,np.multiply(1e0j, eps2cM))
 print "Plot the period 2D as function of dielectric permittivity"
 
 noise = eta #Lack of knowledge on dielectric permittivity
-precision = 0.25e0 #Precision for meshing
+precision = 0.10e0 #Precision for meshing
 
 period = np.vectorize(period)
 betaSPP = np.vectorize(betaSPP)
@@ -394,8 +394,8 @@ print "DeltaLspp = "+str(deltaLspp(wavelength, 1e0+0e0j, -49.5738812793e0+3.8128
 print "== Knowledge over dielectric permittivity: +/- "+str(noise)+"."
 
 print "Mesh generation..."
-epsr = np.arange(-120e0,15e0, precision)
-epsc = np.arange(0e0,60e0, precision)
+epsr = np.arange(-30e0,10e0, precision)
+epsc = np.arange(0e0,25e0, precision)
 
 eps2r, eps2c = np.meshgrid(epsr, epsc)
 
@@ -472,7 +472,8 @@ LsppTable = 1e6*DecayLengthSPP(betaSPP(wavelength, 1e0, eps2r+eps2c*1e0j))
 deltaLsppTable = 1e6*(deltaLspp(wavelength, 1e0, eps2r+eps2c*1e0j, 0e0, 0e0, noise, noise))
 
 plt.figure()
-levels = [5, 10, 20, 30, 40, 50, 100, 200] #um
+#levels = [5, 10, 20, 30, 40, 50, 100, 200] #um
+levels = [1, 5, 10, 20, 30, 40, 50] #um
 #levels = MaxNLocator(nbins=15).tick_values(0e0, LsppTable.max())
 if(reverse): #{
 	CS = plt.contourf(eps1r, eps1c, LsppTable, levels=levels, cmap=plt.cm.Blues)
@@ -528,7 +529,7 @@ else:
 #plt.clabel(CS, inline=1, fontsize=20)
 #plt.legend(pos=1)
 plt.colorbar(CS)
-plt.title(r'SPP mean-free-path fluctuations $\delta L_{SPP}$ ($\mu$m), $\lambda=$'+niceWavelength+' nm.')
+plt.title(r'Fluctuations $\delta L_{SPP}$ ($\mu$m), $\lambda=$'+niceWavelength+' nm.')
 plt.savefig('deltaLspp'+niceWavelength+'.eps')
 plt.savefig('deltaLspp'+niceWavelength+'.png')
 plt.show()

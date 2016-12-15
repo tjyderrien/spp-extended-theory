@@ -2,7 +2,7 @@
 
 reset
 
-fileThibs='18um.txt'
+fileThibs='orientation.csv'
 fileYoann='' #'10um.txt'
 
 set terminal postscript eps enhanced color font 'Helvetica, 24'
@@ -14,8 +14,8 @@ set ylabel 'Amplitude (un.ar.)'
 set samples 10000
 
 deltaAngle=1E0
-angleZero=1E-2
-amplitude=6800E0
+angleZero=45
+amplitude=3500E0
 off=1E0
 
 # sigmaAngle(angle) = angle / 2.*sqrt(2.*log(2.))

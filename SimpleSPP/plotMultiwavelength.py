@@ -20,14 +20,14 @@ if(len(sys.argv)<=2):
 
 MaterialFolder="Database"
 
-#MaterialFile1="Air"
+MaterialFile1="Air"
 #MaterialFile1="Al2O3-Palik"
 #MaterialFile1="SiO2-Palik"
 #MaterialFile1="TiO2-Palik"
 #MaterialFile1="Si-Palik"
 #MaterialFile1="ZnO-Bond"
 
-MaterialFile1="Ag-Johnson"
+#MaterialFile1="Ag-Johnson"
 
 #MaterialFile2="Al-Palik"
 #MaterialFile2="Ti-Palik"
@@ -190,9 +190,9 @@ print "Plot the SPP period with wavelength..."
 
 plt.figure()
 plt.xlabel('Wavelength $\lambda$ $(nm)$')
-plt.ylabel('$\Lambda$ ($nm$)')
-plt.plot(1e9*wavelengths, 1e9 * (2e0*pi/kspp.real), label='Near-field period')
-plt.title('Period of field at $'+MaterialFile1+'$/$'+MaterialFile2+'$ interface')
+plt.ylabel('$\Lambda_{\mbox{SPP}}$ ($nm$)')
+plt.plot(1e9*wavelengths, 1e9 * (2e0*pi/kspp.real)) #label='Near-field period'
+#plt.title('Period of field at $'+MaterialFile1+'$/$'+MaterialFile2+'$ interface')
 plt.legend(loc=2)
 plt.grid(True)
 plt.savefig(MaterialFile1+MaterialFile2+'Period.eps')
@@ -203,13 +203,13 @@ print "Plot the SPP mean-free path with wavelength..."
 plt.figure()
 plt.xlabel('Wavelength $\lambda$ $(nm)$')
 plt.ylabel('SPP mean-free-path $L_{SPP}$ ($\mu$m)')
-plt.plot(1e9*wavelengths, 1e6 * (0.5E0/kspp.imag), label=MaterialFile1+'/'+MaterialFile2)
+plt.plot(1e9*wavelengths, 1e6 * (0.5E0/kspp.imag)) #label=MaterialFile1+'/'+MaterialFile2
 #plt.title('Period of field at $'+MaterialFile1+'$/$'+MaterialFile2+'$ interface')
 plt.legend(loc=2)
 plt.grid(True)
 plt.savefig(MaterialFile1+MaterialFile2+'MeanFreePath.eps')
 #plt.show()
-plt.loglog(1e9*wavelengths, 1e6 * (0.5E0/kspp.imag), label=MaterialFile1+'/'+MaterialFile2)
+plt.plot(1e9*wavelengths, 1e6 * (0.5E0/kspp.imag), label=MaterialFile1+'/'+MaterialFile2)
 plt.savefig(MaterialFile1+MaterialFile2+'MeanFreePath-LogLog.eps')
 
 print "Plot the lifetime with wavelength..."

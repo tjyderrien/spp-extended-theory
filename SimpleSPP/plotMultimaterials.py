@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
 
+## @
+
 # IMPORT LIBRARIES
 from SimpleSPProutines import *
 from advancedPlotting import *
@@ -375,7 +377,7 @@ epsilon2 = np.add(eps2rM,np.multiply(1e0j, eps2cM))
 print "Plot the period 2D as function of dielectric permittivity"
 
 noise = eta #Lack of knowledge on dielectric permittivity
-precision = 0.10e0 #Precision for meshing
+precision = 1.0e0 #Precision for meshing
 
 period = np.vectorize(period)
 betaSPP = np.vectorize(betaSPP)
@@ -394,8 +396,8 @@ print "DeltaLspp = "+str(deltaLspp(wavelength, 1e0+0e0j, -49.5738812793e0+3.8128
 print "== Knowledge over dielectric permittivity: +/- "+str(noise)+"."
 
 print "Mesh generation..."
-epsr = np.arange(-30e0,10e0, precision)
-epsc = np.arange(0e0,25e0, precision)
+epsr = np.arange(-110e0,10e0, precision)
+epsc = np.arange(0e0,50e0, precision)
 
 eps2r, eps2c = np.meshgrid(epsr, epsc)
 
@@ -406,11 +408,11 @@ deltaPeriod = 1e9*(deltaPeriodSPP(wavelength, 1e0, eps2r+eps2c*1e0j, 0e0, 0e0, n
 print "** Plotting 2D period(Re eps, Im eps)..."
 
 plt.figure()
-levels = MaxNLocator(nbins=15).tick_values(0e0, Period.max())
+levels = MaxNLocator(nbins=10).tick_values(0e0, 1E9*2.0*wavelength) #
 if(reverse): #{
-	CS = plt.contourf(eps1r, eps1c, Period, levels=levels, cmap=plt.cm.Blues)
+	CS = plt.contourf(eps1r, eps1c, Period, levels=levels, cmap=plt.cm.RdBu_r)
 else:
-	CS = plt.contourf(eps2r, eps2c, Period, levels=levels, cmap=plt.cm.Blues)
+	CS = plt.contourf(eps2r, eps2c, Period, levels=levels, cmap=plt.cm.RdBu_r)
 #}
 	
 plt.xlabel(r'$Re(\varepsilon)$')
@@ -472,8 +474,8 @@ LsppTable = 1e6*DecayLengthSPP(betaSPP(wavelength, 1e0, eps2r+eps2c*1e0j))
 deltaLsppTable = 1e6*(deltaLspp(wavelength, 1e0, eps2r+eps2c*1e0j, 0e0, 0e0, noise, noise))
 
 plt.figure()
-#levels = [5, 10, 20, 30, 40, 50, 100, 200] #um
-levels = [1, 5, 10, 20, 30, 40, 50] #um
+levels = [5, 10, 20, 30, 40, 50, 100, 200] #um
+#levels = [1, 5, 10, 20, 30, 40, 50] #um
 #levels = MaxNLocator(nbins=15).tick_values(0e0, LsppTable.max())
 if(reverse): #{
 	CS = plt.contourf(eps1r, eps1c, LsppTable, levels=levels, cmap=plt.cm.Blues)

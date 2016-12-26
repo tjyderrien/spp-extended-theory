@@ -1,5 +1,11 @@
 # README #
 
+# Structure of the code
+
+The code is now made of 2 branches. 
+* Branch master: contains the public code for the community. 
+* Branch develop: contains the private code, with unreleased features. 
+
 # Main developers
 
 * T.J.-Y. Derrien: developing theory, programming. 

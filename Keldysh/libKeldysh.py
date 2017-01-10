@@ -99,7 +99,7 @@ def KeldyshFunction(Keldysh1, Keldysh2, Ueff, nmax, wavelength): #{{{
   try: 
     EllipticK1 = ellipk( Keldysh11 ) #inf if Keldysh11 = 1. 
   except: 
-    print "** Error: not enough precision on Keldysh1."
+    print "** Error on ellipk: argument 1 is singular. Please increase precision on Keldysh1 or use ellipkm1 function (careful, argument IS not the same)."
   EllipticE1 = ellipe( Keldysh11 )
   EllipticE2 = ellipe( Keldysh22 )
   # print "EllipticK1 = "+str(EllipticK1)

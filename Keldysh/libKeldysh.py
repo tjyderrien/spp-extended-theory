@@ -49,21 +49,23 @@ def gammaKeldysh(Egap, meff, Efield, wavelength): #{{{
 # Numerically validated with comparison to Maple. 
 #}}}
 
-## Computes some intermediate quantity
+## Computes some intermediate quantity, careful: long double precision.
 def Keldysh1(gamma):
   value = np.float128(gamma) #K1(gamma) function has limit 1 when gamma > 5. Hence, we must compute k1(gamma) with a huge precision to stay out of unity. 
-  return np.float64(np.divide(value, np.sqrt( np.float128(1E0) + value * value) ))
+  return np.divide(value, np.sqrt( np.float128(1E0) + value * value) )
 
 ## Computes some intermediate quantity
 def Keldysh2(gamma):
   value = np.float128(gamma) #idem about precision.
-  return np.float64(np.divide( Keldysh1(value), value ))
+  return np.divide( Keldysh1(value), value )
 
 ## Computes the effective gap for one material
 # @param Egap: band gap of the transition (multi-photonic / tunnel transitions are DIRECT)
 def EffectiveGap(Egap, k1, k2): #{{{
+  # k1 = np.float64(k1); 
+  k22 = np.float64(k2*k2) #reducing precision to call ellipe
   if (k1 != 0):
-    result = 2.0*Egap * ellipe(k2**2)/(pi*k1) #Warning: ellipe(x²) actually computes E(x). 
+    result = 2.0*Egap * ellipe(k22)/(pi*k1) #Warning: ellipe(x²) actually computes E(x). 
   else: 
     print "EffectiveGap(): Keldysh1 = 0."
     exit()
@@ -79,7 +81,8 @@ def EffectiveGap(Egap, k1, k2): #{{{
 # This is based on the Python library SciPy.special functions. 
 # According to https://docs.scipy.org/doc/scipy-0.14.0/reference/generated/scipy.special.dawsn.html#scipy.special.dawsn
 def DawsonIntegral(z): #{{{
-  integral = dawsn(z)
+  z2 = np.float64(z)
+  integral = dawsn(z2)
   # Validation, compared with Maple. 
   # OK DawsonIntegral(0.)=0
   # OK DawsonIntegral(0.5) = 0.42443638350202229
@@ -88,18 +91,17 @@ def DawsonIntegral(z): #{{{
 
 def KeldyshFunction(Keldysh1, Keldysh2, Ueff, nmax, wavelength): #{{{
   omegaLaser = 2.*pi*c/wavelength #SI
-  n_tab = np.arange(0,nmax)
+  n_tab = np.arange(0,nmax+1)
  
   # print "Keldysh1 = "+str(Keldysh1)
-  Keldysh11 = Keldysh1 ** 2
+  Keldysh11 = np.float64(Keldysh1 ** 2)
   # print "--"
   # print "Keldysh11 = "+str(Keldysh11)
-  Keldysh22 = Keldysh2 **2 
+  Keldysh22 = np.float64(Keldysh2 **2)
   # print "Keldysh11 = "+str(Keldysh11)
-  try: 
-    EllipticK1 = ellipk( Keldysh11 ) #inf if Keldysh11 = 1. 
-  except: 
+  if(Keldysh11 == 1.0): 
     print "** Error on ellipk: argument 1 is singular. Please increase precision on Keldysh1 or use ellipkm1 function (careful, argument IS not the same)."
+  EllipticK1 = ellipk( Keldysh11 ) #inf if Keldysh11 = 1.  
   EllipticE1 = ellipe( Keldysh11 )
   EllipticE2 = ellipe( Keldysh22 )
   # print "EllipticK1 = "+str(EllipticK1)
@@ -107,10 +109,10 @@ def KeldyshFunction(Keldysh1, Keldysh2, Ueff, nmax, wavelength): #{{{
   # print "division= "+str(division)
   exponant = np.multiply( n_tab, division )
   sumtable = np.exp( - pi * exponant )
-  sumtable = np.multiply(sumtable,DawsonIntegral(pi*np.sqrt( ((2.0*np.trunc(Ueff/hbar/omegaLaser+1.))-2.0*Ueff/hbar/omegaLaser + n_tab) / (2.0 * ellipk(Keldysh2**2)*ellipe(Keldysh2**2)) ) ) )
+  sumtable = np.multiply(sumtable,DawsonIntegral(pi*np.sqrt( ((2.0*np.trunc(Ueff/hbar/omegaLaser+1.))-2.0*Ueff/hbar/omegaLaser + n_tab) / (2.0 * ellipk(Keldysh22)*ellipe(Keldysh22)) ) ) )
   #print "Effective gap: "+str(Ueff/e)+" eV."
   #print sumtable
-  result = np.multiply(np.sqrt(pi/(2.*ellipk(Keldysh2**2))),np.sum(sumtable))
+  result = np.multiply(np.sqrt(pi/(2.*ellipk(Keldysh22))),np.sum(sumtable))
   return result
 """ Validation
   KeldyshFunction(Keldysh1=0, Keldysh2=0, Ueff=0, nmax=0, wavelength=0): error. 
@@ -127,18 +129,22 @@ def KeldyshFunction(Keldysh1, Keldysh2, Ueff, nmax, wavelength): #{{{
 def KeldyshFunction_Gruzdev(Keldysh1, Keldysh2, Ueff, nmax, wavelength): #{{{
   omegaLaser = 2.*pi*c/wavelength #SI
   n=np.arange(0,nmax+1)
+  Keldysh11 = np.float64(Keldysh1 ** 2)
+  Keldysh22 = np.float64(Keldysh2 ** 2)
   #print n
-  sumtable=np.exp(-pi*n*(ellipk(Keldysh1**2)-ellipe(Keldysh1**2))/ellipe(Keldysh2**2))*DawsonIntegral(pi*np.sqrt( ((np.trunc(Ueff/hbar/omegaLaser+1.))-Ueff/hbar/omegaLaser + n) / (2.0 * ellipk(Keldysh2**2)*ellipe(Keldysh2**2)) ) )
+  sumtable=np.exp(-pi*n*(ellipk(Keldysh11)-ellipe(Keldysh11))/ellipe(Keldysh22))*DawsonIntegral(pi*np.sqrt( ((np.trunc(Ueff/hbar/omegaLaser+1.))-Ueff/hbar/omegaLaser + n) / (2.0 * ellipk(Keldysh22)*ellipe(Keldysh22)) ) )
   #print "Effective gap: "+str(Ueff/e)+" eV."
   #print sumtable
-  result = np.multiply(np.sqrt(pi/(2.*ellipk(Keldysh2**2))), np.sum(sumtable))
+  result = np.multiply(np.sqrt(pi/(2.*ellipk(Keldysh22))), np.sum(sumtable))
   return result
 
 ## The original Keldysh function for Kane direct band gap
 # This function is known to contain mistakes. 
 def IonizationRate(Keldysh1, Keldysh2, KeldyshFunctionResult, Ueff, wavelength):
   omegaLaser = 2.*pi*c/wavelength
-  result = 2.*omegaLaser/(9.*pi)*((omegaLaser*m_e)/(hbar*Keldysh1))**(1.5)*KeldyshFunctionResult*np.exp(-pi*np.trunc(Ueff/hbar/omegaLaser+1)*((ellipk(Keldysh1**2)-ellipe(Keldysh1**2))/(ellipe(Keldysh2**2))))
+  Keldysh11 = np.float64(Keldysh1 * Keldysh1)
+  Keldysh22 = np.float64(Keldysh2 * Keldysh2)
+  result = 2.*omegaLaser/(9.*pi)*((omegaLaser*m_e)/(hbar*Keldysh1))**(1.5)*KeldyshFunctionResult*np.exp(-pi*np.trunc(Ueff/hbar/omegaLaser+1)*((ellipk(Keldysh11)-ellipe(Keldysh11))/(ellipe(Keldysh22))))
   
   return result
 
@@ -234,13 +240,13 @@ BristowLaw = np.vectorize(BristowLaw)
 # @param dt: precision (scalar, seconds)
 # @param order: integration order for Keldysh model (integer, no unit)
 # @N_total: limiter for the ionizable number of electrons (float, m^{-3})
-def generateWpiTables(Egap = 2.58e0*e, meff = 0.18e0, wavelength = 800e-9, tau = 10e-15, PeakFluence = 100e-3*1E4, dt = 1E-17, order = 50, N_total=5E28): #{{{
+def generateWpiTables(Egap = 2.58e0*e, meff = 0.18e0, wavelength = 800e-9, tau = 10e-15, PeakFluence = 100e-3*1E4, dt = 1E-17, order = 50, N_total=5E28, t0=0.0): #{{{
   ShortRefKeldysh = "[Keldysh (1964)]"
   ShortRefGruzdev = "[Gruzdev (2014)]"
   
   print "Defining the laser pulse..."
   PeakIntensity = PeakFluence/tau #scalar, TODO: isn't it multiplied by sqrt(4 ln 2 / Pi) ? 
-  t0 = 0e0
+  # t0 = 0e0
   tmin = -3.5*tau+t0
   tmax = 3.5*tau+t0
   #dt = 1E-17
@@ -323,7 +329,7 @@ def plotPulseToDensity(Egap = 2.58e0*e, meff = 0.18e0, wavelength = 800e-9, tau 
   ShortRefKeldysh = "[Keldysh (1964)]"
   ShortRefGruzdev = "[Gruzdev (2014)]"
   
-  instants, N_excited_Keldysh, N_excited_Gruzdev = generateWpiTables(Egap, meff, wavelength, tau, PeakFluence, dt, order, N_total)
+  instants, N_excited_Keldysh, N_excited_Gruzdev = generateWpiTables(Egap, meff, wavelength, tau, PeakFluence, dt, order, N_total, t0)
   
   print ""
   print "** Warning: results may be not converged."

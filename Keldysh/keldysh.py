@@ -22,8 +22,8 @@ meff=0.18e0; #Effective mass of Si
 Ntotal=1.*5E28
 
 wavelength = 800e-9
-tau=10e-15; dt = 1E-18
-PeakFluence = 100e-3*1E4 #J/cm2 * 1E4 = J/m2
+tau=10e-15; dt = 1E-17
+PeakFluence = 1.327e-3*1E4 #J/cm2 * 1E4 = J/m2
 order = 50
 ShowPlot = True
 

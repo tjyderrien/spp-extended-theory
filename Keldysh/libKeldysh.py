@@ -7,7 +7,7 @@
 import numpy as np
 from numpy import genfromtxt, loadtxt, chararray
 #from scipy.optimize import fsolve, root
-from scipy.special import ellipk, ellipe, dawsn, factorial2, factorial
+from scipy.special import ellipk, ellipe, dawsn, factorial2, factorial, ellipkm1
 #import cmath
 import matplotlib as mp
 import matplotlib.pyplot as plt
@@ -51,11 +51,13 @@ def gammaKeldysh(Egap, meff, Efield, wavelength): #{{{
 
 ## Computes some intermediate quantity
 def Keldysh1(gamma):
-  return gamma/np.sqrt(1.0+gamma**2)
+  value = np.float128(gamma) #K1(gamma) function has limit 1 when gamma > 5. Hence, we must compute k1(gamma) with a huge precision to stay out of unity. 
+  return np.float64(np.divide(value, np.sqrt( np.float128(1E0) + value * value) ))
 
 ## Computes some intermediate quantity
 def Keldysh2(gamma):
-  return Keldysh1(gamma)/gamma
+  value = np.float128(gamma) #idem about precision.
+  return np.float64(np.divide( Keldysh1(value), value ))
 
 ## Computes the effective gap for one material
 # @param Egap: band gap of the transition (multi-photonic / tunnel transitions are DIRECT)
@@ -86,9 +88,26 @@ def DawsonIntegral(z): #{{{
 
 def KeldyshFunction(Keldysh1, Keldysh2, Ueff, nmax, wavelength): #{{{
   omegaLaser = 2.*pi*c/wavelength #SI
-  n=np.arange(0,nmax+1)
-  #print n
-  sumtable=np.exp(-pi*n*(ellipk(Keldysh1**2)-ellipe(Keldysh1**2))/ellipe(Keldysh2**2))*DawsonIntegral(pi*np.sqrt( ((2.0*np.trunc(Ueff/hbar/omegaLaser+1.))-2.0*Ueff/hbar/omegaLaser + n) / (2.0 * ellipk(Keldysh2**2)*ellipe(Keldysh2**2)) ) )
+  n_tab = np.arange(0,nmax)
+ 
+  # print "Keldysh1 = "+str(Keldysh1)
+  Keldysh11 = Keldysh1 ** 2
+  # print "--"
+  # print "Keldysh11 = "+str(Keldysh11)
+  Keldysh22 = Keldysh2 **2 
+  # print "Keldysh11 = "+str(Keldysh11)
+  try: 
+    EllipticK1 = ellipk( Keldysh11 ) #inf if Keldysh11 = 1. 
+  except: 
+    print "** Error: not enough precision on Keldysh1."
+  EllipticE1 = ellipe( Keldysh11 )
+  EllipticE2 = ellipe( Keldysh22 )
+  # print "EllipticK1 = "+str(EllipticK1)
+  division = np.divide( EllipticK1 - EllipticE1 , EllipticE2 )
+  # print "division= "+str(division)
+  exponant = np.multiply( n_tab, division )
+  sumtable = np.exp( - pi * exponant )
+  sumtable = np.multiply(sumtable,DawsonIntegral(pi*np.sqrt( ((2.0*np.trunc(Ueff/hbar/omegaLaser+1.))-2.0*Ueff/hbar/omegaLaser + n_tab) / (2.0 * ellipk(Keldysh2**2)*ellipe(Keldysh2**2)) ) ) )
   #print "Effective gap: "+str(Ueff/e)+" eV."
   #print sumtable
   result = np.multiply(np.sqrt(pi/(2.*ellipk(Keldysh2**2))),np.sum(sumtable))
@@ -304,7 +323,7 @@ def plotPulseToDensity(Egap = 2.58e0*e, meff = 0.18e0, wavelength = 800e-9, tau 
   ShortRefKeldysh = "[Keldysh (1964)]"
   ShortRefGruzdev = "[Gruzdev (2014)]"
   
-  instants, N_excited_Keldysh, N_excited_Gruzdev = generateWpiTables(Egap, meff, wavelength, dt, order)
+  instants, N_excited_Keldysh, N_excited_Gruzdev = generateWpiTables(Egap, meff, wavelength, tau, PeakFluence, dt, order, N_total)
   
   print ""
   print "** Warning: results may be not converged."

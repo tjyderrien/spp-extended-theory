@@ -94,14 +94,20 @@ def KeldyshFunction(Keldysh1, Keldysh2, Ueff, nmax, wavelength): #{{{
   n_tab = np.arange(0,nmax+1)
  
   # print "Keldysh1 = "+str(Keldysh1)
-  Keldysh11 = np.float64(Keldysh1 ** 2)
+  Keldysh11_128 = Keldysh1**2
+  Keldysh11 = np.float64(Keldysh11_128)
   # print "--"
   # print "Keldysh11 = "+str(Keldysh11)
-  Keldysh22 = np.float64(Keldysh2 **2)
+  Keldysh22 = np.float64(Keldysh2**2)
   # print "Keldysh11 = "+str(Keldysh11)
-  if(Keldysh11 == 1.0): 
-    print "** Error on ellipk: argument 1 is singular. Please increase precision on Keldysh1 or use ellipkm1 function (careful, argument IS not the same)."
-  EllipticK1 = ellipk( Keldysh11 ) #inf if Keldysh11 = 1.  
+  distant_to_unity = 1E0 - Keldysh11_128
+  if (distant_to_unity < 1E-320): #then it gonna crash for sure. 
+    print "** Error on ellipk: argument 1 is singular. Distance to unit = "+str(distant_to_unity)+"Please increase precision on Keldysh1 or use ellipkm1 function (careful, argument IS not the same)."
+  elif(distant_to_unity < 1E-10): 
+    #threshold where functions ellipk and ellipkm1 give different values
+    EllipticK1 = ellipkm1( np.float64(distant_to_unity) )
+  else: #other cases, good for efficiency
+    EllipticK1 = ellipk( Keldysh11 ) #inf if Keldysh11 = 1.  
   EllipticE1 = ellipe( Keldysh11 )
   EllipticE2 = ellipe( Keldysh22 )
   # print "EllipticK1 = "+str(EllipticK1)
@@ -129,10 +135,24 @@ def KeldyshFunction(Keldysh1, Keldysh2, Ueff, nmax, wavelength): #{{{
 def KeldyshFunction_Gruzdev(Keldysh1, Keldysh2, Ueff, nmax, wavelength): #{{{
   omegaLaser = 2.*pi*c/wavelength #SI
   n=np.arange(0,nmax+1)
-  Keldysh11 = np.float64(Keldysh1 ** 2)
-  Keldysh22 = np.float64(Keldysh2 ** 2)
+  Keldysh11_128 = Keldysh1**2
+  Keldysh11 = np.float64(Keldysh11_128)
+  # print "--"
+  # print "Keldysh11 = "+str(Keldysh11)
+  Keldysh22 = np.float64(Keldysh2**2)
+  # print "Keldysh11 = "+str(Keldysh11)
+  distant_to_unity = 1E0 - Keldysh11_128
+  if (distant_to_unity < 1E-320): #then it gonna crash for sure. 
+    print "** Error on ellipk: argument 1 is singular. Distance to unit = "+str(distant_to_unity)+"Please increase precision on Keldysh1 or use ellipkm1 function (careful, argument IS not the same)."
+  elif(distant_to_unity < 1E-10):
+    #threshold where functions ellipk and ellipkm1 give different values
+    EllipticK1 = ellipkm1( np.float64(distant_to_unity) )
+  else: #other cases, good for efficiency
+    EllipticK1 = ellipk( Keldysh11 ) #inf if Keldysh11 = 1.i
+  EllipticE1 = ellipe( Keldysh11 )
+  EllipticE2 = ellipe( Keldysh22 )
   #print n
-  sumtable=np.exp(-pi*n*(ellipk(Keldysh11)-ellipe(Keldysh11))/ellipe(Keldysh22))*DawsonIntegral(pi*np.sqrt( ((np.trunc(Ueff/hbar/omegaLaser+1.))-Ueff/hbar/omegaLaser + n) / (2.0 * ellipk(Keldysh22)*ellipe(Keldysh22)) ) )
+  sumtable=np.exp(-pi*n*(EllipticK1-EllipticE1)/EllipticE2)*DawsonIntegral(pi*np.sqrt( ((np.trunc(Ueff/hbar/omegaLaser+1.))-Ueff/hbar/omegaLaser + n) / (2.0 * ellipk(Keldysh22)*EllipticE2) ) )
   #print "Effective gap: "+str(Ueff/e)+" eV."
   #print sumtable
   result = np.multiply(np.sqrt(pi/(2.*ellipk(Keldysh22))), np.sum(sumtable))

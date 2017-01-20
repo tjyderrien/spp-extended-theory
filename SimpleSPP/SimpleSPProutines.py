@@ -5,7 +5,7 @@
 # two semi-infinite media. The formal model is presented in 
 # T.J.-Y. Derrien et al, Journal of Optics 18, 115007 (2016)
 
-# IMPORT LIBRARIES
+# IMPORT PYTHON LIBRARIES
 import numpy as np
 from numpy import genfromtxt, loadtxt, chararray
 from scipy.optimize import fsolve, root
@@ -19,10 +19,11 @@ from scipy.constants import c, epsilon_0, mu_0, pi, e, m_e, h
 from matplotlib.legend_handler import HandlerLine2D
 import sys
 
-from libKeldysh import *
+# IMPORT CUSTOM LIBRARIES
+# from libKeldysh import * #TODO: remove from main file, This one is just to link the documentation for now.
 from libDatabase import *
 from libLaser import *
-from libMaterials import *
+from libMaterials import * #TODO: remove, also not needed by public release
 from libMath import *
 
 lengthunit = 1e-9

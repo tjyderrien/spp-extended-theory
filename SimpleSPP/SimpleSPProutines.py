@@ -20,10 +20,10 @@ from matplotlib.legend_handler import HandlerLine2D
 import sys
 
 # IMPORT CUSTOM LIBRARIES
-from libKeldysh import * #TODO: remove from main file
+# from libKeldysh import * #TODO: remove from main file, This one is just to link the documentation for now.
 from libDatabase import *
 from libLaser import *
-from libMaterials import *
+from libMaterials import * #TODO: remove, also not needed by public release
 from libMath import *
 
 lengthunit = 1e-9

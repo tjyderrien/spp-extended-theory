@@ -1,0 +1,43 @@
+#################################################################
+### Input file for the parameters used by interspectus 
+### Interspectus needs also the file "input.files". Moreover, 
+### the file sum_rule.f90 needs to be adjusted to the calculation
+###
+### Parameters must be given alone or followed by their values as
+### shown in the examples below.
+### Everything following "#" on a line is ignored
+#################################################################
+
+
+### Interpolation type to be used
+interpol_type 1	 ## 1=lin, 2=polynomial, 3=cubic spline, 4=akima
+
+### number of INPUT files - 2 through n
+n_inputs      3  
+
+### define the series of parameter values for the output spectra
+### The three numbers are q_out_min, q_out_max, and the number of 
+### output spectra. Being an interpolation, the code needs 
+### q_out_min <= smallest input value, q_out_max >= largest input value
+q_out_series .25 .75 11  # q_out_min, q_out_max, n_values
+
+###  Stepsize along F(q,w), i.e., the NEW X (after inversion)
+###  If not set, the default 0.001 is used
+stepsize_integral   0.01     
+
+###  stepsize_result, i.e, really stepsize of the resulting functions
+###  If not set, the default 0.001 is used
+stepsize_result     0.01     
+
+### Format of the output file names:
+### If outfile_sortable is set, the filenames are of the form 
+### name_root_0001.45000 with the parameter value q at the end,
+### otherwise name_root_1.45000 which is less clumsy but does not
+### sort the filenames in the order of the values
+outfile_sortable
+
+
+### Only for debugging: if debug is set, a number of files 
+### representing the intermediate steps of the calculation
+### are written out
+# debug

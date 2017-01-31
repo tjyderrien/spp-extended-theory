@@ -1,0 +1,117 @@
+<html>
+
+<head>
+<title>
+Interspectus &#151; INTERpolation of SPECTra Using Sum rules
+</title>
+</head>
+
+<body bgcolor=#FFFAC  text="DarkGreen"  >
+
+
+<h2 align="center">Interspectus &#151; INTERpolation of SPECTra Using Sum rules
+</h2>
+
+<HR width=85%>
+
+
+<h3>Presentation:</h3> 
+
+<B>The code interspectus</B>,  described in the article Phys. Rev. B XXXXX,  performs the interpolation between positive-definite spectra that obey a sum rule. A tar package of the code is available  <a href="interspectus.tar.gz"> HERE </a>. Spectra to be interpolated must be positive-definite, and they must follow a common sum rule. For a description of the interpolation method, please refer to the above-mentioned article. Here we describe the code and its functionality. For any work in which the code has been used, please cite this article.
+
+
+<p>
+<B>Files to work with:</B> The code needs the two input files <a href=input.pars_example>input.pars</a> and <a href=input.files_example>input.files</a> to specify the general parameters of the calculation as well as the names the respective parameter values of the input data files. For a description please see the example files which are extensively commented. Moreover, the file <a href=sum_rule.f90_example>sum_rule.f90</a> must be adjusted to use the correct sum rule and scaling (see below). Unfortunately, the code has to be recompiled after that. (Suggestions on how to solve this more elegantly as welcome!)
+</p>
+
+<p>
+The <B>input data files</B> that contain the spectra between which we want to interpolate have to be in two-column form (&omega;,f(&omega;))  Their names must be specified in &ldquo;input.files&rdquo;. They need not all contain the same number of lines. However, the inputs need to be non-negative everywhere, and they have to start at &omega;=0. (However, equal spacing along the &omega; axis is not necessary.) If portions of the spectra are exactly zero (as for instance in the case of a Gaussian model curve, due to the fast decrease of the function) problems can arise because the inverted integrals are then not monotonous. A small constant can be added or a small broadening applied to the spectra which solves the problem.
+</p>
+
+<p>
+The <B>output data files</B> that contain the spectra created by the interpolation are likewise in two-column form (&omega;,f(&omega;)) Their names are given by the root that is specified in &ldquo;input.files&rdquo; with the corresponding parameter value appended.
+</p>
+
+<HR width=85%>
+
+<h3>
+Examples
+</h3>
+
+<p>
+The tar package comes with two example inputs (input files, input data files, and sum_rule.f90 adjusted to the examples) in order to show how it works. The two examples are (i) a linear interpolation between two Lorentz curves, with an additional given curve for comparison, and (ii) the realistic example of the energy-loss function of silicon for finite momentum transfers, set up to work with three inputs, while two more are provided for comparison. The examples are precisely the results reported in Figs. 3 and 10 of the manuscript. 
+</p>
+<p>
+In order to run the code for the example inputs, copy the input files from the example directory to the directory where the code is (don't forget that the sum_rule.f90 has to be correct and the code then recompiled after any change of the file, cf. next section). In the original package, this is the SRC directory which contains already the EELS example. After (re)compiling the code, you can start to play with the examples.
+</p>
+
+
+<HR width=85%>
+
+
+
+<h3>
+Specification of the sum rule &#151; the file <b> sum_rule.f90</b>
+</h3>
+
+
+<p>
+The correct sum rule must be entered in the file  <b> sum_rule.f90</b>. The program treats the sum rule as given in equation (2) of the article. Sum rules of the form of equation (3) have to be brought to form (2) by the transformation necessary to transform the quantity in question to the quantity that obeys the sum rule, and by scaling according to the C(q). An example is the dynamic structure factor of Eq. (4). This equation can be brought into the form of Eq. (2) by the transformation f(q,&omega;) = 2 S(q,&omega;) * &omega; / q^2. The inverse of this transformation (which depends on the respective parameter value q) has to be applied to the outputs before they are written out.  
+</p>
+
+
+<p>
+This is done using the function &ldquo;sum_rule_func&rdquo; which is defined in the file  &ldquo;sum_rule.f90&rdquo;. This function does the transformation in order to make the inputs into f(q,&omega;), while &ldquo;sum_rule_func_inv&ldquo; in the same file contains the inverse of this function. Useful examples are (already given in fortran notation. They can be used directly in the program. y and x refer to the respective coordinates f and &omega;.):
+
+<UL>
+  <LI> If the inputs obey already the sum rule in the form Eq. (2), we don't have to do anything and just enter the equality: 
+    <br> sum_rule_func = f
+    <br> sum_rule_func_inv = f 
+  <LI> The case of the electron energy-loss function:
+    <br> sum_rule_func = f*omega
+    <br> in which case the inverse transformation is
+    <br> sum_rule_func_inv = f /(omega+.0000000001)
+    <br>(The added small constant avoids the division by zero at &omega;=0).
+  <LI> A more complex example is the case of the dielectric function of a Ge-Si alloy. We can use the screening sum rule Eq. (6) as well as the interpolation for &epsilon;<sub>&#8734;</sub> = (16.2 - 4.5 * x) that characterizes the dependence on the composition (here q stands for the composition x).
+    <br> sum_rule_func = f /(omega+.000001) / (16.2 - 4.5 * q)
+    <br> sum_rule_func_inv = f *(omega) * (16.2 - 4.5 * q)
+</UL>
+
+
+
+<HR width=85%>
+
+
+
+
+<h3>Compilation:</h3> 
+<p>
+The code needs the gsl library as well as the cblas. It is written in FORTAN 90 with a wrapper to use the gsl which is in C. The parser used for the input file has been taken from the <a href=http://dp-code.org>DP code</a>. The FORTRAN as well as the C compiler need to be specified in the makefile (presently set to ifort and cc). Compilation will make the executable interspectus.x. Please DO NOT FORGET TO CHANGE THE SUM RULE ACCORDING TO YOUR PROBLEM!
+</p><p>
+The code in the directory SRC is already set up (file sum_rule.f90 and input files input.pars and input.files) to work with the example in the Examples/EELS directory. The respective input files tdlda* are also in the SRC directory even though they do not belong to the source files.
+</p>
+
+<HR width=85%>
+
+
+
+<h3>Licence:</h3> 
+<p>
+The code is released under the <a href=gpl-2.0.txt>GNU General Public License version 2</a>.
+</p>
+
+
+<HR width=85%>
+
+<h3 align="center" ><a href="../index.html"> Home </a> </h3>
+
+<p align="left">
+<a href="../Disclaimer/disclaimer.html">Disclaimer</a>
+</p>
+
+
+<p><i>Hans-Christian Weissker, 02/2009</i>
+
+
+
+</html>

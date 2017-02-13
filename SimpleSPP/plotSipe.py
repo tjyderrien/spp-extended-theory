@@ -4,7 +4,7 @@
 #TODO: To verify coupling efficiency factor from Sipe theory: plot the efficiency factor maximum as function of the laser wavelength, and correlate with papers such as Endriz and Spicer, PRB 4, 4144 (1971); Benneth and Porteus, JOSA 51, 123 (1961)
 
 # IMPORT LIBRARIES
-from SimpleSPProutines import *
+from libSPP import *
 #from plotGraph import *
 
 def G(s):

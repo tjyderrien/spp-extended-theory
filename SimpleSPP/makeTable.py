@@ -2,7 +2,7 @@
 #-*- coding: utf-8 -*-
 
 # IMPORT LIBRARIES
-from SimpleSPProutines import *
+from libSPP import *
 #from plotGraph import *
 
 # PHYSICAL INPUT

@@ -2,7 +2,7 @@
 #-*- coding: utf-8 -*-
 
 # IMPORT LIBRARIES
-from SimpleSPProutines import *
+from libSPP import *
 
 # Importing data from Palik book using graphs. 
 # Optical data are given in csv files, created using Engauge-digitizer software. 

@@ -14,7 +14,7 @@
 from libKeldysh import *
 from libMaterials import *
 from libDatabase import *
-from SimpleSPProutines import *
+from libSPP import *
 
 # Desired laser parameters
 wavelength = 800e-9

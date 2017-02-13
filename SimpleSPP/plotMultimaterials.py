@@ -9,7 +9,7 @@ This allows to perform comparisons of interesting quantities between many materi
 
 
 # IMPORT LIBRARIES
-from SimpleSPProutines import *
+from libSPP import *
 from libPlotting import *
 from matplotlib.ticker import MaxNLocator
 

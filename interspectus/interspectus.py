@@ -403,9 +403,9 @@ if __name__ == '__main__':
     return(f,x);
 
   # read input-spectra (see also dp_io-module)
-  infiles = ["./SRC/tdlda_q=.25_.25_.25_outlf.eel_gauss_abs_.42",
-             "./SRC/tdlda_q=.5_.5_.5_outlf.eel_gauss_abs_.42",
-             "./SRC/tdlda_q=.75_.75_.75_outlf.eel_gauss_abs_.42"];
+  infiles = ["./SRC/tdlda_q\=.25_.25_.25_outlf.eel_gauss_abs_.42",
+             "./SRC/tdlda_q\=.5_.5_.5_outlf.eel_gauss_abs_.42",
+             "./SRC/tdlda_q\=.75_.75_.75_outlf.eel_gauss_abs_.42"];
   x_inp=[]; f_inp=[]; q_inp = [0.25,0.5,0.75];
   for file in infiles:
     (f,x) = readfile(file);

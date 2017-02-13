@@ -1,31 +1,39 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
 
-## @
+"""@package plotMultimaterials
+Generate plots for many materials contained into a given database.
+
+This allows to perform comparisons of interesting quantities between many materials, for specific wavelengths. 
+"""
+
 
 # IMPORT LIBRARIES
 from SimpleSPProutines import *
-from advancedPlotting import *
-
+from libPlotting import *
 from matplotlib.ticker import MaxNLocator
 
 #from makeTable import *
 
+## Mysterious function! 
 def CleanStrArray(Material2): #{{{
   Material2clean = np.empty(Material2.shape, dtype='|S15')
   linenum=0
   for line in Material2: #for each line, replace Material2[line] with first word of Material2[line]
-    fields = line.strip().split() #here is the first word, to replace the whole line. How to access id of line ?
-    Material2clean[linenum] = fields[0]
+    fields = line.strip().split() 
+    Material2clean[linenum] = fields[0] #here is the first word, to replace the whole line. How to access id of line ?
     linenum = linenum + 1
   return(Material2clean)
 #}}}
 #print Material2clean
 
+## Plot the period of SPP for all the interfaces provided in a database.
+#  @param database:   the database with data to plot
+#  @param legend:     legend string to put onto the plot
+#  @param outputfile: name of the file to output
+#  @param query:      
+def plotDatabaseMaterials(database, legend, outputfile, query, metal): #{{{
 
-def plotDatabaseMaterials(database, legend, outputfile, query,metal): #{{{
-  """plot period of SPP at various interfaces contained in a database
-  """
   # Extract the data for 800 nm
   if (not metal):
     Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, k1imag, k2imag, DeltaLsppValue = ExtractDataDb(database)
@@ -377,7 +385,7 @@ epsilon2 = np.add(eps2rM,np.multiply(1e0j, eps2cM))
 print "Plot the period 2D as function of dielectric permittivity"
 
 noise = eta #Lack of knowledge on dielectric permittivity
-precision = 1.0e0 #Precision for meshing
+precision = 1.0e0 #Precision for meshing (space: dielectric permittivities)
 
 period = np.vectorize(period)
 betaSPP = np.vectorize(betaSPP)

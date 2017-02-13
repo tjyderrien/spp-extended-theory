@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
+## @package libPlotting
+# Library to plot with annotations on each point. 
+#
+# Source: http://stackoverflow.com/questions/8850142/matplotlib-overlapping-annotations
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -37,6 +41,8 @@ def text_plotter(x_data, y_data, text_content, text_positions, axis,txt_width,tx
                        head_width=0.2, head_length=txt_width*0.5, 
                        zorder=0,length_includes_head=True)
 
+## Generate a plot with text labels on each point. 
+# Useful to address many materials in the same figure. 
 def makePlot(x_data, y_data, tags, filename, plottitle, labelx, labely, functionlabel, textcolor):
   #random test data:
   #x_data = random_sample(100)

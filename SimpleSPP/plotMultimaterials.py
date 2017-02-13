@@ -16,29 +16,47 @@ from matplotlib.ticker import MaxNLocator
 #Swap = np.vectorize(Swap)
 
 # =======================================================
-if(len(sys.argv)<=2):
-  print "Usage 1: ./plotMultimaterials.py           \ "
-  print "    <Name of the substrate (Air, Be, Au, ...)> \ "
-  print "    <wavelength (nm)>                          \ "
-  print "    <Source for data: Palik | Name of the 1st author + Year>"
+if(len(sys.argv)<=1):
+  print "==== MULTI-MATERIAL SIMULATION ==== "
+  print "MODE 1: Single substrate - multi film mode."
+  print "Usage:  ./plotMultimaterials.py           \ "
+  print "        <Name ONE substrate (Air, Be, Au, ...)> \ "
+  print "        <ONE wavelength (nm)>                          \ "
+  print "        <Select source for data: Palik | Name of the 1st author + Year>"
   print "Example: ./plotMultimaterials.py Au 800 \"Johnson 1974\""
-  print ""
-  print "Usage 2: ./plotMultimaterials.py <FileName.dat>"
-  print "Example: ./plotMultimaterials.py OxideList.dat"
+  #TODO: DISABLED PART FOR NOW.
+  #print ""
+  #print "MODE 2:  Multi-substrate - multi film, based on a given list."
+  #print "Usage:   ./plotMultimaterials.py <FileName.dat> <Wavelength (nm)>"
+  #print "Example: ./plotMultimaterials.py OxideList.dat"
+  exit()
+
+# FROM THIS POINT, WE KNOW THAT USER USED A COMMAND LINE ARGUMENTS. 
+
+if any("dat" in s for s in sys.argv):
+  print "** Detected USAGE 2."
+else: 
+  #(len(sys.argv[3]) > 0):
+  print "** Detected USAGE 1."
+  query = sys.argv[1]
+  try:
+    source = " ("+sys.argv[3]+")"
+  except:
+    source = ""
+  query = query+source
+  print "Selected substrate = "+query+"."
+#else:
+  #print "** Error: not planned case."
+
+# Valid for any case
+try: 
+  wavelength = 1E-9*float(sys.argv[2])
+except: 
+  print "** Error: Please indicate the light wavelength."
   exit()
   
-query = sys.argv[1]
-wavelength = 1E-9*float(sys.argv[2])
-try:
-  source = " ("+sys.argv[3]+")"
-except:
-  source = ""
-
-query = query+source
 
 ## Choose a wavelength
-#wavelength = 1030e-9
-print "Selected substrate = "+query+"."
 print "Operating wavelength = "+str(wavelength*1E9)+"nm."
 
 ## Choose which material to select

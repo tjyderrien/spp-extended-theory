@@ -10,7 +10,7 @@ SimpleSPP folder is limited to two semi-infinite materials sharing one interface
 
 # Description of executable files
 
-## plotSPPmultiMaterialData.py: 
+## plotMultimaterials.py: 
 
 Plots the SPP period as function of material's Re(epsilon). 
 
@@ -43,7 +43,7 @@ This file uses database with the shape (lambda, n, k) that can be found on some 
 
 # Libraries: 
 
-## SimpleSPProutines.py: 
+## libSPP.py: 
 
 This file contains many basic routines supporting the SPP theory: 
 

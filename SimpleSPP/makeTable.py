@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
 
+## @package makeTable
+# Generates the table of SPP-active interfaces. 
+
 # IMPORT LIBRARIES
 from libSPP import *
 #from plotGraph import *

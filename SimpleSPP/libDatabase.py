@@ -9,12 +9,24 @@ from numpy import genfromtxt, loadtxt, chararray
 ## Filter the SPP database using query and returns a smaller database
 # /!\ content of query cell should be exact
 #
+## Cleans an array from strings [strange...]
+def CleanStrArray(Material2): #{{{
+  Material2clean = np.empty(Material2.shape, dtype='|S15')
+  linenum=0
+  for line in Material2: #for each line, replace Material2[line] with first word of Material2[line]
+    fields = line.strip().split() 
+    Material2clean[linenum] = fields[0] #here is the first word, to replace the whole line. How to access id of line ?
+    linenum = linenum + 1
+  return(Material2clean)
+#}}}
+#print Material2clean
+
+
 def FilterDatabase(SPPdb, query, FieldIndex):
   SPPdbFiltered = np.array(SPPdb[SPPdb[:,FieldIndex]==query,:]) #uses a table of booleans to select
   return SPPdbFiltered
 
 ## Filters the SPP database using query and returns a smaller database
-# 
 def FilterDatabaseContains(SPPdb, query, FieldIndex):
   SPPdbFiltered = SPPdb[np.array(np.core.defchararray.find(SPPdb[:,FieldIndex], query)==0),:]
   return SPPdbFiltered

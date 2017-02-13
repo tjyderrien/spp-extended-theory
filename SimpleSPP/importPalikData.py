@@ -1,20 +1,22 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
 
+## @package importPalikData
+# Importing data from Palik book using digitized plots. 
+# Optical data are input via using CSV-formatted input files, created using Engauge-digitizer software. 
+# The lib generates (wavelength, ReEps, ImEps) tables to be used inside the program.
+
+## Imports data (wavelength, n,k) from different wavelength meshes. 
+#  Such data can be captured using a software like Engauge Digitizer. 
+#  This leads to obtain (n,k) discretized on DIFFERENT MESHES. 
+#  
+#  NOTE: Warning: the data produced by this method are rather unprecise. SPP spectoscopy requires precision to 1E-3. 
+#  This method gives a precision worst then 1E0. Use only in case no other data are available. 
+
 # IMPORT LIBRARIES
 from libSPP import *
 
-# Importing data from Palik book using graphs. 
-# Optical data are given in csv files, created using Engauge-digitizer software. 
-# OUTPUTS: 
-
 def importFromNKtable(wavelength, folder, filename, plotting=1):#{{{
-  """This routine is made to import data captured using a software like Engauge Digitizer. 
-  This leads to obtain (n,k) discretized on DIFFERENT MESHES. 
-  
-  NOTE: Warning: the data produced by this method are rather unprecise. SPP spectoscopy requires precision to 1E-3. 
-  This method gives a precision worst then 1E0. Use only in case no other data are available. 
-  """
   nfile = folder+filename+"-n.csv"
   kfile = folder+filename+"-k.csv"
 
@@ -91,14 +93,13 @@ def importFromNKtable(wavelength, folder, filename, plotting=1):#{{{
   #plt.show()
 #}}}
 
+## Imports (wavelength, ReEps, ImEps) data captured using a software like Engauge Digitizer. 
+#   Input: (epsReal, epsImag) are discretized, also works on DIFFERENT MESHES. 
+#   Output: (n,k, epsilon) discretized on the same mesh. 
+#   
+#   NOTE: Warning: the data produced by this method are rather unprecise. SPP spectoscopy requires precision to 1E-3. 
+#   This method gives a precision worst then 1E0. Use only in case no other data are available. 
 def importFromEpsilonTable(wavelength, folder, filename, plotting=True): #{{{
-  """This routine is made to import data captured using a software like Engauge Digitizer. 
-  Input: (epsReal, epsImag) discretized on DIFFERENT MESHES. 
-  Output: (n,k, epsilon) discretized on the same mesh. 
-  
-  NOTE: Warning: the data produced by this method are rather unprecise. SPP spectoscopy requires precision to 1E-3. 
-  This method gives a precision worst then 1E0. Use only in case no other data are available. 
-  """
   nfile = folder+filename+"-epsR.csv" #TODO: rename nfile to ReEpsFile
   kfile = folder+filename+"-epsC.csv" #TODO: rename kfile to ImEpsFile
   
@@ -162,15 +163,13 @@ def importFromEpsilonTable(wavelength, folder, filename, plotting=True): #{{{
   
 #}}}
 
+## Mere function? Generates (ReEps, ImEps) from absorption data (given in m^{-1}). 
+#  This routine is made to import data captured using sofware such as Engauge Digitized. 
+#  Be very careful! The data produced by this method are very unprecise. SPP spectroscopy requires precision to 1E-3. 
+#  This method gives a precision worst then 1E0. Then, it is only in case we have no other data. 
 def importFromAbsorptionData(wavelength, folder, filename, plotting): #{{{
-  """This routine is made to import data captured using sofware such as Engauge Digitized. 
-  Be very careful! The data produced by this method are very unprecise. SPP spectroscopy requires precision to 1E-3. 
-  This method gives a precision worst then 1E0. Then, it is only in case we have no other data. 
-  """
   absfile = folder+filename+".csv"
-
   narray = loadtxt(absfile, delimiter="\t", skiprows=1)
-  
   unit = 1E9
   
   # import wavelength, alpha from spectroscopic data
@@ -216,16 +215,15 @@ def importFromAbsorptionData(wavelength, folder, filename, plotting): #{{{
   #plt.show()
 #}}}
 
+## Simply plots the optical data taken from a compatible database, 
+# and interpolate palik data from tables of Palik at the given wavelength. 
+# Useful to add one set of (ReEps, ImEps) for ONE wavelength in MaterialOpticalDatabaseForPlasmonics.csv. 
+# INPUT
+# @param wavelength: (float) value of desired output wavelength
+# @param folder:     (str) name of the folder were database can be found
+# @param filename:   (str) name of the material file
+# @param plotting:   (boolean) plot the full data if True
 def importFromTable(wavelength, folder, filename, plotting): #{{{
-  """ Description: Simply plots the optical data taken from a prepared database, 
-  and interpolate palik data from tables of Palik at the given wavelength. 
-  Useful to add one set of (ReEps, ImEps) for ONE wavelength in MaterialOpticalDatabaseForPlasmonics.csv. 
-  INPUT
-  - wavelength: (float) value of desired output wavelength
-  - folder: (str) name of the folder were database can be found
-  - filename: (str) name of the material file
-  - plotting: (boolean) plot the full data if True
-  """
   # Look for Palik into the name
   if(filename.find("Palik") > 0):
     unit1 = 1E-10 #Palik data

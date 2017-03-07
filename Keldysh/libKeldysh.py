@@ -17,6 +17,8 @@ from matplotlib import rc
 from scipy.constants import c, epsilon_0, mu_0, pi, e, m_e, h, hbar
 #from matplotlib.legend_handler import HandlerLine2D
 #import sys
+
+from libDatabase import ExportToTxt
 rc('font', **{'family':'serif', 'serif':['Palatino'], 'size':'18'})
 rc('text', usetex=True)
 mp.rcParams['legend.numpoints'] = 1

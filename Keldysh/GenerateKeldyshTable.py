@@ -45,11 +45,18 @@ PeakField  = np.array([[PeakField]])
 # Transposing for assisting the vectorization
 wavelength = np.transpose( wavelength, (2,0,1) )
 PeakField  = np.array(np.transpose( PeakField , (1,2,0) ))
+
+# Checking before multiplexing
 #print wavelength.shape
 #print PeakField.shape
 #print Egap.shape
+
+# Computation
 Database = GenerateKeldyshDatabase(Egap, meff, wavelength, PeakField, order)
 
-#print PeakFluence
-#print wavelength
+# Checking on stdout
 print Database
+
+# Output to a file
+ExportToTxt(Database, "Keldysh.dat")
+# TODO: normalize this format for C routines and Fortran routines. 

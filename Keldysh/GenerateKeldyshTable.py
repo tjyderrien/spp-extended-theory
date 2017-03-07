@@ -17,7 +17,7 @@ print "** Loading Gruzdev formula [Gruzdev, Optical Engineering 53, 122515 (2014
 print "Defining material parameters..."
 
 #Egap = 2.58e0*e; #LDA band gap of Si: 2.58 eV. #1.12e0*e for indirect band gap; 
-meff=np.array([0.18e0]); #Effective mass of Si
+meff=0.18e0; #Effective mass of Si
 #Ntotal=1.*5E28
 
 #wavelength = np.array([800e-9])
@@ -25,20 +25,31 @@ tau            = np.array([10e-15]);
 PeakFluence    = 1E4*np.array([1e-3, 1e-2, 1e-1, 1E0]) #J/cm2 * 1E4 = J/m2
 PeakIntensity  = np.divide(PeakFluence, np.divide(tau, np.sqrt(4e0*np.log(2e0)/pi)))
 PeakField      = IntensityToField(PeakIntensity)
-order = np.array([50])
+order = 50
 ShowPlot = False
 
-print "E_peak = "+str(PeakField)+" V/m."
+#print "E_peak = "+str(PeakField)+" V/m."
 
 dEgap = 0.05e0 #eV
-Egap = np.array([np.multiply(e, np.arange(dEgap, 10e0, dEgap))])
+Egap = np.array([[np.multiply(e, np.arange(dEgap, 10e0, dEgap))]])
 #Egap = np.array([e*1.12])
+
+# Build the arrays
 wavelength = np.array([1030e-9, 800e-9, 515e-9, 343e-9])
 #PeakField = np.array([np.arange(1E4, 1E10, 1E9)]) #
-PeakFluence = np.array([np.transpose(PeakFluence)])
 
+# Building the tensors
+wavelength = np.array([[wavelength]])
+PeakField  = np.array([[PeakField]])
+
+# Transposing for assisting the vectorization
+wavelength = np.transpose( wavelength, (2,0,1) )
+PeakField  = np.array(np.transpose( PeakField , (1,2,0) ))
+#print wavelength.shape
+#print PeakField.shape
+#print Egap.shape
 Database = GenerateKeldyshDatabase(Egap, meff, wavelength, PeakField, order)
 
-print PeakFluence
-print wavelength
+#print PeakFluence
+#print wavelength
 print Database

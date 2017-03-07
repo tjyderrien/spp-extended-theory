@@ -36,16 +36,17 @@ mp.rcParams['legend.numpoints'] = 1
 def gammaKeldysh(Egap, meff, Efield, wavelength): #{{{
   #print Egap, meff, Efield
   omegaLaser=2.*pi*c/wavelength
+  ErrorMessage=""
   # Validity limit
   if (Egap < hbar * omegaLaser ): 
-    #TODO: this flux should be redirected to an error file. Stdout also goes into the variables. 
-    print "** Validity range error: the Keldysh model is not valid for linear absorption. INVALID RESULT..." 
-    print "** Error details: "+str(int(wavelength*1E9))+" nm wavelength is too small for the gap "+str(float(Egap)/e)+"."
+    #TODO: this flow should be redirected to an error file. Stdout also goes into the variables. 
+    ErrorMessage=ErrorMessage+"** Validity range error: the Keldysh model is not valid for linear absorption. INVALID RESULT...\n"
+    ErrorMessage=ErrorMessage+"** Error details: "+str(int(wavelength*1E9))+" nm wavelength is too small for the gap "+str(float(Egap)/e)+".\n"
     #exit() #Avoid to quit, so that octopus still compare its results. 
   if (abs(Efield) > 1e0):
     result = omegaLaser*np.sqrt(m_e*meff*Egap)/e/Efield
   else:
-    print "gamma(): Divergence, as field equals = 0. Singular case of Keldysh functions. Should give w_PI = 0 then..."
+    ErrorMessage=ErrorMessage+"gamma(): Divergence, as field equals = 0. Singular case of Keldysh functions. Should give w_PI = 0 then...\n"
   #print omegaLaser
   return result
 # Numerically validated with comparison to Maple. 
@@ -253,6 +254,7 @@ def BristowLaw(wavelength, Egap):#{{{
 # @param PeakField: laser field amplitude (scalar, V/m)
 # @param order: integration order for Keldysh model (integer, no unit)
 def GenerateKeldyshDatabase(Egap, meff, wavelength, PeakField, order): #{{{
+  ErrorMessage = ""
   gamma = gammaKeldysh(Egap, meff, PeakField, wavelength) #valid for scalar data
   k1 = Keldysh1(gamma); k2 = Keldysh2(gamma) #valid
   EgapEff = EffectiveGap(Egap, k1, k2) # Original formula from Keldysh. Warning: scipy.special.ellipe (https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.ellipe.html#scipy.special.ellipe) uses a different convention than Maple, Wikipedia or mpmath.

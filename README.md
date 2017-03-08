@@ -2,9 +2,10 @@
 
 # Structure of the code
 
-The code is now made of 2 branches. 
-* Branch master: contains the public code for the community. 
-* Branch develop: contains the private code, with unreleased features. 
+The code is now made of 3 branches. 
+* Branch release: contains the seemingly stable public code for the community.
+* Branch master:  contains a more advanced version of code for the community. 
+* Branch develop: contains the latest code, with non-tested features and possible bugs. 
 
 # Main developers
 
@@ -12,11 +13,9 @@ The code is now made of 2 branches.
 
 * Y. Levy: LIPSS database contributor.
 
-* J. Bonse: Tabulated Palik data.
+* J. Bonse: Provided the tabulated Palik data.
 
 # Current collaborators
-
-* Inam Mirza, Hilase/FZU, Prague, Czech Republic
 
 * Iaroslav Gnilitskyi, UNIMORE, University of Modena, Italy
 

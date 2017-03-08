@@ -105,7 +105,7 @@ s = 0.4e0 #Shape factor: taken from Bonse et al, JAP (2009)
 #kappay = np.arange(0, 4, 0.1)
 #kappa = np.array([wavelength * 1, wavelength * 0]); #test values
 kappax = 4e0 ; kappay = 0e0*kappax; #test values
-
+numberlevels = 8 #for the final 2D plot
 #for kappax in meshkappa:
 
 #ftab = np.arange(0, 1, 0.1)
@@ -210,9 +210,10 @@ epsilon1 = np.add(eps1rM,np.multiply(1e0j, eps1cM))
 epsilon2 = np.add(eps2rM,np.multiply(1e0j, eps2cM))
   
 print "Mesh generation..."
-precision = 2.5e-1
-kx = np.arange(-4e0,4e0,precision)
-ky = np.arange(-4e0,4e0,precision)
+precision = 5e-2
+SipeRanges = 2e0
+kx = np.arange(-SipeRanges,SipeRanges,precision)
+ky = np.arange(-SipeRanges,SipeRanges,precision)
 kxx, kyy = np.meshgrid(ky, kx)
 
 # calculating Sipe efficiency for many materials
@@ -237,8 +238,6 @@ for m in np.arange(0,(kx.size),1):
 	#idx=idx+1	
 
 print etaSipe
- 
-numberlevels = 8
 
 maximum = np.amax(etaSipe)
 print maximum
@@ -246,11 +245,13 @@ print maximum
 plt.figure()
 levels = np.arange(0,maximum,maximum/numberlevels)
 CS = plt.contourf(kxx, kyy, etaSipe, levels=levels, cmap=plt.cm.Blues)
-plt.title(query+"/"+query2+r": $\lambda=$"+str(wavelength)+" nm	")
+plt.title(query+"/"+query2+r": $\lambda=$"+str(int(wavelength/unit))+" nm	")
 plt.xlabel(r'$\kappa_x$')
 plt.ylabel(r'$\kappa_y$')
 plt.colorbar(CS)
-plt.savefig('Sipe2d'+str(wavelength/unit)+'nm-'+query2+'.eps')
+filename='Sipe2d'+str(wavelength/unit)+'nm-'+query2
+plt.savefig(filename+'.eps')
+plt.savefig(filename+'.png')
 plt.show()
 
 

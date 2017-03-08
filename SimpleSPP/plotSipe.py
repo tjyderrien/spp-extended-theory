@@ -146,10 +146,11 @@ kapparange = np.arange(0.1,4,0.1)
 query = 'Air'
 #query2= 'InP (Bonse 2005)'
 #query2= 'Mo (Ordal 1988)'
-query2= 'Cu (Palik)'
+#query2= 'Cu (Palik)'
+query2='SiO2 (Palik)'
 print "Caution: the expression must be exactly the one of MaterialDatabase.csv."
 
-wavelength = 355
+wavelength = 800
 select = str(wavelength)
 unit = 1E-9
 wavelength = wavelength * unit
@@ -159,8 +160,8 @@ print "Wavelength = "+str(wavelength/unit)+" nm."
 SPPdb = GenerateDatabase() #Generate from MaterialDatabase.csv
 print "SPP database has "+str(len(SPPdb))+" entries."
 
-print "Full Database:"
-print SPPdb
+#print "Full Database:"
+#print SPPdb
 
 # Select the material of interface 1
 SPPdb = FilterDatabase(SPPdb, query, 0)
@@ -175,9 +176,10 @@ try:
 	print "Filter on wavelength: SPP database "+title+" has "+str(len(SPPdb))+" entries."
 except:
 	print "Exception: no optical data is available for "+query+" at "+title+"."
+	print SPPdb
 	exit()
   
-#print SPPdb
+
 
 # Filter database on materials
 
@@ -185,8 +187,10 @@ try:
 	title = query2
 	SPPdb = FilterDatabase(SPPdb, query2, 1)
 	print "Filter on material: SPP database "+title+" has "+str(len(SPPdb))+" entries."
+	#print SPPdb
 except:
 	print "Exception: no optical data is available for "+query+" at "+title+"."
+	print SPPdb
 	exit()
 
 if(len(SPPdb)==0):
@@ -206,7 +210,7 @@ epsilon1 = np.add(eps1rM,np.multiply(1e0j, eps1cM))
 epsilon2 = np.add(eps2rM,np.multiply(1e0j, eps2cM))
   
 print "Mesh generation..."
-precision = 2.5e-2
+precision = 2.5e-1
 kx = np.arange(-4e0,4e0,precision)
 ky = np.arange(-4e0,4e0,precision)
 kxx, kyy = np.meshgrid(ky, kx)
@@ -242,6 +246,7 @@ print maximum
 plt.figure()
 levels = np.arange(0,maximum,maximum/numberlevels)
 CS = plt.contourf(kxx, kyy, etaSipe, levels=levels, cmap=plt.cm.Blues)
+plt.title(query+"/"+query2+r": $\lambda=$"+str(wavelength)+" nm	")
 plt.xlabel(r'$\kappa_x$')
 plt.ylabel(r'$\kappa_y$')
 plt.colorbar(CS)

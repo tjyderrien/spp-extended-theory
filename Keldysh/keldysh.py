@@ -25,7 +25,7 @@ wavelength = 800e-9
 tau=10e-15; dt = 1E-17
 PeakFluence = 1.327e-3*1E4 #J/cm2 * 1E4 = J/m2
 order = 50
-ShowPlot = True
+ShowPlot = False
 
 plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, dt, order, ShowPlot, 0e0, Ntotal)
 

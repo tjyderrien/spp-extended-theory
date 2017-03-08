@@ -1,0 +1,15 @@
+out_tdlda_
+0.25   
+tdlda_q=.25_.25_.25_outlf.eel_gauss_abs_.42
+0.5   
+tdlda_q=.5_.5_.5_outlf.eel_gauss_abs_.42
+0.75 
+tdlda_q=.75_.75_.75_outlf.eel_gauss_abs_.42
+
+### This input file is read line by line (not parsed). Therefore
+### the entries have to follow the following strict order:
+# -> 1st line: root of the desired output file name
+# -> After that the pair of the parameter value q and the name of the first 
+# input file, then the same for the second input file ... etc. ad infinitum 
+# (only as many inputs as indicated in the "input.pars" file are used, the 
+# rest is ignored.

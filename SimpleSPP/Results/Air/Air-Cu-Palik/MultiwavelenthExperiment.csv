@@ -5,4 +5,5 @@
 # Wavelength (nm)	Period	ErrorBar
 1064	580	70
 532	360	20
-355	260	20
+#355	260	20 #OLD RESULT. Stella measured again. 
+355	300	40

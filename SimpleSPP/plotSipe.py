@@ -4,7 +4,7 @@
 #TODO: To verify coupling efficiency factor from Sipe theory: plot the efficiency factor maximum as function of the laser wavelength, and correlate with papers such as Endriz and Spicer, PRB 4, 4144 (1971); Benneth and Porteus, JOSA 51, 123 (1961)
 
 # IMPORT LIBRARIES
-from SimpleSPProutines import *
+from libSPP import *
 #from plotGraph import *
 
 def G(s):
@@ -105,7 +105,7 @@ s = 0.4e0 #Shape factor: taken from Bonse et al, JAP (2009)
 #kappay = np.arange(0, 4, 0.1)
 #kappa = np.array([wavelength * 1, wavelength * 0]); #test values
 kappax = 4e0 ; kappay = 0e0*kappax; #test values
-
+numberlevels = 8 #for the final 2D plot
 #for kappax in meshkappa:
 
 #ftab = np.arange(0, 1, 0.1)
@@ -146,10 +146,11 @@ kapparange = np.arange(0.1,4,0.1)
 query = 'Air'
 #query2= 'InP (Bonse 2005)'
 #query2= 'Mo (Ordal 1988)'
-query2= 'Cu (Palik)'
+#query2= 'Cu (Palik)'
+query2='SiO2 (Palik)'
 print "Caution: the expression must be exactly the one of MaterialDatabase.csv."
 
-wavelength = 355
+wavelength = 800
 select = str(wavelength)
 unit = 1E-9
 wavelength = wavelength * unit
@@ -159,8 +160,8 @@ print "Wavelength = "+str(wavelength/unit)+" nm."
 SPPdb = GenerateDatabase() #Generate from MaterialDatabase.csv
 print "SPP database has "+str(len(SPPdb))+" entries."
 
-print "Full Database:"
-print SPPdb
+#print "Full Database:"
+#print SPPdb
 
 # Select the material of interface 1
 SPPdb = FilterDatabase(SPPdb, query, 0)
@@ -175,9 +176,10 @@ try:
 	print "Filter on wavelength: SPP database "+title+" has "+str(len(SPPdb))+" entries."
 except:
 	print "Exception: no optical data is available for "+query+" at "+title+"."
+	print SPPdb
 	exit()
   
-#print SPPdb
+
 
 # Filter database on materials
 
@@ -185,8 +187,10 @@ try:
 	title = query2
 	SPPdb = FilterDatabase(SPPdb, query2, 1)
 	print "Filter on material: SPP database "+title+" has "+str(len(SPPdb))+" entries."
+	#print SPPdb
 except:
 	print "Exception: no optical data is available for "+query+" at "+title+"."
+	print SPPdb
 	exit()
 
 if(len(SPPdb)==0):
@@ -206,9 +210,10 @@ epsilon1 = np.add(eps1rM,np.multiply(1e0j, eps1cM))
 epsilon2 = np.add(eps2rM,np.multiply(1e0j, eps2cM))
   
 print "Mesh generation..."
-precision = 2.5e-2
-kx = np.arange(-4e0,4e0,precision)
-ky = np.arange(-4e0,4e0,precision)
+precision = 5e-2
+SipeRanges = 2e0
+kx = np.arange(-SipeRanges,SipeRanges,precision)
+ky = np.arange(-SipeRanges,SipeRanges,precision)
 kxx, kyy = np.meshgrid(ky, kx)
 
 # calculating Sipe efficiency for many materials
@@ -233,8 +238,6 @@ for m in np.arange(0,(kx.size),1):
 	#idx=idx+1	
 
 print etaSipe
- 
-numberlevels = 8
 
 maximum = np.amax(etaSipe)
 print maximum
@@ -242,10 +245,13 @@ print maximum
 plt.figure()
 levels = np.arange(0,maximum,maximum/numberlevels)
 CS = plt.contourf(kxx, kyy, etaSipe, levels=levels, cmap=plt.cm.Blues)
+plt.title(query+"/"+query2+r": $\lambda=$"+str(int(wavelength/unit))+" nm	")
 plt.xlabel(r'$\kappa_x$')
 plt.ylabel(r'$\kappa_y$')
 plt.colorbar(CS)
-plt.savefig('Sipe2d'+str(wavelength/unit)+'nm-'+query2+'.eps')
+filename='Sipe2d'+str(wavelength/unit)+'nm-'+query2
+plt.savefig(filename+'.eps')
+plt.savefig(filename+'.png')
 plt.show()
 
 

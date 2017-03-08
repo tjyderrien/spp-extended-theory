@@ -1,0 +1,13 @@
+out_lorentz_
+3.0  
+lorentz_g_0.3_x0_3.0
+5.0 
+lorentz_g_0.5_x0_5.0
+
+### This input file is read line by line (not parsed). Therefore
+### the entries have to follow the following strict order:
+# -> 1st line: root of the desired output file name
+# -> After that the pair of the parameter value q and the name of the first 
+# input file, then the same for the second input file ... etc. ad infinitum 
+# (only as many inputs as indicated in the "input.pars" file are used, the 
+# rest is ignored.

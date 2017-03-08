@@ -17,6 +17,8 @@ from matplotlib import rc
 from scipy.constants import c, epsilon_0, mu_0, pi, e, m_e, h, hbar
 #from matplotlib.legend_handler import HandlerLine2D
 #import sys
+
+from libDatabase import ExportToTxt
 rc('font', **{'family':'serif', 'serif':['Palatino'], 'size':'18'})
 rc('text', usetex=True)
 mp.rcParams['legend.numpoints'] = 1
@@ -32,18 +34,21 @@ mp.rcParams['legend.numpoints'] = 1
 # * gammaKeldysh > 10: multi-photon excitation effect is dominant. 
 # 
 # Warning: Don't use this function if Efield is too small (< 1 V/m), as it leads to divergence. 
+#          Although problem should now be solved using higher precision numbers. 
 def gammaKeldysh(Egap, meff, Efield, wavelength): #{{{
   #print Egap, meff, Efield
   omegaLaser=2.*pi*c/wavelength
+  ErrorMessage=""
   # Validity limit
   if (Egap < hbar * omegaLaser ): 
-    print "** Validity range error: the Keldysh model is not valid for linear absorption. INVALID RESULT..."
-    print "** Error details: "+str(int(wavelength*1E9))+" nm wavelength is too small for the gap "+str(float(Egap)/e)+"."
+    #TODO: this flow should be redirected to an error file. Stdout also goes into the variables. 
+    ErrorMessage=ErrorMessage+"** Validity range error: the Keldysh model is not valid for linear absorption. INVALID RESULT...\n"
+    ErrorMessage=ErrorMessage+"** Error details: "+str(int(wavelength*1E9))+" nm wavelength is too small for the gap "+str(float(Egap)/e)+".\n"
     #exit() #Avoid to quit, so that octopus still compare its results. 
   if (abs(Efield) > 1e0):
     result = omegaLaser*np.sqrt(m_e*meff*Egap)/e/Efield
   else:
-    print "gamma(): Divergence, as field equals = 0. Singular case of Keldysh functions. Should give w_PI = 0 then..."
+    ErrorMessage=ErrorMessage+"gamma(): Divergence, as field equals = 0. Singular case of Keldysh functions. Should give w_PI = 0 then...\n"
   #print omegaLaser
   return result
 # Numerically validated with comparison to Maple. 
@@ -57,7 +62,11 @@ def Keldysh1(gamma):
 ## Computes some intermediate quantity
 def Keldysh2(gamma):
   value = np.float128(gamma) #idem about precision.
-  return np.divide( Keldysh1(value), value )
+  try:
+    result = np.divide( Keldysh1(value), value )
+  except:
+    result = 0e0
+  return result
 
 ## Computes the effective gap for one material
 # @param Egap: band gap of the transition (multi-photonic / tunnel transitions are DIRECT)
@@ -67,8 +76,8 @@ def EffectiveGap(Egap, k1, k2): #{{{
   if (k1 != 0):
     result = 2.0*Egap * ellipe(k22)/(pi*k1) #Warning: ellipe(x²) actually computes E(x). 
   else: 
-    print "EffectiveGap(): Keldysh1 = 0."
-    exit()
+    print "EffectiveGap(): Singular error, Keldysh1 = 0."
+    result = 0e0
   return result
   # Validation: 
   # EffectiveGap(0, 0, 0) = Error. 
@@ -164,8 +173,10 @@ def IonizationRate(Keldysh1, Keldysh2, KeldyshFunctionResult, Ueff, wavelength):
   omegaLaser = 2.*pi*c/wavelength
   Keldysh11 = np.float64(Keldysh1 * Keldysh1)
   Keldysh22 = np.float64(Keldysh2 * Keldysh2)
-  result = 2.*omegaLaser/(9.*pi)*((omegaLaser*m_e)/(hbar*Keldysh1))**(1.5)*KeldyshFunctionResult*np.exp(-pi*np.trunc(Ueff/hbar/omegaLaser+1)*((ellipk(Keldysh11)-ellipe(Keldysh11))/(ellipe(Keldysh22))))
-  
+  try:
+    result = 2.*omegaLaser/(9.*pi)*((omegaLaser*m_e)/(hbar*Keldysh1))**(1.5)*KeldyshFunctionResult*np.exp(-pi*np.trunc(Ueff/hbar/omegaLaser+1e0)*((ellipk(Keldysh11)-ellipe(Keldysh11))/(ellipe(Keldysh22))))
+  except:
+    result = 0e0
   return result
 
 ## Corrected Keldysh photoionization probability according to Vitaly Gruzdev (see Ref in details). 
@@ -237,20 +248,38 @@ def BristowLaw(wavelength, Egap):#{{{
   return beta
 #}}}
 
-#print "** Vectorizing functions..."
-FieldToIntensity = np.vectorize(FieldToIntensity)
-IntensityToField = np.vectorize(IntensityToField)
-gammaKeldysh = np.vectorize(gammaKeldysh)
-Keldysh1 = np.vectorize(Keldysh1)
-Keldysh2 = np.vectorize(Keldysh2)
-EffectiveGap=np.vectorize(EffectiveGap)
-KeldyshFunction=np.vectorize(KeldyshFunction)
-KeldyshFunction_Gruzdev=np.vectorize(KeldyshFunction_Gruzdev)
-IonizationRate_Gruzdev=np.vectorize(IonizationRate_Gruzdev)
-PulseGaussianTemporalShape = np.vectorize(PulseGaussianTemporalShape)
-BristowLaw = np.vectorize(BristowLaw)
+## Generate Keldysh tables for interfacing with codes
+# Input: 
+# @param Egap: scalar (J)
+# @param meff: scalar (no unit)
+# @param wavelength: laser wavelength (scalar, meters)
+# @param PeakField: laser field amplitude (scalar, V/m)
+# @param order: integration order for Keldysh model (integer, no unit)
+def GenerateKeldyshDatabase(Egap, meff, wavelength, PeakField, order): #{{{
+  ErrorMessage = ""
+  gamma = gammaKeldysh(Egap, meff, PeakField, wavelength) #valid for scalar data
+  k1 = Keldysh1(gamma); k2 = Keldysh2(gamma) #valid
+  EgapEff = EffectiveGap(Egap, k1, k2) # Original formula from Keldysh. Warning: scipy.special.ellipe (https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.ellipe.html#scipy.special.ellipe) uses a different convention than Maple, Wikipedia or mpmath.
+  KeldyshFunctionResultG = KeldyshFunction_Gruzdev( k1, k2, EgapEff, order, wavelength )
+  wPIg = IonizationRate_Gruzdev(k1, k2, KeldyshFunctionResultG, EgapEff, wavelength)
+  return wPIg
+#}}}
 
-## Generate Keldysh tables for a laser pulse
+#print "** Vectorizing functions..."
+FieldToIntensity           = np.vectorize(FieldToIntensity)
+IntensityToField           = np.vectorize(IntensityToField)
+gammaKeldysh               = np.vectorize(gammaKeldysh)
+Keldysh1                   = np.vectorize(Keldysh1)
+Keldysh2                   = np.vectorize(Keldysh2)
+EffectiveGap               = np.vectorize(EffectiveGap)
+KeldyshFunction            = np.vectorize(KeldyshFunction)
+KeldyshFunction_Gruzdev    = np.vectorize(KeldyshFunction_Gruzdev)
+IonizationRate_Gruzdev     = np.vectorize(IonizationRate_Gruzdev)
+PulseGaussianTemporalShape = np.vectorize(PulseGaussianTemporalShape)
+BristowLaw                 = np.vectorize(BristowLaw)
+GenerateKeldyshDatabase    = np.vectorize(GenerateKeldyshDatabase)
+
+## Generate Keldysh tables for a range of laser intensity, associated with a wavelength
 # Input: 
 # @param Egap: scalar (J)
 # @param meff: scalar (no unit)
@@ -344,7 +373,7 @@ def generateWpiTables(Egap = 2.58e0*e, meff = 0.18e0, wavelength = 800e-9, tau =
 # @param PeakFluence (J/m2): maximum fluence of the pulse
 # @param dt (seconds): precision of the temporal envelope
 # @param order (adim): order of the integration (default: 50).
-def plotPulseToDensity(Egap = 2.58e0*e, meff = 0.18e0, wavelength = 800e-9, tau = 10e-15, PeakFluence = 100e-3*1E4, dt = 1E-17, order = 50, ShowPlot=False, t0=0., N_total=5E28): #{{{
+def plotPulseToDensity(Egap = 2.56e0*e, meff = 0.18e0, wavelength = 800e-9, tau = 10e-15, PeakFluence = 100e-3*1E4, dt = 1E-17, order = 50, ShowPlot=False, t0=0., N_total=5E28): #{{{
 
   ShortRefKeldysh = "[Keldysh (1964)]"
   ShortRefGruzdev = "[Gruzdev (2014)]"

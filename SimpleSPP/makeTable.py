@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
 
+## @package makeTable
+# Generates the table of SPP-active interfaces. 
+
 # IMPORT LIBRARIES
-from SimpleSPProutines import *
+from libSPP import *
 #from plotGraph import *
 
 # PHYSICAL INPUT

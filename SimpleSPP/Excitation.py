@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
 ## @package Excitation
-## Excitation of materials is calculated for ZnO (for now) and later with any material. 
+## Excitation of materials is calculated for ZnO (for now) and later with any band gap material. 
 # Basic inputs should be: 
 # * Egap (J)
 # * Wavelength
@@ -14,7 +14,7 @@
 from libKeldysh import *
 from libMaterials import *
 from libDatabase import *
-from SimpleSPProutines import *
+from libSPP import *
 
 # Desired laser parameters
 wavelength = 800e-9

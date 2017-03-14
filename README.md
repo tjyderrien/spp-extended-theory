@@ -67,10 +67,12 @@ For each of these data, the following theories can be applied.
 
 ## Note to Windows users
 
-The code should work with Windows: 
+The code works with Windows: 
 * Install Anaconda (Python) for Windows (during install: no need for the symbolic linking compatibility). 
 * Download the present repository,  
 * Open/Edit the .py files and enjoy. 
+
+Most of routines were not tested with Windows, so feel free to address any problem to <derrien@fzu.cz.>
 
 # How to use ?
 

@@ -30,6 +30,12 @@ lengthunit = 1e-9
 eta = 5.0 #assumed precision error on the dielectric permittivity
 UsingTeX=True #TODO: set to False for Windows users
 
+## 0: all permisive, no verification on SPP excitation condition
+## 1: use the RegularLIPSScondition, softer than pure SPP excitation condition
+## 2: Period != 0 is necessary for a material to be listed in results
+## 3: Extreme level: use ExperimentallyAchievable() to verify possibility of decay depth > optical penetration depth
+LevelOfSPPaccuracy=0
+
 # Settings for matplotlib
 #rc('font',**{'family':'sans-serif','sans-serif':['Helvetica'], 'size':'16'})
 ## for Palatino and other serif fonts use:
@@ -425,16 +431,25 @@ def SPPactiveInterfaces(dbarray, comment):#{{{
         
         # Print only the experimentally possible cases: SPP active depth must be smaller than absorption depth. 
         # ensure that SPPdecayDepth is smaller than layer thickness, to avoid shift of dispersion relation
-        ExperimentalAchievable = True #ExperimentallyAchievable(OpticalPenetration1, SPPdecayDepth1)
+        if(LevelOfSPPaccuracy < 3): 
+		ExperimentalAchievable = True #ExperimentallyAchievable(OpticalPenetration1, SPPdecayDepth1)
+        else:
+		ExperimentalAchievable = ExperimentallyAchievable(OpticalPenetration1, SPPdecayDepth1)
         
         # Print the table of active SPP interfaces for all cases or only new SPP interfaces					
         #if( not (comment=="new")):
         ##TODO: introduce RigorLevels: 
         ## 0: all permisive, no verification on SPP excitation condition
-        ## 1: Period != 0 is necessary for a material to be listed
-        ## 2: use the RegularLIPSScondition, softer than pure SPP excitation condition
-        ## 3: use ExperimentallyAchievable() to verify possibility of decay depth > optical penetration depth
-        Condition = ExperimentalAchievable and (Period!=0) #and (SPPdecayLength < 20000e0) #and (abs(eps2.real) < eps2.imag)
+        ## 1: use the RegularLIPSScondition, softer than pure SPP excitation condition
+        ## 2: use the generalized SPP excitation condition
+        ## 3: Extreme level: use ExperimentallyAchievable() to verify possibility of decay depth > optical penetration depth
+        if(LevelOfSPPaccuracy == 1):
+          Condition = (SPPdecayLength < 20000e0) #and (abs(eps2.real) < eps2.imag)
+        elif (LevelOfSPPaccuracy >= 2):
+          Condition = ExperimentalAchievable and (Period!=0)
+        else: #super permissive case
+          Condition = True
+		
         if(Condition):
           counter=counter+1
           #print SPParray.shape

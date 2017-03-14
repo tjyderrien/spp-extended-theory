@@ -20,20 +20,21 @@ from matplotlib.legend_handler import HandlerLine2D
 import sys
 
 # IMPORT CUSTOM LIBRARIES
-# from libKeldysh import * #TODO: remove from main file, This one is just to link the documentation for now.
+# from libKeldysh import *
 from libDatabase import *
 from libLaser import *
-from libMaterials import * #TODO: remove, also not needed by public release
+from libMaterials import *
 from libMath import *
 
 lengthunit = 1e-9
 eta = 5.0 #assumed precision error on the dielectric permittivity
+UsingTeX=True #TODO: set to False for Windows users
 
 # Settings for matplotlib
 #rc('font',**{'family':'sans-serif','sans-serif':['Helvetica'], 'size':'16'})
 ## for Palatino and other serif fonts use:
 rc('font', **{'family':'serif', 'serif':['Palatino'], 'size':'18'})
-rc('text', usetex=True)
+rc('text', usetex=UsingTeX)
 mp.rcParams['legend.numpoints'] = 1
 
 ## basic wave function

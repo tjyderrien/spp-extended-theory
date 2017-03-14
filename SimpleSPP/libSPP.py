@@ -395,6 +395,10 @@ def SPPactiveInterfaces(dbarray, comment):#{{{
 	        NewSPPactiveBool='No'
 
         # If new or old SPP active condition is true, then show	
+        # TODO: this condition should consider several levels of accuracy. 
+        # 0: compute for every materials, blindly
+        # 1: compute when SPPcondition() or OldSPPcondition() return True. 
+        # 2: compute only using the RegularLIPSScondition (more permissive than SPP excitation conditions)
         if ((SPPcondition(eps1,eps2)) or (OldSPPcondition(eps1,eps2)) or RegularLIPSScondition):
 	        Period=(period(betaSPP(wavelength1,eps1, eps2))/lengthunit)
 	        SPPdecayDepth1=(DecayDepth(kzSPP(wavelength1, eps1, eps2))/lengthunit)
@@ -423,7 +427,12 @@ def SPPactiveInterfaces(dbarray, comment):#{{{
         ExperimentalAchievable = True #ExperimentallyAchievable(OpticalPenetration1, SPPdecayDepth1)
         
         # Print the table of active SPP interfaces for all cases or only new SPP interfaces					
-        #if( not (comment=="new")): 
+        #if( not (comment=="new")):
+        ##TODO: introduce RigorLevels: 
+        ## 0: all permisive, no verification on SPP excitation condition
+        ## 1: Period != 0 is necessary for a material to be listed
+        ## 2: use the RegularLIPSScondition, softer than pure SPP excitation condition
+        ## 3: use ExperimentallyAchievable() to verify possibility of decay depth > optical penetration depth
         Condition = ExperimentalAchievable and (Period!=0) #and (SPPdecayLength < 20000e0) #and (abs(eps2.real) < eps2.imag)
         if(Condition):
           counter=counter+1

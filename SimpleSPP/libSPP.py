@@ -20,20 +20,27 @@ from matplotlib.legend_handler import HandlerLine2D
 import sys
 
 # IMPORT CUSTOM LIBRARIES
-# from libKeldysh import * #TODO: remove from main file, This one is just to link the documentation for now.
+# from libKeldysh import *
 from libDatabase import *
 from libLaser import *
-from libMaterials import * #TODO: remove, also not needed by public release
+from libMaterials import *
 from libMath import *
 
 lengthunit = 1e-9
 eta = 5.0 #assumed precision error on the dielectric permittivity
+UsingTeX=True #TODO: set to False for Windows users
+
+## 0: all permisive, no verification on SPP excitation condition
+## 1: use the RegularLIPSScondition, softer than pure SPP excitation condition
+## 2: Period != 0 is necessary for a material to be listed in results
+## 3: Extreme level: use ExperimentallyAchievable() to verify possibility of decay depth > optical penetration depth
+LevelOfSPPaccuracy=0
 
 # Settings for matplotlib
 #rc('font',**{'family':'sans-serif','sans-serif':['Helvetica'], 'size':'16'})
 ## for Palatino and other serif fonts use:
 rc('font', **{'family':'serif', 'serif':['Palatino'], 'size':'18'})
-rc('text', usetex=True)
+rc('text', usetex=UsingTeX)
 mp.rcParams['legend.numpoints'] = 1
 
 ## basic wave function
@@ -395,6 +402,10 @@ def SPPactiveInterfaces(dbarray, comment):#{{{
 	        NewSPPactiveBool='No'
 
         # If new or old SPP active condition is true, then show	
+        # TODO: this condition should consider several levels of accuracy. 
+        # 0: compute for every materials, blindly
+        # 1: compute when SPPcondition() or OldSPPcondition() return True. 
+        # 2: compute only using the RegularLIPSScondition (more permissive than SPP excitation conditions)
         if ((SPPcondition(eps1,eps2)) or (OldSPPcondition(eps1,eps2)) or RegularLIPSScondition):
 	        Period=(period(betaSPP(wavelength1,eps1, eps2))/lengthunit)
 	        SPPdecayDepth1=(DecayDepth(kzSPP(wavelength1, eps1, eps2))/lengthunit)
@@ -420,11 +431,25 @@ def SPPactiveInterfaces(dbarray, comment):#{{{
         
         # Print only the experimentally possible cases: SPP active depth must be smaller than absorption depth. 
         # ensure that SPPdecayDepth is smaller than layer thickness, to avoid shift of dispersion relation
-        ExperimentalAchievable = True #ExperimentallyAchievable(OpticalPenetration1, SPPdecayDepth1)
+        if(LevelOfSPPaccuracy < 3): 
+		ExperimentalAchievable = True #ExperimentallyAchievable(OpticalPenetration1, SPPdecayDepth1)
+        else:
+		ExperimentalAchievable = ExperimentallyAchievable(OpticalPenetration1, SPPdecayDepth1)
         
         # Print the table of active SPP interfaces for all cases or only new SPP interfaces					
-        #if( not (comment=="new")): 
-        Condition = ExperimentalAchievable and (Period!=0) #and (SPPdecayLength < 20000e0) #and (abs(eps2.real) < eps2.imag)
+        #if( not (comment=="new")):
+        ##TODO: introduce RigorLevels: 
+        ## 0: all permisive, no verification on SPP excitation condition
+        ## 1: use the RegularLIPSScondition, softer than pure SPP excitation condition
+        ## 2: use the generalized SPP excitation condition
+        ## 3: Extreme level: use ExperimentallyAchievable() to verify possibility of decay depth > optical penetration depth
+        if(LevelOfSPPaccuracy == 1):
+          Condition = (SPPdecayLength < 20000e0) #and (abs(eps2.real) < eps2.imag)
+        elif (LevelOfSPPaccuracy >= 2):
+          Condition = ExperimentalAchievable and (Period!=0)
+        else: #super permissive case
+          Condition = True
+		
         if(Condition):
           counter=counter+1
           #print SPParray.shape

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
-from SimpleSPProutines import *
+from libSPP import *
 #reset
 
 print "==== Plot the exp. LIPSS regularity as function of theoretical Lspp... ===="

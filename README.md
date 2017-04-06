@@ -15,9 +15,13 @@ The code is now made of 3 branches.
 
 * J. Bonse: Provided the tabulated Palik data.
 
-# Current collaborators
+# Current collaborators for this code
 
-* Iaroslav Gnilitskyi, UNIMORE, University of Modena, Italy
+* Stephan Gräf (Jena University): user for Sipe theory.
+
+* Inam Mirza (Hilase Centre, Prague): user for compound materials
+
+* Aleksander Kovacevic (Bratislava, Serbia): multilayered materials
 
 # Financial supports
 
@@ -25,7 +29,7 @@ The code is now made of 3 branches.
 
 * HiLASE projects (State Budget of Czech Republic). 
 
-* Marie Sklodowska-Curie Actions: project QuantumLaP. 
+* Marie Sklodowska-Curie Actions: funding from the European Commission for the Marie Sklodowska-Curie Individual Fellowship under QuantumLaP project No. 657424. 
 
 # Purpose of this project
 
@@ -42,15 +46,33 @@ For each of these data, the following theories can be applied.
 
 * SPP theory for single interface (coded, validated, multi-material, published), 
 
-* SPP theory for multilayer systems: 3 layer model (available with Maple: to be coded in Python), 
+* SPP theory for multilayer systems: 3 layer model (available with Maple: to be coded in Python), published.
 
-* SPP theory for rough interfaces: Sipe model (coded, validated), Sipe-Drude model (coded in Python).
+* SPP theory for rough interfaces: Sipe model (coded, validated), Sipe-Drude model (coded in Python, validated, published by Jörn Bonse in 2005, 2009).
 
-# Install
+# Installation 
 
-* For beginners: To simply download programs, you can click here: https://bitbucket.org/tjyderrien/spp-extended-theory/downloads
+## Simple install for beginners
 
-* For more advanced users: git clone git@bitbucket.org:tjyderrien/spp-extended-theory.git
+* Simply click "download" in the repository bar. You can also click here: https://bitbucket.org/tjyderrien/spp-extended-theory/downloads. 
+
+* To get the regular updates without loosing your modifications, it is recommended to learn basics of Git. 
+
+## For users familiar with Git. 
+
+* For educated users: it is advised to download in HTTP mode using git clone https://tjyderrien@bitbucket.org/tjyderrien/spp-extended-theory.git
+
+* For hardcore users, you may need SSH protocol (key is required, contact me via email) to donwload: 
+ git clone git@bitbucket.org:tjyderrien/spp-extended-theory.git
+
+## Note to Windows users
+
+The code works with Windows: 
+* Install Anaconda (Python) for Windows (during install: no need for the symbolic linking compatibility). 
+* Download the present repository,  
+* Open/Edit the .py files and enjoy. 
+
+Most of routines were not tested with Windows, so feel free to address any problem to <derrien@fzu.cz.>
 
 # How to use ?
 

@@ -229,7 +229,7 @@ def sigmaFWHM(FWHM):
   sigma = FWHM/(2.*np.sqrt(2.*np.log(2.)))
   return sigma
 
-## Pulse shape [table of peak_intensity(time)] evolution with time
+## Single pulse shape [table of peak_intensity(time)] evolution with time
 #
 # Defines the temporal shape of the laser pulse using a Gaussian law. 
 # @param t: instant to output (can be a table)
@@ -237,6 +237,35 @@ def sigmaFWHM(FWHM):
 # @param intensity: peak intensity (W/m^2)
 # @param t0: instant for the peak intensity (t0=0 by default)
 def PulseGaussianTemporalShape(t, tau, PeakIntensity, t0=0.):
+  sigmaTau = sigmaFWHM(tau)
+  #PeakIntensity = fluence/tau 
+  #TODO: Missing coefficient on peak intensity ? 
+  intensity = PeakIntensity * np.exp(-0.5 * ((t-t0)/(sigmaTau))**2 )
+  return intensity
+
+## Single pulse shape [table of peak_intensity(time)] evolution with time
+#
+# Defines the temporal shape of the laser pulse using a squared sinus law. 
+# @param t: instant to output (can be a table)
+# @param tau: pulse duration FWHM (s)
+# @param intensity: peak intensity (W/m^2)
+# @param t0: instant for the peak intensity (t0=0 by default)
+def PulseSquaredSinTemporalShape(t, tau, PeakIntensity, t0=0.):
+  sigmaTau = sigmaFWHM(tau)
+  #PeakIntensity = fluence/tau 
+  #TODO: Missing coefficient on peak intensity ? 
+  intensity = PeakIntensity * np.exp(-0.5 * ((t-t0)/(sigmaTau))**2 )
+  return intensity
+
+## Double pulse shape [table of peak_intensity(time)] evolution with time
+#
+# Defines the temporal shape of TWO laser pulses using a squared sinus law and a time delay. 
+# @param t: instant to output (can be a table)
+# @param tau1: pulse 1 duration FWHM (s)
+# @param tau2: pulse 2 duration FWHM (s)
+# @param intensity: peak intensity (W/m^2)
+# @param t0: instant for the peak intensity (t0=0 by default)
+def PulseSquaredSinTemporalShapeDoublePulse(t, tau1, tau2, Efield1, Efield2, t0=0., delay=0.):
   sigmaTau = sigmaFWHM(tau)
   #PeakIntensity = fluence/tau 
   #TODO: Missing coefficient on peak intensity ? 
@@ -318,7 +347,9 @@ def generateWpiTables(Egap = 2.58e0*e, meff = 0.18e0, wavelength = 800e-9, tau =
   print "** Info: Number of time steps = "+str(int((tmax-tmin)/dt))+"."
   instants=np.arange(tmin,tmax,dt)
 
-  PulseEnvelope=PulseGaussianTemporalShape(instants, tau, PeakIntensity, t0)
+  #Gaussian envelope
+  #PulseEnvelope=PulseGaussianTemporalShape(instants, tau, PeakIntensity, t0)
+  PulseEnvelope=PulseSquaredSinTemporalShape(instants, tau, PeakIntensity, t0)
   print "** Info: Peak intensity = "+str(PulseEnvelope.max()/1E4)+" W/cm^2."
   print "** Info: Peak field amplitude = "+str(IntensityToField(PulseEnvelope).max()/1E9)+" V/nm."
 
@@ -342,7 +373,7 @@ def generateWpiTables(Egap = 2.58e0*e, meff = 0.18e0, wavelength = 800e-9, tau =
   print "** Info: Egap = "+str(Egap/e)+" eV, max[Ueff] = "+str(EgapEff.max()/e)+" eV."
   print ""
 
-  KeldyshFunctionResult = KeldyshFunction( k1, k2, EgapEff, order, wavelength )
+  KeldyshFunctionResult  = KeldyshFunction( k1, k2, EgapEff, order, wavelength )
   KeldyshFunctionResultG = KeldyshFunction_Gruzdev( k1, k2, EgapEff, order, wavelength )
 
   #print "** End of self-consistent loop..."

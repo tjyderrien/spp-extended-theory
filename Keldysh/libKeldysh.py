@@ -35,8 +35,8 @@ from scipy.constants import c, epsilon_0, mu_0, pi, e, m_e, h, hbar
 #import sys
 
 from libDatabase import ExportToTxt
-rc('font', **{'family':'serif', 'serif':['Palatino'], 'size':'18'})
-rc('text', usetex=True)
+rc('font', **{'family':'serif', 'serif':['Georgia'], 'size':'16'})
+rc('text', usetex=False)
 mp.rcParams['legend.numpoints'] = 1
 
 ## Computes the adiabadicity parameter

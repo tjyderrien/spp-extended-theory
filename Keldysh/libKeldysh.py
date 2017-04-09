@@ -39,6 +39,12 @@ rc('font', **{'family':'serif', 'serif':['Georgia'], 'size':'16'})
 rc('text', usetex=False)
 mp.rcParams['legend.numpoints'] = 1
 
+## Computes a step function
+# Heaviside function
+def step(x):
+    return 1.0 * (x > 0.0)
+step = np.vectorize(step)
+
 ## Computes the adiabadicity parameter
 # @param gamma: Adiabadicity parameter (non-dimensional number)
 # @param Egap: band gap energy (in Joules)
@@ -212,14 +218,14 @@ def IonizationRate_Gruzdev(Keldysh1, Keldysh2, KeldyshFunctionResult, Ueff, wave
 # not exactly given by Keldysh theory, but rather by :
 # 1. Value at rest (can be taken in "MaterialOpticalDatabase.dat" 
 # 2. Value with excitation using a Drude model, associated with some effective mass and collision frequency. 
-def FieldToIntensity(Field, permittivity=1):
-  intensity = 0.5 * c * epsilon_0 * np.sqrt(permittivity) * Field**2
+def FieldToIntensity(Field, permittivity=1e0):
+  intensity = 0.5e0 * c * epsilon_0 * np.sqrt(permittivity) * Field * np.conjugate(Field)
   return intensity.real
 
 ## Converts intensity to electric field amplitude
-def IntensityToField(intensity, permittivity=1):
-  Field = np.sqrt(2.0 * intensity / c / epsilon_0 / np.sqrt(permittivity))
-  if (Field.imag != 0): 
+def IntensityToField(intensity, permittivity=1.):
+  Field = np.sqrt(2e0 * intensity / c / epsilon_0 / np.sqrt(permittivity))
+  if (Field.imag > 1E-5): 
     print "** Error: unexpected imaginary part in the conversion from Intensity to Field!"
     exit(-1)
   return Field.real
@@ -246,32 +252,50 @@ def PulseGaussianTemporalShape(t, tau, PeakIntensity, t0=0.):
 ## Single pulse shape [table of peak_intensity(time)] evolution with time
 #
 # Defines the temporal shape of the laser pulse using a squared sinus law. 
-# @param t: instant to output (can be a table)
+# @param t: instants to output (can be a table)
 # @param tau: pulse duration FWHM (s)
 # @param intensity: peak intensity (W/m^2)
 # @param t0: instant for the peak intensity (t0=0 by default)
-def PulseSquaredSinTemporalShape(t, tau, PeakIntensity, t0=0.):
+# @param PulseDelay: temporal delay between 2 pulses (in seconds)
+def PulseSquaredSinTemporalShape(t, tau, PeakIntensity, wavelength, t0=0., PulseDelay=0.):
   sigmaTau = sigmaFWHM(tau)
-  #PeakIntensity = fluence/tau 
-  #TODO: Missing coefficient on peak intensity ? 
-  intensity = PeakIntensity * np.exp(-0.5 * ((t-t0)/(sigmaTau))**2 )
-  return intensity
+  t1 = PulseDelay + t0
+  #PeakIntensity = fluence/tau
+  PeakField = IntensityToField(PeakIntensity)
+  omega = 2e0*pi*c/wavelength
+  H1 = step(t - t1 + tau)
+  H2 = step(t - t1 - tau)
+  Field = PeakField*np.sin(pi*(t-t1-tau)/(2e0*tau))**2 * np.exp(1e0j*omega*t) * H1 * H2
+  intensity = 0.5*c*epsilon_0*Field*np.conjugate(Field) # * np.exp(-0.5 * ((t-t0)/(sigmaTau))**2 )
+  return Field, intensity
 
-## Double pulse shape [table of peak_intensity(time)] evolution with time
-#
-# Defines the temporal shape of TWO laser pulses using a squared sinus law and a time delay. 
+## Bi-color double pulse shapes [table of TotalField(time)] evolution with time
+# Output: Total field <array>, total intensity <array>
+# Returns the temporal shape of TWO laser pulses using a squared sinus law and a time delay. 
+# Pulses CAN be of different colors! 
 # @param t: instant to output (can be a table)
 # @param tau1: pulse 1 duration FWHM (s)
 # @param tau2: pulse 2 duration FWHM (s)
-# @param intensity: peak intensity (W/m^2)
-# @param t0: instant for the peak intensity (t0=0 by default)
-def PulseSquaredSinTemporalShapeDoublePulse(t, tau1, tau2, Efield1, Efield2, t0=0., delay=0.):
-  sigmaTau = sigmaFWHM(tau)
-  #PeakIntensity = fluence/tau 
-  #TODO: Missing coefficient on peak intensity ? 
-  intensity = PeakIntensity * np.exp(-0.5 * ((t-t0)/(sigmaTau))**2 )
-  return intensity
-
+# @param Efield1: pulse 1, peak field amplitude (V/m)
+# @param Efield2: pulse 2, peak field amplitude (V/m)
+# @param wavelength1: pulse 1, wavelength (meters)
+# @param wavelength2: pulse 2, wavelength (meters)
+# @param CEP1: pulse 1, carrier envelope phase
+# @param CEP2: pulse 2, carrier envelope phase
+# @param t1: instant for the peak field 1 (t1=0 by default)
+# @param PulseDelay: delay between the amplitude maxima of pulse 1 and pulse 2 (seconds)
+def PulseSquaredSinTemporalShapeDoublePulse(t, tau1, tau2, Efield1, Efield2, wavelength1, wavelength2, CEP1, CEP2, t1=0., PulseDelay=0.):
+  sigmaTau1 = sigmaFWHM(tau1); sigmaTau2 = sigmaFWHM(tau2)
+  H11        = step(t - t1 + tau1); H12 = step(t - t2 + tau1) #TODO: CHECK !!
+  H21        = step(t - t1 - tau2); H22 = step(t - t2 - tau2)
+  Field1     = Efield1*np.sin(pi*(t-t1-tau1)/(2e0*tau1))**2 * np.exp(1e0j*omega1*t) * H11 * H12
+  Field2     = Efield2*np.sin(pi*(t-t2-tau2)/(2e0*tau2))**2 * np.exp(1e0j*omega2*t) * H21 * H22
+  TotalField = Field1 + Field2
+  Intensity1 = PulseSquaredSinTemporalShape(t, tau1, PeakIntensity1, wavelength1, t1, 0e0)
+  Intensity2 = PulseSquaredSinTemporalShape(t, tau2, PeakIntensity2, wavelength2, t1, PulseDelay) #TODO: t1 ok? 
+  intensity  = 0.5*c*epsilon_0*Field*np.conjugate(Field)
+  return TotalField, Intensity
+  
 ## Calculate the time-dependent excited electron density for a given pulse shape
 # @param IntensityShape: function describing the temporal enveloppe of the pulse
 # @param 
@@ -311,18 +335,20 @@ def GenerateKeldyshDatabase(Egap, meff, wavelength, PeakField, order): #{{{
 #}}}
 
 #print "** Vectorizing functions..."
-FieldToIntensity           = np.vectorize(FieldToIntensity)
-IntensityToField           = np.vectorize(IntensityToField)
-gammaKeldysh               = np.vectorize(gammaKeldysh)
-Keldysh1                   = np.vectorize(Keldysh1)
-Keldysh2                   = np.vectorize(Keldysh2)
-EffectiveGap               = np.vectorize(EffectiveGap)
-KeldyshFunction            = np.vectorize(KeldyshFunction)
-KeldyshFunction_Gruzdev    = np.vectorize(KeldyshFunction_Gruzdev)
-IonizationRate_Gruzdev     = np.vectorize(IonizationRate_Gruzdev)
-PulseGaussianTemporalShape = np.vectorize(PulseGaussianTemporalShape)
-BristowLaw                 = np.vectorize(BristowLaw)
-GenerateKeldyshDatabase    = np.vectorize(GenerateKeldyshDatabase)
+FieldToIntensity                        = np.vectorize(FieldToIntensity)
+IntensityToField                        = np.vectorize(IntensityToField)
+gammaKeldysh                            = np.vectorize(gammaKeldysh)
+Keldysh1                                = np.vectorize(Keldysh1)
+Keldysh2                                = np.vectorize(Keldysh2)
+EffectiveGap                            = np.vectorize(EffectiveGap)
+KeldyshFunction                         = np.vectorize(KeldyshFunction)
+KeldyshFunction_Gruzdev                 = np.vectorize(KeldyshFunction_Gruzdev)
+IonizationRate_Gruzdev                  = np.vectorize(IonizationRate_Gruzdev)
+PulseGaussianTemporalShape              = np.vectorize(PulseGaussianTemporalShape)
+PulseSquaredSinTemporalShape            = np.vectorize(PulseSquaredSinTemporalShape)
+PulseSquaredSinTemporalShapeDoublePulse = np.vectorize(PulseSquaredSinTemporalShapeDoublePulse)
+BristowLaw                              = np.vectorize(BristowLaw)
+GenerateKeldyshDatabase                 = np.vectorize(GenerateKeldyshDatabase)
 
 ## Generate Keldysh tables for a range of laser intensity, associated with a wavelength
 # Input: 
@@ -334,12 +360,12 @@ GenerateKeldyshDatabase    = np.vectorize(GenerateKeldyshDatabase)
 # @param dt: precision (scalar, seconds)
 # @param order: integration order for Keldysh model (integer, no unit)
 # @N_total: limiter for the ionizable number of electrons (float, m^{-3})
-def generateWpiTables(Egap = 2.58e0*e, meff = 0.18e0, wavelength = 800e-9, tau = 10e-15, PeakFluence = 100e-3*1E4, dt = 1E-17, order = 50, N_total=5E28, t0=0.0): #{{{
+def generateWpiTables(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, tau = 10e-15, PeakFluence = 100e-3*1E4, dt = 1E-17, order = 50, N_total=5E28, t0=0.0): #{{{
   ShortRefKeldysh = "[Keldysh (1964)]"
   ShortRefGruzdev = "[Gruzdev (2014)]"
   
   print "Defining the laser pulse..."
-  PeakIntensity = PeakFluence/tau #scalar, TODO: isn't it multiplied by sqrt(4 ln 2 / Pi) ? 
+  PeakIntensity = PeakFluence/tau #scalar, TODO: isn't it multiplied by sqrt(4 ln 2 / pi) ? 
   # t0 = 0e0
   tmin = -3.5*tau+t0
   tmax = 3.5*tau+t0
@@ -349,7 +375,7 @@ def generateWpiTables(Egap = 2.58e0*e, meff = 0.18e0, wavelength = 800e-9, tau =
 
   #Gaussian envelope
   #PulseEnvelope=PulseGaussianTemporalShape(instants, tau, PeakIntensity, t0)
-  PulseEnvelope=PulseSquaredSinTemporalShape(instants, tau, PeakIntensity, t0)
+  FieldEnvelope, PulseEnvelope = PulseSquaredSinTemporalShape(instants, tau, PeakIntensity, wavelength, t0)
   print "** Info: Peak intensity = "+str(PulseEnvelope.max()/1E4)+" W/cm^2."
   print "** Info: Peak field amplitude = "+str(IntensityToField(PulseEnvelope).max()/1E9)+" V/nm."
 
@@ -420,7 +446,7 @@ def generateWpiTables(Egap = 2.58e0*e, meff = 0.18e0, wavelength = 800e-9, tau =
 # @param PeakFluence (J/m2): maximum fluence of the pulse
 # @param dt (seconds): precision of the temporal envelope
 # @param order (adim): order of the integration (default: 50).
-def plotPulseToDensity(Egap = 2.56e0*e, meff = 0.18e0, wavelength = 800e-9, tau = 10e-15, PeakFluence = 100e-3*1E4, dt = 1E-17, order = 50, ShowPlot=False, t0=0., N_total=5E28): #{{{
+def plotPulseToDensity(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, tau = 10e-15, PeakFluence = 100e-3*1E4, dt = 1E-17, order = 50, ShowPlot=False, t0=0., N_total=5E28): #{{{
 
   ShortRefKeldysh = "[Keldysh (1964)]"
   ShortRefGruzdev = "[Gruzdev (2014)]"

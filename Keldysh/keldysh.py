@@ -17,13 +17,13 @@ print "** Loading Gruzdev formula [Gruzdev, Optical Engineering 53, 122515 (2014
 
 print "Defining material parameters..."
 
-Egap = 2.58e0*e; #LDA band gap of Si: 2.58 eV. #1.12e0*e for indirect band gap; 
-meff=0.18e0; #Effective mass of Si
+Egap = 2.56e0*e; #LDA band gap of Si: 2.58 eV. #1.12e0*e for indirect band gap; 
+meff=0.2226e0; #Effective mass of Si
 Ntotal=1.*5E28
 
 wavelength = 800e-9
 tau=10e-15; dt = 1E-17
-PeakFluence = 1.327e-3*1E4 #J/cm2 * 1E4 = J/m2
+PeakFluence = 1E4 #J/cm2 * 1E4 = J/m2
 order = 50
 ShowPlot = False
 

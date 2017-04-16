@@ -27,7 +27,7 @@ PeakFluence = 1E4 #J/cm2 * 1E4 = J/m2
 order = 50
 ShowPlot = False
 
-plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, dt, order, ShowPlot, 0e0, Ntotal)
+timeKeldysh, N_Keldysh_SI, N_Gruzdev_SI = plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, dt, order, ShowPlot, 0e0, Ntotal)
 
 # print "Checking dt convergence..."
 # plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, 1E-17, order, ShowPlot)

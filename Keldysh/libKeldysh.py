@@ -382,7 +382,7 @@ def generateWpiTables(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, tau
   #for i in np.arange(1,50,1): #attempt of self consistent loop: divergent
   #print "** ITERATION "+str(i)
   print "Computing Adiabadicity coefficients for the pulse envelope..."
-  =IntensityToField(IntensityEnvelop)
+  FieldEnvelope=IntensityToField(IntensityEnvelop)
   gamma = gammaKeldysh(Egap, meff, FieldEnvelope, wavelength) #valid for scalar|vector data
   #gamma = gammaKeldysh(EgapEff, meff, IntensityToField(PulseEnvelope), wavelength) #self-consistent, divergent
   print "** Info: Adiabadicity parameter = "+str(gamma.min())+"."

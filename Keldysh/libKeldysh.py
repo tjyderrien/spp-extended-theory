@@ -374,8 +374,8 @@ def generateWpiTables(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, tau
   #Gaussian envelope
   #PulseEnvelope=PulseGaussianTemporalShape(instants, tau, Intensity, t0)
   #FieldEnvelope, PulseEnvelope = PulseSquaredSinTemporalShape(instants, tau, Intensity, wavelength, t0) #TODO: this should be generated outside this function
-  print "** Info: Peak intensity = "+str(PulseEnvelope.max()/1E4)+" W/cm^2."
-  print "** Info: Peak field amplitude = "+str(IntensityToField(PulseEnvelope).max()/1E9)+" V/nm."
+  print "** Info: Peak intensity = "+str(IntensityEnvelop.max()/1E4)+" W/cm^2."
+  print "** Info: Peak field amplitude = "+str(IntensityToField(IntensityEnvelop).max()/1E9)+" V/nm."
 
   #print "** Starting the self-consistent loop..."
 
@@ -383,7 +383,7 @@ def generateWpiTables(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, tau
   #print "** ITERATION "+str(i)
   print "Computing Adiabadicity coefficients for the pulse envelope..."
 
-  gamma = gammaKeldysh(Egap, meff, IntensityToField(PulseEnvelope), wavelength) #valid for scalar data
+  gamma = gammaKeldysh(Egap, meff, IntensityToField(IntensityEnvelop), wavelength) #valid for scalar data
   #gamma = gammaKeldysh(EgapEff, meff, IntensityToField(PulseEnvelope), wavelength) #self-consistent, divergent
   print "** Info: Adiabadicity parameter = "+str(gamma.min())+"."
 

@@ -377,8 +377,8 @@ def generateWpiTables(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, tau
   #PulseEnvelope=PulseGaussianTemporalShape(instants, tau, Intensity, t0)
   #FieldEnvelope, PulseEnvelope = PulseSquaredSinTemporalShape(instants, tau, Intensity, wavelength, t0) #TODO: this should be generated outside this function
   IntensityEnvelope=FieldToIntensity(FieldEnvelope)
-  print "** Info: Peak intensity = "+str(IntensityEnvelope.max()/1E4)+" W/cm^2."
-  print "** Info: Peak field amplitude = "+str(FieldEnvelope.max()/1E9)+" V/nm."
+  print "** Info: Peak intensity = "+str(np.max(IntensityEnvelope)/1E4)+" W/cm^2."
+  print "** Info: Peak field amplitude = "+str(np.max(FieldEnvelope)/1E9)+" V/nm."
 
   #print "** Starting the self-consistent loop..."
 

@@ -255,7 +255,7 @@ def PulseGaussianTemporalShape(t, tau, PeakIntensity, t0=0.):
 # @param t: instants to output (can be a table)
 # @param tau: pulse duration FWHM (s)
 # @param PeakField: peak of the electric field envelope (V/m)
-# @param t0: instant for the peak intensity (t0=0 by default)
+# @param t0: central instant for the laser pulse (t0=0 by default)
 # @param PulseDelay: temporal delay between 2 pulses (in seconds)
 def PulseSquaredSinTemporalShape(t, tau, PeakField, wavelength, t0=0., PulseDelay=0.):
   sigmaTau = sigmaFWHM(tau)
@@ -264,15 +264,17 @@ def PulseSquaredSinTemporalShape(t, tau, PeakField, wavelength, t0=0., PulseDela
   omega = 2e0*pi*c/wavelength
   H1 = step(t - t1 + tau)
   H2 = step(t - t1 - tau)
-  Field = PeakField*np.sin(pi*(t-t1-tau)/(2e0*tau))**2 * np.exp(1e0j*omega*t) * H1 * H2
-  intensity = 0.5*c*epsilon_0*Field*np.conjugate(Field) # * np.exp(-0.5 * ((t-t0)/(sigmaTau))**2 )
-  return Field, intensity
+  Envelope = PeakField*np.sin(pi*(t-t1-tau)/(2e0*tau))**2 * H1 * H2
+  Phase = np.exp(1e0j*omega*t) #TODO: CEP IS MISSING and is intermixed with delay. 
+  Field = Envelope * Phase 
+  #intensity = 0.5*c*epsilon_0*Field*np.conjugate(Field) # * np.exp(-0.5 * ((t-t0)/(sigmaTau))**2 )
+  return Envelope, Field
 
 ## Bi-color double pulse shapes [table of TotalEnvelope(time), TotalField(time)] evolution with time
 # Output: Total envelope <array>, total field <array>
-# Returns the temporal shape of TWO laser pulses using a squared sinus law and a time delay. 
-# Pulses CAN be of different colors! 
-# @param t: instant to output (can be a table)
+# Construct the temporal shape of two-color laser pulses mixed together using a squared sinus law and a time delay. 
+# Pulses CAN be of different wavelengths! 
+# @param t: instants to output (can be a table)
 # @param tau1: pulse 1 duration FWHM (s)
 # @param tau2: pulse 2 duration FWHM (s)
 # @param Efield1: pulse 1, peak field of the envelope (V/m)
@@ -301,12 +303,6 @@ def PulseSquaredSinTemporalShapeDoublePulse(t, tau1, tau2, Efield1, Efield2, wav
   #intensity  = 0.5*c*epsilon_0*Field*np.conjugate(Field)
   return TotalEnvelope, TotalField
   
-## Calculate the time-dependent excited electron density for a given pulse shape
-# @param IntensityShape: function describing the temporal enveloppe of the pulse
-# @param 
-#def TimeDependentDensityKeldysh(IntensityShape, tau, intensity):
-  #%IntensityShape(
-
 ## Two-photon absorption probability from Bristow and Van Driel, 
 # Applied Physics Letters 90, 191104 (2007)
 def BristowLaw(wavelength, Egap):#{{{
@@ -355,7 +351,7 @@ PulseSquaredSinTemporalShapeDoublePulse = np.vectorize(PulseSquaredSinTemporalSh
 BristowLaw                              = np.vectorize(BristowLaw)
 GenerateKeldyshDatabase                 = np.vectorize(GenerateKeldyshDatabase)
 
-## Generate Keldysh tables for a range of laser intensity, associated with a wavelength
+## Generate Keldysh tables for laser fields amplitudes, associated with a wavelength
 # Input: 
 # @param Egap: scalar (J)
 # @param meff: scalar (no unit)

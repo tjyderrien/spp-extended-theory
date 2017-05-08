@@ -23,7 +23,7 @@ Ntotal=1.*5E28
 
 wavelength = 800e-9
 tau=10e-15; dt = 1E-17; CEP=0e0
-PeakFluence = 0.05*1E4 #J/cm2 * 1E4 = J/m2
+PeakFluence = 0.01*1E4 #J/cm2 * 1E4 = J/m2
 PeakField   = np.sqrt(2e0 * PeakFluence / (tau * c * epsilon_0))
 
 tmin=-1.*tau; tmax=1.*tau
@@ -33,11 +33,11 @@ instants = np.arange(tmin, tmax, dt)
 print "Time range: "+str(instants.min())+", "+str(instants.max())+"."
 
 # Test with a single pulse
-FieldEnvelope, RealField = PulseSquaredSinTemporalShape(instants, tau, PeakField, wavelength, CEP, t0)
+#FieldEnvelope, RealField = PulseSquaredSinTemporalShape(instants, tau, PeakField, wavelength, CEP, t0)
 
 # Test with a double pulse
 Delay = 0.
-#FieldEnvelope, RealField = PulseSquaredSinTemporalShapeDoublePulse(instants, tau, tau, PeakField, PeakField, wavelength, wavelength/2., CEP, CEP, t0, Delay)
+FieldEnvelope, RealField = PulseSquaredSinTemporalShapeDoublePulse(instants, tau, tau, PeakField, PeakField, wavelength, wavelength, CEP, CEP, t0, Delay)
 
 #plt.plot(instants, RealField.real)
 #plt.show()

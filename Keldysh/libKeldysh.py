@@ -67,10 +67,12 @@ def gammaKeldysh(Egap, meff, Efield, wavelength): #{{{
     ErrorMessage=ErrorMessage+"** Validity range error: the Keldysh model is not valid for linear absorption. INVALID RESULT...\n"
     ErrorMessage=ErrorMessage+"** Error details: "+str(int(wavelength*1E9))+" nm wavelength is too small for the gap "+str(float(Egap)/e)+".\n"
     #exit() #Avoid to quit, so that octopus still compare its results. 
-  if (abs(Efield) > 1e0):
+  if (Efield > 1e-1): #if vectorial, then abs changed its meaning
     result = omegaLaser*np.sqrt(m_e*meff*Egap)/e/Efield
+    #print Efield, result
   else:
     ErrorMessage=ErrorMessage+"gamma(): Divergence, as field equals = 0. Singular case of Keldysh functions. Should give w_PI = 0 then...\n"
+    result = 1E9 #THIS VALUE IS ARBITRARY FOR A VERY SMALL FIELD. 
   #print omegaLaser
   return result
 # Numerically validated with comparison to Maple. 
@@ -257,15 +259,15 @@ def PulseGaussianTemporalShape(t, tau, PeakIntensity, t0=0.):
 # @param PeakField: peak of the electric field envelope (V/m)
 # @param t0: central instant for the laser pulse (t0=0 by default)
 # @param PulseDelay: temporal delay between 2 pulses (in seconds)
-def PulseSquaredSinTemporalShape(t, tau, PeakField, wavelength, t0=0., PulseDelay=0.):
+def PulseSquaredSinTemporalShape(t, tau, PeakField, wavelength, CEP=0., t0=0., PulseDelay=0.):
   sigmaTau = sigmaFWHM(tau)
   t1 = PulseDelay + t0
   #PeakField = IntensityToField(PeakIntensity)
   omega = 2e0*pi*c/wavelength
   H1 = step(t - t1 + tau)
   H2 = step(t - t1 - tau)
-  Envelope = PeakField*np.sin(pi*(t-t1-tau)/(2e0*tau))**2 * H1 * H2
-  Phase = np.exp(1e0j*omega*t) #TODO: CEP IS MISSING and is intermixed with delay. 
+  Envelope = PeakField*np.sin(pi*(t-t1-tau)/(2e0*tau))**2 * H1 * (1.-H2)
+  Phase = np.exp(1e0j*omega*t+CEP)
   Field = Envelope * Phase 
   #intensity = 0.5*c*epsilon_0*Field*np.conjugate(Field) # * np.exp(-0.5 * ((t-t0)/(sigmaTau))**2 )
   return Envelope, Field
@@ -291,8 +293,8 @@ def PulseSquaredSinTemporalShapeDoublePulse(t, tau1, tau2, Efield1, Efield2, wav
   t2 = t1 + PulseDelay #TODO: CHECK
   H11        = step(t - t1 + tau1); H12 = step(t - t2 + tau1) #TODO: CHECK !!
   H21        = step(t - t1 - tau2); H22 = step(t - t2 - tau2)
-  FieldEnv1     = Efield1*np.sin(pi*(t-t1-tau1)/(2e0*tau1))**2 * H11 * H12 #* np.exp(1e0j*omega1*t)
-  FieldEnv2     = Efield2*np.sin(pi*(t-t2-tau2)/(2e0*tau2))**2 * H21 * H22 #* np.exp(1e0j*omega2*t)
+  FieldEnv1     = Efield1*np.sin(pi*(t-t1-tau1)/(2e0*tau1))**2 * H11 * (1.-H12) #could be bugged
+  FieldEnv2     = Efield2*np.sin(pi*(t-t2-tau2)/(2e0*tau2))**2 * H21 * (1.-H22) #could be bugged
   Phase1 = np.exp(1e0j*omega1*t+CEP1)
   Phase2 = np.exp(1e0j*omega2*t+CEP2)
   #TotalEnvelope = np.sqrt( FieldEnv1*np.conj(FieldEnv1) + FieldEnv2*np.conj(FieldEnv2) + FieldEnv1*np.conj(FieldEnv2) * np.exp(1e0j*(omega1-omega2)*t) + np.conj(FieldEnv1)* FieldEnv2 * np.exp(1e0j*(omega2-omega1)*t) ) #complex square of the fields must provide the envelope
@@ -434,7 +436,7 @@ def generateWpiTables(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, tau
   N_excited_Keldysh = np.multiply( np.exp(-ExpArg_Keldysh), N_total * np.exp(ExpArg_Keldysh) - N_total + N_initial)
   
   N_excited_Gruzdev = np.multiply( np.exp(-ExpArg_Gruzdev), N_total * np.exp(ExpArg_Gruzdev) - N_total + N_initial)
-  return instants, N_excited_Keldysh, N_excited_Gruzdev
+  return instants, N_excited_Keldysh, N_excited_Gruzdev, gamma, wPI, wPIg
 #}}}
 
 #generateWpiTables = np.vectorize(generateWpiTables)
@@ -451,10 +453,12 @@ def plotPulseToDensity(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, ta
 
   ShortRefKeldysh = "[Keldysh (1964)]"
   ShortRefGruzdev = "[Gruzdev (2014)]"
-  IntensityEnvelope=FieldToIntensity(FieldEnvelope)
+  #gamma = gammaKeldysh(Egap, meff, FieldEnvelope, wavelength)
+  
   ### We shall generate the interesting pulse in the file from which we call the Keldysh generator
-  ### FieldEnvelope, PulseEnvelope = PulseSquaredSinTemporalShape(instants, tau, PeakIntensity, wavelength, t0)
-  instants, N_excited_Keldysh, N_excited_Gruzdev = generateWpiTables(Egap, meff, wavelength, tau, FieldEnvelope, dt, order, N_total, t0)
+  instants, N_excited_Keldysh, N_excited_Gruzdev, gamma, wPI, wPIg = generateWpiTables(Egap, meff, wavelength, tau, FieldEnvelope, dt, order, N_total, t0)
+  
+  sizeGamma = len(gamma)
   
   print ""
   print "** Warning: results may be not converged."
@@ -473,11 +477,11 @@ def plotPulseToDensity(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, ta
     #plt.figure()
     plt.figure(figsize=(15,15))
     plt.subplot(311)
-    plt.title(r"Gap = "+str(Egap/e)+" eV, $\lambda=$ "+str(wavelength*1E9)+r" nm, $\tau=$"+str(tau*xunit)+" "+timeunit+", "+r"$F_{max}=$"+str(IntensityEnvelope.max()/1E4)+" W/cm"+r"$^{2}$")
+    plt.title(r"Gap = "+str(Egap/e)+" eV, $\lambda=$ "+str(wavelength*1E9)+r" nm, $\tau=$"+str(tau*xunit)+" "+timeunit+", "+r"$F_{max}=$"+str(FieldEnvelope.max())+" V/m"+r"$^{2}$")
     #plt.xlabel("Field (V/m)")
     #plt.xlabel("Time (ps)")
     plt.ylabel("Adiabadicity $\gamma$")
-    plt.semilogy(instants*xunit, gamma, color="k", linestyle="-", label=r"$\gamma$")
+    plt.semilogy(xunit*instants[0:sizeGamma], gamma, color="k", linestyle="-", label=r"$\gamma$")
     plt.grid()
     # plt.loglog(Efield, 0.1, label="Tunnelling limit")
     # plt.loglog(Efield, 10.*np.ones(), label="MPI limit")
@@ -487,8 +491,8 @@ def plotPulseToDensity(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, ta
     #plt.xlabel("Field (V/m)")
     #plt.xlabel("Time (ps)")
     plt.ylabel("$w_{PI}$ (m$^{-3}$ s$^{-1}$)")
-    plt.plot(instants*xunit, wPI, linestyle="-", color="r", label=r"$w_{PI}$ "+ShortRefKeldysh)
-    plt.plot(instants*xunit, wPIg, linestyle="-", color="b", label=r"$w_{PI}$ "+ShortRefGruzdev)
+    plt.plot(instants[0:sizeGamma]*xunit, wPI, linestyle="-", color="r", label=r"$w_{PI}$ "+ShortRefKeldysh)
+    plt.plot(instants[0:sizeGamma]*xunit, wPIg, linestyle="-", color="b", label=r"$w_{PI}$ "+ShortRefGruzdev)
     plt.grid()
     plt.legend(loc=2)
 
@@ -497,8 +501,8 @@ def plotPulseToDensity(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, ta
     plt.xlabel("Time ("+timeunit+")")
     # plt.xlabel("Field (V/m)")
     plt.ylabel("Density (m$^{-3}$)")
-    plt.plot(instants*xunit, N_excited_Keldysh, color="r", label="$n_e$ "+ShortRefKeldysh)
-    plt.plot(instants*xunit, N_excited_Gruzdev, color="b", label="$n_e$ "+ShortRefGruzdev)
+    plt.plot(instants[0:sizeGamma]*xunit, N_excited_Keldysh, color="r", label="$n_e$ "+ShortRefKeldysh)
+    plt.plot(instants[0:sizeGamma]*xunit, N_excited_Gruzdev, color="b", label="$n_e$ "+ShortRefGruzdev)
     plt.grid()
     plt.legend(loc=2)
     plt.savefig("KeldyshAnalytic.eps") 

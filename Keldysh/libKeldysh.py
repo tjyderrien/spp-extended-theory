@@ -254,22 +254,20 @@ def PulseGaussianTemporalShape(t, tau, PeakIntensity, t0=0.):
 ## Single pulse shape [table of peak_intensity(time)] evolution with time
 #
 # Defines the temporal shape of the laser pulse using a squared sinus law. 
+# Outputs: <Real envelope, complex field>
 # @param t: instants to output (can be a table)
 # @param tau: pulse duration FWHM (s)
 # @param PeakField: peak of the electric field envelope (V/m)
 # @param t0: central instant for the laser pulse (t0=0 by default)
 # @param PulseDelay: temporal delay between 2 pulses (in seconds)
 def PulseSquaredSinTemporalShape(t, tau, PeakField, wavelength, CEP=0., t0=0., PulseDelay=0.):
-  sigmaTau = sigmaFWHM(tau)
-  t1 = PulseDelay + t0
-  #PeakField = IntensityToField(PeakIntensity)
+  t1 = t0
   omega = 2e0*pi*c/wavelength
-  H1 = step(t - t1 + tau)
+  H1 = step(t - t1 + tau) #! theer could be a mistake in pulse duration here!
   H2 = step(t - t1 - tau)
   Envelope = PeakField*np.sin(pi*(t-t1-tau)/(2e0*tau))**2 * H1 * (1.-H2)
   Phase = np.exp(1e0j*omega*t+CEP)
-  Field = Envelope * Phase 
-  #intensity = 0.5*c*epsilon_0*Field*np.conjugate(Field) # * np.exp(-0.5 * ((t-t0)/(sigmaTau))**2 )
+  Field = Envelope * Phase
   return Envelope, Field
 
 ## Bi-color double pulse shapes [table of TotalEnvelope(time), TotalField(time)] evolution with time
@@ -289,10 +287,10 @@ def PulseSquaredSinTemporalShape(t, tau, PeakField, wavelength, CEP=0., t0=0., P
 # @param PulseDelay: delay between the amplitude maxima of pulse 1 and pulse 2 (seconds)
 def PulseSquaredSinTemporalShapeDoublePulse(t, tau1, tau2, Efield1, Efield2, wavelength1, wavelength2, CEP1, CEP2, t1=0., PulseDelay=0.):
   omega1=2.*pi*c/wavelength1; omega2=2.*pi*c/wavelength2
-  sigmaTau1 = sigmaFWHM(tau1); sigmaTau2 = sigmaFWHM(tau2)
+  sigmaTau1 = sigmaFWHM(tau1); sigmaTau2 = sigmaFWHM(tau2) #good for purely gaussian pulse, mmh? 
   t2 = t1 + PulseDelay #TODO: CHECK
-  H11        = step(t - t1 + tau1); H12 = step(t - t2 + tau1) #TODO: CHECK !!
-  H21        = step(t - t1 - tau2); H22 = step(t - t2 - tau2)
+  H11        = step(t - t1 + tau1); H21 = step(t - t2 + tau2) #TODO: CHECK !!
+  H12        = step(t - t1 - tau1); H22 = step(t - t2 - tau2)
   FieldEnv1     = Efield1*np.sin(pi*(t-t1-tau1)/(2e0*tau1))**2 * H11 * (1.-H12) #could be bugged
   FieldEnv2     = Efield2*np.sin(pi*(t-t2-tau2)/(2e0*tau2))**2 * H21 * (1.-H22) #could be bugged
   Phase1 = np.exp(1e0j*omega1*t+CEP1)
@@ -369,8 +367,8 @@ def generateWpiTables(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, tau
   
   print "Defining the laser pulse..."
   # t0 = 0e0
-  tmin = -3.5*tau+t0
-  tmax = 3.5*tau+t0
+  tmin = -1.*tau+t0
+  tmax =  1.*tau+t0
   #dt = 1E-17
   print "** Info: Number of time steps = "+str(int((tmax-tmin)/dt))+"."
   instants=np.arange(tmin,tmax,dt)
@@ -477,7 +475,7 @@ def plotPulseToDensity(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, ta
     #plt.figure()
     plt.figure(figsize=(15,15))
     plt.subplot(311)
-    plt.title(r"Gap = "+str(Egap/e)+" eV, $\lambda=$ "+str(wavelength*1E9)+r" nm, $\tau=$"+str(tau*xunit)+" "+timeunit+", "+r"$F_{max}=$"+str(FieldEnvelope.max())+" V/m"+r"$^{2}$")
+    plt.title(r"Gap = "+str(Egap/e)+" eV, $\lambda=$ "+str(wavelength*1E9)+r" nm, $\tau=$"+str(tau*xunit)+" "+timeunit+", "+r"$E_{max}=$"+str(FieldEnvelope.max()/1E9)+" V/nm"+r"$^{2}$")
     #plt.xlabel("Field (V/m)")
     #plt.xlabel("Time (ps)")
     plt.ylabel("Adiabadicity $\gamma$")

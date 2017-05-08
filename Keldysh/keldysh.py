@@ -22,26 +22,32 @@ meff=0.2226e0; #Effective mass of Si
 Ntotal=1.*5E28
 
 wavelength = 800e-9
-tau=10e-15; dt = 1E-18; CEP=0e0
-PeakFluence = 0.1*1E4 #J/cm2 * 1E4 = J/m2
+tau=10e-15; dt = 1E-17; CEP=0e0
+PeakFluence = 0.05*1E4 #J/cm2 * 1E4 = J/m2
 PeakField   = np.sqrt(2e0 * PeakFluence / (tau * c * epsilon_0))
 
 tmin=-1.*tau; tmax=1.*tau
 t0=0.
 
 instants = np.arange(tmin, tmax, dt)
+print "Time range: "+str(instants.min())+", "+str(instants.max())+"."
+
+# Test with a single pulse
 FieldEnvelope, RealField = PulseSquaredSinTemporalShape(instants, tau, PeakField, wavelength, CEP, t0)
 
-## BUG: bug is here in PulseSquaredSinTemporalShape! 
+# Test with a double pulse
+Delay = 0.
+#FieldEnvelope, RealField = PulseSquaredSinTemporalShapeDoublePulse(instants, tau, tau, PeakField, PeakField, wavelength, wavelength/2., CEP, CEP, t0, Delay)
 
-#plt.plot(instants, FieldEnvelope)
+#plt.plot(instants, RealField.real)
 #plt.show()
 #print FieldEnvelope
+#exit()
 
 order = 50
 ShowPlot = True
 
-timeKeldysh, N_Keldysh_SI, N_Gruzdev_SI = plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelope, dt, order, ShowPlot, 0e0, Ntotal)
+timeKeldysh, N_Keldysh_SI, N_Gruzdev_SI = plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelope.real, dt, order, ShowPlot, 0e0, Ntotal)
 
 # print "Checking dt convergence..."
 # plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, 1E-17, order, ShowPlot)

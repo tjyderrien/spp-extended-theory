@@ -270,8 +270,8 @@ def PulseSquaredSinTemporalShape(t, tau, PeakField, wavelength, CEP=0., t0=0., P
   Field = Envelope * Phase
   return Envelope, Field
 
-## Bi-color double pulse shapes [table of TotalEnvelope(time), TotalField(time)] evolution with time
-# Output: Total envelope <array>, total field <array>
+## Bi-color double pulse definition [table of TotalEnvelope(time), TotalField(time)] via evolution with time
+# Output: Total envelope <array>, total field <array> at a given space point. 
 # Construct the temporal shape of two-color laser pulses mixed together using a squared sinus law and a time delay. 
 # Pulses CAN be of different wavelengths! 
 # @param t: instants to output (can be a table)
@@ -287,9 +287,9 @@ def PulseSquaredSinTemporalShape(t, tau, PeakField, wavelength, CEP=0., t0=0., P
 # @param PulseDelay: delay between the amplitude maxima of pulse 1 and pulse 2 (seconds)
 def PulseSquaredSinTemporalShapeDoublePulse(t, tau1, tau2, Efield1, Efield2, wavelength1, wavelength2, CEP1, CEP2, t1=0., PulseDelay=0.):
   omega1=2.*pi*c/wavelength1; omega2=2.*pi*c/wavelength2
-  sigmaTau1 = sigmaFWHM(tau1); sigmaTau2 = sigmaFWHM(tau2) #good for purely gaussian pulse, mmh? 
-  t2 = t1 + PulseDelay #TODO: CHECK
-  H11        = step(t - t1 + tau1); H21 = step(t - t2 + tau2) #TODO: CHECK !!
+  #sigmaTau1 = sigmaFWHM(tau1); sigmaTau2 = sigmaFWHM(tau2) #good for purely gaussian pulse, mmh? 
+  t2 = t1 + PulseDelay
+  H11        = step(t - t1 + tau1); H21 = step(t - t2 + tau2)
   H12        = step(t - t1 - tau1); H22 = step(t - t2 - tau2)
   FieldEnv1     = Efield1*np.sin(pi*(t-t1-tau1)/(2e0*tau1))**2 * H11 * (1.-H12) #could be bugged
   FieldEnv2     = Efield2*np.sin(pi*(t-t2-tau2)/(2e0*tau2))**2 * H21 * (1.-H22) #could be bugged
@@ -298,9 +298,6 @@ def PulseSquaredSinTemporalShapeDoublePulse(t, tau1, tau2, Efield1, Efield2, wav
   #TotalEnvelope = np.sqrt( FieldEnv1*np.conj(FieldEnv1) + FieldEnv2*np.conj(FieldEnv2) + FieldEnv1*np.conj(FieldEnv2) * np.exp(1e0j*(omega1-omega2)*t) + np.conj(FieldEnv1)* FieldEnv2 * np.exp(1e0j*(omega2-omega1)*t) ) #complex square of the fields must provide the envelope
   TotalEnvelope = np.sqrt( FieldEnv1*np.conj(FieldEnv1) * np.exp(2.*CEP1) + FieldEnv2*np.conj(FieldEnv2) * np.exp(2.*CEP2) + FieldEnv1*np.conj(FieldEnv2) * np.exp(1e0j*(omega1-omega2)*t+CEP1+CEP2) + np.conj(FieldEnv1)* FieldEnv2 * np.exp(1e0j*(omega2-omega1)*t+CEP1+CEP2) ) #complex square of the fields must provide the envelope
   TotalField = FieldEnv1*Phase1 + FieldEnv2*Phase2
-  #Intensity1 = PulseSquaredSinTemporalShape(t, tau1, PeakIntensity1, wavelength1, t1, 0e0)
-  #Intensity2 = PulseSquaredSinTemporalShape(t, tau2, PeakIntensity2, wavelength2, t1, PulseDelay) #TODO: t1 ok? 
-  #intensity  = 0.5*c*epsilon_0*Field*np.conjugate(Field)
   return TotalEnvelope, TotalField
   
 ## Two-photon absorption probability from Bristow and Van Driel, 
@@ -474,8 +471,19 @@ def plotPulseToDensity(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, ta
 
     #plt.figure()
     plt.figure(figsize=(15,15))
-    plt.subplot(311)
-    plt.title(r"Gap = "+str(Egap/e)+" eV, $\lambda=$ "+str(wavelength*1E9)+r" nm, $\tau=$"+str(tau*xunit)+" "+timeunit+", "+r"$E_{max}=$"+str(FieldEnvelope.max()/1E9)+" V/nm"+r"$^{2}$")
+    
+    plt.subplot(411)
+    plt.title(r"Gap = "+str(Egap/e)+" eV, $\lambda=$ "+str(wavelength*1E9)+r" nm, $\tau=$"+str(tau*xunit)+" "+timeunit+", "+r"$E_{max}=$"+str(FieldEnvelope.max()/1E9)+" V/nm")
+    #plt.xlabel("Field (V/m)")
+    #plt.xlabel("Time (ps)")
+    plt.ylabel("Field envelope (V/m)")
+    plt.plot(xunit*instants[0:sizeGamma], FieldEnvelope, color="k", linestyle="-", label=r"Field envelope")
+    plt.grid()
+    # plt.loglog(Efield, 0.1, label="Tunnelling limit")
+    # plt.loglog(Efield, 10.*np.ones(), label="MPI limit")
+    plt.legend(loc=3)
+    
+    plt.subplot(412)
     #plt.xlabel("Field (V/m)")
     #plt.xlabel("Time (ps)")
     plt.ylabel("Adiabadicity $\gamma$")
@@ -485,7 +493,7 @@ def plotPulseToDensity(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, ta
     # plt.loglog(Efield, 10.*np.ones(), label="MPI limit")
     plt.legend(loc=3)
 
-    plt.subplot(312)
+    plt.subplot(413)
     #plt.xlabel("Field (V/m)")
     #plt.xlabel("Time (ps)")
     plt.ylabel("$w_{PI}$ (m$^{-3}$ s$^{-1}$)")
@@ -494,8 +502,8 @@ def plotPulseToDensity(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, ta
     plt.grid()
     plt.legend(loc=2)
 
-    plt.subplot(313)
-    plt.xlabel("Intensity (W/m$^{2}$)")
+    plt.subplot(414)
+    #plt.xlabel("Intensity (W/m$^{2}$)")
     plt.xlabel("Time ("+timeunit+")")
     # plt.xlabel("Field (V/m)")
     plt.ylabel("Density (m$^{-3}$)")
@@ -503,7 +511,7 @@ def plotPulseToDensity(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, ta
     plt.plot(instants[0:sizeGamma]*xunit, N_excited_Gruzdev, color="b", label="$n_e$ "+ShortRefGruzdev)
     plt.grid()
     plt.legend(loc=2)
-    plt.savefig("KeldyshAnalytic.eps") 
+    plt.savefig("KeldyshSimple.eps") 
   
   return instants, N_excited_Keldysh, N_excited_Gruzdev
 #}}}

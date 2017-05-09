@@ -254,10 +254,10 @@ def PulseGaussianTemporalShape(t, tau, PeakIntensity, t0=0.):
 ## Single pulse shape [table of peak_intensity(time)] evolution with time
 #
 # Defines the temporal shape of the laser pulse using a squared sinus law. 
-# Outputs: <Real envelope, complex field>
+# Outputs: <Array of real-valued field envelope, array of complex electric field>
 # @param t: instants to output (can be a table)
 # @param tau: pulse duration FWHM (s)
-# @param PeakField: peak of the electric field envelope (V/m)
+# @param PeakField: peak of the electric field envelope (V/m) (scalar only)
 # @param t0: central instant for the laser pulse (t0=0 by default)
 # @param PulseDelay: temporal delay between 2 pulses (in seconds)
 def PulseSquaredSinTemporalShape(t, tau, PeakField, wavelength, CEP=0., t0=0., PulseDelay=0.):
@@ -277,8 +277,8 @@ def PulseSquaredSinTemporalShape(t, tau, PeakField, wavelength, CEP=0., t0=0., P
 # @param t: instants to output (can be a table)
 # @param tau1: pulse 1 duration FWHM (s)
 # @param tau2: pulse 2 duration FWHM (s)
-# @param Efield1: pulse 1, peak field of the envelope (V/m)
-# @param Efield2: pulse 2, peak field of the envelope (V/m)
+# @param Efield1: pulse 1, (scalar) peak field of the envelope (V/m)
+# @param Efield2: pulse 2, (scalar) peak field of the envelope (V/m)
 # @param wavelength1: pulse 1, wavelength (meters)
 # @param wavelength2: pulse 2, wavelength (meters)
 # @param CEP1: pulse 1, carrier envelope phase
@@ -359,33 +359,34 @@ GenerateKeldyshDatabase                 = np.vectorize(GenerateKeldyshDatabase)
 # @param order: integration order for Keldysh model (integer, no unit)
 # @N_total: limiter for the ionizable number of electrons (float, m^{-3})
 def generateWpiTables(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, tau = 10e-15, FieldEnvelope = 1e9, dt = 1E-17, order = 50, N_total=5E28, t0=0.0): #{{{
+  Header="[libKeldysh] "
   ShortRefKeldysh = "[Keldysh (1964)]"
   ShortRefGruzdev = "[Gruzdev (2014)]"
   
-  print "Defining the laser pulse..."
+  print Header+"Defining the laser pulse..."
   # t0 = 0e0
   tmin = -1.*tau+t0
   tmax =  1.*tau+t0
   #dt = 1E-17
-  print "** Info: Number of time steps = "+str(int((tmax-tmin)/dt))+"."
+  print Header+" ** Info: Number of time steps = "+str(int((tmax-tmin)/dt))+"."
   instants=np.arange(tmin,tmax,dt)
 
   #Gaussian envelope
   #PulseEnvelope=PulseGaussianTemporalShape(instants, tau, Intensity, t0)
   #FieldEnvelope, PulseEnvelope = PulseSquaredSinTemporalShape(instants, tau, Intensity, wavelength, t0) #TODO: this should be generated outside this function
   IntensityEnvelope=FieldToIntensity(FieldEnvelope)
-  print "** Info: Peak intensity = "+str(np.max(IntensityEnvelope)/1E4)+" W/cm^2."
-  print "** Info: Peak field amplitude = "+str(np.max(FieldEnvelope)/1E9)+" V/nm."
+  print Header+"** Info: Peak intensity = "+str(np.max(IntensityEnvelope)/1E4)+" W/cm^2."
+  print Header+"** Info: Peak field amplitude = "+str(np.max(FieldEnvelope)/1E9)+" V/nm."
 
   #print "** Starting the self-consistent loop..."
 
   #for i in np.arange(1,50,1): #attempt of self consistent loop: divergent
   #print "** ITERATION "+str(i)
-  print "Computing Adiabadicity coefficients for the pulse envelope..."
+  print Header+"Computing Adiabadicity coefficients for the pulse envelope..."
   
   gamma = gammaKeldysh(Egap, meff, FieldEnvelope, wavelength) #valid for scalar|vector data
   #gamma = gammaKeldysh(EgapEff, meff, IntensityToField(PulseEnvelope), wavelength) #self-consistent, divergent
-  print "** Info: Adiabadicity parameter = "+str(gamma.min())+"."
+  print Header+"** Info: Adiabadicity parameter = "+str(gamma.min())+"."
 
   #print "Computing Keldysh1, Keldysh2..."
   k1 = Keldysh1(gamma); k2 = Keldysh2(gamma) #valid
@@ -394,22 +395,22 @@ def generateWpiTables(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, tau
   #order = 50
 
   print ""
-  print "** Info: Egap = "+str(Egap/e)+" eV, max[Ueff] = "+str(EgapEff.max()/e)+" eV."
+  print Header+"** Info: Egap = "+str(Egap/e)+" eV, max[Ueff] = "+str(EgapEff.max()/e)+" eV."
   print ""
 
   KeldyshFunctionResult  = KeldyshFunction( k1, k2, EgapEff, order, wavelength )
   KeldyshFunctionResultG = KeldyshFunction_Gruzdev( k1, k2, EgapEff, order, wavelength )
 
   #print "** End of self-consistent loop..."
-  print "Computes w_PI (Keldysh), and w_PIg (Gruzdev) for the pulse envelope..."
+  print Header+"Computes w_PI (Keldysh), and w_PIg (Gruzdev) for the pulse envelope..."
   wPI = IonizationRate(k1, k2, KeldyshFunctionResult, EgapEff, wavelength)
   wPIg = IonizationRate_Gruzdev(k1, k2, KeldyshFunctionResultG, EgapEff, wavelength)
-  print "w_PI until order "+str(order)+" = ", wPI.max()
+  print Header+"w_PI until order "+str(order)+" = ", wPI.max()
 
   #print "Developing: exporting the table..."
 
   print ""
-  print "Temporal integration..."
+  print Header+"Temporal integration..."
   
   # Temporal integration without limiter
   

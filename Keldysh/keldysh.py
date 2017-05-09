@@ -33,11 +33,11 @@ instants = np.arange(tmin, tmax, dt)
 print "Time range: "+str(instants.min())+", "+str(instants.max())+"."
 
 # Test with a single pulse
-#FieldEnvelope, RealField = PulseSquaredSinTemporalShape(instants, tau, PeakField, wavelength, CEP, t0)
+FieldEnvelope, RealField = PulseSquaredSinTemporalShape(instants, tau, PeakField, wavelength, CEP, t0)
 
 # Test with a double pulse
-Delay = 0.
-FieldEnvelope, RealField = PulseSquaredSinTemporalShapeDoublePulse(instants, tau, tau, PeakField, PeakField, wavelength, wavelength, CEP, CEP, t0, Delay)
+#Delay = 0.
+#FieldEnvelope, RealField = PulseSquaredSinTemporalShapeDoublePulse(instants, tau, tau, PeakField, PeakField, wavelength, wavelength, CEP, CEP, t0, Delay)
 
 #plt.plot(instants, RealField.real)
 #plt.show()

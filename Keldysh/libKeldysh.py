@@ -270,7 +270,7 @@ def PulseSquaredSinTemporalShape(t, tau, PeakField, wavelength, CEP=0., t0=0., P
   Field = Envelope * Phase
   return Envelope, Field
 
-## Bi-color double pulse definition [table of TotalEnvelope(time), TotalField(time)] via evolution with time
+## Bi-color double pulse [table of TotalEnvelope(time), TotalField(time)] evolution with time (POLARIZATION IS FOR NOW NEGLECTED!)
 # Output: Total envelope <array>, total field <array> at a given space point. 
 # Construct the temporal shape of two-color laser pulses mixed together using a squared sinus law and a time delay. 
 # Pulses CAN be of different wavelengths! 

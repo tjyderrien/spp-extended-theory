@@ -53,6 +53,10 @@ def FilterDatabaseLowerThan(SPPdb, query, FieldIndex):
   SPPdbFiltered = np.array(SPPdb[SPPdb[:,FieldIndex]<query,:]) #uses a table of booleans to select
   return SPPdbFiltered
 
+def FilterDatabaseGreaterThan(SPPdb, query, FieldIndex):
+  SPPdbFiltered = np.array(SPPdb[SPPdb[:,FieldIndex]>query,:]) #uses a table of booleans to select
+  return SPPdbFiltered
+
 ## Unfold data from database of materials (5 columns)
 def ExtractMaterialData(Database): #TODO: Think how to take data from continuous database directly instead of the ponctual file.
   Material1 = Database[:, 0]; BandGap = Database[:,1]; 

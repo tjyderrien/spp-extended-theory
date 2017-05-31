@@ -1,0 +1,46 @@
+All is solved in 2D real spaces.
+
+This equation has much much better convergence using scipy.optimize.root
+
+0 = f := (k1/eps1 - k2/eps2) * (k1/eps1 - k3/eps3) * cmath.exp(-2*k1*t) - (k1/eps1 + k2/eps2) * (k1/eps1 + k3/eps3)      
+
+where
+
+d := (k1/eps1 - k2/eps2) * (k1/eps1 - k3/eps3)
+
+is the original denominator. We then have to analyze roots where d is "near" 0 seperately (dirty definition).
+
+
+This is an example of what I can get currently (making 40000 initial guesses in a square [-10, 10]x[-10i, 10i] in the complex plane):
+
+Data:
+
+eps1 = -1 + 1i
+eps2 = 2 - 3i
+eps3 = 1 - 7i
+t = 1
+k0 = 2
+
+
+List of roots:
+
+Re(beta)     Im(beta)              abs(f)       abs(d)
+-1.426013566 -2.527562297i         +0.000000000 +5.063535313
+-1.395639323 -4.043034758i         +0.000000000 +13.915978878
++1.426013566 +2.527562297i         +0.000000000 +5.063535313
++1.395639323 +4.043034758i         +0.000000000 +13.915978878
+-0.910179732 -2.197368237i S       +0.000883740 +1.007770210
++0.910179696 +2.197368248i S       +0.001304560 +1.006899764
+-0.986699477 -6.772696069i         +0.000000000 +37.768566544
+-0.824800258 -9.819500312i         +0.000000001 +78.535761187
++0.986699477 +6.772696069i         +0.000000001 +37.768566544
++0.824800258 +9.819500312i         +0.000000001 +78.535761186
+
+It's kinda dirty so roots might be missing, might be duplicate, etc. All square roots signs in the definitions of k1, k2, k3 are +. There will probably be more solutions if the square of initial guesses is extended.
+
+
+Also, there are always 2 special solutions when k1 = 0, which is when
+
+beta = +/- sqrt(k_0^2 * eps1),
+
+they are marked S in the table.

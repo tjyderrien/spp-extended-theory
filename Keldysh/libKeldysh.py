@@ -242,7 +242,7 @@ def sigmaFWHM(FWHM):
 # Defines the temporal shape of the laser pulse using a Gaussian law. 
 # @param t: instant to output (can be a table)
 # @param tau: pulse duration (s)
-# @param intensity: peak intensity (W/m^2)
+# @param PeakIntensity: peak intensity (W/m^2)
 # @param t0: instant for the peak intensity (t0=0 by default)
 def PulseGaussianTemporalShape(t, tau, PeakIntensity, t0=0.):
   sigmaTau = sigmaFWHM(tau)
@@ -299,7 +299,7 @@ def PulseSquaredSinTemporalShapeDoublePulse(t, tau1, tau2, Efield1, Efield2, wav
   TotalEnvelope = np.sqrt( FieldEnv1*np.conj(FieldEnv1) * np.exp(2.*CEP1) + FieldEnv2*np.conj(FieldEnv2) * np.exp(2.*CEP2) + FieldEnv1*np.conj(FieldEnv2) * np.exp(1e0j*(omega1-omega2)*t+CEP1+CEP2) + np.conj(FieldEnv1)* FieldEnv2 * np.exp(1e0j*(omega2-omega1)*t+CEP1+CEP2) ) #complex square of the fields must provide the envelope
   TotalField = FieldEnv1*Phase1 + FieldEnv2*Phase2
   return TotalEnvelope, TotalField
-  
+
 ## Two-photon absorption probability from Bristow and Van Driel, 
 # Applied Physics Letters 90, 191104 (2007)
 def BristowLaw(wavelength, Egap):#{{{
@@ -368,7 +368,7 @@ def generateWpiTables(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, tau
   tmin = -1.*tau+t0
   tmax =  1.*tau+t0
   #dt = 1E-17
-  print Header+" ** Info: Number of time steps = "+str(int((tmax-tmin)/dt))+"."
+  print Header+"** Info: Number of time steps = "+str(int((tmax-tmin)/dt))+"."
   instants=np.arange(tmin,tmax,dt)
 
   #Gaussian envelope
@@ -446,7 +446,7 @@ def generateWpiTables(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, tau
 # @param dt (seconds): precision of the temporal envelope
 # @param order (adim): order of the integration (default: 50).
 def plotPulseToDensity(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, tau = 10e-15, FieldEnvelope = 1e9, dt = 1E-17, order = 50, ShowPlot=False, t0=0., N_total=5E28): #{{{
-
+  Header="[libKeldysh] "
   ShortRefKeldysh = "[Keldysh (1964)]"
   ShortRefGruzdev = "[Gruzdev (2014)]"
   #gamma = gammaKeldysh(Egap, meff, FieldEnvelope, wavelength)
@@ -457,15 +457,15 @@ def plotPulseToDensity(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, ta
   sizeGamma = len(gamma)
   
   print ""
-  print "** Warning: results may be not converged."
-  print "            Reduce dt, and increase order until convergence."
+  print Header+"** Warning: results may be not converged."
+  print Header+"            Reduce dt, and increase order until convergence."
   print ""
-  print "Maximum density N_ex "+ShortRefKeldysh+" = "+str(N_excited_Keldysh.max())+"."
-  print "Maximum density N_ex "+ShortRefGruzdev+" = "+str(N_excited_Gruzdev.max())+"."
+  print Header+"Maximum density N_ex "+ShortRefKeldysh+" = "+str(N_excited_Keldysh.max())+"."
+  print Header+"Maximum density N_ex "+ShortRefGruzdev+" = "+str(N_excited_Gruzdev.max())+"."
   print ""
 #  return N_excited_Gruzdev 
   if(ShowPlot): 
-    print "Plotting..."
+    print Header+"Plotting..."
 
     xunit = 1E15
     timeunit = "fs"
@@ -516,3 +516,65 @@ def plotPulseToDensity(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, ta
   
   return instants, N_excited_Keldysh, N_excited_Gruzdev
 #}}}
+
+##############################
+
+## Converts field CGS units (statV/cm) in SI (V/m).
+# @param CGS: input field in CGS units
+# Retuns the field in SI units (V/m).
+def Field_CGS_to_SI(CGS):
+  c_CGS      = c*1e2
+  conversion = 1E-6*c_CGS*1E2
+  return CGS/conversion
+
+## Converts a mass in g (CGS unit) to kg (SI)
+# @param CGS: mass in g (CGS unit)
+def Mass_CGS_to_SI(CGS):
+  return CGS * 1E-3
+
+## Converts an energy in ergs (CGS unit) to Joules (SI unit)
+# @param CGS: energy in ergs (CGS unit)
+def Energy_CGS_to_SI(CGS):
+  return CGS * 1E-7
+
+## Converts velocity in cm/s (CGS unit) to m/s (SI unit)
+# @param CGS: velocity in cm/s
+def Velocity_CGS_to_SI(CGS):
+  return CGS * 1E2
+
+## Converts velocity in m/s (SI unit) to cm/s (CGS unit)
+# @param SI: velocity in m/s
+def Velocity_SI_to_CGS(SI):
+  return SI * 1E-2
+
+## Converts electric charge in statC (CGS unit) to Coulombs (SI unit)
+def electric_charge_CGS_to_SI(CGS):
+  c_CGS = Velocity_SI_to_CGS(c)
+  return CGS / c_CGS #TODO: verify if consistent!
+
+## Interface for reading the files of Vladimir Zhukov
+# /!\ Vladimir uses adiabadicity coefficient for gas, which differs from a 1/sqrt(2) factor. 
+# /!\ Vladimir also uses CGS units. 
+# See the paper [Keldysh, L. Ionization in the field of a strong electromagnetic wave Journal of Experimental and Theoretical Physics, Lebedev Inst. of Physics, Moscow, 1964, 47, 5]
+# @param Egap: band gap value (Joules, SI)
+# @param meff: effective mass (no unit)
+# @param wavelength: wavelength of the photons (in meters, SI)
+# @param NormalizedPeakField: normalized field to be obtained in CGS
+def VZ_RenormalizeField_CGS(Egap, meff, wavelength, NormalizedPeakField):
+  #TODO: I think I inverted the conversions. Check again! 
+  # field for which gamma_VZ = 1. 
+  me_CGS = Mass_CGS_to_SI(m_e * meff) #[1 kg    (SI) = 1E3  g      (CGS) ]
+  Eg_CGS = Energy_CGS_to_SI(Egap)     #[1 J     (SI) = 1E7  ergs   (CGS) ]
+  c_CGS  = Velocity_CGS_to_SI(c)      #[1 [m/s] (SI) = 1E-2 cm/s   (CGS) ]
+  e_CGS  = electric_charge_CGS_to_SI(e) / c_CGS                  #[1 C     (SI) = c_CGS statC (CGS) ]
+  EfieldStar_VZ_CGS = 2.*me_CGS*omega**2*Eg_CGS/e_CGS**2 #gas formula for Keldysh parameter
+  EfieldStar_VZ_SI  = Field_CGS_to_SI(EfieldStar_VZ_CGS)
+  return EfieldStar_VZ_SI
+
+
+  
+  
+  
+  
+  
+  

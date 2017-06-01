@@ -36,12 +36,18 @@ def CleanStrArray(Material2): #{{{
 #}}}
 #print Material2clean
 
-
+## Exact (but any type) filter for the SPP database using any type of query to compare with the field number <index>. 
+# @param SPPdb: a numpy array of strings | integers | reals | complex
+# @param query: a string | integer | real | complex to compare with. 
+# @param FieldIndex: number of the field of interest #TODO: change for a dictionnary of fields
 def FilterDatabase(SPPdb, query, FieldIndex):
   SPPdbFiltered = np.array(SPPdb[SPPdb[:,FieldIndex]==query,:]) #uses a table of booleans to select
   return SPPdbFiltered
 
-## Filters the SPP database using query and returns a smaller database
+## Filter for the SPP database using a string <query> which should be *contained* in field of nmuber <index>. 
+# @param SPPdb: a numpy array of strings
+# @param query: a string to compare with
+# @param FieldIndex: number of the field of interest #TODO: change for a dictionnary of fields
 def FilterDatabaseContains(SPPdb, query, FieldIndex):
   SPPdbFiltered = SPPdb[np.array(np.core.defchararray.find(SPPdb[:,FieldIndex], query)==0),:]
   return SPPdbFiltered

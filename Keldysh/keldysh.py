@@ -30,7 +30,7 @@ tmin=-1.*tau; tmax=1.*tau
 t0=0.
 
 instants = np.arange(tmin, tmax, dt)
-print "Time range: "+str(instants.min())+", "+str(instants.max())+"."
+#print "Time range: "+str(instants.min())+", "+str(instants.max())+"."
 
 # Test with a single pulse
 FieldEnvelope, RealField = PulseSquaredSinTemporalShape(instants, tau, PeakField, wavelength, CEP, t0)

@@ -261,7 +261,7 @@ def PulseGaussianTemporalShape(t, tau, PeakIntensity, t0=0.):
 # @param t0: central instant for the laser pulse (t0=0 by default)
 # @param PulseDelay: temporal delay between 2 pulses (in seconds)
 def PulseSquaredSinTemporalShape(t, tau, PeakField, wavelength, CEP=0., t0=0., PulseDelay=0.):
-  t1 = t0
+  t1 = t0 + PulseDelay
   omega = 2e0*pi*c/wavelength
   H1 = step(t - t1 + tau) #! theer could be a mistake in pulse duration here!
   H2 = step(t - t1 - tau)
@@ -527,32 +527,58 @@ def Field_CGS_to_SI(CGS):
   conversion = 1E-6*c_CGS*1E2
   return CGS/conversion
 
+def Field_SI_to_CGS(SI):
+  c_CGS      = c*1e2
+  conversion = 1E-6*c_CGS*1E2
+  return SI*conversion
+
 ## Converts a mass in g (CGS unit) to kg (SI)
 # @param CGS: mass in g (CGS unit)
 def Mass_CGS_to_SI(CGS):
   return CGS * 1E-3
+
+## Converts a mass from kg (SI) to g (CGS unit)
+# @param SI: mass in kg (SI unit)
+def Mass_SI_to_CGS(SI):
+  return SI * 1E3
 
 ## Converts an energy in ergs (CGS unit) to Joules (SI unit)
 # @param CGS: energy in ergs (CGS unit)
 def Energy_CGS_to_SI(CGS):
   return CGS * 1E-7
 
-## Converts velocity in cm/s (CGS unit) to m/s (SI unit)
+## Converts an energy from Joules (SI unit) to ergs (CGS unit) 
+# @param SI: energy in Joules (SI unit)
+def Energy_SI_to_CGS(SI):
+  return SI / 1E-7
+
+## Converts velocity from m/s (SI unit) to cm/s (CGS unit)
 # @param CGS: velocity in cm/s
 def Velocity_CGS_to_SI(CGS):
   return CGS * 1E2
 
-## Converts velocity in m/s (SI unit) to cm/s (CGS unit)
+## Converts velocity from cm/s (CGS unit) to m/s (SI unit)
 # @param SI: velocity in m/s
 def Velocity_SI_to_CGS(SI):
-  return SI * 1E-2
+  return SI / 1E-2
 
-## Converts electric charge in statC (CGS unit) to Coulombs (SI unit)
+## Converts electric charge in statC (CGS unit) to Coulomb (SI unit)
 def electric_charge_CGS_to_SI(CGS):
   c_CGS = Velocity_SI_to_CGS(c)
   return CGS / c_CGS #TODO: verify if consistent!
 
-## Interface for reading the files of Vladimir Zhukov
+## Converts electric charge in Coulomb (SI unit) to statC (CGS unit)
+def electric_charge_SI_to_CGS(SI):
+  c_CGS = Velocity_SI_to_CGS(c)
+  return SI * c_CGS
+
+def Length_SI_to_CGS(SI):
+  return SI * 1e2
+
+def Length_CGS_to_SI(CGS):
+  return CGS / 1e2
+
+## Generates the normalization coefficients for electric field
 # /!\ Vladimir uses adiabadicity coefficient for gas, which differs from a 1/sqrt(2) factor. 
 # /!\ Vladimir also uses CGS units. 
 # See the paper [Keldysh, L. Ionization in the field of a strong electromagnetic wave Journal of Experimental and Theoretical Physics, Lebedev Inst. of Physics, Moscow, 1964, 47, 5]
@@ -560,19 +586,103 @@ def electric_charge_CGS_to_SI(CGS):
 # @param meff: effective mass (no unit)
 # @param wavelength: wavelength of the photons (in meters, SI)
 # @param NormalizedPeakField: normalized field to be obtained in CGS
-def VZ_RenormalizeField_CGS(Egap, meff, wavelength, NormalizedPeakField):
-  #TODO: I think I inverted the conversions. Check again! 
+def VZ_FieldNormalization(Egap, meff, wavelength):
+  # TODO: the function remains to be validated! 
   # field for which gamma_VZ = 1. 
-  me_CGS = Mass_CGS_to_SI(m_e * meff) #[1 kg    (SI) = 1E3  g      (CGS) ]
-  Eg_CGS = Energy_CGS_to_SI(Egap)     #[1 J     (SI) = 1E7  ergs   (CGS) ]
-  c_CGS  = Velocity_CGS_to_SI(c)      #[1 [m/s] (SI) = 1E-2 cm/s   (CGS) ]
-  e_CGS  = electric_charge_CGS_to_SI(e) / c_CGS                  #[1 C     (SI) = c_CGS statC (CGS) ]
-  EfieldStar_VZ_CGS = 2.*me_CGS*omega**2*Eg_CGS/e_CGS**2 #gas formula for Keldysh parameter
+  me_CGS = Mass_SI_to_CGS(m_e * meff) #[1 kg    (SI) = 1E3  g      (CGS) ]
+  Eg_CGS = Energy_SI_to_CGS(Egap)     #[1 J     (SI) = 1E7  ergs   (CGS) ]
+  c_CGS  = Velocity_SI_to_CGS(c)      #[1 [m/s] (SI) = 1E2 cm/s   (CGS) ]
+  e_CGS  = electric_charge_SI_to_CGS(e) / c_CGS  #[1 C     (SI) = c_CGS \times statC (CGS) ]
+  wavelength_CGS = Length_SI_to_CGS(wavelength)
+  omega_CGS = 2.*pi*c_CGS/wavelength_CGS
+  EfieldStar_VZ_CGS = np.sqrt(2.*me_CGS*omega_CGS**2 * Eg_CGS / e_CGS**2) #gas formula for Keldysh parameter
   EfieldStar_VZ_SI  = Field_CGS_to_SI(EfieldStar_VZ_CGS)
-  return EfieldStar_VZ_SI
+  return EfieldStar_VZ_SI, EfieldStar_VZ_CGS
 
+VZ_FieldNormalization = np.vectorize(VZ_FieldNormalization)
 
+## Interfaces bicolor tables of V. Zhukov bicolor Keldysh model with the laser parameters
+# Returns the W_PI coefficients from V. Zhukov model to be integrated in time for bi-color laser pulses
+def VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength1 = 800e-9, wavelength2 = 800e-9, Egap=2.56*e, meff=0.2226, tau1=10e-15, tau2=10e-15, Delay=0., dt = 1E-17, N_total=5E28, t0=0.0): #{{{
+  Header="[libKeldysh] "
   
+  print Header+"Defining the laser pulse..."
+  # t0 = 0e0
+  tmin = -1.*tau1+t0
+  tmax =  1.*tau2+t0 + Delay
+  
+  print Header+"** Info: Number of time steps = "+str(int((tmax-tmin)/dt))+"."
+  instants=np.arange(tmin,tmax,dt)
+  
+  # Printing info on the pulses
+  IntensityEnvelope1=FieldToIntensity(FieldEnvelope1)
+  print Header+"** Info: Peak intensity 1= "+str(np.max(IntensityEnvelope1)/1E4)+" W/cm^2."
+  print Header+"** Info: Peak field amplitude 1= "+str(np.max(FieldEnvelope1)/1E9)+" V/nm."
+  
+  IntensityEnvelope2=FieldToIntensity(FieldEnvelope2)
+  print Header+"** Info: Peak intensity 2= "+str(np.max(IntensityEnvelope2)/1E4)+" W/cm^2."
+  print Header+"** Info: Peak field amplitude 2= "+str(np.max(FieldEnvelope2)/1E9)+" V/nm."
+
+  # 0. Expressing FieldEnvelopes in CGS
+  FieldNormalizationCoeff1_SI, FieldNormalizationCoeff1_CGS = VZ_FieldNormalization(Egap, meff, wavelength1)
+  FieldNormalizationCoeff2_SI, FieldNormalizationCoeff2_CGS = VZ_FieldNormalization(Egap, meff, wavelength2)
+  
+  print Header+"** Normalization coefficient Field 1 [SI]: "+str(FieldNormalizationCoeff1_SI)
+  print Header+"** Normalization coefficient Field 1 [CGS]: "+str(FieldNormalizationCoeff1_CGS)
+  print Header+"** Normalization coefficient Field 2 [SI]: "+str(FieldNormalizationCoeff2_SI)
+  print Header+"** Normalization coefficient Field 2 [CGS]: "+str(FieldNormalizationCoeff2_CGS)
+  
+  # Normalize FieldEnvelope 1,2 in CGS. Vladimir requires normalized field1 and normalized field2 to deliver a W_PI. Note: his formula for gamma is the one for gas and does not account for optical Stark effect (increase of gap with field strength). #TODO: Why ? Stark effect also happens in gas. 
+  
+  FieldEnvelope1_CGS = Field_SI_to_CGS(FieldEnvelope1)
+  FieldEnvelope2_CGS = Field_SI_to_CGS(FieldEnvelope2)
+  
+  print Header+"Field1 [CGS] = "+str(FieldEnvelope1_CGS.max())
+  print Header+"Field2 [CGS] = "+str(FieldEnvelope2_CGS.max())
+  
+  FieldEnvelopeNormalized1_CGS = FieldEnvelope1_CGS / FieldNormalizationCoeff1_CGS
+  FieldEnvelopeNormalized2_CGS = FieldEnvelope2_CGS / FieldNormalizationCoeff2_CGS
+  
+  FieldEnvelopeNormalized1_SI = FieldEnvelope1 / FieldNormalizationCoeff1_SI
+  FieldEnvelopeNormalized2_SI = FieldEnvelope2 / FieldNormalizationCoeff2_SI
+  
+  print Header+"Normalized Field1 is now [CGS]: "+str(FieldEnvelopeNormalized1_CGS.max())
+  print Header+"Normalized Field2 is now [CGS]: "+str(FieldEnvelopeNormalized2_CGS.max())
+  print Header+"Normalized Field1 is now [SI]: "+str(FieldEnvelopeNormalized1_SI.max())
+  print Header+"Normalized Field2 is now [SI]: "+str(FieldEnvelopeNormalized2_SI.max())
+  print ""
+  print Header+"** Info: Egap = "+str(Egap/e)+" eV"
+  print ""
+
+  #print "** End of self-consistent loop..."
+  print Header+"Computes w_PI (Keldysh) for the bicolor pulse envelope..."
+  
+  print Header+"max(w_PI) = ", w_PI.max()
+
+  #print "Developing: exporting the table..."
+
+  print ""
+  print Header+"Temporal integration..."
+  
+  # Temporal integration without limiter
+  
+  # Just multiply array of w_PI by dt, with limited to Ntotal
+  #N_excited_Keldysh = dN_excited_Keldysh.cumsum()
+  #N_excited_Gruzdev = dN_excited_Gruzdev.cumsum()
+  
+  # Temporal integration with limiter
+  dN_excited_Zhukov = np.multiply(wPI, dt)
+  
+  # Initial number of electrons in conduction band
+  N_initial = np.zeros(wPI.shape)
+  
+  ExpArg_Zhukov = np.divide(dN_excited_Zhukov.cumsum(), N_total)
+  
+  N_excited_Zhukov = np.multiply( np.exp(-ExpArg_Zhukov), N_total * np.exp(ExpArg_Zhukov) - N_total + N_initial)
+  
+  #N_excited_Gruzdev = np.multiply( np.exp(-ExpArg_Gruzdev), N_total * np.exp(ExpArg_Gruzdev) - N_total + N_initial)
+  return instants, N_excited_Zhukov, wPI, wPIg
+#}}}
   
   
   

@@ -565,49 +565,71 @@ def Energy_CGS_to_SI(CGS):
 def Energy_SI_to_CGS(SI):
   return SI * 1E7
 
+## Converts electric charge in Coulomb (SI unit) to statC (CGS unit)
+# Validated on Jackson book: 1 C ~ 3E9 statC 
+def electric_charge_SI_to_CGS(SI):
+  c_CGS = Velocity_SI_to_CGS(c)
+  conversion = c_CGS / 10.
+  return SI * conversion
+
+## Converts electric charge in statC (CGS unit) to Coulomb (SI unit)
+# Validated on Jackson book: 1 C ~ 3E9 statC 
+def electric_charge_CGS_to_SI(CGS):
+  c_CGS = Velocity_SI_to_CGS(c)
+  conversion = c_CGS / 10.
+  return CGS / conversion
+
 ## Converts field CGS units (statV/cm) in SI (V/m).
 # @param CGS: input field in CGS units
 # Retuns the field in SI units (V/m).
-# 1 statV ~ 300 V
+# Jackson: 1 V/m ~ 1 / 3 * 1E-4 
+#                = 1E8 / c_SI * 1E-4 = 1E2 / c_SI
+#                = 1E6 / c_CGS
 def Field_CGS_to_SI(CGS):
   c_CGS      = Velocity_SI_to_CGS(c)
-  conversion = 1E6/c
+  conversion = 1E6 / c_CGS
   return CGS/conversion
 
+## Converts field SI units (V/m) to CGS units (statV/cm)
+# @param SI: input field in SI units (V/m)
+# Retuns the field in CGS units (statV/cm).
+# Jackson: 1 V/m ~ 1 / 3 * 1E-4 
+#                = 1E8 / c_SI * 1E-4 = 1E2 / c_SI
+#                = 1E6 / c_CGS
 def Field_SI_to_CGS(SI):
   c_CGS      = Velocity_SI_to_CGS(c) #[cm/s]
-  conversion = c_CGS
+  conversion = 1E6 / c_CGS
   return SI*conversion
-## Converts electric charge in statC (CGS unit) to Coulomb (SI unit)
-def electric_charge_CGS_to_SI(CGS):
-  c_CGS = Velocity_SI_to_CGS(c)
-  return CGS * c_CGS
 
-## Converts electric charge in Coulomb (SI unit) to statC (CGS unit)
-def electric_charge_SI_to_CGS(SI):
-  c_CGS = Velocity_SI_to_CGS(c)
-  return SI / c_CGS
+
 
 
 ## Generates the normalization coefficients for electric field
 # /!\ Vladimir uses adiabadicity coefficient for gas, which differs from a 1/sqrt(2) factor. 
 # /!\ Vladimir also uses CGS units. 
+# /!\ Vladimir neglects the effective mass to compute normalization of the field! #TODO Check with him!
 # See the paper [Keldysh, L. Ionization in the field of a strong electromagnetic wave Journal of Experimental and Theoretical Physics, Lebedev Inst. of Physics, Moscow, 1964, 47, 5]
 # @param Egap: band gap value (Joules, SI)
 # @param meff: effective mass (no unit)
 # @param wavelength: wavelength of the photons (in meters, SI)
 # @param NormalizedPeakField: normalized field to be obtained in CGS
 def VZ_FieldNormalization(Egap, meff, wavelength):
-  # TODO: the function remains to be validated! 
   # field for which gamma_VZ = 1. 
-  me_CGS = Mass_SI_to_CGS(m_e * meff) #[1 kg    (SI) = 1E3  g      (CGS) ]
+  meff = 1e0 #TODO: ask vladimir if this is fine. 
+  me_CGS = Mass_SI_to_CGS(m_e) * meff #[1 kg    (SI) = 1E3  g      (CGS) ]
   Eg_CGS = Energy_SI_to_CGS(Egap)     #[1 J     (SI) = 1E7  ergs   (CGS) ]
   c_CGS  = Velocity_SI_to_CGS(c)      #[1 [m/s] (SI) = 1E2 cm/s   (CGS) ]
   e_CGS  = electric_charge_SI_to_CGS(e)  #[1 C     (SI) = c_CGS \times statC (CGS) ]
   wavelength_CGS = Length_SI_to_CGS(wavelength)
   omega_CGS = 2.*pi*c_CGS/wavelength_CGS #should be equal to SI
-  EfieldStar_VZ_CGS = np.sqrt(2.*me_CGS*omega_CGS**2 * Eg_CGS / e_CGS**2) #gas formula for Keldysh parameter
-  EfieldStar_VZ_SI  = Field_CGS_to_SI(EfieldStar_VZ_CGS)
+  omega_SI  = 2.*pi*c    /wavelength #SI
+  if(omega_CGS != omega_SI):
+    print "Error on omega_CGS"
+    exit()
+  EfieldStar_VZ_CGS = np.sqrt(2. * omega_CGS**2 / e_CGS**2 * me_CGS * Eg_CGS) #gas formula for Keldysh parameter
+  EfieldStar_VZ_SI  = np.sqrt(2. * omega_SI**2 / e**2 * m_e * meff * Egap)
+  #print EfieldStar_VZ_SI
+  #Field_CGS_to_SI(EfieldStar_VZ_CGS)
   return EfieldStar_VZ_SI, EfieldStar_VZ_CGS
 
 VZ_FieldNormalization = np.vectorize(VZ_FieldNormalization)

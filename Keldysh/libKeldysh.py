@@ -654,7 +654,9 @@ def VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength1 = 800e-9, w
   print Header+"** Info: Egap = "+str(Egap/e)+" eV"
   print ""
 
-  #print "** End of self-consistent loop..."
+  print Header+"** Selecting the right database..."
+  #TODO: I stopped here on 1st June 2017
+  Dictionnary={'': '', }
   print Header+"Computes w_PI (Keldysh) for the bicolor pulse envelope..."
   
   print Header+"max(w_PI) = ", w_PI.max()

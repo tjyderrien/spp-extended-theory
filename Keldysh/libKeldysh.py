@@ -519,64 +519,75 @@ def plotPulseToDensity(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, ta
 
 ##############################
 
-## Converts field CGS units (statV/cm) in SI (V/m).
-# @param CGS: input field in CGS units
-# Retuns the field in SI units (V/m).
-def Field_CGS_to_SI(CGS):
-  c_CGS      = c*1e2
-  conversion = 1E-6*c_CGS*1E2
-  return CGS/conversion
+## Convert length units from CGS to SI
+# Validated on https://en.wikipedia.org/wiki/Centimetre%E2%80%93gram%E2%80%93second_system_of_units#Electromagnetic_units_in_various_CGS_systems
+def Length_CGS_to_SI(CGS):
+  return CGS / 1e2
 
-def Field_SI_to_CGS(SI):
-  c_CGS      = c*1e2
-  conversion = 1E-6*c_CGS*1E2
-  return SI*conversion
+## Convert length units from SI to CGS
+# Validated on https://en.wikipedia.org/wiki/Centimetre%E2%80%93gram%E2%80%93second_system_of_units#Electromagnetic_units_in_various_CGS_systems
+def Length_SI_to_CGS(SI):
+  return SI * 1e2
 
 ## Converts a mass in g (CGS unit) to kg (SI)
 # @param CGS: mass in g (CGS unit)
+# Validated on https://en.wikipedia.org/wiki/Centimetre%E2%80%93gram%E2%80%93second_system_of_units#Electromagnetic_units_in_various_CGS_systems
 def Mass_CGS_to_SI(CGS):
   return CGS * 1E-3
 
 ## Converts a mass from kg (SI) to g (CGS unit)
 # @param SI: mass in kg (SI unit)
+# Validated on https://en.wikipedia.org/wiki/Centimetre%E2%80%93gram%E2%80%93second_system_of_units#Electromagnetic_units_in_various_CGS_systems
 def Mass_SI_to_CGS(SI):
   return SI * 1E3
 
+## Converts velocity from cm/s (CGS unit) tp m/s (SI unit)
+# @param CGS: velocity in cm/s
+# Validated on https://en.wikipedia.org/wiki/Centimetre%E2%80%93gram%E2%80%93second_system_of_units#Electromagnetic_units_in_various_CGS_systems
+def Velocity_CGS_to_SI(CGS):
+  return CGS / 1E2
+
+## Converts velocity from m/s (SI unit) to cm/s (CGS unit)
+# @param SI: velocity in m/s
+# Validated on https://en.wikipedia.org/wiki/Centimetre%E2%80%93gram%E2%80%93second_system_of_units#Electromagnetic_units_in_various_CGS_systems
+def Velocity_SI_to_CGS(SI):
+  return SI * 1E2
+
 ## Converts an energy in ergs (CGS unit) to Joules (SI unit)
 # @param CGS: energy in ergs (CGS unit)
+# Validated on https://en.wikipedia.org/wiki/Centimetre%E2%80%93gram%E2%80%93second_system_of_units#Electromagnetic_units_in_various_CGS_systems
 def Energy_CGS_to_SI(CGS):
-  return CGS * 1E-7
+  return CGS / 1E7
 
 ## Converts an energy from Joules (SI unit) to ergs (CGS unit) 
 # @param SI: energy in Joules (SI unit)
+# Validated on https://en.wikipedia.org/wiki/Centimetre%E2%80%93gram%E2%80%93second_system_of_units#Electromagnetic_units_in_various_CGS_systems
 def Energy_SI_to_CGS(SI):
-  return SI / 1E-7
+  return SI * 1E7
 
-## Converts velocity from m/s (SI unit) to cm/s (CGS unit)
-# @param CGS: velocity in cm/s
-def Velocity_CGS_to_SI(CGS):
-  return CGS * 1E2
+## Converts field CGS units (statV/cm) in SI (V/m).
+# @param CGS: input field in CGS units
+# Retuns the field in SI units (V/m).
+# 1 statV ~ 300 V
+def Field_CGS_to_SI(CGS):
+  c_CGS      = Velocity_SI_to_CGS(c)
+  conversion = 1E-6*c_CGS*1E2
+  return CGS/conversion
 
-## Converts velocity from cm/s (CGS unit) to m/s (SI unit)
-# @param SI: velocity in m/s
-def Velocity_SI_to_CGS(SI):
-  return SI / 1E-2
-
+def Field_SI_to_CGS(SI):
+  c_CGS      = Velocity_SI_to_CGS(c)
+  conversion = 1E-6*c_CGS*1E2
+  return SI*conversion
 ## Converts electric charge in statC (CGS unit) to Coulomb (SI unit)
 def electric_charge_CGS_to_SI(CGS):
   c_CGS = Velocity_SI_to_CGS(c)
-  return CGS / c_CGS #TODO: verify if consistent!
+  return CGS * c_CGS
 
 ## Converts electric charge in Coulomb (SI unit) to statC (CGS unit)
 def electric_charge_SI_to_CGS(SI):
   c_CGS = Velocity_SI_to_CGS(c)
-  return SI * c_CGS
+  return SI / c_CGS
 
-def Length_SI_to_CGS(SI):
-  return SI * 1e2
-
-def Length_CGS_to_SI(CGS):
-  return CGS / 1e2
 
 ## Generates the normalization coefficients for electric field
 # /!\ Vladimir uses adiabadicity coefficient for gas, which differs from a 1/sqrt(2) factor. 
@@ -592,9 +603,9 @@ def VZ_FieldNormalization(Egap, meff, wavelength):
   me_CGS = Mass_SI_to_CGS(m_e * meff) #[1 kg    (SI) = 1E3  g      (CGS) ]
   Eg_CGS = Energy_SI_to_CGS(Egap)     #[1 J     (SI) = 1E7  ergs   (CGS) ]
   c_CGS  = Velocity_SI_to_CGS(c)      #[1 [m/s] (SI) = 1E2 cm/s   (CGS) ]
-  e_CGS  = electric_charge_SI_to_CGS(e) / c_CGS  #[1 C     (SI) = c_CGS \times statC (CGS) ]
+  e_CGS  = electric_charge_SI_to_CGS(e)  #[1 C     (SI) = c_CGS \times statC (CGS) ]
   wavelength_CGS = Length_SI_to_CGS(wavelength)
-  omega_CGS = 2.*pi*c_CGS/wavelength_CGS
+  omega_CGS = 2.*pi*c_CGS/wavelength_CGS #should be equal to SI
   EfieldStar_VZ_CGS = np.sqrt(2.*me_CGS*omega_CGS**2 * Eg_CGS / e_CGS**2) #gas formula for Keldysh parameter
   EfieldStar_VZ_SI  = Field_CGS_to_SI(EfieldStar_VZ_CGS)
   return EfieldStar_VZ_SI, EfieldStar_VZ_CGS

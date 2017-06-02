@@ -571,12 +571,12 @@ def Energy_SI_to_CGS(SI):
 # 1 statV ~ 300 V
 def Field_CGS_to_SI(CGS):
   c_CGS      = Velocity_SI_to_CGS(c)
-  conversion = 1E-6*c_CGS*1E2
+  conversion = 1E6/c
   return CGS/conversion
 
 def Field_SI_to_CGS(SI):
-  c_CGS      = Velocity_SI_to_CGS(c)
-  conversion = 1E-6*c_CGS*1E2
+  c_CGS      = Velocity_SI_to_CGS(c) #[cm/s]
+  conversion = c_CGS
   return SI*conversion
 ## Converts electric charge in statC (CGS unit) to Coulomb (SI unit)
 def electric_charge_CGS_to_SI(CGS):

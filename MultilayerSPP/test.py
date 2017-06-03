@@ -2,7 +2,7 @@ import cmath
 import numpy as np
 
 import matplotlib.pyplot as plt
-from scipy.optimize import root, fsolve
+from scipy.optimize import root
 from scipy.linalg import norm
 from itertools import product
 
@@ -14,59 +14,77 @@ k0 = 1
 t = 1
 
 #guess area
-x_start = -5
-x_stop = 5
-x_steps = 50
+step = .01
 
-y_start = -5
-y_stop = 5
-y_steps = 50
+x_min = -2
+x_max = 2
+x_steps = 60#round((x_max - x_min)/step)
+
+y_min = -13
+y_max = 13
+y_steps = 300#round((y_max - y_min)/step)
 
 #tolerances
-t_true = .01
-t_sim = 1e-3
+t_sim = 1e-7
 
-def disp(betaR, new):
-    betaC = betaR[0] + betaR[1]*1j
-    k1 = sgn1*cmath.sqrt(betaC*betaC - k0*k0*eps1)
-    k2 = sgn2*cmath.sqrt(betaC*betaC - k0*k0*eps2)
-    k3 = sgn3*cmath.sqrt(betaC*betaC - k0*k0*eps3)
+def func(betaR):
+    beta = betaR[0] + betaR[1]*1j
+    k1 = sgn1*cmath.sqrt(beta*beta - k0*k0*eps1)
+    k2 = sgn2*cmath.sqrt(beta*beta - k0*k0*eps2)
+    k3 = sgn3*cmath.sqrt(beta*beta - k0*k0*eps3)
 
-    if new:
-        try:
-            out = (k1/eps1 - k2/eps2) * (k1/eps1 - k3/eps3) * cmath.exp(-2*k1*t) - (k1/eps1 + k2/eps2) * (k1/eps1 + k3/eps3)
-        except:
-            out = 1e20
-    else:
-        try:
-            out = cmath.exp(-2*k1*t) - ((k1/eps1 + k2/eps2) * (k1/eps1 + k3/eps3))/((k1/eps1 - k2/eps2) * (k1/eps1 - k3/eps3))
-        except:
-            out = 1e20        
+    try:
+        out = (k1/eps1 - k2/eps2) * (k1/eps1 - k3/eps3) * cmath.exp(-2*k1*t) - (k1/eps1 + k2/eps2) * (k1/eps1 + k3/eps3)
+    except:
+        out = 1e20
     return [out.real, out.imag]
 
-print('Guess area is a rectangle in the complex plane: [%s, %s]x[%si, %si], x_steps = %s, y_steps = %s' % (x_start, x_stop, y_start, y_stop, x_steps, y_steps))
+##    try:
+##        outj = - (k1/eps1 + k3/eps3)*(beta/(k1*eps1) + beta/(k2*eps2)) - (k1/eps1 + k2/eps2)*(beta/(k1*eps1) + beta/(k3*eps3))
+##        + cmath.exp(-2*k1*t)*(
+##            (k1/eps1 - k3/eps3)*(beta/(k1*eps1) - beta/(k2*eps2))
+##            + (k1/eps1 - k2/eps2)*(beta/(k1*eps1) - beta/(k3*eps3))
+##            - 2*beta*t*(k1/eps1 - k2/eps2)*(k1/eps1 - k3/eps3)/k1
+##            )
+##        
+##    except:
+##        outj = 1e20
+
+     #, np.array([[outj.real, (1j*outj).real], [outj.imag, (1j*outj).imag]])]
+
+print('Guess area is a rectangle: [%f, %f]x[%fi, %fi], x_steps = %d, y_steps = %d' % (x_min, x_max, y_min, y_max, x_steps, y_steps))
 print()
 mroots = []
 for sgn1, sgn2, sgn3 in product((-1,1), (-1,1), (-1,1)):
     roots = []
-    print('Branch:', ('%+d' % sgn1)[0]+('%+d' % sgn2)[0]+('%+d' % sgn3)[0])
-    print('Re(beta)        Im(beta)             Abs(new form)   Abs(old form)')
-    for x in np.linspace(x_start, x_stop, num=x_steps):
-        for y in np.linspace(y_start, y_stop, num=y_steps):
-            nrt = root(disp, [x, y], args=(True,), method='hybr')
+    out = []
+    print('Branch: [%s][%s][%s]' % (('%+d' % sgn1)[0], ('%+d' % sgn2)[0], ('%+d' % sgn3)[0]))
+    for x in np.linspace(x_min, x_max, num=x_steps):
+        for y in np.linspace(y_min, y_max, num=y_steps):
+            nrt = root(func, [x, y], method='hybr', tol=1e-14)
             if nrt.success:
-                new = True
-                if norm(disp(nrt.x, True)) > t_true:
-                    new = False
-                for rt in roots:
-                    if norm(rt - nrt.x) < t_sim:
-                        new = False
-                if new:
-                    roots.append(nrt.x)
-                    print('%+.12f' % nrt.x[0], '%+.12fi' % nrt.x[1], '   ', '%+.12f' % norm(disp(nrt.x, True)), '%+.12f' % norm(disp(nrt.x, False)))
-    print('Total:', len(roots))
+                roots.append(nrt.x)
+
+    while len(roots) > 0:
+        cntr = roots[0]
+        same = [cntr]
+        nrest = []
+
+        for rt in roots[1:]:
+            if norm(rt - cntr, 1) < t_sim:
+                same.append(rt)
+                cntr = np.mean(same, axis = 0)
+            else:
+                nrest.append(rt)
+
+        out.append(cntr)
+        roots = list(nrest)
+
+    for rt in out:
+        print('%+2.15f %+2.15f    %+2.15f %+2.15f' % (rt[0], rt[1], func(rt)[0], func(rt)[1]))
+    print('Total: %d' % len(out))
     print()
-    mroots.append(roots)
+    mroots.append(out)
 
 ##a = cmath.sqrt(eps1*k0*k0)
 ##plt.plot((a.real, -a.real), (a.imag, -a.imag), 'r')

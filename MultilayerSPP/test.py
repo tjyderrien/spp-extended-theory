@@ -24,18 +24,19 @@ k0 = 2*pi/wavelength
 t = 10e-9 #in meters
 
 #guess area
-step = .01
+delta = .01
 
 x_min = -1E9 #real part of beta
 x_max = 1E9
-x_steps = 60  #round((x_max - x_min)/step)
+x_steps = 10 #round((x_max - x_min)/delta)
 
 y_min = -1E9
 y_max = 1E9
-y_steps = 300#round((y_max - y_min)/step)
+y_steps = 10 #round((y_max - y_min)/delta)
 
 #tolerances
-t_sim = 1e-1
+t_root = 1E-14
+t_sim = 10
 
 def func(betaR):
     beta = betaR[0] + betaR[1]*1j
@@ -62,16 +63,16 @@ def func(betaR):
 
      #, np.array([[outj.real, (1j*outj).real], [outj.imag, (1j*outj).imag]])]
 
-print('Guess area is a rectangle: [%f, %f]x[%fi, %fi], x_steps = %d, y_steps = %d' % (x_min, x_max, y_min, y_max, x_steps, y_steps))
+print('Guess area is a rectangle: [%s, %s]x[%si, %si], x_steps = %d, y_steps = %d' % (x_min, x_max, y_min, y_max, x_steps, y_steps))
 print()
-mroots = []
+broots = []
 for sgn1, sgn2, sgn3 in product((-1,1), (-1,1), (-1,1)):
     roots = []
     out = []
     print('Branch: [%s][%s][%s]' % (('%+d' % sgn1)[0], ('%+d' % sgn2)[0], ('%+d' % sgn3)[0]))
     for x in np.linspace(x_min, x_max, num=x_steps):
         for y in np.linspace(y_min, y_max, num=y_steps):
-            nrt = root(func, [x, y], method='hybr', tol=1e-14)
+            nrt = root(func, [x, y], method='hybr', tol=t_root)
             if nrt.success:
                 roots.append(nrt.x)
 
@@ -91,21 +92,18 @@ for sgn1, sgn2, sgn3 in product((-1,1), (-1,1), (-1,1)):
         roots = list(nrest)
 
     for rt in out:
-        print('%+2.15f %+2.15f    %+2.15f %+2.15f' % (rt[0], rt[1], func(rt)[0], func(rt)[1]))
+        print('%+.20g %+.20g    %+.20g %+.20g' % (rt[0], rt[1], func(rt)[0], func(rt)[1]))
     print('Total: %d' % len(out))
     print()
-    mroots.append(out)
+    broots.append(out)
 
 ##a = cmath.sqrt(eps1*k0*k0)
 ##plt.plot((a.real, -a.real), (a.imag, -a.imag), 'r')
-plt.scatter(*zip(*mroots[0]), c='red')
-plt.scatter(*zip(*mroots[1]), c='green')
-plt.scatter(*zip(*mroots[2]), c='blue')
-plt.scatter(*zip(*mroots[3]), c='black')
-plt.scatter(*zip(*mroots[4]), c='magenta')
-plt.scatter(*zip(*mroots[5]), c='cyan')
-plt.scatter(*zip(*mroots[6]), c='lime')
-plt.scatter(*zip(*mroots[7]), c='orangered')
+
+colors = ['red', 'green', 'blue', 'black', 'magenta', 'cyan', 'lime', 'orangered']
+for rts, col in zip(broots, colors):
+    plt.scatter(*zip(*rts), c=col)
+
 plt.xlabel('Re')
 plt.ylabel('Im')
 plt.grid()

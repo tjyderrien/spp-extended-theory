@@ -5,27 +5,37 @@ import matplotlib.pyplot as plt
 from scipy.optimize import root
 from scipy.linalg import norm
 from itertools import product
+from libMaterials import Drude
+
+pi = 2.*np.arcsin(1.0)
 
 #data
-eps1 = 1 + 1j
-eps2 = 3 + 1j
-eps3 = 1 + 3j
-k0 = 1
-t = 1
+wavelength = 800e-9
+ne=5E27 #(m^-3) quantity of electrons in conduction band
+nu = (1.1E-15)**-1 #collision time between conduction band electrons
+meff = 0.18
+
+epsilon=13.64+0.048j
+eps2 = 1.+0.j       #environment
+eps3 = 13.64+0.048j #substrate Si (no excitation)
+eps1 = Drude(wavelength, ne, eps3, nu, meff)
+
+k0 = 2*pi/wavelength
+t = 10e-9 #in meters
 
 #guess area
 step = .01
 
-x_min = -2
-x_max = 2
-x_steps = 60#round((x_max - x_min)/step)
+x_min = -1E9 #real part of beta
+x_max = 1E9
+x_steps = 60  #round((x_max - x_min)/step)
 
-y_min = -13
-y_max = 13
+y_min = -1E9
+y_max = 1E9
 y_steps = 300#round((y_max - y_min)/step)
 
 #tolerances
-t_sim = 1e-7
+t_sim = 1e-1
 
 def func(betaR):
     beta = betaR[0] + betaR[1]*1j
@@ -96,5 +106,8 @@ plt.scatter(*zip(*mroots[4]), c='magenta')
 plt.scatter(*zip(*mroots[5]), c='cyan')
 plt.scatter(*zip(*mroots[6]), c='lime')
 plt.scatter(*zip(*mroots[7]), c='orangered')
-
+plt.xlabel('Re')
+plt.ylabel('Im')
+plt.grid()
+plt.savefig('betaSolution.eps')
 plt.show()

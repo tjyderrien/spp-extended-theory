@@ -705,15 +705,38 @@ def VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength1 = 800e-9, w
     print Header+"Path: "+VZ_basename
     
   elif((wavelength1 == 800e-9 and wavelength2 == 1030e-9) or (wavelength1 == 1030e-9 and wavelength2 == 800e-9)): 
+    #TODO: the two sets could be inverted! Therefore data should be swept. 
     Dictionnary={'FieldSquared': 0, 'wpi': 1, 'energy': 2, 'log10wpi': 3, 'FieldSquaredLog10': 4} #Bichromatic case
     DataFolder  = 'Zhukov/800x1030/'
     DataFileName={'E2=0': DataFolder+'DLG800raEE2(1030)=0.dat', 'E2=0.2-phi=0': DataFolder+'DLG800raEE(1030)=0_2fi=0.dat', 'E2=1-phi=0': DataFolder+'DLG800raEE(1030)=1fi=0.dat', 'E2=2-phi=0': 'DLG800raEE(1030)=2fi=0.dat', 'E2=2-phi=pi/2': 'DLG800raEE(1030)=2fi=Pina2.dat'}
-    # TODO: selectors for various parameters are missing here. 
+    # The case FieldSquared(wavelength2)=0 is available, but not used. Should be compared to single wavelength case for validation of the bicolor cases. 
+    if(FieldEnvelopeNormalized2_CGS == 0.2 and CEP2==0.):
+      VZ_basename = DataFileName['E2=0.2-phi=0']
+    elif(FieldEnvelopeNormalized2_CGS == 1.0 and CEP2 == 0.):
+      VZ_basename = DataFileName['E2=1-phi=0']
+    elif(FieldEnvelopeNormalized2_CGS == 2.0 and CEP2 == 0.): 
+      VZ_basename = DataFileName['E2=2-phi=0']
+    elif(FieldEnvelopeNormalized2_CGS == 2.0 and CEP2 == pi/2.):
+      VZ_basename = DataFileName['E2=2-phi=pi/2']
+    else: 
+      print Header+"Fields value are not available for 1030x800 nm. Inputting the normalized field would be easier to access Vladimir's data? "
+      exit()
   elif((wavelength1 == 400e-9 and wavelength2 == 2*wavelength1) or (wavelength1 == 800e-9 and wavelength2 == wavelength1/2.)):
+    #TODO: the two sets could be inverted! 
     Dictionnary={'FieldSquared': 0, 'wpi': 1, 'energy': 2, 'log10wpi': 3, 'FieldSquaredLog10': 4} #Bichromatic case
     DataFolder  = 'Zhukov/800x400/'
     DataFileName={'E2=2-phi=0': DataFolder+'DLGEE(800)=2fi=0.dat', 'E2=2-phi=pi/3': DataFolder+'DLGEE(800)=2fi=pina3.dat', 'E2=2-phi=pi/4': DataFolder+'DLGEE(800)=2fi=pina4.dat', 'E2=1-phi=pi/4': 'DLGEE(800)=2fi=pina4.dat', 'E2=0.2-phi=pi/4': 'DLGEE(800)=0_2fi=pina4.dat'}
-    # TODO: selectors for various parameters are missing here. 
+    if(FieldEnvelopeNormalized2_CGS == 2.0 and CEP2==0.):
+      VZ_basename = DataFileName['E2=2-phi=0']
+    elif(FieldEnvelopeNormalized2_CGS == 2.0 and CEP2 == pi/3.):
+      VZ_basename = DataFileName['E2=2-phi=pi/3']
+    elif(FieldEnvelopeNormalized2_CGS == 2.0 and CEP2 == pi/4.): 
+      VZ_basename = DataFileName['E2=2-phi=pi/4']
+    elif(FieldEnvelopeNormalized2_CGS == 1.0 and CEP2 == pi/4.):
+      VZ_basename = DataFileName['E2=1-phi=pi/4']
+    else: 
+      print Header+"Fields value are not available for 1030x800 nm. Inputting the normalized field would be easier to access Vladimir's data? "
+      exit()
   else:
     print Header+"THIS COMBINATION OF WAVES IS NOT AVAILABLE. Please kindly ask the corresponding data to Prof. Vladimir Zhukov, zukov@ict.nsc.ru."
     exit()

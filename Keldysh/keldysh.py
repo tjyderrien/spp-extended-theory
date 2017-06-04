@@ -21,10 +21,10 @@ Egap = 2.56e0*e; #LDA band gap of Si: 2.58 eV. #1.12e0*e for indirect band gap;
 meff=0.2226e0; #Effective mass of Si
 Ntotal=1.*5E28
 
-wavelength = 800e-9; wavelenth2 = 1600e-9
+wavelength = 800e-9; wavelength2 = 1030e-9
 tau=10e-15; dt = 1E-17; CEP=0e0
 PeakFluence = 0.01*1E4 #J/cm2 * 1E4 = J/m2
-PeakField   = np.sqrt(2e0 * PeakFluence / (tau * c * epsilon_0))
+PeakField   = 4655327068.03 # np.sqrt(2e0 * PeakFluence / (tau * c * epsilon_0))
 
 t0=0. #defines the instant 0.
 Delay = 0. #delay between maxima of the pulses
@@ -35,13 +35,13 @@ instants = np.arange(tmin, tmax, dt)
 
 PeakField2  = PeakField #/ 2.
 CEP2        = 0. #pi/3.
-wavelength2 = wavelength
+#wavelength2 = wavelength
 
 # Test with a single pulse centered on 0
 FieldEnvelope1, RealField1 = PulseSquaredSinTemporalShape(instants, tau, PeakField, wavelength, CEP, t0, 0.)
 
 # We build a second pulse with a delay
-FieldEnvelope2, RealField2 = PulseSquaredSinTemporalShape(instants, tau, PeakField2, wavelength, CEP, t0, Delay)
+FieldEnvelope2, RealField2 = PulseSquaredSinTemporalShape(instants, tau, PeakField2, wavelength2, CEP, t0, Delay)
 
 print "# Test with a bicolor double pulse"
 
@@ -59,7 +59,7 @@ plt.savefig('PulseEnvelopes.png')
 #plt.show()
 
 print "Computing the W_PI values..."
-wPI_Zhukov = VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength, wavelength2, Egap, meff, tau, tau, Delay, dt, Ntotal, t0)
+wPI_Zhukov = VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength, wavelength2, CEP, CEP2, Egap, meff, tau, tau, Delay, dt, Ntotal, t0)
 
 exit()
 

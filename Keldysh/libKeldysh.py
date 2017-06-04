@@ -635,7 +635,7 @@ VZ_FieldNormalization = np.vectorize(VZ_FieldNormalization)
 
 ## Interfaces bicolor tables of V. Zhukov bicolor Keldysh model with the laser parameters
 # Returns the W_PI coefficients from V. Zhukov model to be integrated in time for bi-color laser pulses
-def VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength1 = 800e-9, wavelength2 = 800e-9, Egap=2.56*e, meff=0.2226, tau1=10e-15, tau2=10e-15, Delay=0., dt = 1E-17, N_total=5E28, t0=0.0): #{{{
+def VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength1 = 800e-9, wavelength2 = 800e-9, CEP1=0., CEP2=0., Egap=2.56*e, meff=0.2226, tau1=10e-15, tau2=10e-15, Delay=0., dt = 1E-17, N_total=5E28, t0=0.0): #{{{
   Header="[libKeldysh] "
   
   print Header+"Defining the laser pulse..."
@@ -648,10 +648,12 @@ def VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength1 = 800e-9, w
   
   # Printing info on the pulses
   IntensityEnvelope1=FieldToIntensity(FieldEnvelope1)
+  print Header+"** Info: wavelength 1=", wavelength1
   print Header+"** Info: Peak intensity 1= "+str(np.max(IntensityEnvelope1)/1E4)+" W/cm^2."
   print Header+"** Info: Peak field amplitude 1= "+str(np.max(FieldEnvelope1)/1E9)+" V/nm."
   
   IntensityEnvelope2=FieldToIntensity(FieldEnvelope2)
+  print Header+"** Info: wavelength 2=", wavelength2
   print Header+"** Info: Peak intensity 2= "+str(np.max(IntensityEnvelope2)/1E4)+" W/cm^2."
   print Header+"** Info: Peak field amplitude 2= "+str(np.max(FieldEnvelope2)/1E9)+" V/nm."
 
@@ -701,46 +703,47 @@ def VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength1 = 800e-9, w
       VZ_basename = DataFileName['1030']
     else: 
       print Header+"** Warning: single color general Keldysh model is available in this library. "
-    
-    print Header+"Path: "+VZ_basename
-    
   elif((wavelength1 == 800e-9 and wavelength2 == 1030e-9) or (wavelength1 == 1030e-9 and wavelength2 == 800e-9)): 
     #TODO: the two sets could be inverted! Therefore data should be swept. 
     Dictionnary={'FieldSquared': 0, 'wpi': 1, 'energy': 2, 'log10wpi': 3, 'FieldSquaredLog10': 4} #Bichromatic case
     DataFolder  = 'Zhukov/800x1030/'
     DataFileName={'E2=0': DataFolder+'DLG800raEE2(1030)=0.dat', 'E2=0.2-phi=0': DataFolder+'DLG800raEE(1030)=0_2fi=0.dat', 'E2=1-phi=0': DataFolder+'DLG800raEE(1030)=1fi=0.dat', 'E2=2-phi=0': 'DLG800raEE(1030)=2fi=0.dat', 'E2=2-phi=pi/2': 'DLG800raEE(1030)=2fi=Pina2.dat'}
     # The case FieldSquared(wavelength2)=0 is available, but not used. Should be compared to single wavelength case for validation of the bicolor cases. 
-    if(FieldEnvelopeNormalized2_CGS == 0.2 and CEP2==0.):
+    if(FieldEnvelopeNormalized2_CGS.max() == 0.2 and CEP2==0.):
       VZ_basename = DataFileName['E2=0.2-phi=0']
-    elif(FieldEnvelopeNormalized2_CGS == 1.0 and CEP2 == 0.):
+    elif(FieldEnvelopeNormalized2_CGS.max() == 1.0): #and CEP2 == 0.):
       VZ_basename = DataFileName['E2=1-phi=0']
-    elif(FieldEnvelopeNormalized2_CGS == 2.0 and CEP2 == 0.): 
+      print "Branching"
+    elif(FieldEnvelopeNormalized2_CGS.max() == 2.0 and CEP2 == 0.): 
       VZ_basename = DataFileName['E2=2-phi=0']
-    elif(FieldEnvelopeNormalized2_CGS == 2.0 and CEP2 == pi/2.):
+    elif(FieldEnvelopeNormalized2_CGS.max() == 2.0 and CEP2 == pi/2.):
       VZ_basename = DataFileName['E2=2-phi=pi/2']
-    else: 
-      print Header+"Fields value are not available for 1030x800 nm. Inputting the normalized field would be easier to access Vladimir's data? "
+    else:
+      print Header+"Not all field values are available for 1030x800 nm. We have mostly 0.2, 1.0 and 2.0 normalied field units. Inputting the normalized field would be easier to access Vladimir's data?"
+      print "Possible values: "+str(FieldNormalizationCoeff1_SI * 0.2)+" "+str(FieldNormalizationCoeff1_SI*1.0)+", "+str(FieldNormalizationCoeff1_SI*2.0)
+      print "Field2NormalizedMax_CGS="+str(FieldEnvelopeNormalized2_CGS.max())
+      print "CEP2=", CEP2
       exit()
   elif((wavelength1 == 400e-9 and wavelength2 == 2*wavelength1) or (wavelength1 == 800e-9 and wavelength2 == wavelength1/2.)):
     #TODO: the two sets could be inverted! 
     Dictionnary={'FieldSquared': 0, 'wpi': 1, 'energy': 2, 'log10wpi': 3, 'FieldSquaredLog10': 4} #Bichromatic case
     DataFolder  = 'Zhukov/800x400/'
     DataFileName={'E2=2-phi=0': DataFolder+'DLGEE(800)=2fi=0.dat', 'E2=2-phi=pi/3': DataFolder+'DLGEE(800)=2fi=pina3.dat', 'E2=2-phi=pi/4': DataFolder+'DLGEE(800)=2fi=pina4.dat', 'E2=1-phi=pi/4': 'DLGEE(800)=2fi=pina4.dat', 'E2=0.2-phi=pi/4': 'DLGEE(800)=0_2fi=pina4.dat'}
-    if(FieldEnvelopeNormalized2_CGS == 2.0 and CEP2==0.):
+    if(FieldEnvelopeNormalized2_CGS.max() == 2.0 and CEP2==0.):
       VZ_basename = DataFileName['E2=2-phi=0']
-    elif(FieldEnvelopeNormalized2_CGS == 2.0 and CEP2 == pi/3.):
+    elif(FieldEnvelopeNormalized2_CGS.max() == 2.0 and CEP2 == pi/3.):
       VZ_basename = DataFileName['E2=2-phi=pi/3']
-    elif(FieldEnvelopeNormalized2_CGS == 2.0 and CEP2 == pi/4.): 
+    elif(FieldEnvelopeNormalized2_CGS.max() == 2.0 and CEP2 == pi/4.): 
       VZ_basename = DataFileName['E2=2-phi=pi/4']
-    elif(FieldEnvelopeNormalized2_CGS == 1.0 and CEP2 == pi/4.):
+    elif(FieldEnvelopeNormalized2_CGS.max() == 1.0 and CEP2 == pi/4.):
       VZ_basename = DataFileName['E2=1-phi=pi/4']
     else: 
       print Header+"Fields value are not available for 1030x800 nm. Inputting the normalized field would be easier to access Vladimir's data? "
       exit()
   else:
-    print Header+"THIS COMBINATION OF WAVES IS NOT AVAILABLE. Please kindly ask the corresponding data to Prof. Vladimir Zhukov, zukov@ict.nsc.ru."
+    print Header+"THIS COMBINATION OF WAVES IS NOT AVAILABLE. Please kindly ask the corresponding data to Prof. Vladimir Zhukov, zukov@ict.nsc.ru." 
     exit()
-  
+  print Header+"Path: "+VZ_basename
   IndexWpi         =Dictionnary['wpi']
   IndexFieldSquared=Dictionnary['FieldSquared']
   databasecontents=loadtxt(VZ_basename)

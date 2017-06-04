@@ -28,8 +28,8 @@ from libLaser import *
 # Input:
 # @param wavelength (float)
 # @param ne (float)
-# @epsilon (complex): dielectric permittivity under wavelength, without excitation
-# @nu (float): collision frequency
+# @param epsilon (complex): dielectric permittivity under wavelength, without excitation
+# @param nu (float): collision frequency
 # Output: complex-valued dielectric permittivity
 def Drude(wavelength, ne, epsilon, nu, meff=1.0):#{{{
   omegap2=ne * e**2 / (m_e * meff * epsilon_0)

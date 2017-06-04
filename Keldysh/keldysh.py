@@ -21,7 +21,7 @@ Egap = 2.56e0*e; #LDA band gap of Si: 2.58 eV. #1.12e0*e for indirect band gap;
 meff=0.2226e0; #Effective mass of Si
 Ntotal=1.*5E28
 
-wavelength = 800e-9; wavelength2 = 1030e-9
+wavelength = 800e-9; wavelength2 = 400e-9
 tau=10e-15; dt = 1E-17; CEP=0e0
 PeakFluence = 0.01*1E4 #J/cm2 * 1E4 = J/m2
 PeakField   = 4655327068.03 # np.sqrt(2e0 * PeakFluence / (tau * c * epsilon_0))

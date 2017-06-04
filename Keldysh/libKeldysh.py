@@ -27,14 +27,14 @@ from scipy.special import ellipk, ellipe, dawsn, factorial2, factorial, ellipkm1
 #import cmath
 import matplotlib as mp
 import matplotlib.pyplot as plt
-#from scipy.interpolate import InterpolatedUnivariateSpline
+from scipy.interpolate import InterpolatedUnivariateSpline
 from matplotlib import rc
 # from pylab import *
 from scipy.constants import c, epsilon_0, mu_0, pi, e, m_e, h, hbar
 #from matplotlib.legend_handler import HandlerLine2D
 #import sys
 
-from libDatabase import ExportToTxt
+from libDatabase import *
 rc('font', **{'family':'serif', 'serif':['Georgia'], 'size':'16'})
 rc('text', usetex=False)
 mp.rcParams['legend.numpoints'] = 1
@@ -614,8 +614,7 @@ def Field_SI_to_CGS(SI):
 # @param wavelength: wavelength of the photons (in meters, SI)
 # @param NormalizedPeakField: normalized field to be obtained in CGS
 def VZ_FieldNormalization(Egap, meff, wavelength):
-  # field for which gamma_VZ = 1. 
-  meff = 1e0 #TODO: ask vladimir if this is fine. 
+  # field for which gamma_VZ = 1.  
   me_CGS = Mass_SI_to_CGS(m_e) * meff #[1 kg    (SI) = 1E3  g      (CGS) ]
   Eg_CGS = Energy_SI_to_CGS(Egap)     #[1 J     (SI) = 1E7  ergs   (CGS) ]
   c_CGS  = Velocity_SI_to_CGS(c)      #[1 [m/s] (SI) = 1E2 cm/s   (CGS) ]
@@ -687,12 +686,84 @@ def VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength1 = 800e-9, w
   print Header+"** Info: Egap = "+str(Egap/e)+" eV"
   print ""
 
-  print Header+"** Selecting the right database..."
-  #TODO: I stopped here on 1st June 2017
-  Dictionnary={'': '', }
-  print Header+"Computes w_PI (Keldysh) for the bicolor pulse envelope..."
+  #Choosing the right column index in the data files
+  print Header+"** Selecting the right headers..."
+  if(wavelength1 == wavelength2):
+    Dictionnary={'FieldSquaredLog10': 0, 'log10wpi': 1, 'photons': 2, 'energy': 3, 'wpi': 4, 'FieldSquared': 5} #Monochromatic case
+    DataFolder  = 'Zhukov/Monochrome/'
+    DataFileName={'1030': DataFolder+'DLG1030mono.dat', '800': DataFolder+'DLG800mono.dat', '400': DataFolder+'DLG400mono.dat'}
+    print Header+"Choosing the right database..."
+    if(wavelength1==800e-9):
+      VZ_basename = DataFileName['800']
+    elif(wavelength1==400e-9):
+      VZ_basename = DataFileName['400']
+    elif(wavelength1==1030e-9):
+      VZ_basename = DataFileName['1030']
+    else: 
+      print Header+"** Warning: single color general Keldysh model is available in this library. "
+    
+    print Header+"Path: "+VZ_basename
+    
+  elif((wavelength1 == 800e-9 and wavelength2 == 1030e-9) or (wavelength1 == 1030e-9 and wavelength2 == 800e-9)): 
+    Dictionnary={'FieldSquared': 0, 'wpi': 1, 'energy': 2, 'log10wpi': 3, 'FieldSquaredLog10': 4} #Bichromatic case
+    DataFolder  = 'Zhukov/800x1030/'
+    DataFileName={'E2=0': DataFolder+'DLG800raEE2(1030)=0.dat', 'E2=0.2-phi=0': DataFolder+'DLG800raEE(1030)=0_2fi=0.dat', 'E2=1-phi=0': DataFolder+'DLG800raEE(1030)=1fi=0.dat', 'E2=2-phi=0': 'DLG800raEE(1030)=2fi=0.dat', 'E2=2-phi=pi/2': 'DLG800raEE(1030)=2fi=Pina2.dat'}
+    # TODO: selectors for various parameters are missing here. 
+  elif((wavelength1 == 400e-9 and wavelength2 == 2*wavelength1) or (wavelength1 == 800e-9 and wavelength2 == wavelength1/2.)):
+    Dictionnary={'FieldSquared': 0, 'wpi': 1, 'energy': 2, 'log10wpi': 3, 'FieldSquaredLog10': 4} #Bichromatic case
+    DataFolder  = 'Zhukov/800x400/'
+    DataFileName={'E2=2-phi=0': DataFolder+'DLGEE(800)=2fi=0.dat', 'E2=2-phi=pi/3': DataFolder+'DLGEE(800)=2fi=pina3.dat', 'E2=2-phi=pi/4': DataFolder+'DLGEE(800)=2fi=pina4.dat', 'E2=1-phi=pi/4': 'DLGEE(800)=2fi=pina4.dat', 'E2=0.2-phi=pi/4': 'DLGEE(800)=0_2fi=pina4.dat'}
+    # TODO: selectors for various parameters are missing here. 
+  else:
+    print Header+"THIS COMBINATION OF WAVES IS NOT AVAILABLE. Please kindly ask the corresponding data to Prof. Vladimir Zhukov, zukov@ict.nsc.ru."
+    exit()
   
-  print Header+"max(w_PI) = ", w_PI.max()
+  IndexWpi         =Dictionnary['wpi']
+  IndexFieldSquared=Dictionnary['FieldSquared']
+  databasecontents=loadtxt(VZ_basename)
+  
+  deltaField_CGS = 0.0025 #TODO: automatic step from the database file? Isnt it a bit small ?!
+  deltaField_SI = Field_CGS_to_SI(deltaField_CGS)
+  
+  # Time to filter the entries with the required normaliezd field in the relevant database
+  #databasecontentsfilter=FilterDatabaseLowerThan(databasecontentsfilter,FieldEnvelopeNormalized1_CGS+deltaField_CGS,IndexFieldSquared)
+  #databasecontentsfilter=FilterDatabaseGreaterThan(databasecontentsfilter,FieldEnvelopeNormalized1_CGS-deltaField_CGS,IndexFieldSquared)
+  
+  # We have now to interpolate the given data E2 and Wpi  
+  DB_FieldSquaredNorm = databasecontents[:,IndexFieldSquared]
+  DB_Wpi              = databasecontents[:,IndexWpi]
+  
+  #print Header+"Normalized Fields from DB.."
+  #print DB_FieldSquaredNorm
+  #print Header+"W_pi from DB.."
+  #print DB_Wpi
+  print Header+"Data well imported from DB."
+  
+  #print DB_FieldSquaredNorm, DB_Wpi
+  
+  print Header+"Interpolating the w_PI..."
+  InterpolationOrder=1
+  WPI_func = InterpolatedUnivariateSpline(DB_FieldSquaredNorm, DB_Wpi, k=InterpolationOrder)
+  
+  print Header+"Range of the interpolant: "
+  print FieldEnvelopeNormalized1_CGS.min(), FieldEnvelopeNormalized1_CGS.max()
+  
+  # BUG: Problem is: FieldSquared is too small when calling the tabulated function. Values of field were checked. Files of Vladimir are not slightly sampled for small fields. 
+  
+  # Interpolating the right W_PI [CGS unit!]
+  # WPI [SI] = m^-3 s^-1
+  # WPI [CGS]= cm^-3.s^-1
+  w_PI_CGS = WPI_func(FieldEnvelopeNormalized1_CGS**2)
+  w_PI_SI = (Length_CGS_to_SI(1.))**-3 * w_PI_CGS 
+  
+  print Header+"Here is the result"
+  print w_PI_CGS
+  
+  
+  # Catch the value of interest. We might have to perform linear interpolation between two values.
+  #w_PI = np.array([databasecontents[IndexWpi], databasecontents[IndexFieldSquared])
+  
+  print Header+"range(w_PI_SI) = ", w_PI_SI.min(), w_PI_SI.max()
 
   #print "Developing: exporting the table..."
 
@@ -706,17 +777,17 @@ def VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength1 = 800e-9, w
   #N_excited_Gruzdev = dN_excited_Gruzdev.cumsum()
   
   # Temporal integration with limiter
-  dN_excited_Zhukov = np.multiply(wPI, dt)
+  dN_excited_Zhukov = np.multiply(w_PI_SI, dt)
   
   # Initial number of electrons in conduction band
-  N_initial = np.zeros(wPI.shape)
+  N_initial = np.zeros(w_PI_SI.shape)
   
   ExpArg_Zhukov = np.divide(dN_excited_Zhukov.cumsum(), N_total)
   
   N_excited_Zhukov = np.multiply( np.exp(-ExpArg_Zhukov), N_total * np.exp(ExpArg_Zhukov) - N_total + N_initial)
   
   #N_excited_Gruzdev = np.multiply( np.exp(-ExpArg_Gruzdev), N_total * np.exp(ExpArg_Gruzdev) - N_total + N_initial)
-  return instants, N_excited_Zhukov, wPI, wPIg
+  return instants, N_excited_Zhukov, w_PI_SI, w_PI_CGS
 #}}}
   
   

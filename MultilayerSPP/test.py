@@ -11,7 +11,7 @@ pi = 2.*np.arcsin(1.0)
 
 #data
 wavelength = 800e-9
-ne=5E27 #(m^-3) quantity of electrons in conduction band
+ne=1E28 #(m^-3) quantity of electrons in conduction band
 nu = (1.1E-15)**-1 #collision time between conduction band electrons
 meff = 0.18
 
@@ -35,7 +35,7 @@ y_max = 1E9
 y_steps = 300#round((y_max - y_min)/step)
 
 #tolerances
-t_sim = 1e-1
+t_sim = 1e-7
 
 def func(betaR):
     beta = betaR[0] + betaR[1]*1j

@@ -73,6 +73,7 @@ for sgn1, sgn2, sgn3 in product((-1,1), (-1,1), (-1,1)):
     print('Branch: [%s][%s][%s]' % (('%+d' % sgn1)[0], ('%+d' % sgn2)[0], ('%+d' % sgn3)[0]))
     for x in np.linspace(x_min, x_max, num=x_steps):
         for y in np.linspace(y_min, y_max, num=y_steps):
+
             nrt = root(func, [x, y], method='hybr', tol=t_root) #tolerance for the solution (relative ? absolute ?)
             if nrt.success:
                 roots.append(nrt.x)

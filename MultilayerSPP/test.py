@@ -35,12 +35,9 @@ y_max = 1E9
 y_steps = 10 #round((y_max - y_min)/delta)
 
 #tolerances
-<<<<<<< HEAD
-t_sim = 1e-7
-=======
+
 t_root = 1E-14
 t_sim = 10
->>>>>>> 7676106953b77535625848fb5e6f26a43333e1c9
 
 def func(betaR):
     beta = betaR[0] + betaR[1]*1j
@@ -76,11 +73,7 @@ for sgn1, sgn2, sgn3 in product((-1,1), (-1,1), (-1,1)):
     print('Branch: [%s][%s][%s]' % (('%+d' % sgn1)[0], ('%+d' % sgn2)[0], ('%+d' % sgn3)[0]))
     for x in np.linspace(x_min, x_max, num=x_steps):
         for y in np.linspace(y_min, y_max, num=y_steps):
-<<<<<<< HEAD
-            nrt = root(func, [x, y], method='hybr', tol=1e-7) #tolerance for the solution (relative ? absolute ?)
-=======
-            nrt = root(func, [x, y], method='hybr', tol=t_root)
->>>>>>> 7676106953b77535625848fb5e6f26a43333e1c9
+            nrt = root(func, [x, y], method='hybr', tol=t_root) #tolerance for the solution (relative ? absolute ?)
             if nrt.success:
                 roots.append(nrt.x)
 

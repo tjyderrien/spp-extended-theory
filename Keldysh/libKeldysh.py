@@ -816,7 +816,7 @@ def VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength1 = 800e-9, w
   print Header+"** Converstion to W_PI (SI)..."
   print Header+"range(w_PI_SI) = ", w_PI_SI.min(), w_PI_SI.max()
 
-  #print "Developing: exporting the table..."
+  print "Waiting for Vladimir's response on the W_PI CGS unit."
   exit()
   print ""
   print Header+"Temporal integration..."

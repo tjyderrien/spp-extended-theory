@@ -8,6 +8,7 @@ from itertools import product
 from libMaterials import Drude
 
 pi = np.pi
+prec = 6 #printing precision
 
 #data
 wavelength = 800e-9
@@ -21,25 +22,35 @@ eps3 = 13.64+0.048j #substrate Si (no excitation)
 eps1 = Drude(wavelength, ne, eps3, nu, meff)
 
 k0 = 2*pi/wavelength
-t = 10e-9 #in meters
+t = 20e-9 #in meters
+
+#branches
+branches = [0, 1, 2, 3, 4, 5, 6, 7] #list of branches you want to use
+
+#0 (-, -, -)
+#1 (-, -, +)
+#2 (-, +, -)
+#3 (-, +, +)
+#4 (+, -, -)
+#5 (+, -, +)
+#6 (+, +, -)
+#7 (+, +, +)
 
 #area of initial guesses
-
 #x = real part, y = imaginary part
-x_min = -1e8
-x_max = 1e8
-x_steps = 30
+x_min = -4e7
+x_max = 4e7
 
 y_min = -1e9
 y_max = 1e9
+
+x_steps = 30
 y_steps = 30
 
-totalg = x_steps*y_steps
-
 #tolerances
+t_blur = 1000
 
-t_zero = 100000
-t_blur = 10
+#-----------------------------------------------------------------------------
 
 def func(betaR):
     beta = betaR[0] + betaR[1]*1j
@@ -53,7 +64,9 @@ def func(betaR):
         out = 1e99
     return [out.real, out.imag]
 
-print('Guess area is a rectangle: [%s, %s]x[%si, %si], x_steps = %d, y_steps = %d' % (x_min, x_max, y_min, y_max, x_steps, y_steps))
+print('Guess area is a rectangle:')
+print('[%.2e, %.2e]x[%.2ei, %.2ei], x_steps = %d, y_steps = %d' % (x_min, x_max, y_min, y_max, x_steps, y_steps))
+print()
 print('Initial data:')
 print('    eps1:', eps1)
 print('    eps2:', eps2)
@@ -62,49 +75,60 @@ print('    k0:', k0)
 print('    t:', t)
 
 broots = []
-for sgn1, sgn2, sgn3 in product((-1,1), (-1,1), (-1,1)): #choose a branch
+for sgn1, sgn2, sgn3 in [list(product((-1,1), (-1,1), (-1,1)))[i] for i in branches]:
     roots = []
     separed = []
     num = 0
     print()
+    print()
     print('Branch: (%s, %s, %s)' % (('%+d' % sgn1)[0], ('%+d' % sgn2)[0], ('%+d' % sgn3)[0]))
     for x in np.linspace(x_min, x_max, num=x_steps):
         num += 1
-        print('Tracing the grid: %d%%' % (num/x_steps*100), end = '\r')
+        print('Tracing the grid: %d%%' % (num/x_steps*100), end = '\r') 
         for y in np.linspace(y_min, y_max, num=y_steps): #take an initial guess [x, y] from within the specified grid, x_steps and y_steps determine the grid density
-            nrt = root(func, [x, y], method='hybr')
-            if nrt.success and norm(nrt.fun) < t_zero:   #if it converges and the value is less than tolerance t_zero, add it to the list of roots
+            nrt = root(func, [x, y], method='hybr') #uses the MINPACK method: http://www.netlib.org/minpack/
+            if nrt.success: #if it converges, add it to the list of roots
                 roots.append(nrt.x)
 
     ln = len(roots)
     print('Total (converged): %d   ' % ln)
-
-    for i in range(len(roots)):                          #this part should remove duplicate roots (considering tolerance t_blur)
-        print('Similarizing roots: %.2f%%' % (i/ln*100), end = '\r')
+    
+    for i in range(len(roots)): #this part should remove duplicate roots (considering tolerance t_blur)
+        print('Assimilating roots: %d%%' % (i/ln*100), end = '\r')
         for j in range(i + 1, len(roots)):
-            if norm(roots[i] - roots[j], 1) < t_blur:
+            if norm(roots[i] - roots[j]) < t_blur:
                 switch = True
                 for sep in separed:
                     if i in sep and j not in sep:
                         separed[separed.index(sep)].append(j)
                         switch = False
+                        break
                     elif j in sep and i not in sep:
                         separed[separed.index(sep)].append(i)
                         switch = False
+                        break
                     elif i in sep and j in sep:
                         switch = False
+                        break
                 if switch:
                     separed.append([i, j])
 
     unique = [np.mean([roots[i] for i in sep], axis = 0) for sep in separed]
 
+    if len(unique) > 0:
+        print(' '*23)
+        print('Real%s     Imaginary%s│  Abs(F)  %s│  Levenberg–Marquardt' % tuple([' '*prec]*3))
+        print('%s┼%s┼%s' % ('─'*(2*prec + 18), '─'*(prec + 10), '─'*(2*prec + 24)))
     for rt in unique:
-        print('% .10e % .10e    % .10e % .10e' % (rt[0], rt[1], func(rt)[0], func(rt)[1]))
-    print('Total (similarized): %d' % len(unique))
+        nrt = root(func, rt, method='lm')
+        print(('%% .%de  %% .%de  │ %% .%de  │  %%s  %% .%de  %% .%de' % tuple([prec]*5)) % (rt[0], rt[1], norm(func(rt)), nrt.success, nrt.x[0], nrt.x[1])) #checking with Levenberg–Marquardt method
+    if len(unique) > 0:
+        print()
+    print('Total (assimilated): %d' % len(unique))
     broots.append(unique)
 
-#a = cmath.sqrt(eps1*k0*k0)
-#plt.plot((a.real, -a.real), (a.imag, -a.imag), 'red')
+##a = cmath.sqrt(eps1*k0*k0)
+##plt.plot((a.real, -a.real), (a.imag, -a.imag), 'red')
 colors = ['red', 'green', 'blue', 'black', 'magenta', 'cyan', 'lime', 'orangered']
 for rts, col in zip(broots, colors):
     if len(rts) > 0:

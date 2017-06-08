@@ -8,6 +8,7 @@ from itertools import product
 from libMaterials import Drude
 
 pi = np.pi
+prec = 6 #printing precision
 
 #data
 wavelength = 800e-9
@@ -21,22 +22,35 @@ eps3 = 13.64+0.048j #substrate Si (no excitation)
 eps1 = Drude(wavelength, ne, eps3, nu, meff)
 
 k0 = 2*pi/wavelength
-t = 10e-9 #in meters
+t = 20e-9 #in meters
+
+#branches
+branches = [0, 1, 2, 3, 4, 5, 6, 7] #list of branches you want to use
+
+#0 (-, -, -)
+#1 (-, -, +)
+#2 (-, +, -)
+#3 (-, +, +)
+#4 (+, -, -)
+#5 (+, -, +)
+#6 (+, +, -)
+#7 (+, +, +)
 
 #area of initial guesses
-
 #x = real part, y = imaginary part
 x_min = -4e7
 x_max = 4e7
-x_steps = 30
 
 y_min = -1e9
 y_max = 1e9
+
+x_steps = 30
 y_steps = 30
 
 #tolerances
-
 t_blur = 1000
+
+#-----------------------------------------------------------------------------
 
 def func(betaR):
     beta = betaR[0] + betaR[1]*1j
@@ -61,7 +75,7 @@ print('    k0:', k0)
 print('    t:', t)
 
 broots = []
-for sgn1, sgn2, sgn3 in product((-1,1), (-1,1), (-1,1)): #choose a branch
+for sgn1, sgn2, sgn3 in [list(product((-1,1), (-1,1), (-1,1)))[i] for i in branches]:
     roots = []
     separed = []
     num = 0
@@ -102,12 +116,12 @@ for sgn1, sgn2, sgn3 in product((-1,1), (-1,1), (-1,1)): #choose a branch
     unique = [np.mean([roots[i] for i in sep], axis = 0) for sep in separed]
 
     if len(unique) > 0:
-        print('                       ')
-        print('Real                 Imaginary            │  Abs(value)          │  Levenberg–Marquardt')
-        print('──────────────────────────────────────────┼──────────────────────┼────────────────────────────────────────────────')
+        print(' '*23)
+        print('Real%s     Imaginary%s│  Abs(F)  %s│  Levenberg–Marquardt' % tuple([' '*prec]*3))
+        print('%s┼%s┼%s' % ('─'*(2*prec + 18), '─'*(prec + 10), '─'*(2*prec + 24)))
     for rt in unique:
         nrt = root(func, rt, method='lm')
-        print('% .12e  % .12e  │ % .12e  │  %s  % .12e  % .12e' % (rt[0], rt[1], norm(func(rt)), nrt.success, nrt.x[0], nrt.x[1])) #checking with Levenberg–Marquardt method
+        print(('%% .%de  %% .%de  │ %% .%de  │  %%s  %% .%de  %% .%de' % tuple([prec]*5)) % (rt[0], rt[1], norm(func(rt)), nrt.success, nrt.x[0], nrt.x[1])) #checking with Levenberg–Marquardt method
     if len(unique) > 0:
         print()
     print('Total (assimilated): %d' % len(unique))

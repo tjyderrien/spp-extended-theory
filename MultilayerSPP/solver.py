@@ -28,16 +28,18 @@ t = 10e-9 #in meters
 #x = real part, y = imaginary part
 x_min = -1e8
 x_max = 1e8
-x_steps = 50
+x_steps = 30
 
 y_min = -1e9
 y_max = 1e9
-y_steps = 50
+y_steps = 30
+
+totalg = x_steps*y_steps
 
 #tolerances
 
 t_zero = 100000
-t_smear = 10
+t_blur = 10
 
 def func(betaR):
     beta = betaR[0] + betaR[1]*1j
@@ -53,47 +55,56 @@ def func(betaR):
 
 print('Guess area is a rectangle: [%s, %s]x[%si, %si], x_steps = %d, y_steps = %d' % (x_min, x_max, y_min, y_max, x_steps, y_steps))
 print('Initial data:')
-print('    Eps1:', eps1)
-print('    Eps2:', eps2)
-print('    Eps3:', eps3)
+print('    eps1:', eps1)
+print('    eps2:', eps2)
+print('    eps3:', eps3)
 print('    k0:', k0)
 print('    t:', t)
 
 broots = []
 for sgn1, sgn2, sgn3 in product((-1,1), (-1,1), (-1,1)): #choose a branch
     roots = []
-    unique = []
+    separed = []
+    num = 0
     print()
-    print('Branch: [%s][%s][%s]' % (('%+d' % sgn1)[0], ('%+d' % sgn2)[0], ('%+d' % sgn3)[0]))
+    print('Branch: (%s, %s, %s)' % (('%+d' % sgn1)[0], ('%+d' % sgn2)[0], ('%+d' % sgn3)[0]))
     for x in np.linspace(x_min, x_max, num=x_steps):
-        for y in np.linspace(y_min, y_max, num=y_steps):
-            #take an initial guess [x, y] from within the specified grid (x_min, x_max, x_steps, y_min, y_max, y_steps), x_steps and y_steps determine the grid density
-            nrt = root(func, [x, y], method='hybr') #try to calculate a root for this initial guess
-            if nrt.success and norm(nrt.fun) < t_zero: #if it converges and the value is less than tolerance t_zero, add it to the list of roots
+        num += 1
+        print('Tracing the grid: %d%%' % (num/x_steps*100), end = '\r')
+        for y in np.linspace(y_min, y_max, num=y_steps): #take an initial guess [x, y] from within the specified grid, x_steps and y_steps determine the grid density
+            nrt = root(func, [x, y], method='hybr')
+            if nrt.success and norm(nrt.fun) < t_zero:   #if it converges and the value is less than tolerance t_zero, add it to the list of roots
                 roots.append(nrt.x)
 
-    while len(roots) > 0: #now go thru the list of roots
-        center = roots[0] #take the first element of the list and put it in 'center'
-        same = [center]
-        nrest = []
+    ln = len(roots)
+    print('Total (converged): %d   ' % ln)
 
-        for rt in roots[1:]: #go thru the rest of roots
-            if norm(rt - center) < t_smear: #if the current root 'rt' is sufficiently near center, add it to the new list of similar roots 'same'
-                same.append(rt)
-                center = np.mean(same, axis = 0) #update 'center' to include the new root, 'center' always lies in the middle
-            else:
-                nrest.append(rt)
+    for i in range(len(roots)):                          #this part should remove duplicate roots (considering tolerance t_blur)
+        print('Similarizing roots: %.2f%%' % (i/ln*100), end = '\r')
+        for j in range(i + 1, len(roots)):
+            if norm(roots[i] - roots[j], 1) < t_blur:
+                switch = True
+                for sep in separed:
+                    if i in sep and j not in sep:
+                        separed[separed.index(sep)].append(j)
+                        switch = False
+                    elif j in sep and i not in sep:
+                        separed[separed.index(sep)].append(i)
+                        switch = False
+                    elif i in sep and j in sep:
+                        switch = False
+                if switch:
+                    separed.append([i, j])
 
-        unique.append(center) #'unique' contains separated roots
-        roots = list(nrest) #continue the algorithm with the rest
-
-    #while loop ended, now all the roots are separated and their centers are inside 'unique'
+    unique = [np.mean([roots[i] for i in sep], axis = 0) for sep in separed]
 
     for rt in unique:
-        print('% .10e  % .10e       % .10e  % .10e' % (rt[0], rt[1], func(rt)[0], func(rt)[1]))
-    print('Total: %d' % len(unique))
+        print('% .10e % .10e    % .10e % .10e' % (rt[0], rt[1], func(rt)[0], func(rt)[1]))
+    print('Total (similarized): %d' % len(unique))
     broots.append(unique)
 
+#a = cmath.sqrt(eps1*k0*k0)
+#plt.plot((a.real, -a.real), (a.imag, -a.imag), 'red')
 colors = ['red', 'green', 'blue', 'black', 'magenta', 'cyan', 'lime', 'orangered']
 for rts, col in zip(broots, colors):
     if len(rts) > 0:

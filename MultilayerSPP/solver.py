@@ -1,3 +1,27 @@
+#!/usr/bin/env python
+#-*- coding: utf-8 -*-
+
+# Copyright (C) 2017 F. Preucil, T.J.-Y. Derrien
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>
+
+## @package libMultilayer
+# Module libMultilayer explores the SPP theory at a thin film located 
+# between two semi-infinite media. The formal model is presented in 
+# T.J.-Y. Derrien et al, J. Appl. Phys. 116, 074902 (2014) and references 
+# therein. 
+
 import cmath
 import numpy as np
 
@@ -6,23 +30,25 @@ from scipy.optimize import root
 from numpy.linalg import norm
 from itertools import product
 from libMaterials import Drude
+from libDatabase import ExportToTxt
 
 pi = np.pi
 prec = 8 #printing precision
 
 #data
 wavelength = 800e-9
-ne=1e28 #(m^-3) quantity of electrons in conduction band
-nu = (1.1e-15)**-1 #collision time between conduction band electrons
+ne=5e27 #np.arange(1E25, 1E28, 10) #(m^-3) quantity of electrons in conduction band
+nu = (1.1E-15)**-1 #collision time between conduction band electrons
 meff = 0.18
 
-epsilon = 13.64+0.048j
 eps2 = 1.+0.j       #environment
 eps3 = 13.64+0.048j #substrate Si (no excitation)
+
+#for ne in neList:
 eps1 = Drude(wavelength, ne, eps3, nu, meff)
 
-k0 = 2*pi/wavelength
-t = 10e-9 #in meters
+k0 = 2.*pi/wavelength
+t = 100e-9 #Thickness of the layer in meters
 
 #branches
 branches = [0, 1, 2, 3, 4, 5, 6, 7] #list of branches you want to use
@@ -36,16 +62,20 @@ branches = [0, 1, 2, 3, 4, 5, 6, 7] #list of branches you want to use
 #6 (+, +, -)
 #7 (+, +, +)
 
-#area of initial guesses
-#x = real part, y = imaginary part
-x_min = -5e3
-x_max = 5e3
+#Meshing the initial guess area
+#Mesh enough to obtain a large enough number of solutions
 
-y_min = 2e9
-y_max = 3e9
+maxvalue = 1E8
+maxsteps = 100
 
-x_steps = 20
-y_steps = 5000
+x_min   = -maxvalue
+x_max   =  maxvalue
+
+y_min   = -maxvalue
+y_max   =  maxvalue
+
+x_steps =  maxsteps
+y_steps =  maxsteps
 
 #tolerances
 t_blur = 100000
@@ -55,7 +85,7 @@ t_blur = 100000
 a = k0*cmath.sqrt(eps1*eps2*(eps1-eps2)/(eps1*eps1 - eps2*eps2))
 print('% .5e, % .5e, % .5e, % .5e' % (a.real, a.imag, -a.real, -a.imag))
 
-def func(betaR):
+def func(betaR): #{{{
     beta = betaR[0] + betaR[1]*1j
     k1 = sgn1*cmath.sqrt(beta*beta - k0*k0*eps1)
     k2 = sgn2*cmath.sqrt(beta*beta - k0*k0*eps2)
@@ -159,8 +189,11 @@ for rts, col in zip(broots, colors):
     if len(rts) > 0:
         plt.scatter(*zip(*rts), c=col)
 
+ExportToTxt(broots, 'betaSolution-Ne'+str(ne)+'-t'+str(t)+'.log')
+
 plt.xlabel('Re')
 plt.ylabel('Im')
 plt.grid()
+plt.legend(loc=4)
 plt.savefig('betaSolution.eps')
 plt.show()

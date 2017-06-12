@@ -29,7 +29,7 @@ import cmath
 import matplotlib as mp
 import matplotlib.pyplot as plt
 from scipy.interpolate import InterpolatedUnivariateSpline
-from matplotlib import rc
+from matplotlib import rc, font_manager
 # from pylab import *
 from scipy.constants import c, epsilon_0, mu_0, pi, e, m_e, h
 from matplotlib.legend_handler import HandlerLine2D
@@ -43,19 +43,27 @@ from libMaterials import *
 from libMath import *
 
 lengthunit = 1e-9
-eta = 5.0 #assumed precision error on the dielectric permittivity
+eta = 0.5 #assumed precision error on the dielectric permittivity
 UsingTeX=True #TODO: set to False for Windows users
 
 ## 0: all permisive, no verification on SPP excitation condition
 ## 1: use the RegularLIPSScondition, softer than pure SPP excitation condition
 ## 2: Period != 0 is necessary for a material to be listed in results
 ## 3: Extreme level: use ExperimentallyAchievable() to verify possibility of decay depth > optical penetration depth
-LevelOfSPPaccuracy=0
+LevelOfSPPaccuracy=2
 
 # Settings for matplotlib
-#rc('font',**{'family':'sans-serif','sans-serif':['Helvetica'], 'size':'16'})
+sizeOfFont = 18
+FontName='cmd'
+fontProperties = {'family':'sans-serif','sans-serif':[FontName],
+    'weight' : 'normal', 'size' : sizeOfFont}
+ticks_font = font_manager.FontProperties(family=FontName, style='normal',
+    size=sizeOfFont, weight='normal', stretch='normal')
+rc('font',**fontProperties)
+rc('text.latex', preamble=r'\usepackage{cmbright}')
+#rc('font',**{'family':'sans-serif','sans-serif':['Arial'], 'size':'18'})
 ## for Palatino and other serif fonts use:
-rc('font', **{'family':'serif', 'serif':['Palatino'], 'size':'18'})
+#rc('font', **{'family':'serif', 'serif':['Palatino'], 'size':'18'})
 rc('text', usetex=UsingTeX)
 mp.rcParams['legend.numpoints'] = 1
 
@@ -70,7 +78,6 @@ mp.rcParams['legend.numpoints'] = 1
 # @param wavelength (float), 
 # @param eps1 (complex), 
 # @param eps2 (complex)
-#
 def betaSPP(wavelength, eps1, eps2):#{{{
 
     omega = 2.0*pi*c/wavelength
@@ -461,7 +468,9 @@ def SPPactiveInterfaces(dbarray, comment):#{{{
         ## 3: Extreme level: use ExperimentallyAchievable() to verify possibility of decay depth > optical penetration depth
         if(LevelOfSPPaccuracy == 1):
           Condition = (SPPdecayLength < 20000e0) #and (abs(eps2.real) < eps2.imag)
-        elif (LevelOfSPPaccuracy >= 2):
+        elif (LevelOfSPPaccuracy == 2):
+          Condition = (Period!=0)
+        elif (LevelOfSPPaccuracy >= 3):
           Condition = ExperimentalAchievable and (Period!=0)
         else: #super permissive case
           Condition = True

@@ -30,14 +30,14 @@ from scipy.optimize import root
 from numpy.linalg import norm
 from itertools import product
 from libMaterials import Drude
-from libDatabase import ExportToTxt
+#from libDatabase import ExportToTxt
 
 pi = np.pi
 prec = 8 #printing precision
 
 #data
 wavelength = 800e-9
-ne=5e27 #np.arange(1E25, 1E28, 10) #(m^-3) quantity of electrons in conduction band
+ne=5E27 #np.arange(1E25, 1E28, 10) #(m^-3) quantity of electrons in conduction band
 nu = (1.1E-15)**-1 #collision time between conduction band electrons
 meff = 0.18
 
@@ -48,7 +48,7 @@ eps3 = 13.64+0.048j #substrate Si (no excitation)
 eps1 = Drude(wavelength, ne, eps3, nu, meff)
 
 k0 = 2.*pi/wavelength
-t = 100e-9 #Thickness of the layer in meters
+t = 200e-9 #Thickness of the layer in meters
 
 #branches
 branches = [0, 1, 2, 3, 4, 5, 6, 7] #list of branches you want to use
@@ -78,7 +78,7 @@ x_steps =  maxsteps
 y_steps =  maxsteps
 
 #tolerances
-t_blur = 100000
+t_blur = 10 # 100000
 
 #-----------------------------------------------------------------------------
 
@@ -189,11 +189,11 @@ for rts, col in zip(broots, colors):
     if len(rts) > 0:
         plt.scatter(*zip(*rts), c=col)
 
-ExportToTxt(broots, 'betaSolution-Ne'+str(ne)+'-t'+str(t)+'.log')
+#ExportToTxt(broots, 'betaSolution-Ne'+str(ne)+'-t'+str(t)+'.log')
 
 plt.xlabel('Re')
 plt.ylabel('Im')
 plt.grid()
 plt.legend(loc=4)
-plt.savefig('betaSolution.eps')
-plt.show()
+plt.savefig('betaSolution-wavelength'+str(wavelength*1E9)+'-thickness'+str(t)+'-density-'+str(ne)+'m-3.eps')
+#plt.show()

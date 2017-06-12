@@ -52,13 +52,13 @@ UsingTeX=True #TODO: set to False for Windows users
 ## 3: Extreme level: use ExperimentallyAchievable() to verify possibility of decay depth > optical penetration depth
 LevelOfSPPaccuracy=2
 
-# Settings for matplotlib
+# Settings for matplotlib: taken from https://stackoverflow.com/questions/12322738/how-do-i-change-the-axis-tick-font-in-a-matplotlib-plot-when-rendering-using-lat
 sizeOfFont = 18
-FontName='cmd'
+FontName='cm'
 fontProperties = {'family':'sans-serif','sans-serif':[FontName],
     'weight' : 'normal', 'size' : sizeOfFont}
-ticks_font = font_manager.FontProperties(family=FontName, style='normal',
-    size=sizeOfFont, weight='normal', stretch='normal')
+ticks_font = font_manager.FontProperties(family=FontName, style='italic',
+    size=sizeOfFont, weight='normal', stretch='normal')	
 rc('font',**fontProperties)
 rc('text.latex', preamble=r'\usepackage{cmbright}')
 #rc('font',**{'family':'sans-serif','sans-serif':['Arial'], 'size':'18'})

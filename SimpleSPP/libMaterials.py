@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2.7
 #-*- coding: utf-8 -*-
 ## @package libMaterials 
 # Functions describing materials and their interaction with light. 
@@ -37,7 +37,7 @@ def Drude(wavelength, ne, epsilon, nu, meff=1.0):#{{{
   return epsilon - omegap2/(omega*omega) * 1e0/(1e0+1e0j*nu/omega)
 #}}}
 
-## Return Fresnel reflectivity 
+## Fresnel reflectivity formula at single interface
 # Input:
 #   eps1: complex-valued permittivity 1+j0
 #   eps2: idem, for medium2
@@ -61,6 +61,8 @@ def IndexToEpsilon(n):
 # @param eps1: dielectric permittivity (epsilon <complex>) of first medium
 # @param eps2: dielectric permittivity (epsilon <complex>) of second medium
 # @param fraction: fraction of epsilon2 mixed with (1.-fraction)*epsilon1 medium
+# This function was validated by comparison with Inam Mirza. 
+# Applicable for dielectric - metal mixtures. Maybe not applicable for metal-metal mixtures. 
 def MaxwellGarnett2(eps1, eps2, fraction):
   eps1r = eps1.real; eps1c = eps1.imag
   eps2r = eps2.real; eps2c = eps2.imag

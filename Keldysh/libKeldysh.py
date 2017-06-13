@@ -27,7 +27,7 @@ from scipy.special import ellipk, ellipe, dawsn, factorial2, factorial, ellipkm1
 #import cmath
 import matplotlib as mp
 import matplotlib.pyplot as plt
-from scipy.interpolate import interp2d
+from scipy.interpolate import interp2d, InterpolatedUnivariateSpline
 from matplotlib import rc
 # from pylab import *
 from scipy.constants import c, epsilon_0, mu_0, pi, e, m_e, h, hbar
@@ -692,16 +692,16 @@ def VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength1 = 800e-9, w
 
   #Choosing the right column index in the data files
   print Header+"** Selecting the right headers..."
-  if(wavelength1 == wavelength2):
-    Dictionnary={'FieldSquaredLog10': 0, 'log10wpi': 1, 'photons': 2, 'energy': 3, 'wpi': 4, 'FieldSquared1': 5} #Monochromatic case
+  if( FieldEnvelopeNormalized2_CGS.max() == 0. ): # was wavelength1 == wavelength2.  
+    Dictionnary = {'FieldSquaredLog10': 0, 'log10wpi': 1, 'photons': 2, 'energy': 3, 'wpi': 4, 'FieldSquared1': 5} #Monochromatic case
     DataFolder  = 'Zhukov/Monochrome/'
     DataFileName={'1030': DataFolder+'DLG1030mono.dat', '800': DataFolder+'DLG800mono.dat', '400': DataFolder+'DLG400mono.dat'}
     print Header+"Choosing the right database..."
-    if(wavelength1==800e-9):
+    if(wavelength1   == 800e-9):
       VZ_basename = DataFileName['800']
-    elif(wavelength1==400e-9):
+    elif(wavelength1 == 400e-9):
       VZ_basename = DataFileName['400']
-    elif(wavelength1==1030e-9):
+    elif(wavelength1 == 1030e-9):
       VZ_basename = DataFileName['1030']
     else: 
       print Header+"** Warning: single color general Keldysh model is available in this library. "
@@ -709,30 +709,7 @@ def VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength1 = 800e-9, w
     #TODO: the two sets could be inverted! Therefore data should be swept.
     print "THIS SET IS BROKEN. Waiting for the input of Vladimir Zhukov."
     exit()
-    #Dictionnary={'FieldSquared': 0, 'wpi': 1, 'energy': 2, 'log10wpi': 3, 'FieldSquaredLog10': 4} #Bichromatic case
-    #DataFolder  = 'Zhukov/800x1030nm/'
-    ## These data are not possible to use. Files DLGEE are not useful. However, W400x800fi are useful, but were not provided. 
-    ##DataFileName={'E2=0': DataFolder+'DLG800raEE2(1030)=0.dat', 'E2=0.2-phi=0': DataFolder+'DLG800raEE(1030)=0_2fi=0.dat', 'E2=1-phi=0': DataFolder+'DLG800raEE(1030)=1fi=0.dat', 'E2=2-phi=0': 'DLG800raEE(1030)=2fi=0.dat', 'E2=2-phi=pi/2': 'DLG800raEE(1030)=2fi=Pina2.dat'}
-    #DataFileName={'E2=0': DataFolder+'DLG800raEE2(1030)=0.dat', 'E2=0.2-phi=0': DataFolder+'DLG800raEE(1030)=0_2fi=0.dat', 'E2=1-phi=0': DataFolder+'DLG800raEE(1030)=1fi=0.dat', 'E2=2-phi=0': 'DLG800raEE(1030)=2fi=0.dat', 'E2=2-phi=pi/2': 'DLG800raEE(1030)=2fi=Pina2.dat'}
-    ## The case FieldSquared(wavelength2)=0 is available, but not used. Should be compared to single wavelength case for validation of the bicolor cases. 
-    #if(CEP2 == 0.): 
-      #if(abs(FieldEnvelopeNormalized2_CGSMax - 0.2) < 0.01):
-        #VZ_basename = DataFileName['E2=0.2-phi=0']
-      #elif(abs(FieldEnvelopeNormalized2_CGSMax - 1.0) < 0.01):
-        #VZ_basename = DataFileName['E2=1-phi=0']
-      #elif(abs(FieldEnvelopeNormalized2_CGSMax-2.) < 0.01): 
-        #VZ_basename = DataFileName['E2=2-phi=0']
-      #else:
-        #print Header+"Not all field values are available for 1030x800 nm. We have mostly 0.2, 1.0 and 2.0 normalied field units. Inputting the normalized field would be easier to access Vladimir's data?"
-        #print "Possible values: "+str(FieldNormalizationCoeff1_SI * 0.2)+" "+str(FieldNormalizationCoeff1_SI*1.0)+", "+str(FieldNormalizationCoeff1_SI*2.0)
-    #elif(abs(FieldEnvelopeNormalized2_CGSMax - 2.0) < 0.01 and CEP2 == pi/2.):
-      #VZ_basename = DataFileName['E2=2-phi=pi/2']
-    #else:
-      #print Header+"Not all field values are available for 1030x800 nm. We have mostly 0.2, 1.0 and 2.0 normalied field units. Inputting the normalized field would be easier to access Vladimir's data?"
-      #print "Possible values: "+str(FieldNormalizationCoeff1_SI * 0.2)+" "+str(FieldNormalizationCoeff1_SI*1.0)+", "+str(FieldNormalizationCoeff1_SI*2.0)
-      #print "Field2NormalizedMax_CGS="+str(FieldEnvelopeNormalized2_CGS.max())
-      #print "CEP2="+str(float(CEP2))
-      #exit()
+    
   elif((wavelength1 == 400e-9 and wavelength2 == 2*wavelength1) or (wavelength1 == 800e-9 and wavelength2 == wavelength1/2.)):
     #TODO: the two sets could be inverted! 
     Dictionnary={'FieldSquared1': 0, 'FieldSquared2': 1, 'wpi': 2 } #Bichromatic case
@@ -769,7 +746,13 @@ def VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength1 = 800e-9, w
   print Header+"Path: "+VZ_basename
   IndexWpi           = Dictionnary['wpi']
   IndexFieldSquared1 = Dictionnary['FieldSquared1']
-  IndexFieldSquared2 = Dictionnary['FieldSquared2']
+  if (FieldEnvelopeNormalized2_CGS.max() > 0.):
+    IndexFieldSquared2 = Dictionnary['FieldSquared2']
+    NumberOfColors = 2
+  else:
+    NumberOfColors = 1
+  
+  # Fetching content of the files
   databasecontents   = loadtxt(VZ_basename, skiprows=2)
   
   deltaField_CGS = 0.0025 #TODO: automatic step from the database file? Isnt it a bit small ?!
@@ -778,46 +761,71 @@ def VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength1 = 800e-9, w
   # Time to filter the entries with the required normaliezd field in the relevant database
   #databasecontentsfilter=FilterDatabaseLowerThan(databasecontentsfilter,FieldEnvelopeNormalized1_CGS+deltaField_CGS,IndexFieldSquared)
   #databasecontentsfilter=FilterDatabaseGreaterThan(databasecontentsfilter,FieldEnvelopeNormalized1_CGS-deltaField_CGS,IndexFieldSquared)
+  DB_FieldSquaredNorm1 = databasecontents[:,IndexFieldSquared1] #this is a mapping
+  DB_Wpi               = databasecontents[:,IndexWpi]           #this is a mapping
+  if(NumberOfColors == 2):
+    DB_FieldSquaredNorm2 = databasecontents[:,IndexFieldSquared2] #this is a mapping
   
-  DB_FieldSquaredNorm1 = databasecontents[:,IndexFieldSquared1]
-  DB_FieldSquaredNorm2 = databasecontents[:,IndexFieldSquared2]
-  DB_Wpi               = databasecontents[:,IndexWpi]
+    #print DB_FieldSquaredNorm1.shape, DB_FieldSquaredNorm2.shape, DB_Wpi.shape
+    print Header+"Data well imported from DB."
+    
+    # This works for 2D matrix interpolation
+    print Header+"** Preparing interpolation of w_pi(E1,E2)..."
+    xdim = int(np.sqrt(len(DB_FieldSquaredNorm1)))
+    print xdim
+    Wpi_2D_X  = DB_FieldSquaredNorm1.reshape(xdim, xdim)
+    Wpi_2D_Y  = DB_FieldSquaredNorm2.reshape(xdim, xdim)
+    Wpi_2D    = DB_Wpi.reshape((xdim, xdim))
+    Wpi_X     = Wpi_2D_X[:,0]
+    Wpi_Y     = Wpi_2D_Y[0,:]
   
-  #print DB_FieldSquaredNorm1.shape, DB_FieldSquaredNorm2.shape, DB_Wpi.shape
-  print Header+"Data well imported from DB."
+    print Header+"** Interpolating the w_PI..."
+    #InterpolationOrder=1
+    WPI_func = interp2d(Wpi_X, Wpi_Y, Wpi_2D) #interfaces w_PI with E1, E2 values, as a function in RxR. 
   
-  print Header+"** Preparing interpolation of w_pi(E1,E2)..."
-  xdim = int(np.sqrt(len(DB_FieldSquaredNorm1)))
-  print xdim
-  Wpi_2D_X  = DB_FieldSquaredNorm1.reshape(xdim, xdim)
-  Wpi_2D_Y  = DB_FieldSquaredNorm2.reshape(xdim, xdim)
-  Wpi_2D    = DB_Wpi.reshape((xdim, xdim))
-  Wpi_X     = Wpi_2D_X[:,0]
-  Wpi_Y     = Wpi_2D_Y[0,:]
+    print Header+"Range of the interpolant: "
+    print FieldEnvelopeNormalized1_CGS.min(), FieldEnvelopeNormalized1_CGS.max()
+    
+    # Interpolating the right W_PI [CGS unit!]
+    # WPI [SI] = m^-3 s^-1
+    # WPI [CGS]= cm^-3.s^-1
+    w_PI_CGS_matrix = WPI_func(FieldEnvelopeNormalized1_CGS**2, FieldEnvelopeNormalized2_CGS**2) #hence w_PI_CGS: This function is giving a full matrix in RxR. I just want a list indexed on instants. Maybe capture the diagonal of this matrix? This would correspond to the same instants.
+    w_PI_CGS = w_PI_CGS_matrix.diagonal()
+    # w_PI_CGS is in particles per cm^-3. 
+  elif(NumberOfColors == 1): 
+    print Header+"** Info: selected the single color Keldysh tables."
+    print Header+"Linear interpolation from the single-color W_PI(E1) table... "
+    InterpolationOrder=1
+    print Header+"Size of field envelope: "+str(DB_FieldSquaredNorm1.shape)
+    print Header+"Size of the WPI database: "+str(DB_Wpi.shape)
+    WPI_func_1d = InterpolatedUnivariateSpline(DB_FieldSquaredNorm1, DB_Wpi, k=InterpolationOrder)
+    w_PI_CGS = WPI_func_1d(FieldEnvelopeNormalized1_CGS**2)
+    w_PI_CGS = np.clip(w_PI_CGS, 0., None)
+    
+  else: 
+    print Header+"Number of colors is too high. Keldysh-Zhukov model is made for 2 colors. "
+    exit()
   
-  print Header+"** Interpolating the w_PI..."
-  #InterpolationOrder=1
-  #WPI_func = InterpolatedUnivariateSpline(DB_FieldSquaredNorm, DB_Wpi, k=InterpolationOrder)
-  WPI_func = interp2d(Wpi_X, Wpi_Y, Wpi_2D)
+  print Header+"range(w_PI_CGS) = ", w_PI_CGS.min(), w_PI_CGS.max()
+  print Header+"dimension(w_PI_CGS) = ", w_PI_CGS.shape
   
-  print Header+"Range of the interpolant: "
-  print FieldEnvelopeNormalized1_CGS.min(), FieldEnvelopeNormalized1_CGS.max()
+  print Header+"** Conversion to W_PI (SI)..."
+  # Normalization coefficient given by Vladimir. 
+  OverallCoefficient = 128.*Egap/(pi*hbar)*N_total #CGS unit? #What is this 128 ? 
+  w_PI_SI = OverallCoefficient * (Length_CGS_to_SI(1.))**-3 * w_PI_CGS 
   
-  # Interpolating the right W_PI [CGS unit!]
-  # WPI [SI] = m^-3 s^-1
-  # WPI [CGS]= cm^-3.s^-1
-  w_PI_CGS = WPI_func(FieldEnvelopeNormalized1_CGS**2, FieldEnvelopeNormalized2_CGS**2)
-  # w_PI_CGS is in particles per cm^-3. 
-  w_PI_SI = (Length_CGS_to_SI(1.))**-3 * w_PI_CGS 
-  
-  print Header+"W_PI (CGS)"
-  print w_PI_CGS
-  
-  print Header+"** Converstion to W_PI (SI)..."
   print Header+"range(w_PI_SI) = ", w_PI_SI.min(), w_PI_SI.max()
-
-  print "Waiting for Vladimir's response on the W_PI CGS unit."
-  exit()
+  print Header+"dimension(w_PI_SI) = ", w_PI_SI.shape
+  
+  #print "Waiting for Vladimir's response on the W_PI CGS unit."
+  
+  # Still we cannot use this data, as they don't share the same timeline. 
+  # Did we introduce E1(t) and E2(t) in each dimension? 
+  # Or did we introduce (E1, E2) as a mapping? 
+  # Vladimir provided a mapping. We want to use it as a 
+  # We shall call w_PI_SI for each instantaneous field1 and field2. 
+  # 
+  
   print ""
   print Header+"Temporal integration..."
   
@@ -829,7 +837,7 @@ def VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength1 = 800e-9, w
   
   # Temporal integration with limiter
   dN_excited_Zhukov = np.multiply(w_PI_SI, dt)
-  
+  print dN_excited_Zhukov.cumsum()
   # Initial number of electrons in conduction band
   N_initial = np.zeros(w_PI_SI.shape)
   

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2.7
 #-*- coding: utf-8 -*-
 ## @package Keldysh
 ## Computes the Keldysh excitation rate of quasi-free electrons
@@ -21,10 +21,10 @@ Egap = 2.56e0*e; #LDA band gap of Si: 2.58 eV. #1.12e0*e for indirect band gap;
 meff=0.2226e0; #Effective mass of Si
 Ntotal=1.*5E28
 
-wavelength = 800e-9; wavelength2 = 400e-9
+wavelength = 800e-9; wavelength2 = 800e-9
 tau=10e-15; dt = 1E-17; CEP=0e0
 PeakFluence = 0.01*1E4 #J/cm2 * 1E4 = J/m2
-PeakField   = 4655327068.03 # np.sqrt(2e0 * PeakFluence / (tau * c * epsilon_0))
+PeakField   = np.sqrt(2e0 * PeakFluence / (tau * c * epsilon_0))
 
 t0=0. #defines the instant 0.
 Delay = 0. #delay between maxima of the pulses
@@ -33,7 +33,7 @@ tmin=-1.*tau + t0; tmax=1.*tau + Delay + t0
 instants = np.arange(tmin, tmax, dt)
 #print "Time range: "+str(instants.min())+", "+str(instants.max())+"."
 
-PeakField2  = PeakField #/ 2.
+PeakField2  = 0. #/ 2.
 CEP2        = 0. #pi/3.
 #wavelength2 = wavelength
 

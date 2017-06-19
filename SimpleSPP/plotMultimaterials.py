@@ -213,8 +213,8 @@ else:
 	CS = plt.contourf(eps2r, eps2c, Period, levels=levels, cmap=plt.cm.RdBu_r)
 #}
 	
-plt.xlabel(r'$Re(\varepsilon)$')
-plt.ylabel(r'$Im(\varepsilon)$')
+plt.xlabel(r'Re($\varepsilon$)')
+plt.ylabel(r'Im($\varepsilon$)')
 
 # adding the dots for materials
 if(reverse): #{
@@ -244,8 +244,9 @@ else:
 	CS = plt.contourf(eps2r, eps2c, deltaPeriod, levels=levels, cmap=plt.cm.Blues)
 #}
 	
-plt.xlabel(r'$Re(\varepsilon)$')
-plt.ylabel(r'$Im(\varepsilon)$')
+plt.xlabel(r'Re($\varepsilon$)')
+plt.ylabel(r'Im($\varepsilon$)')
+
 
 # adding the dots for materials
 if(reverse): #{
@@ -281,8 +282,8 @@ else:
 	CS = plt.contourf(eps2r, eps2c, LsppTable, levels=levels, cmap=plt.cm.Blues)
 #}
 	
-plt.xlabel(r'$Re(\varepsilon)$')
-plt.ylabel(r'$Im(\varepsilon)$')
+plt.xlabel(r'Re($\varepsilon$)')
+plt.ylabel(r'Im($\varepsilon$)')
 
 # adding the materials information !
 if(reverse): #{
@@ -295,9 +296,11 @@ else:
 #plt.clabel(CS, inline=1, fontsize=20)
 #plt.legend(pos=1)
 plt.colorbar(CS)
-plt.title(r'SPP mean-free-path $L_{SPP}$ ($\mu$m), $\lambda=$'+niceWavelength+' nm.')
-plt.savefig('Lspp2d'+niceWavelength+'.eps')
-plt.savefig('Lspp2d'+niceWavelength+'.png')
+plt.title(r'SPP mean-free-path L$_\textrm{\large{} SPP}$ ($\mu$m), $\lambda=$'+niceWavelength+' nm')
+plt.savefig('Lspp2d'+niceWavelength+'.eps', format='eps')
+plt.savefig('Lspp2d'+niceWavelength+'.png', format='png')
+plt.savefig('Lspp2d'+niceWavelength+'.svg', format='svg')
+plt.savefig('Lspp2d'+niceWavelength+'.pdf', format='pdf')
 #plt.show()
 
 ####### "Plotting the Lspp uncertainty due to dispersion over dielectric permittivity."
@@ -315,8 +318,8 @@ else:
 	CS = plt.contourf(eps2r, eps2c, deltaLsppTable, levels=levels, cmap=plt.cm.Blues)
 #}
 	
-plt.xlabel(r'$Re(\varepsilon)$')
-plt.ylabel(r'$Im(\varepsilon)$')
+plt.xlabel(r'Re($\varepsilon$)')
+plt.ylabel(r'Im($\varepsilon$)')
 
 # adding the materials information !
 if(reverse): #{
@@ -332,4 +335,4 @@ plt.colorbar(CS)
 plt.title(r'Fluctuations $\delta L_{SPP}$ ($\mu$m), $\lambda=$'+niceWavelength+' nm.')
 plt.savefig('deltaLspp'+niceWavelength+'.eps')
 plt.savefig('deltaLspp'+niceWavelength+'.png')
-plt.show()
+#plt.show()

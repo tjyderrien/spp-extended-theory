@@ -33,28 +33,6 @@ if(len(sys.argv)<=2):
   print "Example: ./plotMultiwavelength.py Au Johnson"
   exit()
 
-MaterialFolder="Database"
-
-MaterialFile1="Air"
-#MaterialFile1="Al2O3-Palik"
-#MaterialFile1="SiO2-Palik"
-#MaterialFile1="TiO2-Palik"
-#MaterialFile1="Si-Palik"
-#MaterialFile1="ZnO-Bond"
-
-#MaterialFile1="Ag-Johnson"
-
-#MaterialFile2="Al-Palik"
-#MaterialFile2="Ti-Palik"
-#MaterialFile2="Ag-Palik"
-#MaterialFile2="Au-Palik"
-#MaterialFile2="Au-Johnson"
-
-#MaterialFile2="SiO2-Palik"
-#MaterialFile2="Ti-Johnson"
-#MaterialFile2="Mo-Palik"
-#MaterialFile2="Si-Palik"
-
 #============ Manage the command line input =================
 query = sys.argv[1]
 #wavelength = 1E-9*float(sys.argv[2])
@@ -81,13 +59,39 @@ except:
 
 MaterialFile2 = query+source
 
+# ============= BYPASSING COMMAND LINE =============
+
+MaterialFolder="Database"
+
+#MaterialFile1="Air"
+#MaterialFile1="Al2O3-Palik"
+MaterialFile1="SiO2-Palik"
+#MaterialFile1="TiO2-Palik"
+#MaterialFile1="Si-Palik"
+#MaterialFile1="ZnO-Bond"
+
+#MaterialFile1="Ag-Johnson"
+#MaterialFile1="Ag-Palik"
+
+#MaterialFile2="Al-Palik"
+#MaterialFile2="Ti-Palik"
+#MaterialFile2="Ag-Palik"
+#MaterialFile2="Au-Palik"
+#MaterialFile2="Au-Johnson"
+
+#MaterialFile2="SiO2-Palik"
+#MaterialFile2="Ti-Johnson"
+#MaterialFile2="Mo-Palik"
+#MaterialFile2="Si-Palik"
+
 # Managing source files units (quite artificial...)
 UnitMat1=1e10
 if(source == "-Palik"):
   UnitMat2=1e10
-  #print "** Warning: Palik optical data selected..."
+  print "** Info: Palik optical data selected..."
 elif(source == "-Johnson"):
   UnitMat2=1e6
+  print "** Info: Johnson optical data selected..."
 else:
   print "** Warning: Rare source of optical data was selected..."
   UnitMat2=1e6
@@ -113,12 +117,15 @@ nlines, ncols = MaterialArray2.shape
 try:
   MaterialArray1 = loadtxt(MaterialFolder+'/'+MaterialFile1, delimiter='\t', skiprows=4)
 except:
-  print "** Warning: Material 1 ("+MaterialFile1+") was not found in "+MaterialFolder+"."
-  print "** Warning: Material 1 was replaced by Air."
-  
-  MaterialArray1 = np.zeros((nlines, 3))
-  MaterialArray1[:,1] = np.ones(nlines) #Air index is 1. 
-  MaterialArray1[:,0] = MaterialArray2[:,0] #Copy the table of wavelengths
+  try:
+    MaterialArray1 = loadtxt(MaterialFolder+'/'+MaterialFile1, delimiter=' ', skiprows=4)
+  except:
+    print "** Warning: Material 1 ("+MaterialFile1+") was not found in "+MaterialFolder+"."
+    print "** Warning: Material 1 was replaced by Air."
+    
+    MaterialArray1 = np.zeros((nlines, 3))
+    MaterialArray1[:,1] = np.ones(nlines) #Air index is 1. 
+    MaterialArray1[:,0] = MaterialArray2[:,0] #Copy the table of wavelengths
 
 #print "Shape of MaterialArray1 is "+str(MaterialArray1.shape)
 #print "Shape of MaterialArray2 is "+str(MaterialArray2.shape)
@@ -217,12 +224,12 @@ print "Plot the SPP mean-free path with wavelength..."
 
 plt.figure()
 plt.xlabel('Wavelength $\lambda$ $(nm)$')
-plt.ylabel('SPP mean-free-path $L_{SPP}$ ($\mu$m)')
+plt.ylabel('SPP mean-free-path $L_{\mbox{SPP}}$ (\mbox{$\mu$m})')
 plt.plot(1e9*wavelengths, 1e6 * (0.5E0/kspp.imag)) #label=MaterialFile1+'/'+MaterialFile2
 #plt.title('Period of field at $'+MaterialFile1+'$/$'+MaterialFile2+'$ interface')
 plt.legend(loc=2)
 plt.grid(True)
-plt.savefig(MaterialFile1+MaterialFile2+'MeanFreePath.eps')
+plt.savefig(MaterialFile1+MaterialFile2+'MeanFreePath.svg')
 #plt.show()
 plt.plot(1e9*wavelengths, 1e6 * (0.5E0/kspp.imag), label=MaterialFile1+'/'+MaterialFile2)
 plt.savefig(MaterialFile1+MaterialFile2+'MeanFreePath-LogLog.eps')
@@ -284,7 +291,7 @@ HohenauLabel="Hohenau formula"#17
 RaetherLabel="Raether formula" #18
 plt.figure()
 plt.xlabel('Wavelength $\lambda$ (nm)')
-plt.ylabel(r'SPP lifetime $\tau_{\mbox{SPP}}$ (ps)')
+plt.ylabel(r'SPP lifetime $\tau_{\textrm{SPP}}$ (ps)')
 line2,=plt.plot(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeRe, 'r--', label=r'Eq. (17)')
 line1,=plt.plot(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeOld, 'k-', label=r'Eq. (18)')
 #line3,=plt.plot(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeNew, 'r--', label=r'$\tau_{SPP}=L_{SPP}/v_g$, Eq. (Wirtinger), $\omega \in \mathbb{R}$, $\beta \in \mathbb{C}$')
@@ -295,7 +302,7 @@ line1,=plt.plot(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeOld, 'k-', label=r'Eq. (18
 plt.setp(line1, linewidth=3); plt.setp(line2, linewidth=3); #plt.setp(line3, linewidth=3); 
 plt.legend(loc=2)
 plt.xticks(np.arange(0, 3500, 500))
-if(query == "Ti"):
+if(query == "Ti"): #used only for changing the visual scale!
   maxLifeTime=0.05
 elif (query == "Ag"):
   maxLifeTime=7
@@ -319,7 +326,7 @@ OpticalPenetrationDepth = (OpticalPenetrationDepth.imag)**(-1e0)
 
 plt.figure()
 plt.xlabel('Wavelength $\lambda$ (nm)')
-plt.ylabel(r'SPP decay depth $\delta_{\mbox{SPP}}$ ($\mu$lm)')
+plt.ylabel(r'SPP decay depth $\delta_{\textrm{SPP}}$ ($\mu$lm)')
 plt.semilogy(1e9*2*pi*c/omegaspp, 1E6*SPPdecayDepth, 'r-', label=r'$\delta_{SPP}$, medium 1')
 plt.semilogy(1e9*2*pi*c/omegaspp, 1E6*SPPdecayDepth2, 'r--', label=r'$\delta_{SPP}$, medium 2')
 plt.semilogy(1e9*2*pi*c/omegaspp, 1E6*OpticalPenetrationDepth, 'bx', label=r'$\delta_{OPD}$, medium 2')
@@ -328,7 +335,7 @@ plt.legend(loc=1)
 plt.savefig(MaterialFile1+MaterialFile2+'SppDecayDepth.eps')
 plt.savefig(MaterialFile1+MaterialFile2+'SppDecayDepth.png')
 
-fraction = 12.5/100.
+fraction = 70./100.
 EffectivePermittivity = MaxwellGarnett2(eps1new, eps2new, 1.-fraction)
 print "Plotting Maxwell-Garnett 2-material mixing."
 plt.figure()
@@ -337,8 +344,10 @@ plt.xlabel(r'Wavelength $\lambda$ (nm)')
 plt.plot(1e9*wavelengths, EffectivePermittivity.real, 'b-', label=r'$Re(\varepsilon_{eff})$')
 plt.plot(1e9*wavelengths, EffectivePermittivity.imag, 'r-', label=r'$Im(\varepsilon_{eff})$')
 plt.legend(loc=1)
-plt.savefig(MaterialFile1+MaterialFile2+'Garnett.eps')
-plt.savefig(MaterialFile1+MaterialFile2+'Garnett.png')
+plt.xlim((200.,2000.))
+filename=MaterialFile1+'fraction'+str(fraction)+MaterialFile2+'fraction'+str(1.-fraction)+'Garnett'
+plt.savefig(filename+'.eps')
+plt.savefig(filename+'.png')
 
 if(ShowPictures == True):
   plt.show()

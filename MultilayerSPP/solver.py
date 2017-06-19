@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #-*- coding: utf-8 -*-
 
 # Copyright (C) 2017 F. Preucil, T.J.-Y. Derrien
@@ -48,7 +48,7 @@ eps3 = 13.64+0.048j #substrate Si (no excitation)
 eps1 = Drude(wavelength, ne, eps3, nu, meff)
 
 k0 = 2.*pi/wavelength
-t = 200e-9 #Thickness of the layer in meters
+t = 300e-9 #Thickness of the layer in meters
 
 #branches
 branches = [0, 1, 2, 3, 4, 5, 6, 7] #list of branches you want to use
@@ -196,4 +196,4 @@ plt.ylabel('Im')
 plt.grid()
 plt.legend(loc=4)
 plt.savefig('betaSolution-wavelength'+str(wavelength*1E9)+'-thickness'+str(t)+'-density-'+str(ne)+'m-3.eps')
-#plt.show()
+plt.show()

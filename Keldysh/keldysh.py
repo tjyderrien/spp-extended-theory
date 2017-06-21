@@ -12,72 +12,154 @@ print ""
 print "** Welcome to SPP-extended-theory suite."
 print "** Author(s): T.J.-Y. Derrien"
 print ""
-print "** Loading Keldysh module [Keldysh, Sov. J. Exp. Th. Phys. 47, 5 (1964)]..."
-print "** Loading Gruzdev formula [Gruzdev, Optical Engineering 53, 122515 (2014)]"
+print "** Loaded Keldysh module [Keldysh, Sov. J. Exp. Th. Phys. 47, 5 (1964)]..."
+print "** Loaded Gruzdev formula [Gruzdev, Optical Engineering 53, 122515 (2014)]"
 
-print "Defining material parameters..."
+print "** Info: this file contains examples how to use the Keldysh library. "
+print "         It also contains validation cases of the present theory on Si and known references. "
 
-Egap = 2.56e0*e; #LDA band gap of Si: 2.58 eV. #1.12e0*e for indirect band gap; 
-meff=0.2226e0; #Effective mass of Si
-Ntotal=1.*5E28
+# Test the Keldysh model using silicon band gap given by the LDA functionals. 
+def SiliconLDAbandGap(): #{{{
+  print "Defining Si material parameters..."
 
-wavelength = 800e-9; wavelength2 = 800e-9
-tau=10e-15; dt = 1E-17; CEP=0e0
-PeakFluence = 0.01*1E4 #J/cm2 * 1E4 = J/m2
-PeakField   = np.sqrt(2e0 * PeakFluence / (tau * c * epsilon_0))
+  Egap = 2.56e0*e; #LDA band gap of Si: 2.58 eV. #1.12e0*e for indirect band gap; 
+  meff=0.2226e0; #Effective mass of Si
+  Ntotal=1.*5E28
 
-t0=0. #defines the instant 0.
-Delay = 0. #delay between maxima of the pulses
-tmin=-1.*tau + t0; tmax=1.*tau + Delay + t0
+  wavelength = 800e-9; wavelength2 = 800e-9
+  tau=10e-15; dt = 1E-17; CEP=0e0
+  PeakFluence = 0.01*1E4 #J/cm2 * 1E4 = J/m2
+  PeakField   = np.sqrt(2e0 * PeakFluence / (tau * c * epsilon_0))
 
-instants = np.arange(tmin, tmax, dt)
-#print "Time range: "+str(instants.min())+", "+str(instants.max())+"."
+  t0=0. #defines the instant 0.
+  Delay = 0. #delay between maxima of the pulses
+  tmin=-1.*tau + t0; tmax=1.*tau + Delay + t0
 
-PeakField2  = 0. #/ 2.
-CEP2        = 0. #pi/3.
-#wavelength2 = wavelength
+  instants = np.arange(tmin, tmax, dt)
+  #print "Time range: "+str(instants.min())+", "+str(instants.max())+"."
 
-# Test with a single pulse centered on 0
-FieldEnvelope1, RealField1 = PulseSquaredSinTemporalShape(instants, tau, PeakField, wavelength, CEP, t0, 0.)
+  PeakField2  = 0. #/ 2.
+  CEP2        = 0. #pi/3.
+  #wavelength2 = wavelength
 
-# We build a second pulse with a delay
-FieldEnvelope2, RealField2 = PulseSquaredSinTemporalShape(instants, tau, PeakField2, wavelength2, CEP, t0, Delay)
+  print Header+"** Test: building single pulse centered on 0..."
+  FieldEnvelope1, RealField1 = PulseSquaredSinTemporalShape(instants, tau, PeakField, wavelength, CEP, t0, 0.)
 
-print "# Test with a bicolor double pulse"
+  print Header+"** Test: We build a second pulse with a delay..."
+  FieldEnvelope2, RealField2 = PulseSquaredSinTemporalShape(instants, tau, PeakField2, wavelength2, CEP, t0, Delay)
 
-FieldEnvelopeTot, RealFieldTot = PulseSquaredSinTemporalShapeDoublePulse(instants, tau, tau, PeakField, PeakField, wavelength, wavelength2, CEP, CEP2, t0, Delay)
+  print Header+"** Test: building a bicolor double pulse"
 
-plt.plot(instants, RealField1.real, '-')
-plt.plot(instants, FieldEnvelope1.real, '--')
-plt.plot(instants, RealField2.real, '-')
-plt.plot(instants, FieldEnvelope2.real, '--')
-plt.plot(instants, RealFieldTot.real, '-')
-plt.plot(instants, FieldEnvelopeTot.real, '--')
-plt.xlabel('')
-plt.savefig('PulseEnvelopes.eps')
-plt.savefig('PulseEnvelopes.png')
-#plt.show()
+  FieldEnvelopeTot, RealFieldTot = PulseSquaredSinTemporalShapeDoublePulse(instants, tau, tau, PeakField, PeakField, wavelength, wavelength2, CEP, CEP2, t0, Delay)
 
-print "Computing the W_PI values..."
-wPI_Zhukov = VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength, wavelength2, CEP, CEP2, Egap, meff, tau, tau, Delay, dt, Ntotal, t0)
+  plt.plot(instants, RealField1.real, '-')
+  plt.plot(instants, FieldEnvelope1.real, '--')
+  plt.plot(instants, RealField2.real, '-')
+  plt.plot(instants, FieldEnvelope2.real, '--')
+  plt.plot(instants, RealFieldTot.real, '-')
+  plt.plot(instants, FieldEnvelopeTot.real, '--')
+  plt.xlabel('')
+  plt.savefig('PulseEnvelopes.eps')
+  plt.savefig('PulseEnvelopes.png')
+  #plt.show()
 
-exit()
+  print Header+"** Info: PulseEnvelope.EPS and PNG were written in the current folder. "
 
-order = 50
-ShowPlot = True
+  order = 50
+  ShowPlot = True
 
-#timeKeldysh, N_Keldysh_SI, N_Gruzdev_SI = plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelope.real, dt, order, ShowPlot, 0e0, Ntotal)
+  print Header+"** Test 0: Convergence test using the Keldysh-Gruzdev formulas..."
+  plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, 1E-17, order, ShowPlot)
+  plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, 5E-17, order, ShowPlot)
+  plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, 1E-16, order, ShowPlot)
+  print "Checking dt convergence..."
+  print ""
+  print "Checking order convergence..."
+  plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, dt, 10, ShowPlot)
+  plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, dt, 20, ShowPlot)
+  plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, dt, 30, ShowPlot)
+  plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, dt, 40, ShowPlot)
+  plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, dt, 50, ShowPlot)
 
-# print "Checking dt convergence..."
-# plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, 1E-17, order, ShowPlot)
-# plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, 5E-17, order, ShowPlot)
-# plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, 1E-16, order, ShowPlot)
-# print ""
-# print "Checking order convergence..."
-# plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, dt, 10, ShowPlot)
-# plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, dt, 20, ShowPlot)
-# plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, dt, 30, ShowPlot)
-# plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, dt, 40, ShowPlot)
-# plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, dt, 50, ShowPlot)
+  print Header+"** Test 1: computing the W_PI values from self-coded and validated Gruzdev theory applied to Gulley 2010 article..."
+  timeKeldysh, N_Keldysh_SI, N_Gruzdev_SI = plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelope.real, dt, order, ShowPlot, 0e0, Ntotal)
 
-#TODO: print "Exporting density to a table for ZnO optical index calculations."
+  print Header+"** Test 2: computing the W_PI values from self-coded and validated Gruzdev theory..."
+  timeKeldysh, N_Keldysh_SI, N_Gruzdev_SI = plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelope.real, dt, order, ShowPlot, 0e0, Ntotal)
+
+  print Header+"** Test 3: computing the W_PI values from Vladimir Zhukov tables..."
+  wPI_Zhukov = VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength, wavelength2, CEP, CEP2, Egap, meff, tau, tau, Delay, dt, Ntotal, t0)
+#}}}
+
+# Repeats the results obtained in Gulley, Opt. Eng. 51, 121805 (2012). 
+def SilicaGulley2012(): #{{{
+  print "Defining SiO2 material parameters from [Gulley 2012]..."
+
+  Egap = 2.56e0*e; #band gap of SiO2
+  meff=0.2226e0; #Effective mass of SiO2 #TODO?
+  Ntotal=1.*5E28; #valence band electron density #TODO
+
+  wavelength = 800e-9; wavelength2 = 800e-9
+  tau=10e-15; dt = 1E-17; CEP=0e0
+  PeakFluence = 0.01*1E4 #J/cm2 * 1E4 = J/m2
+  PeakField   = np.sqrt(2e0 * PeakFluence / (tau * c * epsilon_0))
+
+  t0=0. #defines the instant 0.
+  Delay = 0. #delay between maxima of the pulses
+  tmin=-1.*tau + t0; tmax=1.*tau + Delay + t0
+
+  instants = np.arange(tmin, tmax, dt)
+  #print "Time range: "+str(instants.min())+", "+str(instants.max())+"."
+
+  PeakField2  = 0. #/ 2.
+  CEP2        = 0. #pi/3.
+  #wavelength2 = wavelength
+
+  print Header+"** Test: building single pulse centered on 0..."
+  FieldEnvelope1, RealField1 = PulseSquaredSinTemporalShape(instants, tau, PeakField, wavelength, CEP, t0, 0.)
+
+  print Header+"** Test: We build a second pulse with a delay..."
+  FieldEnvelope2, RealField2 = PulseSquaredSinTemporalShape(instants, tau, PeakField2, wavelength2, CEP, t0, Delay)
+
+  print Header+"** Test: building a bicolor double pulse"
+
+  FieldEnvelopeTot, RealFieldTot = PulseSquaredSinTemporalShapeDoublePulse(instants, tau, tau, PeakField, PeakField, wavelength, wavelength2, CEP, CEP2, t0, Delay)
+
+  plt.plot(instants, RealField1.real, '-')
+  plt.plot(instants, FieldEnvelope1.real, '--')
+  plt.plot(instants, RealField2.real, '-')
+  plt.plot(instants, FieldEnvelope2.real, '--')
+  plt.plot(instants, RealFieldTot.real, '-')
+  plt.plot(instants, FieldEnvelopeTot.real, '--')
+  plt.xlabel('')
+  plt.savefig('PulseEnvelopes.eps')
+  plt.savefig('PulseEnvelopes.png')
+  #plt.show()
+
+  print Header+"** Info: PulseEnvelope.EPS and PNG were written in the current folder. "
+
+  order = 50
+  ShowPlot = True
+
+  print Header+"** Test 0: Convergence test using the Keldysh-Gruzdev formulas..."
+  plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, 1E-17, order, ShowPlot)
+  plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, 5E-17, order, ShowPlot)
+  plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, 1E-16, order, ShowPlot)
+  print "Checking dt convergence..."
+  print ""
+  print "Checking order convergence..."
+  plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, dt, 10, ShowPlot)
+  plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, dt, 20, ShowPlot)
+  plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, dt, 30, ShowPlot)
+  plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, dt, 40, ShowPlot)
+  plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, dt, 50, ShowPlot)
+
+  print Header+"** Test 1: computing the W_PI values from self-coded and validated Gruzdev theory..."
+  timeKeldysh, N_Keldysh_SI, N_Gruzdev_SI = plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelope.real, dt, order, ShowPlot, 0e0, Ntotal)
+
+  print Header+"** Test 2: computing the W_PI values from Vladimir Zhukov tables..."
+  print Header+"           WE DONT HAVE THEM FOR THIS BAND GAP. Contact zukov@ict.nsc.ru."
+  #wPI_Zhukov = VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength, wavelength2, CEP, CEP2, Egap, meff, tau, tau, Delay, dt, Ntotal, t0)
+  
+  return 0
+#}}}

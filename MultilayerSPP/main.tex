@@ -1,1 +1,85 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{hyperref}
 
+\newcommand{\rf}[1]{(\ref{#1})}
+\newcommand{\cu}{\mathrm{i}}
+\newcommand{\rb}[1]{\left(#1\right)}
+\newcommand{\bb}[1]{\left[#1\right]}
+\newcommand{\cub}[1]{\left\{#1\right\}}
+\newcommand{\df}[2]{\frac{\mathrm{d} #1}{\mathrm{d} #2}}
+\newcommand{\eps}{\varepsilon}
+
+\begin{document}
+\section{Basics}
+The main equation
+\begin{equation}
+\exp(-2 k_1 t) = \frac{N}{\Delta},
+\label{e:or}
+\end{equation}
+where
+\begin{equation}
+k_i=s_i\sqrt{\beta^2-k_0^2\eps_i},
+\end{equation}
+$s_i\in\{-1,1\}$ choose the branches of the square roots, and
+\begin{equation}
+N = \rb{\frac{k_1}{\eps_1}+\frac{k_2}{\eps_2}}\rb{\frac{k_1}{\eps_1}+\frac{k_3}{\eps_3}},\qquad \Delta = \rb{\frac{k_1}{\eps_1}-\frac{k_2}{\eps_2}}\rb{\frac{k_1}{\eps_1}-\frac{k_3}{\eps_3}},
+\end{equation}
+where $\Delta$ is always finite, because $\eps_i \neq 0$ (assumption). The denominator $\Delta$ might be zero though. Let us denote $\mathcal{Z} = \{\beta \in \mathbb{C},\ \Delta(\beta) = 0\}$. What is $\mathcal{Z}$? From the first bracket of $\Delta$
+\begin{equation}
+\eps_2^2 (\beta^2-k_0^2\eps_1) = \eps_1^2 (\beta^2-k_0^2\eps_2),
+\end{equation}
+which implies
+\begin{equation}
+\beta = \pm\sqrt{\frac{\eps_2^2 k_0^2 \eps_1-\eps_1^2 k_0^2 \eps_2}{\eps_2^2-\eps_1^2}},
+\end{equation}
+and from the second bracket also
+\begin{equation}
+\beta = \pm\sqrt{\frac{\eps_3^2 k_0^2 \eps_1-\eps_1^2 k_0^2 \eps_3}{\eps_3^2-\eps_1^2}}.
+\end{equation}
+So
+\begin{equation}
+\mathcal{Z} = \cub{\pm\sqrt{\frac{\eps_2^2 k_0^2 \eps_1-\eps_1^2 k_0^2 \eps_2}{\eps_2^2-\eps_1^2}},\pm\sqrt{\frac{\eps_3^2 k_0^2 \eps_1-\eps_1^2 k_0^2 \eps_3}{\eps_3^2-\eps_1^2}}},
+\end{equation}
+which is four numbers in total. If $\eps_1 = \eps_2$ or $\eps_1 = \eps_3$, then $\mathcal{Z} = \mathbb{C}$ instead, and the original equation \rf{e:or} is not defined at all.
+
+Consider a transformed equation
+\begin{equation}
+\Delta\exp(-2 k_1 t) = N.
+\label{e:tr}
+\end{equation}
+Denote $\mathcal{S}$ the set of roots of the original form \rf{e:or}, and denote $\mathcal{S}'$ the set of roots of the transformed form \rf{e:tr}. The domain of \rf{e:or} is $\mathcal{D} = \{\beta \in \mathbb{C},\ \Delta(\beta) \neq 0\}$, and the domain of \rf{e:tr} is $\mathcal{D}' = \{\beta \in \mathbb{C}\}$.
+
+Since $\mathcal{D} \subseteq \mathcal{D}'$ (or explicitly $\mathcal{D}' = \mathcal{D} \cup \mathcal{Z}, \mathcal{D} \cap \mathcal{Z} = \emptyset $), it must hold $\mathcal{S}\subseteq\mathcal{S}'$. In other words, by extending the domain (the set where the equation is defined), we might be generating new roots. The possible new roots must be inside the added part ($\mathcal{Z}$) of the domain, so $\mathcal{S}'\setminus \mathcal{S} \subset \mathcal{Z}$.
+
+Conclusion: if we have a root  $\beta \in \mathcal{S}'$, it might not be a root of the original equation \rf{e:or} ($\beta \notin \mathcal{S}$). In that case $\beta \in \mathcal{Z}$, and we should check that. If it is not inside $\mathcal{Z}$, then it is a valid root of the original equation \rf{e:or} (so $\beta \in \mathcal{S}$).
+
+\section{Standing wave solution}
+Let us consider the following two solutions
+\begin{equation}
+\beta = \pm\sqrt{k_0^2\eps_1}.
+\end{equation}
+We have $k_1=0$ (trivially), and we can easily see that \rf{e:or} is satisfied regardless of the choice of $s_i$. This is the only one known analytic solution so far in the most general case.
+\section{Inverse law}
+Function
+\begin{equation}
+\sqrt{\beta^2 - c}
+\end{equation}
+has a phase discontinuity, which is described by
+\begin{equation}
+\Im(\beta^2 - c) = 0,\qquad \Re(\beta^2 - c) < 0.
+\end{equation}
+
+Splitting into real and imaginary parts
+\begin{equation}
+\beta = \Re(\beta) + \cu\Im(\beta),\qquad c = \Re(c) + \cu\Im(c) 
+\end{equation}
+yields
+\begin{equation}
+\Im(\beta) = \frac{\Im(c)}{2\Re(\beta)},\qquad \Re^2(\beta)-\Im^2(\beta) - \Re(c) < 0.
+\end{equation}
+These two equations describe a curve, which is a part of a hyperbola. In our case we have three square roots (for three different epsilons), so we will have three such curves. It seems some roots are sometimes (not always) localized on one of these curves. These roots are directional, which means that taking limits from some directions might yield zero, whereas some other directions might give a non-zero (similar to the Heaviside function in 1D).
+\end{document}

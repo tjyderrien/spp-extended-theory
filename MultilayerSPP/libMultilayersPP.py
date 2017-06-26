@@ -107,14 +107,14 @@ findroots = np.vectorize(findroots)
 #returns a list of branches, each branch is a list of roots, each root is a 1D numpy array containing two values, first value = Re(beta), second value = Im(beta)
 
 #Example:
-roots = findroots(-1+1j, 1, 1,
+#roots = findroots(-1+1j, 1, 1,
                   1, 1,
                   -10, 10,
                   -10, 10,
                   5, 5,
                   .0001)
 
-print(roots) #list of arrays
+#print(roots) #list of arrays
 #print(roots[0])     #prints roots belonging to the zeroth branch (-, -, -)
 #print(roots[7][0])  #prints the first root from the last branch (+, +, +)
 
@@ -128,4 +128,3 @@ print(roots) #list of arrays
 #   6 (+, +, -)
 #   7 (+, +, +)
 
-# Attempt to vectorize the solver

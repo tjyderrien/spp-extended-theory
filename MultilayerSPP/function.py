@@ -29,6 +29,11 @@ from scipy.optimize import root
 from numpy.linalg import norm
 from itertools import product
 
+## Function f(x,y)=0 to solve in the R^2 space. 
+# f(x,y) = 0 is an equation defined in complex space. 
+# All parameters can be complex-valued. 
+# See: T.J.-Y. Derrien et al, J. Appl. Phys. 116, 074902 (2014) and references 
+# therein. 
 def func(betaR, eps1, eps2, eps3, k0, t, sgn1, sgn2, sgn3):
     beta = betaR[0] + betaR[1]*1j
     k1 = sgn1*cmath.sqrt(beta*beta - k0*k0*eps1)
@@ -41,6 +46,24 @@ def func(betaR, eps1, eps2, eps3, k0, t, sgn1, sgn2, sgn3):
         out = 1e99
     return [out.real, out.imag]
 
+## Finds many (all?) roots of the "func" function using two numerical solvers in RxR. 
+# The solver is adapted to the function "func" and its mathematical dependencies. 
+# WARNING: This routine cannot be used with another equation without modification. 
+# In present state, the solver investigates the 8 possible branches of the thin film equation 
+# for Surface Plasmon Polaritons. See T.J.-Y. Derrien et al, J. Appl. Phys. 116, 074902 (2014) and references 
+# therein. 
+# @param eps1: Dielectric permittivity of the thin film
+# @param eps2: Dielectric permittivity of the half-plane below the thin film. 
+# @param eps3: Dielectric permittivity of the half-plane above the thin film. Source light is supposed to come from this direction. 
+# @param k0: wavenumber of the source light (SI units). 
+# @param t: thickness of the film
+# @param x_min: lower boundary of Re(roots)
+# @param x_max: higher boundary of Re(roots)
+# @param y_min: lower boundary of Im(roots)
+# @param y_max: higher boundary of Im(roots)
+# @param x_steps: number of steps used to mesh the Re(roots) space. 
+# @param y_steps: number of steps used to mesh the Im(roots) space. 
+# @param t_blur: tolerance to merge the identified solutions. 
 def findroots(eps1, eps2, eps3, k0, t, x_min, x_max, y_min, y_max, x_steps, y_steps, t_blur):
     broots = []
     for sgn1, sgn2, sgn3 in product((-1,1), (-1,1), (-1,1)):
@@ -70,6 +93,7 @@ def findroots(eps1, eps2, eps3, k0, t, x_min, x_max, y_min, y_max, x_steps, y_st
 
         broots.append(unique)
     return broots
+findroots = np.vectorize(findroots)
 
 #Usage:
 #
@@ -83,15 +107,16 @@ def findroots(eps1, eps2, eps3, k0, t, x_min, x_max, y_min, y_max, x_steps, y_st
 #returns a list of branches, each branch is a list of roots, each root is a 1D numpy array containing two values, first value = Re(beta), second value = Im(beta)
 
 #Example:
-roots = findroots(1, 2, 3,
+roots = findroots(-1+1j, 1, 1,
                   1, 1,
                   -10, 10,
                   -10, 10,
                   5, 5,
                   .0001)
 
-print(roots[0])     #prints roots belonging to the zeroth branch (-, -, -)
-print(roots[7][0])  #prints the first root from the last branch (+, +, +)
+print(roots) #list of arrays
+#print(roots[0])     #prints roots belonging to the zeroth branch (-, -, -)
+#print(roots[7][0])  #prints the first root from the last branch (+, +, +)
 
 #List of branch indexes:
 #   0 (-, -, -)
@@ -102,3 +127,5 @@ print(roots[7][0])  #prints the first root from the last branch (+, +, +)
 #   5 (+, -, +)
 #   6 (+, +, -)
 #   7 (+, +, +)
+
+# Attempt to vectorize the solver

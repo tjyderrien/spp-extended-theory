@@ -78,7 +78,7 @@ x_steps =  maxsteps
 y_steps =  maxsteps
 
 #tolerances
-t_blur = 10 # 100000
+t_blur = 10 # unit of beta
 
 #-----------------------------------------------------------------------------
 
@@ -182,8 +182,8 @@ for sgn1, sgn2, sgn3 in [list(product((-1,1), (-1,1), (-1,1)))[i] for i in branc
 
     broots.append(unique)
 
-##a = cmath.sqrt(eps1*k0*k0)
-##plt.plot((a.real, -a.real), (a.imag, -a.imag), 'red')
+a = cmath.sqrt(eps1*k0*k0) #standing wave inside the thin film here
+plt.plot((a.real, -a.real), (a.imag, -a.imag), 'red')
 colors = ['red', 'green', 'blue', 'black', 'magenta', 'cyan', 'lime', 'orangered']
 for rts, col in zip(broots, colors):
     if len(rts) > 0:

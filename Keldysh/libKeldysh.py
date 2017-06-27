@@ -531,7 +531,7 @@ def plotPulseToDensity(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, ta
     plt.ylabel("$w_{PI}$ (m$^{-3}$ s$^{-1}$)")
     plt.loglog(FieldToIntensity(FieldEnvelope.real), wPI,  linestyle="-", color="r", label=r"$w_{PI}$ "+ShortRefKeldysh)
     plt.loglog(FieldToIntensity(FieldEnvelope.real), wPIg, linestyle="-", color="b", label=r"$w_{PI}$ "+ShortRefGruzdev)
-    plt.loglog(Gulley2012[:,0], Gulley2012[:,1], linestyle="--", color="b", label=r"$w_{PI}$ "+ShortRefGulley)
+    plt.loglog(Gulley2012[:,0], Gulley2012[:,1], linestyle="-", color="k", label="Data from "+ShortRefGulley)
     plt.grid()
     plt.legend(loc=2)
     plt.xlim((1E11*1E4, 1E15*1E4))

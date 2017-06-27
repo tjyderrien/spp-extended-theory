@@ -8,6 +8,8 @@
 # * Outputing density in certain conditions. 
 from libKeldysh import *
 
+Header="[keldysh] "
+
 print ""
 print "** Welcome to SPP-extended-theory suite."
 print "** Author(s): T.J.-Y. Derrien"
@@ -81,9 +83,6 @@ def SiliconLDAbandGap(): #{{{
   plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, dt, 40, ShowPlot)
   plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, dt, 50, ShowPlot)
 
-  print Header+"** Test 1: computing the W_PI values from self-coded and validated Gruzdev theory applied to Gulley 2010 article..."
-  timeKeldysh, N_Keldysh_SI, N_Gruzdev_SI = plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelope.real, dt, order, ShowPlot, 0e0, Ntotal)
-
   print Header+"** Test 2: computing the W_PI values from self-coded and validated Gruzdev theory..."
   timeKeldysh, N_Keldysh_SI, N_Gruzdev_SI = plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelope.real, dt, order, ShowPlot, 0e0, Ntotal)
 
@@ -95,13 +94,13 @@ def SiliconLDAbandGap(): #{{{
 def SilicaGulley2012(): #{{{
   print "Defining SiO2 material parameters from [Gulley 2012]..."
 
-  Egap = 2.56e0*e; #band gap of SiO2
-  meff=0.2226e0; #Effective mass of SiO2 #TODO?
-  Ntotal=1.*5E28; #valence band electron density #TODO
+  Egap = 9e0*e; #band gap of SiO2
+  meff = 1e0; #Effective mass of SiO2
+  Ntotal=10.*5E28; #valence band electron density #to avoid limitation
 
   wavelength = 800e-9; wavelength2 = 800e-9
   tau=10e-15; dt = 1E-17; CEP=0e0
-  PeakFluence = 0.01*1E4 #J/cm2 * 1E4 = J/m2
+  PeakFluence = 1E19*10e-15 #setting by the peak intensity #0.01*1E4 #J/cm2 * 1E4 = J/m2
   PeakField   = np.sqrt(2e0 * PeakFluence / (tau * c * epsilon_0))
 
   t0=0. #defines the instant 0.
@@ -114,7 +113,7 @@ def SilicaGulley2012(): #{{{
   PeakField2  = 0. #/ 2.
   CEP2        = 0. #pi/3.
   #wavelength2 = wavelength
-
+  
   print Header+"** Test: building single pulse centered on 0..."
   FieldEnvelope1, RealField1 = PulseSquaredSinTemporalShape(instants, tau, PeakField, wavelength, CEP, t0, 0.)
 
@@ -141,25 +140,32 @@ def SilicaGulley2012(): #{{{
   order = 50
   ShowPlot = True
 
-  print Header+"** Test 0: Convergence test using the Keldysh-Gruzdev formulas..."
-  plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, 1E-17, order, ShowPlot)
-  plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, 5E-17, order, ShowPlot)
-  plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, 1E-16, order, ShowPlot)
-  print "Checking dt convergence..."
-  print ""
-  print "Checking order convergence..."
-  plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, dt, 10, ShowPlot)
-  plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, dt, 20, ShowPlot)
-  plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, dt, 30, ShowPlot)
-  plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, dt, 40, ShowPlot)
-  plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, dt, 50, ShowPlot)
-
   print Header+"** Test 1: computing the W_PI values from self-coded and validated Gruzdev theory..."
-  timeKeldysh, N_Keldysh_SI, N_Gruzdev_SI = plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelope.real, dt, order, ShowPlot, 0e0, Ntotal)
+  timeKeldysh, N_Keldysh_SI, N_Gruzdev_SI = plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelope1.real, dt, order, ShowPlot, 0e0, Ntotal)
+  
+  #print Header+"** Test 0: Convergence test using the Keldysh-Gruzdev formulas..."
+  #plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, 1E-17, order, ShowPlot)
+  #plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, 5E-17, order, ShowPlot)
+  #plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, 1E-16, order, ShowPlot)
+  
+  #print "Checking dt convergence..."
+  #print ""
+  #print "Checking order convergence..."
+  
+  #plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, dt, 10, ShowPlot)
+  #plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, dt, 20, ShowPlot)
+  #plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, dt, 30, ShowPlot)
+  #plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, dt, 40, ShowPlot)
+  #plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, dt, 50, ShowPlot)
 
-  print Header+"** Test 2: computing the W_PI values from Vladimir Zhukov tables..."
-  print Header+"           WE DONT HAVE THEM FOR THIS BAND GAP. Contact zukov@ict.nsc.ru."
+  #print Header+"** Test 1: computing the W_PI values from self-coded and validated Gruzdev theory..."
+  #timeKeldysh, N_Keldysh_SI, N_Gruzdev_SI = plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelope1.real, dt, order, ShowPlot, 0e0, Ntotal)
+
+  #print Header+"** Test 2: computing the W_PI values from Vladimir Zhukov tables..."
+  #print Header+"           WE DONT HAVE THEM FOR THIS BAND GAP. Contact zukov@ict.nsc.ru."
   #wPI_Zhukov = VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength, wavelength2, CEP, CEP2, Egap, meff, tau, tau, Delay, dt, Ntotal, t0)
   
   return 0
 #}}}
+
+SilicaGulley2012()

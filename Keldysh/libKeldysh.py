@@ -35,9 +35,17 @@ from scipy.constants import c, epsilon_0, mu_0, pi, e, m_e, h, hbar
 #import sys
 
 from libDatabase import *
-rc('font', **{'family':'serif', 'serif':['Georgia'], 'size':'16'})
-rc('text', usetex=False)
+from libUnits import *
+
+rc('font', **{'family':'serif', 'serif':['Helvetica'], 'size':'16'})
+rc('text', usetex=True)
 mp.rcParams['legend.numpoints'] = 1
+
+Header="[libKeldysh] "
+
+ShortRefKeldysh = "[Keldysh (1964)]"
+ShortRefGruzdev = "[Gruzdev (2014)]"
+ShortRefGulley  = "[Gulley (2012)]"
 
 ## Computes a step function
 # Heaviside function
@@ -359,10 +367,7 @@ GenerateKeldyshDatabase                 = np.vectorize(GenerateKeldyshDatabase)
 # @param order: integration order for Keldysh model (integer, no unit)
 # @N_total: limiter for the ionizable number of electrons (float, m^{-3})
 def generateWpiTables(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, tau = 10e-15, FieldEnvelope = 1e9, dt = 1E-17, order = 50, N_total=5E28, t0=0.0): #{{{
-  Header="[libKeldysh] "
-  ShortRefKeldysh = "[Keldysh (1964)]"
-  ShortRefGruzdev = "[Gruzdev (2014)]"
-  
+
   print Header+"Defining the laser pulse..."
   # t0 = 0e0
   tmin = -1.*tau+t0
@@ -446,15 +451,16 @@ def generateWpiTables(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, tau
 # @param dt (seconds): precision of the temporal envelope
 # @param order (adim): order of the integration (default: 50).
 def plotPulseToDensity(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, tau = 10e-15, FieldEnvelope = 1e9, dt = 1E-17, order = 50, ShowPlot=False, t0=0., N_total=5E28): #{{{
-  Header="[libKeldysh] "
-  ShortRefKeldysh = "[Keldysh (1964)]"
-  ShortRefGruzdev = "[Gruzdev (2014)]"
+  #Header="[libKeldysh] "
   #gamma = gammaKeldysh(Egap, meff, FieldEnvelope, wavelength)
   
   ### We shall generate the interesting pulse in the file from which we call the Keldysh generator
   instants, N_excited_Keldysh, N_excited_Gruzdev, gamma, wPI, wPIg = generateWpiTables(Egap, meff, wavelength, tau, FieldEnvelope, dt, order, N_total, t0)
   
-  sizeGamma = len(gamma)
+  try: 
+    sizeGamma = len(gamma)
+  except: 
+    print Header+"Error: problem on gamma in plotPulseToDensity():"+str(gamma)
   
   print ""
   print Header+"** Warning: results may be not converged."
@@ -465,7 +471,7 @@ def plotPulseToDensity(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, ta
   print ""
 #  return N_excited_Gruzdev 
   if(ShowPlot): 
-    print Header+"Plotting..."
+    print Header+"Plotting as function of time..."
 
     xunit = 1E15
     timeunit = "fs"
@@ -480,8 +486,6 @@ def plotPulseToDensity(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, ta
     plt.ylabel("Field envelope (V/m)")
     plt.plot(xunit*instants[0:sizeGamma], FieldEnvelope, color="k", linestyle="-", label=r"Field envelope")
     plt.grid()
-    # plt.loglog(Efield, 0.1, label="Tunnelling limit")
-    # plt.loglog(Efield, 10.*np.ones(), label="MPI limit")
     plt.legend(loc=3)
     
     plt.subplot(412)
@@ -490,8 +494,6 @@ def plotPulseToDensity(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, ta
     plt.ylabel("Adiabadicity $\gamma$")
     plt.semilogy(xunit*instants[0:sizeGamma], gamma, color="k", linestyle="-", label=r"$\gamma$")
     plt.grid()
-    # plt.loglog(Efield, 0.1, label="Tunnelling limit")
-    # plt.loglog(Efield, 10.*np.ones(), label="MPI limit")
     plt.legend(loc=3)
 
     plt.subplot(413)
@@ -504,7 +506,7 @@ def plotPulseToDensity(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, ta
     plt.legend(loc=2)
 
     plt.subplot(414)
-    #plt.xlabel("Intensity (W/m$^{2}$)")
+    
     plt.xlabel("Time ("+timeunit+")")
     # plt.xlabel("Field (V/m)")
     plt.ylabel("Density (m$^{-3}$)")
@@ -513,95 +515,31 @@ def plotPulseToDensity(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, ta
     plt.grid()
     plt.legend(loc=2)
     plt.savefig("KeldyshSimple.eps") 
-  
+    
+    ### Second plot
+    print Header+"Importing Gulley [2012] data..."
+    try:
+      Gulley2012=np.loadtxt("Gulley-Fig2.csv", dtype='float', delimiter='\t')
+      #print Gulley2012[:,0]
+    except: 
+      print Header+"** Warning: failed to import Gulley2012 data table..."
+      
+    
+    print Header+"Plotting as function of laser field envelope..."
+    plt.figure()
+    plt.xlabel("Intensity (W/m$^{2}$)")
+    plt.ylabel("$w_{PI}$ (m$^{-3}$ s$^{-1}$)")
+    plt.loglog(FieldToIntensity(FieldEnvelope.real), wPI,  linestyle="-", color="r", label=r"$w_{PI}$ "+ShortRefKeldysh)
+    plt.loglog(FieldToIntensity(FieldEnvelope.real), wPIg, linestyle="-", color="b", label=r"$w_{PI}$ "+ShortRefGruzdev)
+    plt.loglog(Gulley2012[:,0], Gulley2012[:,1], linestyle="--", color="b", label=r"$w_{PI}$ "+ShortRefGulley)
+    plt.grid()
+    plt.legend(loc=2)
+    plt.xlim((1E11*1E4, 1E15*1E4))
+    plt.ylim((1E20*1E6,1E40*1E6))
+    plt.savefig("Keldysh-Field-Wpi.eps") 
+    
   return instants, N_excited_Keldysh, N_excited_Gruzdev
 #}}}
-
-##############################
-
-## Convert length units from CGS to SI
-# Validated on https://en.wikipedia.org/wiki/Centimetre%E2%80%93gram%E2%80%93second_system_of_units#Electromagnetic_units_in_various_CGS_systems
-def Length_CGS_to_SI(CGS):
-  return CGS / 1e2
-
-## Convert length units from SI to CGS
-# Validated on https://en.wikipedia.org/wiki/Centimetre%E2%80%93gram%E2%80%93second_system_of_units#Electromagnetic_units_in_various_CGS_systems
-def Length_SI_to_CGS(SI):
-  return SI * 1e2
-
-## Converts a mass in g (CGS unit) to kg (SI)
-# @param CGS: mass in g (CGS unit)
-# Validated on https://en.wikipedia.org/wiki/Centimetre%E2%80%93gram%E2%80%93second_system_of_units#Electromagnetic_units_in_various_CGS_systems
-def Mass_CGS_to_SI(CGS):
-  return CGS * 1E-3
-
-## Converts a mass from kg (SI) to g (CGS unit)
-# @param SI: mass in kg (SI unit)
-# Validated on https://en.wikipedia.org/wiki/Centimetre%E2%80%93gram%E2%80%93second_system_of_units#Electromagnetic_units_in_various_CGS_systems
-def Mass_SI_to_CGS(SI):
-  return SI * 1E3
-
-## Converts velocity from cm/s (CGS unit) tp m/s (SI unit)
-# @param CGS: velocity in cm/s
-# Validated on https://en.wikipedia.org/wiki/Centimetre%E2%80%93gram%E2%80%93second_system_of_units#Electromagnetic_units_in_various_CGS_systems
-def Velocity_CGS_to_SI(CGS):
-  return CGS / 1E2
-
-## Converts velocity from m/s (SI unit) to cm/s (CGS unit)
-# @param SI: velocity in m/s
-# Validated on https://en.wikipedia.org/wiki/Centimetre%E2%80%93gram%E2%80%93second_system_of_units#Electromagnetic_units_in_various_CGS_systems
-def Velocity_SI_to_CGS(SI):
-  return SI * 1E2
-
-## Converts an energy in ergs (CGS unit) to Joules (SI unit)
-# @param CGS: energy in ergs (CGS unit)
-# Validated on https://en.wikipedia.org/wiki/Centimetre%E2%80%93gram%E2%80%93second_system_of_units#Electromagnetic_units_in_various_CGS_systems
-def Energy_CGS_to_SI(CGS):
-  return CGS / 1E7
-
-## Converts an energy from Joules (SI unit) to ergs (CGS unit) 
-# @param SI: energy in Joules (SI unit)
-# Validated on https://en.wikipedia.org/wiki/Centimetre%E2%80%93gram%E2%80%93second_system_of_units#Electromagnetic_units_in_various_CGS_systems
-def Energy_SI_to_CGS(SI):
-  return SI * 1E7
-
-## Converts electric charge in Coulomb (SI unit) to statC (CGS unit)
-# Validated on Jackson book: 1 C ~ 3E9 statC 
-def electric_charge_SI_to_CGS(SI):
-  c_CGS = Velocity_SI_to_CGS(c)
-  conversion = c_CGS / 10.
-  return SI * conversion
-
-## Converts electric charge in statC (CGS unit) to Coulomb (SI unit)
-# Validated on Jackson book: 1 C ~ 3E9 statC 
-def electric_charge_CGS_to_SI(CGS):
-  c_CGS = Velocity_SI_to_CGS(c)
-  conversion = c_CGS / 10.
-  return CGS / conversion
-
-## Converts field CGS units (statV/cm) in SI (V/m).
-# @param CGS: input field in CGS units
-# Retuns the field in SI units (V/m).
-# Jackson: 1 V/m ~ 1 / 3 * 1E-4 
-#                = 1E8 / c_SI * 1E-4 = 1E2 / c_SI
-#                = 1E6 / c_CGS
-def Field_CGS_to_SI(CGS):
-  c_CGS      = Velocity_SI_to_CGS(c)
-  conversion = 1E6 / c_CGS
-  return CGS/conversion
-
-## Converts field SI units (V/m) to CGS units (statV/cm)
-# @param SI: input field in SI units (V/m)
-# Retuns the field in CGS units (statV/cm).
-# Jackson: 1 V/m ~ 1 / 3 * 1E-4 
-#                = 1E8 / c_SI * 1E-4 = 1E2 / c_SI
-#                = 1E6 / c_CGS
-def Field_SI_to_CGS(SI):
-  c_CGS      = Velocity_SI_to_CGS(c) #[cm/s]
-  conversion = 1E6 / c_CGS
-  return SI*conversion
-
-
 
 
 ## Generates the normalization coefficients for electric field

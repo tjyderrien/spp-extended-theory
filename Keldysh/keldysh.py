@@ -28,38 +28,38 @@ def SiliconLDAbandGap(): #{{{
   meff=0.2226e0; #Effective mass of Si
   Ntotal=1.*5E28
 
-  wavelength = 800e-9; wavelength2 = 800e-9
+  wavelength = 800e-9;
   tau=10e-15; dt = 1E-17; CEP=0e0
   PeakFluence = 0.01*1E4 #J/cm2 * 1E4 = J/m2
   PeakField   = np.sqrt(2e0 * PeakFluence / (tau * c * epsilon_0))
 
   t0=0. #defines the instant 0.
-  Delay = 0. #delay between maxima of the pulses
+  Delay = 10e-15 #delay between maxima of the pulses
   tmin=-1.*tau + t0; tmax=1.*tau + Delay + t0
 
   instants = np.arange(tmin, tmax, dt)
   #print "Time range: "+str(instants.min())+", "+str(instants.max())+"."
 
-  PeakField2  = 0. #/ 2.
-  CEP2        = 0. #pi/3.
-  #wavelength2 = wavelength
+  PeakField2  = PeakField
+  CEP2        = pi/3.
+  wavelength2 = wavelength #/ 2.
 
   print Header+"** Test: building single pulse centered on 0..."
   FieldEnvelope1, RealField1 = PulseSquaredSinTemporalShape(instants, tau, PeakField, wavelength, CEP, t0, 0.)
 
   print Header+"** Test: We build a second pulse with a delay..."
-  FieldEnvelope2, RealField2 = PulseSquaredSinTemporalShape(instants, tau, PeakField2, wavelength2, CEP, t0, Delay)
+  FieldEnvelope2, RealField2 = PulseSquaredSinTemporalShape(instants, tau, PeakField2, wavelength2, CEP2, t0, Delay)
 
   print Header+"** Test: building a bicolor double pulse"
 
-  FieldEnvelopeTot, RealFieldTot = PulseSquaredSinTemporalShapeDoublePulse(instants, tau, tau, PeakField, PeakField, wavelength, wavelength2, CEP, CEP2, t0, Delay)
+  FieldEnvelopeTot, RealFieldTot = PulseSquaredSinTemporalShapeDoublePulse(instants, tau, tau, PeakField, PeakField2, wavelength, wavelength2, CEP, CEP2, t0, Delay)
 
-  plt.plot(instants, RealField1.real, '-')
-  plt.plot(instants, FieldEnvelope1.real, '--')
-  plt.plot(instants, RealField2.real, '-')
-  plt.plot(instants, FieldEnvelope2.real, '--')
-  plt.plot(instants, RealFieldTot.real, '-')
-  plt.plot(instants, FieldEnvelopeTot.real, '--')
+  plt.plot(instants, RealField1.real, 'r-')
+  plt.plot(instants, FieldEnvelope1.real, 'r--')
+  plt.plot(instants, RealField2.real, 'b-')
+  plt.plot(instants, FieldEnvelope2.real, 'b--')
+  plt.plot(instants, RealFieldTot.real, 'k-')
+  plt.plot(instants, FieldEnvelopeTot.real, 'k--')
   plt.xlabel('')
   plt.savefig('PulseEnvelopes.eps')
   plt.savefig('PulseEnvelopes.png')
@@ -168,4 +168,5 @@ def SilicaGulley2012(): #{{{
   return 0
 #}}}
 
-SilicaGulley2012()
+#SilicaGulley2012()
+SiliconLDAbandGap()

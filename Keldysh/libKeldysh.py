@@ -274,7 +274,7 @@ def PulseSquaredSinTemporalShape(t, tau, PeakField, wavelength, CEP=0., t0=0., P
   H1 = step(t - t1 + tau) #! theer could be a mistake in pulse duration here!
   H2 = step(t - t1 - tau)
   Envelope = PeakField*np.sin(pi*(t-t1-tau)/(2e0*tau))**2 * H1 * (1.-H2)
-  Phase = np.exp(1e0j*omega*t+CEP)
+  Phase = np.exp(1e0j*(omega*t+CEP))
   Field = Envelope * Phase
   return Envelope, Field
 
@@ -301,10 +301,11 @@ def PulseSquaredSinTemporalShapeDoublePulse(t, tau1, tau2, Efield1, Efield2, wav
   H12        = step(t - t1 - tau1); H22 = step(t - t2 - tau2)
   FieldEnv1     = Efield1*np.sin(pi*(t-t1-tau1)/(2e0*tau1))**2 * H11 * (1.-H12) #could be bugged
   FieldEnv2     = Efield2*np.sin(pi*(t-t2-tau2)/(2e0*tau2))**2 * H21 * (1.-H22) #could be bugged
-  Phase1 = np.exp(1e0j*omega1*t+CEP1)
-  Phase2 = np.exp(1e0j*omega2*t+CEP2)
+  Phase1 = np.exp(1e0j*(omega1*t+CEP1))
+  Phase2 = np.exp(1e0j*(omega2*t+CEP2))
   #TotalEnvelope = np.sqrt( FieldEnv1*np.conj(FieldEnv1) + FieldEnv2*np.conj(FieldEnv2) + FieldEnv1*np.conj(FieldEnv2) * np.exp(1e0j*(omega1-omega2)*t) + np.conj(FieldEnv1)* FieldEnv2 * np.exp(1e0j*(omega2-omega1)*t) ) #complex square of the fields must provide the envelope
-  TotalEnvelope = np.sqrt( FieldEnv1*np.conj(FieldEnv1) * np.exp(2.*CEP1) + FieldEnv2*np.conj(FieldEnv2) * np.exp(2.*CEP2) + FieldEnv1*np.conj(FieldEnv2) * np.exp(1e0j*(omega1-omega2)*t+CEP1+CEP2) + np.conj(FieldEnv1)* FieldEnv2 * np.exp(1e0j*(omega2-omega1)*t+CEP1+CEP2) ) #complex square of the fields must provide the envelope
+  #BUG: the phase does not work properly! Rederive the following formula! 
+  TotalEnvelope = np.sqrt( FieldEnv1*np.conj(FieldEnv1) + FieldEnv2*np.conj(FieldEnv2) + FieldEnv1*np.conj(FieldEnv2) * np.exp(1e0j*((omega1-omega2)*t+CEP1-CEP2)) + np.conj(FieldEnv1)* FieldEnv2 * np.exp(1e0j*((omega2-omega1)*t+CEP2-CEP1)) ) #complex square of the fields must provide the envelope
   TotalField = FieldEnv1*Phase1 + FieldEnv2*Phase2
   return TotalEnvelope, TotalField
 

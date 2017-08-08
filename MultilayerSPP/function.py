@@ -39,7 +39,6 @@ def func(betaR, eps1, eps2, eps3, k0, t, sgn1, sgn2, sgn3):
     k1 = sgn1*cmath.sqrt(beta*beta - k0*k0*eps1)
     k2 = sgn2*cmath.sqrt(beta*beta - k0*k0*eps2)
     k3 = sgn3*cmath.sqrt(beta*beta - k0*k0*eps3)
-
     try:
         out = (k1/eps1 - k2/eps2) * (k1/eps1 - k3/eps3) * cmath.exp(-2*k1*t) - (k1/eps1 + k2/eps2) * (k1/eps1 + k3/eps3)
     except:

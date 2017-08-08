@@ -86,7 +86,6 @@ def func(betaR):
     k1 = sgn1*cmath.sqrt(beta*beta - k0*k0*eps1)
     k2 = sgn2*cmath.sqrt(beta*beta - k0*k0*eps2)
     k3 = sgn3*cmath.sqrt(beta*beta - k0*k0*eps3)
-
     try:
         out = (k1/eps1 - k2/eps2) * (k1/eps1 - k3/eps3) * cmath.exp(-2*k1*t) - (k1/eps1 + k2/eps2) * (k1/eps1 + k3/eps3)
     except:
@@ -97,20 +96,25 @@ def plothyp(eps, col):
     brpoint = cmath.sqrt(eps*k0*k0).real
     domain = np.linspace(-brpoint, -1E-6*brpoint, num=2000)
     plt.plot(domain, k0*k0*eps.imag/(2*domain), col)
-
     domain = np.linspace(1E-6*brpoint, brpoint, num=2000)
     plt.plot(domain, k0*k0*eps.imag/(2*domain), col)
 
-print('Guess area is a rectangle:')
-print('[%.2e, %.2e]x[%.2ei, %.2ei], x_steps = %d, y_steps = %d' % (x_min, x_max, y_min, y_max, x_steps, y_steps))
+print('Guess area is the following rectangle:')
+print('  Re(beta) in [%.2e, %.2e]' % (x_min, x_max))
+print('  Im(beta) in [%.2e, %.2e]' % (y_min, y_max))
+print('  x_steps = %d' % x_steps)
+print('  y_steps = %d' % y_steps)
 print()
-print('Initial data:')
-print('    eps1:', eps1)
-print('    eps2:', eps2)
-print('    eps3:', eps3)
-print('    k0:', k0)
-print('    t:', t)
+print('Data:')
+print('  eps1:', eps1)
+print('  eps2:', eps2)
+print('  eps3:', eps3)
+print('  k0:', k0)
+print('  t:', t)
+print()
+print('Selected branches:', branches)
 
+#main algorithm
 broots = []
 for sgn1, sgn2, sgn3 in [list(product((-1,1), (-1,1), (-1,1)))[i] for i in branches]:
     roots = []
@@ -156,10 +160,10 @@ for sgn1, sgn2, sgn3 in [list(product((-1,1), (-1,1), (-1,1)))[i] for i in branc
         print(('%% .%de  %% .%de  │ %% .%de  │  %%s  %% .%de  %% .%de' % tuple([prec]*5)) % (rt[0], rt[1], norm(func(rt)), nrt.success, nrt.x[0], nrt.x[1])) #checking with Levenberg–Marquardt method
     if len(unique) > 0:
         print()
-    print('Total (assimilated): %d ' % len(unique))
-
+    print('Total (merged): %d ' % len(unique))
     broots.append(unique)
 
+#plotting
 bounds = [0, 0, 0, 0]
 for rts in broots:
     for rt in rts:

@@ -55,7 +55,7 @@ Header="[libKeldyshMcDonald] "
 # @param kpoints: number of k-points in 1D direction
 # @param AtomicDistance: distance between lattice sites (in Bohr)
 def SiBandStructureLongitudinal(A_projected_AU, EgapDirect=2.65, kpoints=64, AtomicDistance=5.32): #{{{
-  print Header+"Defining the band structure."
+  #print Header+"Defining the band structure."
   #AtomicDistance=5.32 #interatomic distance in Si (at. u.) 
 
   #kN = 64 #resolution of k space
@@ -74,17 +74,18 @@ def SiBandStructureLongitudinal(A_projected_AU, EgapDirect=2.65, kpoints=64, Ato
   k = np.arange(0., kmax, (kmax-kmin) / kpoints ) #meshing |k> space until 2pi/a
   
   # We shall apply the time dependence of k HERE.
-  print np.shape(A_projected_AU)
-  k_td = np.broadcast_to(k,(len(A_projected_AU),len(k))) #extending size of k into time
+  #print np.shape(A_projected_AU)
+  #k_td = np.broadcast_to(k,(len(A_projected_AU),len(k))) #extending size of k into time
   #print np.shape(k_td)
-  A_projected_AU_td = np.broadcast_to(A_projected_AU, (len(k), len(A_projected_AU) ) )
-  A_projected_AU_td = np.transpose(A_projected_AU_td)
+  #A_projected_AU_td = np.broadcast_to(A_projected_AU, (len(k), len(A_projected_AU) ) )
+  #A_projected_AU_td = np.transpose(A_projected_AU_td)
   #print Header+"Boundaries of A_projected_AU (Hartree/Bohr)."
-  print Header+"Boundaries of A_projected_SI (V/m)."
-  print Field_AU_to_SI(A_projected_AU.max())
-  k_td = k + A_projected_AU_td #shifts k|| by A|| in a time-dependent fashion. 
+  #print Header+"Boundaries of A_projected_SI (V/m)."
+  #print Field_AU_to_SI(A_projected_AU.max())
+  k_shifted = k + A_projected_AU #shifts k|| by A|| do the same for each timestep, but not vectorially (too heavy?)
+  #k_td = k + A_projected_AU_td #shifts k|| by A|| in a time-dependent fashion. 
   
-  print Header+"Dimension of k_td="+str(np.shape(k_td)) #GOOD. 
+  #print Header+"Dimension of k_td="+str(np.shape(k_td)) #GOOD. 
   
   #print index, k
   #print Header+"|j><k|"
@@ -93,11 +94,12 @@ def SiBandStructureLongitudinal(A_projected_AU, EgapDirect=2.65, kpoints=64, Ato
   #print np.outer(k, index)
 
   # How to create a new dimension with len(time)? Introduce it before giving k to index. 
-  cosTerm = np.cos(np.outer(k_td, index)*AtomicDistance)
+  #cosTerm = np.cos(np.outer(k_td, index)*AtomicDistance)
+  cosTerm = np.cos(np.outer(k_shifted, index)*AtomicDistance)
 
-  print Header+"cosTerm"
-  print np.shape(cosTerm)
-  print cosTerm
+  #print Header+"cosTerm"
+  #print np.shape(cosTerm)
+  #print cosTerm
 
   termsM1  = cosTerm*alpha #What * is exactly doing here? 
 
@@ -119,18 +121,18 @@ def SiBandStructureLongitudinal(A_projected_AU, EgapDirect=2.65, kpoints=64, Ato
   epsilonLong_AU = np.sum(termsM1, 1)
   epsilonLong_SI = Energy_Hartree_to_eV(epsilonLong_AU)
 
-  print Header+"Dimension of k-space..."
-  print len(k)
+  #print Header+"Dimension of k-space..."
+  #print len(k)
   
-  print Header+"Dimension of epsilon_Long_SI"
-  print len(epsilonLong_SI)
+  #print Header+"Dimension of epsilon_Long_SI"
+  #print len(epsilonLong_SI)
 
-  plt.figure()
-  plt.xlabel('k')
-  plt.ylabel(r'$\varepsilon_{||}$')
-  plt.plot(k,epsilonLong_SI)
-  plt.savefig("BandStructure1D.eps")
-  plt.savefig("BandStructure1D.png")
+  #plt.figure()
+  #plt.xlabel('k')
+  #plt.ylabel(r'$\varepsilon_{||}$')
+  #plt.plot(k,epsilonLong_SI)
+  #plt.savefig("BandStructure1D.eps")
+  #plt.savefig("BandStructure1D.png")
   #plt.show()
           
   return epsilonLong_AU
@@ -198,19 +200,37 @@ ElectricField_AU = np.array([ ElectricField_x_AU, ElectricField_y_AU, ElectricFi
 # But then, we have a time-dependent band gap in one dimension? 
 
 # We build a 3d-TD band structure (TD k-space)
-EpsilonX = SiBandStructureLongitudinal(Ax_AU) #A_|| should be here
-exit()
-EpsilonY = SiBandStructureLongitudinal(Ay_AU) #A_perp should be here
-EpsilonZ = SiBandStructureLongitudinal(Az_AU) #A_perp should be here
-print np.shape(EpsilonX), np.shape(EpsilonY), np.shape(EpsilonZ)
 
-Epsilon = np.einsum('i,j,k->ijk', EpsilonX, EpsilonY, EpsilonZ)
+# Method 1: vectorize by hand (quite difficult, gave up)
+# Method 2: make use of np.vstack() for each timestep in a for loop. 
+kpoints = 4; EgapDirect=2.65;
+EpsilonX = np.zeros(kpoints); EpsilonY = EpsilonX; EpsilonZ = EpsilonX
+
+#TODO: this creates gap map for only 1 dimension. We need for 3 dimensions: kx+Ax, ky+Ay, kz+Az
+for Ax_AU_instant in Ax_AU:
+  EpsilonX = np.vstack((EpsilonX, SiBandStructureLongitudinal(Ax_AU_instant, EgapDirect, kpoints))) #A_|| should be here
+for Ay_AU_instant in Ay_AU:
+  EpsilonY = np.vstack((EpsilonY, SiBandStructureLongitudinal(Ay_AU_instant, EgapDirect, kpoints))) #A_perp should be here
+for Az_AU_instant in Az_AU:
+  EpsilonZ = np.vstack((EpsilonZ, SiBandStructureLongitudinal(Az_AU_instant, EgapDirect, kpoints))) #A_perp should be here
+
+print Header+"Band structure, time-resolved"
+#print np.shape(EpsilonX), np.shape(EpsilonY), np.shape(EpsilonZ)
+#print EpsilonX, EpsilonY, EpsilonZ
+#We have for now (Eg_x, Eg_y, Eg_z) (kx, ky, kz, t)
+# To construct the total Epsilon(kx,ky,kz,t), we have to use the composition law given in McDonald paper.
+Epsilon = EgapDirect + EpsilonX + EpsilonY + EpsilonZ
+
+#Epsilon = np.einsum('i,l,j,l,k,l->ijkl', EpsilonX, EpsilonY, EpsilonZ)
 print np.shape(Epsilon)
 print Epsilon
+exit()
 
-#plt.matshow(Epsilon[32,:,:]) #apparently band structure is well defined
-#plt.show()
-
+# We need to compute d from Eg(kx,ky,kz)
+print Header+"Plotting a section of the band structure... (ky,kz)"
+plt.matshow(Epsilon[kpoints/2,:,:]) #apparently band structure is well defined
+plt.show()
+exit()
 d = DipolarTransition(Epsilon)
 print np.shape(d)
 

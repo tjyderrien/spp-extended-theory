@@ -236,34 +236,36 @@ print Header+"Plot the kappaX for which maximum efficiency is found as function 
 print "Mesh generation..."
 k_precision = 0.5
 SipeRanges = 2e0
-kx = np.arange(-SipeRanges,SipeRanges,k_precision)
-ky = np.arange(-SipeRanges,SipeRanges,k_precision)
-kxx, kyy = np.meshgrid(ky, kx)
+#kx = np.arange(0.,SipeRanges,k_precision)
+#ky = np.arange(0.,SipeRanges,k_precision)
+kx = [1.05e0]; ky= [0e0] #single value of kx,ky
+#kxx, kyy = np.meshgrid(ky, kx)
 
 # calculating Sipe efficiency for many materials
 title = select+' nm'
 
 # Generating mapping of dielectric permittivities
-epsR = np.arange(-10., 1., 0.5) #eta: precision on epsilon inherited from libSPP.py
-epsI = np.arange(  0., 1., 0.5) #eta: precision on epsilon inherited from libSPP.py
+epsR = np.arange(-10, 10., 0.01) #eta: precision on epsilon inherited from libSPP.py
+epsI = np.arange(  0., 10., 0.01) #eta: precision on epsilon inherited from libSPP.py
 
-epsR2, epsI2 = np.meshgrid(epsI, epsR)
+epsI2, epsR2 = np.meshgrid(epsI, epsR)
 epsilon2 = np.add(epsR2,np.multiply(1e0j, epsI2)) #map of all possible dielectric permittivities
 
 print "Calculating efficiency for all (kx, ky) values at wavelength "+title+"."
 
 #print "kxx shape = "+str(kxx.shape)+"."
 etaSipe = np.zeros((len(kx), len(ky), len(epsR), len(epsI)))
-print Header+"Memory usage: "+str(len(etaSipe)*64./8./1024.)+" kB."
+print Header+"Memory usage: "+str(len(kx)*len(ky)*len(epsR)*len(epsI)*64./8./1024./1024.)+" MB."
+#print Header+"Memory usage: "+str(len(etaSipe)*64./8./1024.)+" kB."
 
 print Header+"Shape (kx,ky,epsR,epsI)="+str(np.shape(etaSipe))
 
 # Building the etaSipe(kx,ky) distribution
-for j in np.arange(0,len(epsR)-1,1):
-  for k in np.arange(0,len(epsI)-1,1):
-    for m in np.arange(0,len(kx)-1,1):
-      for n in np.arange(0,len(ky)-1,1):
-        print "[Debug] kx["+str(m)+"], ky["+str(n)+"], epsR["+str(j)+"], epsI["+str(k)+"]."
+for j in np.arange(0,len(epsR),1):
+  for k in np.arange(0,len(epsI),1):
+    for m in np.arange(0,len(kx),1):
+      for n in np.arange(0,len(ky),1):
+        #print "[Debug] kx["+str(m)+"], ky["+str(n)+"], epsR["+str(j)+"], epsI["+str(k)+"]."
         kappa = np.array([kx[m], ky[n]])
         kappai = np.array([-cmath.sin(theta), 0])
         kappap = kappai + kappa; kappam = kappai - kappa
@@ -272,12 +274,22 @@ for j in np.arange(0,len(epsR)-1,1):
         except:
           etaSipe[m,n,j,k] = 0.
 
-# Ok, it's time to get a picture mapping of the efficiency.         
-print etaSipe
-maximum = np.amax(etaSipe) #finds maximum value of efficiency 
-print maximum
+# Ok, it's time to get a picture mapping of the efficiency.
+#print etaSipe
+maximum = np.amax(etaSipe) #finds maximum value of efficiency
+print etaSipe[0,0,:,:]
+print Header+"Maximum efficiency = "+str(maximum)
 # TODO: find the corresponding value of kappaX, kappaY. 
-
+plt.figure()
+plt.matshow(etaSipe[:,:,0,0]) #eta(kx,ky;epsR=-2, epsI=0)
+plt.colorbar()
+plt.figure()
+#levels = [1, 5, 10, 20, 30, 40, 50, 100]
+CS=plt.contourf(epsR2,epsI2,np.log10(etaSipe[0,0,:,:])) #,levels=levels)
+plt.colorbar(CS)
+plt.xlabel(r'Re($\varepsilon$)')
+plt.ylabel(r'Im($\varepsilon$)')
+plt.show()
 
 # TODO 
 # - Automatize the inverse Fourier transform to check regularity and pattern shape: see formula in my thesis. 

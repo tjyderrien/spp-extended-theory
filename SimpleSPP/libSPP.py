@@ -54,13 +54,13 @@ LevelOfSPPaccuracy=2
 
 # Settings for matplotlib: taken from https://stackoverflow.com/questions/12322738/how-do-i-change-the-axis-tick-font-in-a-matplotlib-plot-when-rendering-using-lat
 sizeOfFont = 18
-FontName='cm'
+FontName='Helvetica' #'cm'
 fontProperties = {'family':'sans-serif','sans-serif':[FontName],
     'weight' : 'normal', 'size' : sizeOfFont}
 ticks_font = font_manager.FontProperties(family=FontName, style='italic',
     size=sizeOfFont, weight='normal', stretch='normal')	
 rc('font',**fontProperties)
-rc('text.latex', preamble=r'\usepackage{cmbright}')
+#rc('text.latex', preamble=r'\usepackage{cmbright}')
 #rc('font',**{'family':'sans-serif','sans-serif':['Arial'], 'size':'18'})
 ## for Palatino and other serif fonts use:
 #rc('font', **{'family':'serif', 'serif':['Palatino'], 'size':'18'})

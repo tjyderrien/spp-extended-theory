@@ -19,6 +19,10 @@
 ## @package libThermalPropertiesMaterials
 # Module libThermalPropertiesMaterials defines the thermodynamic properties of some materials. 
 
+# TODO: this module could be helped by: 
+# https://pypi.python.org/pypi/pycalphad/0.5.1
+# https://github.com/guillemborrell/thermopy
+
 from libSPP import *
 
 from scipy.constants import h, hbar, e

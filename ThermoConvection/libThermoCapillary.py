@@ -55,3 +55,25 @@ def InstabilityGrowthRate(T, k, depth, dynamic_viscosity, density, surface_tensi
 Term1                 = np.vectorize(Term1)
 Term2                 = np.vectorize(Term2)
 InstabilityGrowthRate = np.vectorize(InstabilityGrowthRate)
+
+laser_wavelength = 1025e-9
+laser_fluence = 4E4 #J/m2
+laser_FWHM = 300e-15 #s
+
+# BE VERY CAREFUL WITH UNITS !
+T=np.arange(300.,400., 50.) #length should be greater than 1, strictly. 
+print T
+surface_tension = Silica_SurfaceTension(T)
+print surface_tension
+exit()
+
+
+k = np.arange(0., 2.*pi/laser_wavelength / 2., 1E6)
+thickness = 100e-9
+dynamic_viscosity = Silica_DynamicViscosity(T)
+density = Silica_Liquid_VolumicMass() #TODO: CHECK UNIT
+Absorptivity = 1. #total
+laser_intensity = laser_fluence / laser_FWHM
+
+print Term1(T, k, thickness, dynamic_viscosity, density, surface_tension)
+print Term2(T, k, surface_tension, Absorptivity, laser_intensity, dynamic_viscosity)

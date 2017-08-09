@@ -25,7 +25,8 @@
 
 from libSPP import *
 
-from scipy.constants import h, hbar, e
+from scipy.constants import h, hbar, e, gravitational_constant
+gravity = gravitational_constant
 
 def Silica_Solid_VolumicMass():
   return 2.5e3 #kg/m3
@@ -53,22 +54,32 @@ def Silica_Liquid_HeatCapacity():
   # to be multiplied by density!
   return 0.72E3 #J / kg / K
 
+## Thermal Conductivity of silica, for a waide range of temperatures. 
+#Fitted on Wray, Kurt L. and Connolly, Thomas J., "Thermal Conductivity of Clear Fused Silica at High Temperatures", Journal of Applied Physics (1959), 1702--1705.
 def Silica_HeatConductivity(T):
   a3 = 7.06418e-10
   a2 = -3.96976e-6
   a1 = 7.56664e-3
   a0 = 0.633319
-  return a3*T**3 + a2*T**2 + a1*T + a0 #Fitted on Wray, Kurt L. and Connolly, Thomas J., "Thermal Conductivity of Clear Fused Silica at High Temperatures", Journal of Applied Physics (1959), 1702--1705.
+  return a3*T**3 + a2*T**2 + a1*T + a0
 
+## Surface tension of liquid silica (in N/m)
+# @param T: temperature (K)
+#Fitted on Boyd K et al., "Surface tension and viscosity measurement of optical glasses using a scanning CO 2 laser", Optical Materials Express (2012), 1101--1110.
 def Silica_SurfaceTension(T):
-  a = 1.54E-5; b=0.267; #Fitted on "Surface tension and viscosity measurement of optical glasses using a scanning CO 2 laser", Optical Materials Express (2012), 1101--1110.
+  a = 1.54E-5; b=0.267; 
   return a*T+b
 
+## Dynamic viscosity of fused silica (in Pa.s)
+#Fitted on Urbain et al, "Viscosity of liquid silica, silicates and alumino-silicates", Geochimica et Cosmochimica Acta (1982), 1061--1072.
+# @param T: temperature (K). Validity range: 1300-2000 K 
 def Silica_DynamicViscosity(T):
-  a=6.2388; b=-14.6668; #Fitted on Urbain et al, "Viscosity of liquid silica, silicates and alumino-silicates", Geochimica et Cosmochimica Acta (1982), 1061--1072.
+  a=6.23888379570223e0; b=-14.6668118241314e0; 
   return 0.1*np.exp(1E4*a/T+b)
 
-## Returns temperature-dependent band-gap energy of SiO2 in eV. 
+## Returns temperature-dependent band-gap energy of SiO2 (in eV).
+# @param T: temperature (in K). Validity range: 300 K - 2000 K.
+# Saito, K. & Ikushima, A. J. Absorption edge in silica glass Physical Review B, 2000, 62, 8584
 def Silica_BandGapEnergy(T):
   Egap0  = 8.52 #eV
   L0     = 10.3e0

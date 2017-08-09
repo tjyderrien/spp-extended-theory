@@ -59,18 +59,19 @@ InstabilityGrowthRate = np.vectorize(InstabilityGrowthRate)
 laser_wavelength = 1025e-9
 laser_fluence = 4E4 #J/m2
 laser_FWHM = 300e-15 #s
+thickness = 100e-9 #molten depth thickness [m]
 
-# BE VERY CAREFUL WITH UNITS !
 T=np.arange(300.,400., 50.) #length should be greater than 1, strictly. 
 print T
 surface_tension = Silica_SurfaceTension(T)
-print surface_tension
+
+k_laser = 2.*pi/laser_wavelength
+k = np.arange(0., 2.*k_laser, k_laser/10.)
+
+dynamic_viscosity = Silica_DynamicViscosity(T) #BUG
+print dynamic_viscosity
 exit()
 
-
-k = np.arange(0., 2.*pi/laser_wavelength / 2., 1E6)
-thickness = 100e-9
-dynamic_viscosity = Silica_DynamicViscosity(T)
 density = Silica_Liquid_VolumicMass() #TODO: CHECK UNIT
 Absorptivity = 1. #total
 laser_intensity = laser_fluence / laser_FWHM

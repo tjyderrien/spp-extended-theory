@@ -30,4 +30,17 @@ def Term1(T, k, depth, dynamic_viscosity, density, surface_tension):
   denom = 2e0*np.sinh(2e0*k*h)
   return num / denom
 
-def Term2():
+def Term2(T, surface_tension, Absorptivity, laser_intensity):
+  num1 = np.diff(surface_tension)/np.diff(T) * Absorptivity * laser_intensity / thermal_conductivity(T)
+  num2 = k**2 * (gravity * thickness * density + surface_tension * k**3 )
+  num3 = np.sqrt( thermal_conductivity(T) * k**2 * density * ( np.exp(k*depth)**2 + 1E0) / ( ( heat_capacity * density * np.sqrt( (  np.exp(k*thickness)**2 + 1) * np.exp(k*thickness)**2 - 1e0 )) * np.sqrt(density * (gravity*thickness*density+surface_tension*k**3)) ) )
+  num4 = np.sqrt(2.) * (np.exp(k*thickness)**2+1e0)
+  
+  num = num1 * num2 * num3 * num4 
+  
+  denom1 = 4e0*density*np.sqrt((np.exp(k*thickness)**2 + 1e0) * ( np.exp(k*thickness)**2 - 1e0 )
+  denom2 = np.sqrt(density * (gravity*thickness*density+surface_tension*k**3))
+  denom3 = ( (np.exp(k*thickness)**2-1e0) * (gravity*thickness*density+surface_tension*k**3) ) / (density * (np.exp(k*thickness)**2+1e0))
+  denom4 = ( k**2 * np.abs(np.diff(surface_tension) / np.diff(T)) * Absorptivity * laser_intensity / thermal_conductivity ) / (density * (1e0 + np.sqrt( dynamic_viscosity * density * heat_capacity / (density * thermal_conductivity) ) ))
+  denom = denom1 * denom2 * ( denom3 - denom4 )
+  return num / denom

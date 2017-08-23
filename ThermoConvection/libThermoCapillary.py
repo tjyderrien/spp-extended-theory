@@ -61,20 +61,21 @@ laser_fluence = 4E4 #J/m2
 laser_FWHM = 300e-15 #s
 thickness = 100e-9 #molten depth thickness [m]
 
-T=np.arange(300.,400., 50.) #length should be greater than 1, strictly. 
+T=np.arange(1300.,2000., 200.) #length should be greater than 1, strictly. 
 print T
 surface_tension = Silica_SurfaceTension(T)
 
 k_laser = 2.*pi/laser_wavelength
 k = np.arange(0., 2.*k_laser, k_laser/10.)
 
-dynamic_viscosity = Silica_DynamicViscosity(T) #BUG
-print dynamic_viscosity
-exit()
+dynamic_viscosity = Silica_DynamicViscosity(T) #careful that SiO2 must be warm enough (T > 1300 K)
+#print dynamic_viscosity
 
 density = Silica_Liquid_VolumicMass() #TODO: CHECK UNIT
+#print density
+#exit()
 Absorptivity = 1. #total
 laser_intensity = laser_fluence / laser_FWHM
 
-print Term1(T, k, thickness, dynamic_viscosity, density, surface_tension)
-print Term2(T, k, surface_tension, Absorptivity, laser_intensity, dynamic_viscosity)
+print Term1(T, k, thickness, dynamic_viscosity, density, surface_tension) #TODO: compare with Maple
+#print Term2(T, k, surface_tension, Absorptivity, laser_intensity, dynamic_viscosity) #TODO: compare with Maple<

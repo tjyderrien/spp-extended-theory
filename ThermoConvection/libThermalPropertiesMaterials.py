@@ -28,6 +28,8 @@ from libSPP import *
 from scipy.constants import h, hbar, e, gravitational_constant
 gravity = gravitational_constant
 
+Header = "[libThermalPropertiesMaterials] "
+
 def Silica_Solid_VolumicMass():
   return 2.5e3 #kg/m3
 
@@ -74,8 +76,15 @@ def Silica_SurfaceTension(T):
 #Fitted on Urbain et al, "Viscosity of liquid silica, silicates and alumino-silicates", Geochimica et Cosmochimica Acta (1982), 1061--1072.
 # @param T: temperature (K). Validity range: 1300-2000 K 
 def Silica_DynamicViscosity(T):
-  a=6.23888379570223e0; b=-14.6668118241314e0; 
-  return 0.1*np.exp(1E4*a/T+b)
+  Tm_SiO2   = 1300e0 #K [arbitrary?]
+  Tmax_SiO2 = 2000e0 #K [arbitrary?]
+  if(T < Tm_SiO2 or T>Tmax_SiO2):
+    print Header+"** Warning: dynamic viscosity was taken out of range (SiO2 temperature must be liquid). "
+    result = 0e0
+  else: 
+    a=6.23888379570223e0; b=-14.6668118241314e0; 
+    result = 0.1*np.exp(1E4*a/T+b)
+  return result
 
 ## Returns temperature-dependent band-gap energy of SiO2 (in eV).
 # @param T: temperature (in K). Validity range: 300 K - 2000 K.

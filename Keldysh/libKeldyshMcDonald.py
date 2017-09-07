@@ -1,4 +1,5 @@
 import math, cmath
+import numpy as np
 from scipy.integrate import ode
 import matplotlib.pyplot as plt
 
@@ -6,24 +7,27 @@ import matplotlib.pyplot as plt
 F_0 = 1
 d_0x = 1
 omega_0 = 1
-t_0 = 5
+t_0 = 4
 T_2 = 1
 log2 = math.log(2)
 
 #external functions
 def Omega(t):
-    return F_0*d_0x*math.cos(omega_0*t)*math.exp(-log2*((t - t_0)/(5*omega_0))**2)
+    return F_0*d_0x*math.cos(omega_0*t)*math.exp(-log2*((t - t_0)/(5*omega_0))**2) #no K-dependency?
 def S(t):
-    return t
+    return t #this is a placeholder, it should contain the action, which is K-dependent
 
-#initial condition, etc...
+#initial condition
 t_start = 0
-t_stop = 10
-dt = .1
-X_start = [2, 2, 1]
+t_stop = 8
+points = 200
 
-#contains the ODE system matrix
-def ODE_matrix(t, X):
+pi_start = 3
+n_v_start = 2
+n_c_start = 1
+
+#contains the ODE system RHS
+def RHS(t, X):
     pi = X[0]
     n_v = X[1]
     n_c = X[2]
@@ -33,26 +37,26 @@ def ODE_matrix(t, X):
     return [pi_dot, n_v_dot, n_c_dot]
 
 #initializes the integrator
-r = ode(ODE_matrix).set_integrator('zvode', method='bdf')
-r.set_initial_value(X_start, t_start)
+#https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.ode.html
+r = ode(RHS).set_integrator('zvode', method='bdf')
 
 #integrates the problem to get results
-times = []
+times = np.linspace(t_start, t_stop, points)
 pi_Re = []
 pi_Im = []
 n_v = []
 n_c = []
-while r.successful() and r.t < t_stop:
-    print(r.t, r.y)
-    times.append(r.t)
+for t in times:
+    r.set_initial_value([pi_start, n_v_start, n_c_start], t_start)
+    r.integrate(t)
     pi_Re.append(r.y[0].real)
     pi_Im.append(r.y[0].imag)
     n_v.append(r.y[1].real)
     n_c.append(r.y[2].real)
-    r.integrate(r.t + dt)
 
-plt.plot(times, pi_Re, 'r')
-plt.plot(times, pi_Im, 'r', linestyle='--')
-plt.plot(times, n_v, 'g')
-plt.plot(times, n_c, 'b')
+plt.plot(times, pi_Re, 'r', label='Re(pi)')
+plt.plot(times, pi_Im, 'r', linestyle='--', label='Im(pi)')
+plt.plot(times, n_v, 'g', label='n_v')
+plt.plot(times, n_c, 'b', label='n_c')
+plt.legend(loc='upper right')
 plt.show()

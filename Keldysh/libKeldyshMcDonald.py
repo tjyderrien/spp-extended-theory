@@ -20,16 +20,16 @@ band_amps_c = ((0.0898, -0.0814, -0.0024, -0.0048, -0.0003, -0.0009),
 E_g = 0                                                                 #gap energy
 d_0x = 3.46                                                             #x-component of the dipole moment
 
-F_0 = 1                                                                 #laser field parameters
-omega_0 = 1
+F_0 = 2                                                                 #laser field parameters
+omega_0 = 0.5
 t_0 = 15
 
-T_2 = 1                                                                 #what is this?
+T_2 = 1                                                                #damping factor
 
 #some precached numbers
-prefactor = -(5/2)*F_0*omega_0*spilog2
-a_anl = 1j*slog2/(5*omega_0)
-b_anl = (-1j*t_0*2*log2-25*omega_0*omega_0*omega_0)/(10*omega_0*slog2)
+prefactor = -(5./2.)*F_0*omega_0*spilog2
+a_anl = 1j*slog2/(5.*omega_0)
+b_anl = (-1j*t_0*2*log2-25.*omega_0*omega_0*omega_0)/(10*omega_0*slog2)
 
 #dispersion curve
 def Epsilon(k):
@@ -63,12 +63,12 @@ def S(K, t):
 K = [0, 0, 0]
 #initial condition
 t_init = 0
-t_end = 30
-samples = 300
+t_end = 50
+samples = 500
 
-pi_init = 0
-n_v_init = 2
-n_c_init = 1
+pi_init = 10
+n_v_init = 3
+n_c_init = 0
 S_init = S(K, t_init)
 
 print('t_init = %f' % t_init)

@@ -3,7 +3,7 @@ import numpy as np
 from scipy.integrate import ode
 from scipy.integrate import quad
 from scipy.special import erf #for analytic
-from scipy.special import dawsn
+from scipy.special import wofz
 import matplotlib.pyplot as plt
 
 #some constants
@@ -21,15 +21,15 @@ E_g = 0                                                                 #gap ene
 d_0x = 3.46                                                             #x-component of the dipole moment
 
 F_0 = 1                                                                 #laser field parameters
-omega_0 = 2
-t_0 = 30
+omega_0 = 1
+t_0 = 15
 
 T_2 = 1                                                                 #what is this?
 
 #some precached numbers
-prefactor = -5/2*F_0*omega_0*spilog2*cmath.exp(-25*omega_0*omega_0*omega_0*omega_0/(4*log2)-1j*t_0*omega_0)
-a_anl = slog2/(5*omega_0)
-b_anl = (-t_0*2*log2+25j*omega_0*omega_0*omega_0)/(10*omega_0*slog2)
+prefactor = -(5/2)*F_0*omega_0*spilog2
+a_anl = 1j*slog2/(5*omega_0)
+b_anl = (-1j*t_0*2*log2-25*omega_0*omega_0*omega_0)/(10*omega_0*slog2)
 
 #dispersion curve
 def Epsilon(k):
@@ -42,15 +42,17 @@ def Epsilon(k):
 #we only have 1D field
 #x-component of the laser field
 def F_x(t):
-    return F_0*math.cos(omega_0*t)*math.exp(-log2*((t-t_0)/(5*omega_0))**2)
+    return F_0*math.cos(omega_0*t)*math.exp(-log2*(t-t_0)*(t-t_0)/(25*omega_0*omega_0))
 #x-component of the vector potential, temporal integral of the laser field
 def A_x(t):
-    return analytic_A_x(t)
-    #return quad(F_x, -np.inf, t, limit=500)[0]
+    #return analytic_A_x(t)
+    return quad(F_x, -np.inf, t, limit=500)[0]
 
 #analytic vector potential
 def analytic_A_x(t):
-    return (prefactor*(1-erf(a_anl*t+b_anl))).real
+    wof = wofz(a_anl*t+b_anl)
+    aux = wof.real*math.cos(t*omega_0) + wof.imag*math.sin(t*omega_0)
+    return prefactor*math.exp(-log2*(t-t_0)*(t-t_0)/(25*omega_0*omega_0))*aux
 
 #action integral
 def S(K, t):
@@ -61,8 +63,8 @@ def S(K, t):
 K = [0, 0, 0]
 #initial condition
 t_init = 0
-t_end = 40
-samples = 400
+t_end = 30
+samples = 300
 
 pi_init = 0
 n_v_init = 2
@@ -73,6 +75,7 @@ print('t_init = %f' % t_init)
 print('t_end = %f' % t_end)
 print('S_init = %.15f' % S_init)
 
+#exit()
 #contains the ODE system RHS
 def RHS(t, X):
     pi = X[0]
@@ -84,7 +87,7 @@ def RHS(t, X):
     n_v_dot = 2*d_0x*F_x(t)*(pi*cmath.exp(1j*S)).imag
     n_c_dot = -n_v_dot
     #A_x_dot = F_x(t)
-    S_dot = Epsilon([K[0]+A_x(t), K[1], K[2]])
+    S_dot = Epsilon([K[0]+analytic_A_x(t), K[1], K[2]])
     return [pi_dot, n_v_dot, n_c_dot, S_dot]
 
 #initializes the integrator
@@ -100,10 +103,12 @@ n_c = []
 Ss = []
 A_xs = []
 F_xs = []
+aA_xs = []
 
 tlen = len(times)
-ind = 1
+ind = 0
 for t in times:
+    ind += 1
     intg.set_initial_value([pi_init, n_v_init, n_c_init, S_init], t_init)
     intg.integrate(t)
     pi_Re.append(intg.y[0].real)
@@ -113,8 +118,8 @@ for t in times:
     A_xs.append(A_x(t))
     Ss.append(intg.y[3].real)
     F_xs.append(F_x(t))
-    print('Progress: %d%%' % (ind/tlen * 100), end='\r')
-    ind += 1
+    aA_xs.append(analytic_A_x(t))
+    print('Progress: %d%%' % (ind/tlen * 100))
 
 plt.plot(times, pi_Re, 'r', label='Re(pi)')
 plt.plot(times, pi_Im, 'r', linestyle='--', label='Im(pi)')
@@ -123,5 +128,6 @@ plt.plot(times, n_c, 'b', label='n_c')
 plt.plot(times, A_xs, 'm', label='A_x')
 plt.plot(times, Ss, 'c', label='S')
 plt.plot(times, F_xs, 'gray', label='F_x')
+plt.plot(times, aA_xs, 'lime', label='analytic_A_x')
 plt.legend(loc='upper right')
 plt.show()

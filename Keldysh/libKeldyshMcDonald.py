@@ -1,242 +1,134 @@
-#!/usr/bin/env python2
-#-*- coding: utf-8 -*-
-
-# Copyright (C) 2013-2017 T. J.-Y. Derrien
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>
-
-## @package libKeldysh-McDonald
-# This module aims to calculate the density of excited electrons as function of laser parameters. 
-# Several flavors of the Keldysh theory are available: 
-# - Keldysh original paper in solid, for Kane band structure [compared with td-dft]
-# - Keldysh paper with few terms corrected by Gruzdev [compared with td-dft]
-# - Keldysh-Zhukov tables, where Keldysh theory was computed numerically without using the saddle point method
-# - Keldysh-Shcheblanov model, improving rigor on the analytical integration [https://arxiv.org/abs/1706.07303]
-# - Keldysh-McDonald-Corkum model, allowing for analytical treatment of mulltiwavelength fields [Physical Review Letters, 2017, 118, 173601]
-
-# IMPORT LIBRARIES
+import math, cmath
 import numpy as np
-import numpy.linalg as npl
-from numpy import genfromtxt, loadtxt, chararray
-#from scipy.optimize import fsolve, root
-from scipy.special import ellipk, ellipe, dawsn, factorial2, factorial, ellipkm1
-#import cmath
-import matplotlib as mp
+from scipy.integrate import ode
+from scipy.integrate import quad
+from scipy.special import erf #for analytic
+from scipy.special import wofz
 import matplotlib.pyplot as plt
-from scipy.interpolate import interp2d, InterpolatedUnivariateSpline
-from matplotlib import rc
-# from pylab import *
-from scipy.constants import c, epsilon_0, mu_0, pi, e, m_e, h, hbar
-#from matplotlib.legend_handler import HandlerLine2D
-#import sys
 
-from libUnits import *       #part of the spp-extended-theory/Keldysh
-from libAtomicUnits import * #part of the octopus-slabs repository. 
-from libDatabase import *    #part of the spp-extended-theory
-from libKeldyshPulses import * #part ot the spp-etended-theory/Keldysh
+#some constants
+log2 = math.log(2)
+slog2 = math.sqrt(math.log(2))
+spilog2 = math.sqrt(math.pi/math.log(2))
+atomic_dist = (5.32, 6.14, 9.83)                                    #atomic distances
+band_amps_v = ((-0.0928, 0.0705, 0.0200, -0.0012, 0.0029, 0.0006),  #band amplitudes
+               (-0.0307, 0.0307, 0, 0, 0, 0),
+               (-0.0059, 0.0059, 0, 0, 0, 0))
+band_amps_c = ((0.0898, -0.0814, -0.0024, -0.0048, -0.0003, -0.0009),
+               (0.1147, -0.1147, 0, 0, 0, 0),
+               (0.0435, -0.0435, 0, 0, 0, 0))
+E_g = 0 #gap energy
+d_0x = 3.46 #x-component of the dipole moment
 
-Header="[libKeldyshMcDonald] "
+F_0 = 1 #laser field parameters
+omega_0 = .28
+t_0 = 5
 
-## Builds a conduction band model epsilon(k) as function of longitunal k
-# mesh1D k -> mesh1D epsilon (Bohr)
-# @param A_projected_AU: A projected 
-# @param EgapDirect: value of the direct band gap energy (eV)
-# @param kpoints: number of k-points in 1D direction
-# @param AtomicDistance: distance between lattice sites (in Bohr)
-def SiBandStructureLongitudinal(A_projected_AU, EgapDirect=2.65, kpoints=64, AtomicDistance=5.32): #{{{
-  #print Header+"Defining the band structure."
-  #AtomicDistance=5.32 #interatomic distance in Si (at. u.) 
+T_2 = 10 #damping factor
 
-  #kN = 64 #resolution of k space
+#some precached numbers for analytic vector potential
+prefactor = -2.5*F_0*omega_0*spilog2
+a_anl = 1j*slog2/(5.*omega_0)
+b_anl = (-1j*t_0*2*log2-25*omega_0*omega_0*omega_0)/(10*omega_0*slog2)
+shift = 2*math.exp(-25*omega_0*omega_0*omega_0*omega_0/(4*log2))*math.cos(t_0*omega_0)
 
-  # Building the objects
-  epsilonLong = [ Energy_eV_to_Hartree(EgapDirect) ] #LDA band gap of Si #TODO: this must be field depedent to account for stark effect
+#dispersion curve
+def Epsilon(k):
+    total = E_g
+    for i in range(0, 3):       #iterating over directions
+        for j in range(0, 6):   #cosine sum
+            total += (band_amps_c[i][j]-band_amps_v[i][j])*math.cos(j*k[i]*atomic_dist[i])/3
+    return total
 
-  Delta = np.max(epsilonLong)
-  alpha = np.array([Delta/2., -Delta/2.]) #|alpha> # First, we use the coeffs of the McDonald paper. 
-  index = np.arange(0,len(alpha)) # |j>
-  #print alpha, index
+#we only have 1D field
+#x-component of the laser field
+def F_x(t):
+    return F_0*math.cos(omega_0*t)*math.exp(-log2*(t-t_0)*(t-t_0)/(25*omega_0*omega_0))
+#x-component of the vector potential, temporal integral of the laser field
+def A_x(t):
+    #return analytic_A_x(t)
+    return -quad(F_x, -np.inf, t, limit=500)[0]
 
-  # Give values to alpha.
-  kmin = 0.
-  kmax = 2.*pi/AtomicDistance
-  k = np.arange(0., kmax, (kmax-kmin) / kpoints ) #meshing |k> space until 2pi/a
-  
-  # We shall apply the time dependence of k HERE.
-  #print np.shape(A_projected_AU)
-  #k_td = np.broadcast_to(k,(len(A_projected_AU),len(k))) #extending size of k into time
-  #print np.shape(k_td)
-  #A_projected_AU_td = np.broadcast_to(A_projected_AU, (len(k), len(A_projected_AU) ) )
-  #A_projected_AU_td = np.transpose(A_projected_AU_td)
-  #print Header+"Boundaries of A_projected_AU (Hartree/Bohr)."
-  #print Header+"Boundaries of A_projected_SI (V/m)."
-  #print Field_AU_to_SI(A_projected_AU.max())
-  k_shifted = k + A_projected_AU #shifts k|| by A|| do the same for each timestep, but not vectorially (too heavy?)
-  #k_td = k + A_projected_AU_td #shifts k|| by A|| in a time-dependent fashion. 
-  
-  #print Header+"Dimension of k_td="+str(np.shape(k_td)) #GOOD. 
-  
-  #print index, k
-  #print Header+"|j><k|"
-  #print np.outer(index, k) #generates |k><index|. How to compute |index><k| ?
-  #print Header+"|k><j|"
-  #print np.outer(k, index)
+#analytic vector potential
+def analytic_A_x(t):
+    aux = (wofz(a_anl*t+b_anl)*cmath.exp(-1j*omega_0*t)).real
+    return prefactor*(shift - math.exp(-log2*(t-t_0)*(t-t_0)/(25*omega_0*omega_0))*aux)
 
-  # How to create a new dimension with len(time)? Introduce it before giving k to index. 
-  #cosTerm = np.cos(np.outer(k_td, index)*AtomicDistance)
-  cosTerm = np.cos(np.outer(k_shifted, index)*AtomicDistance)
+#action integral
+def S(K, t):
+    return quad(lambda t, K: Epsilon([K[0]+A_x(t), K[1], K[2]]), -np.inf, t, args=K, limit=500)[0]
 
-  #print Header+"cosTerm"
-  #print np.shape(cosTerm)
-  #print cosTerm
+#--------------------------------------------------------------------------------------------------
 
-  termsM1  = cosTerm*alpha #What * is exactly doing here? 
+K = [0, 0, 0]
+#initial condition
+t_init = 0
+t_end = 30
+samples = 500
 
-  #print Header+"cos(:,:) * <alpha|"
-  ##print termsM1
+pi_init = 5 + 1j
+n_v_init = 3
+n_c_init = 0
+A_x_init = A_x(t_init)
+S_init = S(K, t_init)
 
-  ## Indicial writing: very clear, very intuitive, computationally expensive
-  #termsL = np.zeros((len(k), len(alpha)))
-  #for i in np.arange(0,kN):
-    #for j in np.arange(0,len(alpha)):
-      #termsL[i,j] = alpha[j]*np.cos(j*k[i]*AtomicDistance)
+print('t_init = %f' % t_init)
+print('t_end = %f' % t_end)
+print('A_x_init = %.15f' % A_x_init)
+print('S_init = %.15f' % S_init)
 
-  #print Header+"** Comparison Matrix vs indice method"
-  #print Header+"== VECTOR =="
-  #print termsL
-  #print Header+"== MATRIX =="
-  #print termsM1
-  #print Header+"Computing band gap using alpha_j"
-  epsilonLong_AU = np.sum(termsM1, 1)
-  epsilonLong_SI = Energy_Hartree_to_eV(epsilonLong_AU)
+#contains the ODE system RHS
+def RHS(t, X):
+    pi = X[0]
+    n_v = X[1]
+    n_c = X[2]
+    A_x = X[3]
+    S = X[3]
+    pi_dot = -pi/T_2 -1j*d_0x*F_x(t)*(n_v-n_c)*cmath.exp(-1j*S)
+    n_v_dot = 2*d_0x*F_x(t)*(pi*cmath.exp(1j*S)).imag
+    n_c_dot = -n_v_dot
+    A_x_dot = -F_x(t)
+    S_dot = Epsilon([K[0]+A_x.real, K[1], K[2]])
+    return [pi_dot, n_v_dot, n_c_dot, A_x_dot, S_dot]
 
-  #print Header+"Dimension of k-space..."
-  #print len(k)
-  
-  #print Header+"Dimension of epsilon_Long_SI"
-  #print len(epsilonLong_SI)
+#initializes the integrator
+#https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.ode.html
+intg = ode(RHS).set_integrator('zvode', method='bdf', nsteps=5000)
 
-  #plt.figure()
-  #plt.xlabel('k')
-  #plt.ylabel(r'$\varepsilon_{||}$')
-  #plt.plot(k,epsilonLong_SI)
-  #plt.savefig("BandStructure1D.eps")
-  #plt.savefig("BandStructure1D.png")
-  #plt.show()
-          
-  return epsilonLong_AU
-#}}}
+#integrates the problem to get results
+times = np.linspace(t_init, t_end, samples)
+pi_Re = []
+pi_Im = []
+n_v = []
+n_c = []
+Ss = []
+A_xs = []
+F_xs = []
+aA_xs = []
 
+tlen = len(times)
+ind = 0
+for t in times:
+    ind += 1
+    intg.set_initial_value([pi_init, n_v_init, n_c_init, A_x_init, S_init], t_init)
+    intg.integrate(t)
+    pi_Re.append(intg.y[0].real)
+    pi_Im.append(intg.y[0].imag)
+    n_v.append(intg.y[1].real)
+    n_c.append(intg.y[2].real)
+    A_xs.append(intg.y[3].real)
+    Ss.append(intg.y[4].real)
+    F_xs.append(F_x(t))
+    aA_xs.append(analytic_A_x(t))
+    print('Progress: %d%%' % (ind/tlen * 100), end = '\r')
 
-
-## Build the dipolar transition matrix
-# @param Egap: k-dependent band gap energy (at.u.)
-# McDonald et al, Phys Rev A 92, 033845 (2015)
-# Returns a tuple of 4th order. 
-def DipolarTransition(Eg):
-  Epx = 0.302 
-  Epy = 0.302
-  Epz = 0.375
-  dx = np.sqrt(Epx / (2e0*Eg**2))
-  dy = np.sqrt(Epy / (2e0*Eg**2))
-  dz = np.sqrt(Epz / (2e0*Eg**2))
-  return np.array([dx, dy, dz])
-
-# Laser pulse is already generated via keldysh.py yes? 
-wavelength = 800e-9; PolarizationAngle = 0. 
-tau=10e-15; dt = 1E-17; CEP=0e0
-PeakFluence = 1.*1E4 #J/cm2 * 1E4 = J/m2
-PeakField   = np.sqrt(2e0 * PeakFluence / (tau * c * epsilon_0))
-
-t0=0. #defines the instant 0.
-tmin=-1.*tau + t0; tmax=1.*tau + t0
-
-instants = np.arange(tmin, tmax, dt)
-#print "Time range: "+str(instants.min())+", "+str(instants.max())+"."
-
-print Header+"** Test: building single pulse centered on 0..."
-RealField1x, RealField1y, RealField1z = PulseSquaredSinTemporalShape_vectorial_linear(instants, tau, PeakField, wavelength, PolarizationAngle, CEP, t0, 0.)
-
-## Converts electric field to vector potential |Ax,Ay,Az>(t)
-# @param ElectricField in Hartree atomic units. 
-# @param instants contains the instants carrying the pulse electric field (any temporal interval is allowed)
-def LaserFieldAU_to_VectorPotential(ElectricField, instants):
-  dA = ElectricField[1:] * np.diff(instants)
-  A = - dA.cumsum() #computes the integral of int(E.dt)
-  return A #is A(t) in Hartree atomic units
-   
-# Converts the electric field (SI) to Atomic Units first. 
-ElectricField_x_AU = Field_SI_to_AU(RealField1x)
-ElectricField_y_AU = Field_SI_to_AU(RealField1y)
-ElectricField_z_AU = Field_SI_to_AU(RealField1z)
-
-# Each component should be independent with time derivation. 
-Ax_AU = LaserFieldAU_to_VectorPotential(ElectricField_x_AU, instants)
-Ay_AU = LaserFieldAU_to_VectorPotential(ElectricField_y_AU, instants)
-Az_AU = LaserFieldAU_to_VectorPotential(ElectricField_z_AU, instants)
-
-A_AU = np.array([Ax_AU, Ay_AU, Az_AU ])
-A_norm = np.sqrt(Ax_AU.max()**2+Ay_AU.max()**2+Az_AU.max()**2)
-print Header+"Building the vector potential..."
-print np.shape(A_AU)
-#print A_AU
-
-print Header+"Build the vectorial electric field..."
-ElectricField_AU = np.array([ ElectricField_x_AU, ElectricField_y_AU, ElectricField_z_AU ])
-
-# Ok, first we have to construct time-dependent dipolar momentum.
-# Question: should we change the way we construct epsilon(k) to epsilon(K+A(t)). 
-# But then, we have a time-dependent band gap in one dimension? 
-
-# We build a 3d-TD band structure (TD k-space)
-
-# Method 1: vectorize by hand (quite difficult, gave up)
-# Method 2: make use of np.vstack() for each timestep in a for loop. 
-kpoints = 4; EgapDirect=2.65;
-EpsilonX = np.zeros(kpoints); EpsilonY = EpsilonX; EpsilonZ = EpsilonX
-
-#TODO: this creates gap map for only 1 dimension. We need for 3 dimensions: kx+Ax, ky+Ay, kz+Az
-for Ax_AU_instant in Ax_AU:
-  EpsilonX = np.vstack((EpsilonX, SiBandStructureLongitudinal(Ax_AU_instant, EgapDirect, kpoints))) #A_|| should be here
-for Ay_AU_instant in Ay_AU:
-  EpsilonY = np.vstack((EpsilonY, SiBandStructureLongitudinal(Ay_AU_instant, EgapDirect, kpoints))) #A_perp should be here
-for Az_AU_instant in Az_AU:
-  EpsilonZ = np.vstack((EpsilonZ, SiBandStructureLongitudinal(Az_AU_instant, EgapDirect, kpoints))) #A_perp should be here
-
-print Header+"Band structure, time-resolved"
-#print np.shape(EpsilonX), np.shape(EpsilonY), np.shape(EpsilonZ)
-#print EpsilonX, EpsilonY, EpsilonZ
-#We have for now (Eg_x, Eg_y, Eg_z) (kx, ky, kz, t)
-# To construct the total Epsilon(kx,ky,kz,t), we have to use the composition law given in McDonald paper.
-Epsilon = EgapDirect + EpsilonX + EpsilonY + EpsilonZ
-
-#Epsilon = np.einsum('i,l,j,l,k,l->ijkl', EpsilonX, EpsilonY, EpsilonZ)
-print np.shape(Epsilon)
-print Epsilon
-exit()
-
-# We need to compute d from Eg(kx,ky,kz)
-print Header+"Plotting a section of the band structure... (ky,kz)"
-plt.matshow(Epsilon[kpoints/2,:,:]) #apparently band structure is well defined
+plt.plot(times, pi_Re, 'r', label='Re(pi)')
+plt.plot(times, pi_Im, 'r', linestyle='--', label='Im(pi)')
+plt.plot(times, n_v, 'g', label='n_v')
+plt.plot(times, n_c, 'b', label='n_c')
+plt.plot(times, A_xs, 'm', label='A_x')
+plt.plot(times, Ss, 'c', label='S')
+plt.plot(times, F_xs, 'gray', label='F_x')
+#plt.plot(times, aA_xs, 'lime', label='analytic_A_x')
+plt.legend(loc='upper right')
 plt.show()
-exit()
-d = DipolarTransition(Epsilon)
-print np.shape(d)
-
-## Have to compute the inner product <d|F(t)>
-print Header+"Computing the dipolar coupling strength..."
-print np.shape(d), np.shape(ElectricField_AU)
-#CouplingStrengh = np.inner(d, ElectricField_AU)
-AtomicDistance_AU = 5.32 #Interatomic distances in Bohrs for Silicon
-print A_norm, 2.*pi/AtomicDistance_AU

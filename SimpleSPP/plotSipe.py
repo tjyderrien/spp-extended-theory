@@ -238,15 +238,15 @@ k_precision = 0.5
 SipeRanges = 2e0
 #kx = np.arange(0.,SipeRanges,k_precision)
 #ky = np.arange(0.,SipeRanges,k_precision)
-kx = [1.05e0]; ky= [0e0] #single value of kx,ky
+kx = [1.5e0]; ky= [0.0e0] #single value of kx,ky
 #kxx, kyy = np.meshgrid(ky, kx)
 
 # calculating Sipe efficiency for many materials
 title = select+' nm'
 
 # Generating mapping of dielectric permittivities
-epsR = np.arange(-10, 10., 0.01) #eta: precision on epsilon inherited from libSPP.py
-epsI = np.arange(  0., 10., 0.01) #eta: precision on epsilon inherited from libSPP.py
+epsR = np.arange(-20, 2., 0.05) #eta: precision on epsilon inherited from libSPP.py
+epsI = np.arange(  0., 10., 0.05) #eta: precision on epsilon inherited from libSPP.py
 
 epsI2, epsR2 = np.meshgrid(epsI, epsR)
 epsilon2 = np.add(epsR2,np.multiply(1e0j, epsI2)) #map of all possible dielectric permittivities
@@ -284,12 +284,16 @@ plt.figure()
 plt.matshow(etaSipe[:,:,0,0]) #eta(kx,ky;epsR=-2, epsI=0)
 plt.colorbar()
 plt.figure()
-#levels = [1, 5, 10, 20, 30, 40, 50, 100]
-CS=plt.contourf(epsR2,epsI2,np.log10(etaSipe[0,0,:,:])) #,levels=levels)
+levels = [-2, -1, 0, 1, 2]
+CS=plt.contourf(epsR2,epsI2,np.log10(etaSipe[0,0,:,:]),levels=levels, cmap=plt.cm.RdBu_r)
 plt.colorbar(CS)
 plt.xlabel(r'Re($\varepsilon$)')
 plt.ylabel(r'Im($\varepsilon$)')
 plt.show()
+
+# Or we can integrate on a certain range of kx in 1. to 1.10. 
+# TODO: About LIPSS regularity: Efficiency factor is maybe not the best quantity to look at, as highest factor is obtained for materials where -Re(eps) ~ Im(eps). If efficacy factor correspond to field enhancement, why do we find a low coupling with Au and Ag? And high coupling with W and Ti ? 
+# TODO: About LIPSS period: Shall we automatically capture the (kx,ky) where efficiency is the highest in the Sipe(kx,ky)? Then we could plot Most_probable_period ( Re(eps) , Im(eps) ). 
 
 # TODO 
 # - Automatize the inverse Fourier transform to check regularity and pattern shape: see formula in my thesis. 

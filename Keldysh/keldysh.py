@@ -6,7 +6,10 @@
 # Two types of usage are planned :
 # * Generating tables to use directly into simulation codes
 # * Outputing density in certain conditions. 
-from libKeldysh import *
+
+from libKeldyshPulses import *
+from libKeldyshZhukov import *
+from libKeldyshMcDonald import *
 
 Header="[keldysh] "
 
@@ -173,13 +176,13 @@ def SilicaGulley2012(): #{{{
 def SilicaGraef2017(): #{{{
   print "Defining SiO2 material parameters from [Gräf2017]..."
 
-  Egap = 9e0*e; #band gap of SiO2
+  Egap = 8.024234328*e; #band gap of SiO2
   meff = 1e0; #Effective mass of SiO2
   Ntotal=10.*5E28; #valence band electron density #to avoid limitation
 
   wavelength = 1030e-9; wavelength2 = 800e-9
   tau=300e-15; dt = 1E-17; CEP=0e0
-  PeakFluence = 5.*5E4
+  PeakFluence = 5E4
   PeakField   = np.sqrt(2e0 * PeakFluence / (tau * c * epsilon_0))
 
   t0=0. #defines the instant 0.
@@ -249,5 +252,5 @@ def SilicaGraef2017(): #{{{
 
 
 #SilicaGulley2012()
-#SiliconLDAbandGap()
-SilicaGraef2017()
+SiliconLDAbandGap()
+#SilicaGraef2017()

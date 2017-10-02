@@ -1,4 +1,21 @@
-## @package MultilayerSPP
+#!/usr/bin/env python
+#-*- coding: utf-8 -*-
+
+# Copyright (C) 2013-2017 T. J.-Y. Derrien
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>
+
 ## Preparation of the multilayer SPP model. 
 # This script aims to calculate the dispersion relation of 
 # multilayer SPPs following the paper: 
@@ -30,7 +47,7 @@ def dispersionSPP(eps1,eps2,eps3,t,k0,beta):
     k2=cmath.sqrt(beta*beta-k0*k0 * eps2)
     k3=cmath.sqrt(beta*beta-k0*k0 * eps3)
     
-    eq = cmath.exp(-2*k1*t) - ( (k1/eps1 + k2/eps2) / (k1/eps1 - k2/eps2) ) * ( (k1/eps1 + k3/eps3) / (k1/eps1 - k3/eps3) )
+    eq = cmath.exp(-2.*k1*t) - ( (k1/eps1 + k2/eps2) / (k1/eps1 - k2/eps2) ) * ( (k1/eps1 + k3/eps3) / (k1/eps1 - k3/eps3) )
     return eq;
 
 ## Testing non-linear solver in R^2 space.
@@ -42,7 +59,7 @@ def f(z):
 ## Testing non-linear solver in complex space. 
 def f2(z):
     # z^2+1=0, without explicitly detailing real and imaginary part
-    temp=cmath.exp(2 * cmath.log( z ))+1
+    temp=cmath.exp(2. * cmath.log( z ))+1
     return temp;
 
 ## Interfacing complex space to R^2 space.

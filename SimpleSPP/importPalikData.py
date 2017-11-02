@@ -333,7 +333,10 @@ plotting = True
 
 #=========================================
 
-try: 
+try: #TODO: should we select by author? Or by units? 
+# NOTE: if Palik, then wavelength is given in nm. 
+# NOTE: if other, then wavelengths are usually given in um. 
+# BUG: access to databases are treated differently between importPalikData.py and plotMultiwavelength.py. 
   if(source == "Palik"):
     folder = "Database/"
     print "Material: "+filename+"."
@@ -350,16 +353,17 @@ try:
     print "You can add the following directly inside 'MaterialOpticalDatabaseForPlasmonics.csv'"
     print filename+"\t"+"?"+"\t"+str(int(wavelength))+"\t"+str(epsilon.real)+"\t"+str(epsilon.imag)+"\t?\t?\t?\t?\t?"
   else:
-    folder = "Database/PalikGraph/"
+    folder = "Database/PalikGraph/" #TODO: Ag-Johnson is in ./Databasea actually.
+    #folder = "Database/"
     print "Material: "+filename+"."
     print "Wavelength = "+str(wavelength)+" nm"
-    epsilon=importFromNKtable(wavelength*1e-9, folder, filename)
+    epsilon=importFromTable(wavelength*1e-6, folder, filename)
     print epsilon
     print "You can add the following directly inside 'MaterialOpticalDatabaseForPlasmonics.csv'"
     print filename+"\t"+"?"+"\t"+str(int(wavelength))+"\t"+str(epsilon.real)+"\t"+str(epsilon.imag)+"\t?\t?\t?\t?\t?"
 except:
   print "Failed to import "+folder+filename+"!"
-  print "Goto Database/importPalikData.sh for finding other sources."
+  print "Use SimpleSPP/Database/importPalikData.sh for finding other sources."
   
 #==========================================
 #print "Lambda = 3000 nm"

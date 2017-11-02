@@ -31,23 +31,22 @@ from itertools import product
 from libMaterials import Drude
 #from libDatabase import ExportToTxt
 
-pi = np.pi
 prec = 8 #printing precision
 
 #data
-wavelength = 800e-9
-ne=5E27 #np.arange(1E25, 1E28, 10) #(m^-3) quantity of electrons in conduction band
+wavelength = 800E-9
+ne = 5E27 #np.arange(1E25, 1E28, 10) #(m^-3) quantity of electrons in conduction band
 nu = (1.1E-15)**-1 #collision time between conduction band electrons
 meff = 0.18
 
-eps2 = 1.+0.j       #environment
+eps2 = -1.+2.j       #environment
 eps3 = 13.64+0.048j #substrate Si (no excitation)
 
 #for ne in neList:
 eps1 = Drude(wavelength, ne, eps3, nu, meff)
 
-k0 = 2.*pi/wavelength
-t = 300e-9 #Thickness of the layer in meters
+k0 = 2.*np.pi/wavelength
+t = 300E-9 #thickness of the layer in meters
 
 #branches
 branches = [0, 1, 2, 3, 4, 5, 6, 7] #list of branches you want to use
@@ -77,35 +76,44 @@ x_steps =  maxsteps
 y_steps =  maxsteps
 
 #tolerances
-t_blur = 10 # unit of beta
+tol_merge = 10 #from the space of betas
 
 #-----------------------------------------------------------------------------
 
-a = k0*cmath.sqrt(eps1*eps2*(eps1-eps2)/(eps1*eps1 - eps2*eps2))
-print('% .5e, % .5e, % .5e, % .5e' % (a.real, a.imag, -a.real, -a.imag))
-
-def func(betaR): #{{{
+def func(betaR):
     beta = betaR[0] + betaR[1]*1j
     k1 = sgn1*cmath.sqrt(beta*beta - k0*k0*eps1)
     k2 = sgn2*cmath.sqrt(beta*beta - k0*k0*eps2)
     k3 = sgn3*cmath.sqrt(beta*beta - k0*k0*eps3)
-
     try:
         out = (k1/eps1 - k2/eps2) * (k1/eps1 - k3/eps3) * cmath.exp(-2*k1*t) - (k1/eps1 + k2/eps2) * (k1/eps1 + k3/eps3)
     except:
         out = 1e99
     return [out.real, out.imag]
 
-print('Guess area is a rectangle:')
-print('[%.2e, %.2e]x[%.2ei, %.2ei], x_steps = %d, y_steps = %d' % (x_min, x_max, y_min, y_max, x_steps, y_steps))
-print()
-print('Initial data:')
-print('    eps1:', eps1)
-print('    eps2:', eps2)
-print('    eps3:', eps3)
-print('    k0:', k0)
-print('    t:', t)
+def plothyp(eps, col):
+    brpoint = cmath.sqrt(eps*k0*k0).real
+    domain = np.linspace(-brpoint, -1E-6*brpoint, num=2000)
+    plt.plot(domain, k0*k0*eps.imag/(2*domain), col)
+    domain = np.linspace(1E-6*brpoint, brpoint, num=2000)
+    plt.plot(domain, k0*k0*eps.imag/(2*domain), col)
 
+print('Guess area is the following rectangle:')
+print('  Re(beta) in [%.2e, %.2e]' % (x_min, x_max))
+print('  Im(beta) in [%.2e, %.2e]' % (y_min, y_max))
+print('  x_steps = %d' % x_steps)
+print('  y_steps = %d' % y_steps)
+print()
+print('Data:')
+print('  eps1:', eps1)
+print('  eps2:', eps2)
+print('  eps3:', eps3)
+print('  k0:', k0)
+print('  t:', t)
+print()
+print('Selected branches:', branches)
+
+#main algorithm
 broots = []
 for sgn1, sgn2, sgn3 in [list(product((-1,1), (-1,1), (-1,1)))[i] for i in branches]:
     roots = []
@@ -115,59 +123,35 @@ for sgn1, sgn2, sgn3 in [list(product((-1,1), (-1,1), (-1,1)))[i] for i in branc
     print()
     print('Branch: (%s, %s, %s)' % (('%+d' % sgn1)[0], ('%+d' % sgn2)[0], ('%+d' % sgn3)[0]))
     for x in np.linspace(x_min, x_max, num=x_steps):
-        print('Tracing the grid: %d%%' % (num/x_steps*100), end = '\r') 
-        for y in np.linspace(y_min, y_max, num=y_steps): #take an initial guess [x, y] from within the specified grid, x_steps and y_steps determine the grid density
-            nrt = root(func, [x, y], method='hybr') #uses the MINPACK method: http://www.netlib.org/minpack/
-            if nrt.success: #if it converges, add it to the list of roots
+        print('Tracing the grid: %d%%' % (num/x_steps*100), end = '\r')
+        for y in np.linspace(y_min, y_max, num=y_steps):                #take an initial guess [x, y] from within the specified grid, x_steps and y_steps determine the grid density
+            nrt = root(func, [x, y], method='hybr')                     #uses the MINPACK method: http://www.netlib.org/minpack/
+            if nrt.success:                                             #if it converges, add it to the list of roots
                 roots.append(nrt.x)
         num += 1
 
     lns = len(roots)
     print('Total (converged): %d   ' % lns)
-    
-##    for i in range(len(roots)): #this part should remove duplicate roots (considering tolerance t_blur)
-##        print('Assimilating roots: %d%%' % (i/ln*100), end = '\r')
-##        for j in range(i + 1, len(roots)):
-##            if norm(roots[i] - roots[j]) < t_blur:
-##                switch = True
-##                for sep in separed:
-##                    if i in sep:
-##                        if j in sep:
-##                            switch = False
-##                            break
-##                        else:
-##                            separed[separed.index(sep)].append(j)
-##                            switch = False
-##                            break
-##                    else:
-##                        if j in sep:
-##                            separed[separed.index(sep)].append(i)
-##                            switch = False
-##                            break
-##                if switch:
-##                    separed.append([i, j])
-##
-##    unique = [np.mean([roots[i] for i in sep], axis = 0) for sep in separed]
 
     ln = lns
-    while ln > 0: #this part should remove duplicate roots (considering tolerance t_blur)
-        print('Assimilating roots: %d%%' % (100 - ln/lns*100), end = '\r')
-        center = roots[0] #take the first element of the list and put it in 'center'
+    while ln > 0:                                                       #this part should remove duplicate roots (considering tolerance tol_merge)
+        print('Merging roots: %d%%' % (100 - ln/lns*100), end = '\r')
+        center = roots[0]                                               #take the first element of the list and put it in 'center'
         aux = [center]
         aux2 = []
-        for rt in roots[1:]: #go thru the rest of roots
-            if norm(rt - center) < t_blur: #if the current root 'rt' is sufficiently near center, add it to the new list of similar roots 'aux'
+        for rt in roots[1:]:                                            #go thru the rest of roots
+            if norm(rt - center) < tol_merge:                           #if the current root 'rt' is sufficiently near center, add it to the new list of similar roots 'aux'
                 aux.append(rt)
-                center = np.mean(aux, axis = 0) #update 'center' to include the new root, 'center' always lies in the middle
+                center = np.mean(aux, axis = 0)                         #update 'center' to include the new root, 'center' always lies in the middle
             else:
                 aux2.append(rt)
         if len(aux) > 2:
-            unique.append(center) #'unique' contains separated roots
-        roots = list(aux2) #continue the algorithm with the rest
+            unique.append(center)                                       #'unique' contains separated roots
+        roots = list(aux2)                                              #continue the algorithm with the rest
         ln = len(roots)
 
     if len(unique) > 0:
-        print(' '*23)
+        print(' '*18)
         print('Real%s     Imaginary%s│  Abs(F)  %s│  Levenberg–Marquardt' % tuple([' '*prec]*3))
         print('%s┼%s┼%s' % ('─'*(2*prec + 18), '─'*(prec + 10), '─'*(2*prec + 24)))
     for rt in unique:
@@ -175,15 +159,27 @@ for sgn1, sgn2, sgn3 in [list(product((-1,1), (-1,1), (-1,1)))[i] for i in branc
         print(('%% .%de  %% .%de  │ %% .%de  │  %%s  %% .%de  %% .%de' % tuple([prec]*5)) % (rt[0], rt[1], norm(func(rt)), nrt.success, nrt.x[0], nrt.x[1])) #checking with Levenberg–Marquardt method
     if len(unique) > 0:
         print()
-    print('Total (assimilated): %d ' % len(unique))
-    #a = k0*cmath.sqrt(eps1*eps2*(eps1-eps2)/(eps1*eps1 - eps2*eps2))
-    #print('% .5e, % .5e, % .5e, % .5e' % (a.real, a.imag, -a.real, -a.imag))
-
+    print('Total (merged): %d ' % len(unique))
     broots.append(unique)
 
-a = cmath.sqrt(eps1*k0*k0) #standing wave inside the thin film here
-plt.plot((a.real, -a.real), (a.imag, -a.imag), 'red')
-colors = ['red', 'green', 'blue', 'black', 'magenta', 'cyan', 'lime', 'orangered']
+#plotting
+bounds = [0, 0, 0, 0]
+for rts in broots:
+    for rt in rts:
+        if rt[0] < bounds[0]:
+            bounds[0] = rt[0]
+        if rt[0] > bounds[1]:
+            bounds[1] = rt[0]
+        if rt[1] < bounds[2]:
+            bounds[2] = rt[1]
+        if rt[1] > bounds[3]:
+            bounds[3] = rt[1]
+
+plothyp(eps1, 'r-')
+plothyp(eps2, 'g-')
+plothyp(eps3, 'b-')
+
+colors = ['r', 'g', 'b', 'k', 'm', 'c', 'lime', 'orangered']
 for rts, col in zip(broots, colors):
     if len(rts) > 0:
         plt.scatter(*zip(*rts), c=col)
@@ -192,7 +188,8 @@ for rts, col in zip(broots, colors):
 
 plt.xlabel('Re')
 plt.ylabel('Im')
+plt.axis([1.1*bnd for bnd in bounds])
 plt.grid()
-plt.legend(loc=4)
-plt.savefig('betaSolution-wavelength'+str(wavelength*1E9)+'-thickness'+str(t)+'-density-'+str(ne)+'m-3.eps')
+#plt.legend(loc=4)
+#plt.savefig('betaSolution-wavelength'+str(wavelength*1E9)+'-thickness'+str(t)+'-density-'+str(ne)+'m-3.eps')
 plt.show()

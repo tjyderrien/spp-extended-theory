@@ -116,7 +116,7 @@ query = 'Air'
 query2='SiO2 (Palik)'
 print "Caution: the expression must be exactly the one of MaterialDatabase.csv."
 
-wavelength = 1025
+wavelength = 1025.
 select = str(wavelength)
 unit = 1E-9
 wavelength = wavelength * unit
@@ -238,15 +238,17 @@ k_precision = 0.5
 SipeRanges = 2e0
 #kx = np.arange(0.,SipeRanges,k_precision)
 #ky = np.arange(0.,SipeRanges,k_precision)
-kx = [1.5e0]; ky= [0.0e0] #single value of kx,ky
+
+# Manual definition of kappa_x, kappa_y. 
+kx = [0.0e0]; ky = [1.1e0] #single value of kx,ky
 #kxx, kyy = np.meshgrid(ky, kx)
 
 # calculating Sipe efficiency for many materials
 title = select+' nm'
 
 # Generating mapping of dielectric permittivities
-epsR = np.arange(-20, 2., 0.05) #eta: precision on epsilon inherited from libSPP.py
-epsI = np.arange(  0., 10., 0.05) #eta: precision on epsilon inherited from libSPP.py
+epsR = np.arange(-20, 10., 0.05) #eta: precision on epsilon could be inherited from libSPP.py by using the variable "precision". 
+epsI = np.arange(  0., 10., 0.05) #eta: precision on epsilon could be inherited from libSPP.py by using the variable "precision"
 
 epsI2, epsR2 = np.meshgrid(epsI, epsR)
 epsilon2 = np.add(epsR2,np.multiply(1e0j, epsI2)) #map of all possible dielectric permittivities
@@ -260,7 +262,7 @@ print Header+"Memory usage: "+str(len(kx)*len(ky)*len(epsR)*len(epsI)*64./8./102
 
 print Header+"Shape (kx,ky,epsR,epsI)="+str(np.shape(etaSipe))
 
-# Building the etaSipe(kx,ky) distribution
+# Building the etaSipe(kx,ky) distribution for all values of permittivities and all kappa_x, kappa_y.
 for j in np.arange(0,len(epsR),1):
   for k in np.arange(0,len(epsI),1):
     for m in np.arange(0,len(kx),1):
@@ -274,19 +276,27 @@ for j in np.arange(0,len(epsR),1):
         except:
           etaSipe[m,n,j,k] = 0.
 
-# Ok, it's time to get a picture mapping of the efficiency.
 #print etaSipe
 maximum = np.amax(etaSipe) #finds maximum value of efficiency
-print etaSipe[0,0,:,:]
-print Header+"Maximum efficiency = "+str(maximum)
-# TODO: find the corresponding value of kappaX, kappaY. 
+
+print Header+"** Info: Maximum value of efficacy: "+str(maximum)
+#print etaSipe[0,0,:,:]
+# TODO: find the value of kappaX, kappaY and epsilon for which efficiency is maximum. 
+
+# Ok, it's time to get a picture mapping of the efficiency.
+
 plt.figure()
-plt.matshow(etaSipe[:,:,0,0]) #eta(kx,ky;epsR=-2, epsI=0)
+plt.contourf(etaSipe[:,:,0,0]) #eta(kx,ky;epsR=-2, epsI=0)
+plt.xlabel(r'$\kappa_x$')
+plt.ylabel(r'$\kappa_y$')
+plt.title(r"$\eta (\kappa_x, \kappa_y; \varepsilon_r=$"+str(epsR[0])+r", $\varepsilon_i=$"+str(epsI[0])+")")
 plt.colorbar()
+
 plt.figure()
 levels = [-2, -1, 0, 1, 2]
 CS=plt.contourf(epsR2,epsI2,np.log10(etaSipe[0,0,:,:]),levels=levels, cmap=plt.cm.RdBu_r)
 plt.colorbar(CS)
+plt.title(r"$\eta (\kappa_x=$"+str(kx[0])+r"$, \kappa_y=$"+str(ky[0])+r", $\varepsilon_r, \varepsilon_i$)")
 plt.xlabel(r'Re($\varepsilon$)')
 plt.ylabel(r'Im($\varepsilon$)')
 plt.show()

@@ -240,7 +240,7 @@ SipeRanges = 2e0
 #ky = np.arange(0.,SipeRanges,k_precision)
 
 # Manual definition of kappa_x, kappa_y. 
-kx = [0.0e0]; ky = [1.1e0] #single value of kx,ky
+kx = [0.0e0]; ky = [0.6e0] #single value of kx,ky
 #kxx, kyy = np.meshgrid(ky, kx)
 
 # calculating Sipe efficiency for many materials

@@ -3,9 +3,7 @@ import numpy as np
 from scipy.integrate import ode
 import matplotlib.pyplot as plt
 
-#some constants
-pi2 = math.pi**2
-
+#physical constants
 atomic_dist = (5.32, 6.14, 9.83)                                    #atomic distances
 band_amps_v = ((-0.0928, 0.0705, 0.0200, -0.0012, 0.0029, 0.0006),  #band amplitudes
                (-0.0307, 0.0307, 0, 0, 0, 0),
@@ -24,6 +22,17 @@ FWHM = 1
 t0 = .2
 phi = 0
 
+#precaching values
+pi2 = math.pi**2
+t1 = 2*FWHM + t0
+
+FWHMomg = FWHM*omega
+piFWHM = math.pi/FWHM
+FWHMomgpip = FWHMomg+math.pi
+FWHMomgpim = FWHMomg-math.pi
+piFWHMomgp = piFWHM+omega
+piFWHMomgm = piFWHM-omega
+
 #dispersion curve
 def Epsilon(k):
     total = E_g
@@ -35,21 +44,19 @@ def Epsilon(k):
 #we only have 1D field
 #x-component of the laser field (squared sine converted to cosine)
 def F_x(t):
-    if t0 < t < 2*FWHM+t0:
-        return peak*(1-math.cos(math.pi*(t-t0)/FWHM))*math.cos(omega*(t-t0)+phi)/2
+    if t0 < t < t1:
+        return peak*(1-math.cos(piFWHM*(t-t0)))*math.cos(omega*(t-t0)+phi)/2
     else:
         return 0
 
 #x-component of the vector potential (analytic integration)
 def A_x(t):
-    if t >= 2*FWHM + t0:
-        return peak*pi2*math.sin(FWHM*omega)*math.cos(FWHM*omega+phi)/(FWHM**2*omega**3-pi2*omega)
-    elif t0 < t < 2*FWHM + t0:
-        term1 = -FWHM*omega*(FWHM*omega+math.pi)*math.sin((math.pi/FWHM-omega)*(t-t0)-phi)
-        term2 = (math.pi-FWHM*omega)*(2*(FWHM*omega+math.pi)*math.sin(omega*(t-t0)+phi)-FWHM*omega*math.sin((math.pi/FWHM+omega)*(t-t0)+phi))
-        term3 = -2*pi2*math.sin(phi)
-        denom = 4*(FWHM**2*omega**3-pi2*omega)
-        return peak*(term1 + term2 + term3)/denom
+    if t >= t1:
+        return peak*pi2*math.sin(FWHMomg)*math.cos(FWHMomg+phi)/(FWHMomgpip*FWHMomgpim*omega)
+    elif t0 < t < t1:
+        return peak*( FWHMomg*FWHMomgpip*math.sin(piFWHMomgm*(t-t0)-phi)
+                      + FWHMomgpim*(2*FWHMomgpip*math.sin(omega*(t-t0)+phi)-FWHMomg*math.sin(piFWHMomgp*(t-t0)+phi))
+                      + 2*pi2*math.sin(phi) )/(-4*FWHMomgpip*FWHMomgpim*omega)
     else:
         return 0
 

@@ -25,8 +25,11 @@
 
 from libSPP import *
 
-from scipy.constants import h, hbar, e, gravitational_constant
+from scipy.constants import h, hbar, e, gravitational_constant, Boltzmann
 gravity = gravitational_constant
+k_b     = Boltzmann
+
+#print "Boltzmann constant: "+str(k_b)+" J.s."
 
 Header = "[libThermalPropertiesMaterials] "
 
@@ -36,29 +39,44 @@ def Silica_Solid_VolumicMass():
 def Silica_Liquid_VolumicMass():
   return 2.2e3 #kg/m3
 
-def Silica_Solid_ThermalConductivity():
-  return 0.14E2 #W/m/K [Bauerle data]
+def Silica_Solid_ThermalConductivity(T):
+  if(T >= Silica_MeltingTemperature()): 
+    print Header+"** Warning: Silica_Solid_ThermalConductivity() is used out validity range. "
+  result = 0.14E2 #W/m/K [Bauerle data]
+  return result
 
-def Silica_Liquid_ThermalConductivity():
+def Silica_Liquid_ThermalConductivity(T):
+  if(T < Silica_MeltingTemperature()): 
+    print Header+"** Warning: Silica_Liquid_ThermalConductivity() is used out of its validity range. "
   return 0.014E2 #W/m/K [Bauerle data]
 
-def Silica_Solid_HeatDiffusivity():
+def Silica_Solid_HeatDiffusivity(T):
+  if(T >= Silica_MeltingTemperature()): 
+    print Header+"** Warning: Silica_Solid_HeatDiffusivity() is used out of its validity range. "
   return 0.086e-4 #m2/s
 
-def Silica_Liquid_HeatDiffusivity():
+def Silica_Liquid_HeatDiffusivity(T):
+  if(T < Silica_MeltingTemperature()): 
+    print Header+"** Warning: Silica_Liquid_HeatDiffusivity() is used out of its validity range. "
   return 0.009E-4 #m2/s
 
-def Silica_Solid_HeatCapacity():
+def Silica_Solid_HeatCapacity(T):
+  if(T >= Silica_MeltingTemperature()): 
+    print Header+"** Warning: Silica_Solid_HeatCapacity() is used out of its validity range. "
   # to be multiplied by density!
   return 0.74e3 #J / kg / K
 
-def Silica_Liquid_HeatCapacity():
+def Silica_Liquid_HeatCapacity(T):
   # to be multiplied by density!
+  if(T < Silica_MeltingTemperature()): 
+    print Header+"** Warning: Silica_Liquid_HeatCapacity() is used out of its validity range. "
   return 0.72E3 #J / kg / K
 
-## Thermal Conductivity of silica, for a waide range of temperatures. 
+## Thermal Conductivity of silica, for a wide range of temperatures. 
 #Fitted on Wray, Kurt L. and Connolly, Thomas J., "Thermal Conductivity of Clear Fused Silica at High Temperatures", Journal of Applied Physics (1959), 1702--1705.
 def Silica_HeatConductivity(T):
+  if(T < 300. or T > 2000.):
+    print Header+"** Warning: Silica_HeatConductivity() was used out of its validity range."
   a3 = 7.06418e-10
   a2 = -3.96976e-6
   a1 = 7.56664e-3
@@ -68,15 +86,21 @@ def Silica_HeatConductivity(T):
 ## Surface tension of liquid silica (in N/m)
 # @param T: temperature (K)
 #Fitted on Boyd K et al., "Surface tension and viscosity measurement of optical glasses using a scanning CO 2 laser", Optical Materials Express (2012), 1101--1110.
+#BUG: validity range? 
 def Silica_SurfaceTension(T):
   a = 1.54E-5; b=0.267; 
-  return a*T+b
+  return a*T+b, a
+
+## Silica melting temperature (in K)
+# Source? 
+def Silica_MeltingTemperature(): 
+  return 1300. 
 
 ## Dynamic viscosity of fused silica (in Pa.s)
 #Fitted on Urbain et al, "Viscosity of liquid silica, silicates and alumino-silicates", Geochimica et Cosmochimica Acta (1982), 1061--1072.
 # @param T: temperature (K). Validity range: 1300-2000 K 
 def Silica_DynamicViscosity(T):
-  Tm_SiO2   = 1300e0 #K [arbitrary?]
+  Tm_SiO2   = Silica_MeltingTemperature() #K
   Tmax_SiO2 = 2000e0 #K [arbitrary?]
   if(T < Tm_SiO2 or T>Tmax_SiO2):
     print Header+"** Warning: dynamic viscosity was taken out of range (SiO2 temperature must be liquid). "

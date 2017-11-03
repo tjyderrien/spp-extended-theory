@@ -23,7 +23,6 @@
 # Chapter IV of PhD thesis: Derrien, T. J.-Y., Nanostructuring of solar cells by femtosecond laser irradiation. Theoretical study of the formation mechanisms. Université de la Méditerranée - Aix Marseille II, 2012. 
 # Jean Berthier and Pascal Silberzan, "Microfluidics for Biotechnology", Artech House (2009).
 
-
 from libThermalPropertiesMaterials import *
 
 ## Collision time for the matter momentum damping
@@ -63,6 +62,13 @@ def CapillaryNumber(dynamic_viscosity, velocity, SurfaceTension):
 def WebberNumber(density, velocity, length, SurfaceTension): 
   return density * velocity**2 * length / SurfaceTension
 
+## Peclet number
+# @param kinematic_viscosity [m2/s]: 
+# @param diffusivity [m2/s]: 
+def PecletNumber(kinematic_viscosity, diffusivity):
+  Pe = kinematic_viscosity / diffusivity
+  return Pe
+
 MomentumDampingTime                     = np.vectorize(MomentumDampingTime                       )
 PressureInducedVelocity                 = np.vectorize(PressureInducedVelocity                   )
 SurfaceTensionInducedVelocity           = np.vectorize(SurfaceTensionInducedVelocity             )
@@ -71,3 +77,4 @@ SurfaceTensionInducedNonlinearVelocity  = np.vectorize(SurfaceTensionInducedNonl
 ReynoldsNumber                          = np.vectorize(ReynoldsNumber                            )
 CapillaryNumber                         = np.vectorize(CapillaryNumber                           )
 WebberNumber                            = np.vectorize(WebberNumber                              )
+PecletNumber                            = np.vectorize(PecletNumber)

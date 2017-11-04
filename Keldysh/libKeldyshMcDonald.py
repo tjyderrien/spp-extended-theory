@@ -16,22 +16,28 @@ d_0x = 3.46 #x-component of the dipole moment
 T_2 = 10 #damping factor
 
 #laser field parameters
-peak = 2
+peak = 1
 omega = 20
 FWHM = 1
-t0 = .2
+t0 = 1
 phi = 0
 
 #precaching values
 pi2 = math.pi**2
-t1 = 2*FWHM + t0
+t1 = t0-FWHM
+t2 = t0+FWHM
 
 FWHMomg = FWHM*omega
 piFWHM = math.pi/FWHM
-FWHMomgpip = FWHMomg+math.pi
-FWHMomgpim = FWHMomg-math.pi
-piFWHMomgp = piFWHM+omega
-piFWHMomgm = piFWHM-omega
+FWHM2mpi2omg = (FWHMomg**2-pi2)*omega
+
+c1 = -peak*FWHM/(4*(FWHMomg-math.pi))
+c2 = -peak*FWHM/(4*(FWHMomg+math.pi))
+c3 = -peak/(2*omega)
+c4 = peak*pi2/(2*FWHM2mpi2omg)*math.sin(FWHMomg-phi)
+
+peak2 = peak/2
+cnstvalA = peak*pi2*math.sin(FWHMomg)*math.cos(phi)/FWHM2mpi2omg
 
 #dispersion curve
 def Epsilon(k):
@@ -44,19 +50,22 @@ def Epsilon(k):
 #we only have 1D field
 #x-component of the laser field (squared sine converted to cosine)
 def F_x(t):
-    if t0 < t < t1:
-        return peak*(1-math.cos(piFWHM*(t-t0)))*math.cos(omega*(t-t0)+phi)/2
+    if t1 < t < t2:
+        t_shifted = t-t0
+        return peak2*(1+math.cos(piFWHM*t_shifted))*math.cos(omega*t_shifted+phi)
     else:
         return 0
 
 #x-component of the vector potential (analytic integration)
 def A_x(t):
-    if t >= t1:
-        return peak*pi2*math.sin(FWHMomg)*math.cos(FWHMomg+phi)/(FWHMomgpip*FWHMomgpim*omega)
-    elif t0 < t < t1:
-        return peak*( FWHMomg*FWHMomgpip*math.sin(piFWHMomgm*(t-t0)-phi)
-                      + FWHMomgpim*(2*FWHMomgpip*math.sin(omega*(t-t0)+phi)-FWHMomg*math.sin(piFWHMomgp*(t-t0)+phi))
-                      + 2*pi2*math.sin(phi) )/(-4*FWHMomgpip*FWHMomgpim*omega)
+    if t >= t2:
+        return cnstvalA
+    elif t1 < t < t2:
+        t_shifted = t-t0
+        return (c1*math.sin((omega-piFWHM)*t_shifted+phi)
+                + c2*math.sin((omega+piFWHM)*t_shifted+phi)
+                + c3*math.sin(omega*t_shifted+phi)
+                + c4)
     else:
         return 0
 

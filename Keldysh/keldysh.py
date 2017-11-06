@@ -7,9 +7,10 @@
 # * Generating tables to use directly into simulation codes
 # * Outputing density in certain conditions. 
 
+from libKeldysh       import * 
 from libKeldyshPulses import *
 from libKeldyshZhukov import *
-from libKeldyshUlrich import *
+#from libKeldyshUlrich import *
 
 Header="[keldysh] "
 
@@ -251,7 +252,7 @@ def SilicaGraef2017(): #{{{
 #}}}
 
 # Extends the Keldysh-Gruzdev model to parameters required by Hamed Merdji group (CEA > LYDIL France) for the nanocone irradiation in ZnO
-def ZnOMerdji2017():#{{{
+def ZnOMerdji2017(intensity):#{{{
   print "Defining ZnO material parameters from [Huang2014]..."
 
   Egap = 3.42*e; #band gap of ZnO [Tsoi2006: Tsoi, S. and Lu, X. and Ramdas, A. K. and Alawadhi, H. and Grimsditch, M. and Cardona, M. and Lauck, R., "Isotopic-mass dependence of the A, B, and C excitonic band gaps in ZnO at low temperatures", Physical Review B (2006).]
@@ -260,7 +261,7 @@ def ZnOMerdji2017():#{{{
 
   wavelength = 3200e-9;
   tau=100e-15; dt = 1E-17; CEP=0e0
-  intensity = 1E12*1E4
+  #intensity = 1E12*1E4
   PeakFluence = intensity * tau
   PeakField   = np.sqrt(2e0 * PeakFluence / (tau * c * epsilon_0))
 
@@ -303,10 +304,31 @@ def ZnOMerdji2017():#{{{
 
   print Header+"** Test 1: computing the W_PI values from self-coded and validated Gruzdev theory..."
   timeKeldysh, N_Keldysh_SI, N_Gruzdev_SI = plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelope1.real, dt, order, ShowPlot, 0e0, Ntotal)
+  
+  return N_Gruzdev_SI.max()
 #}}}  
 
 
 #SilicaGulley2012()
 #SiliconLDAbandGap()
 #SilicaGraef2017()
-ZnOMerdji2017()
+
+## Build the famous mapping of N_exc(intensity) from Keldysh theory. 
+intensities = np.power(10., 4.+np.arange(10., 13., 0.1)) #array([1E10, 1E11, 1E12, 1E13])*1E4 #W/m2
+
+print intensities 
+
+count = 0
+Nexc = np.zeros(intensities.size)
+for intensity in intensities:
+  Nexc[count] = ZnOMerdji2017(intensity)
+  count += 1
+  
+print Nexc
+
+plt.figure()
+plt.loglog(intensities, Nexc)
+plt.xlabel(r"$I_{max}$")
+plt.ylabel(r'$N_{exc}^{max}$')
+#plt.title(r"Wavelength $\lambda = $"+str(wavelength*1E6)+r" $\mu$m.")
+plt.savefig('Keldysh-NexcOfIntensity.eps')

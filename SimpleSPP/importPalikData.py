@@ -353,11 +353,19 @@ try: #TODO: should we select by author? Or by units?
     print "You can add the following directly inside 'MaterialOpticalDatabaseForPlasmonics.csv'"
     print filename+"\t"+"?"+"\t"+str(int(wavelength))+"\t"+str(epsilon.real)+"\t"+str(epsilon.imag)+"\t?\t?\t?\t?\t?"
   else:
-    folder = "Database/PalikGraph/" #TODO: Ag-Johnson is in ./Databasea actually.
+    folder = "Database/PalikGraph/" #TODO: Ag-Johnson is in ./Database actually.
     #folder = "Database/"
     print "Material: "+filename+"."
     print "Wavelength = "+str(wavelength)+" nm"
-    epsilon=importFromTable(wavelength*1e-6, folder, filename)
+    try: 
+      epsilon=importFromTable(wavelength*1e-6, folder, filename)
+    except:
+      print "Import failed using importFromTable(). Trying with importFromNKtable()."
+      try: 
+        importFromNKtable(wavelength*1e-6, folder, filename)
+      except:
+        print "Failed even using importFromNKtable(). Call that damn developer. "
+        exit()
     print epsilon
     print "You can add the following directly inside 'MaterialOpticalDatabaseForPlasmonics.csv'"
     print filename+"\t"+"?"+"\t"+str(int(wavelength))+"\t"+str(epsilon.real)+"\t"+str(epsilon.imag)+"\t?\t?\t?\t?\t?"

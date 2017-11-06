@@ -9,7 +9,7 @@
 
 from libKeldyshPulses import *
 from libKeldyshZhukov import *
-from libKeldyshMcDonald import *
+from libKeldyshUlrich import *
 
 Header="[keldysh] "
 
@@ -172,7 +172,7 @@ def SilicaGulley2012(): #{{{
   return 0
 #}}}
 
-# Repeats the results obtained in Gulley, Opt. Eng. 51, 121805 (2012). 
+# Extends the Keldysh-Gruzdev models to parameters required by Stephane Gräf to analyze nanostructure formation in SiO2. 
 def SilicaGraef2017(): #{{{
   print "Defining SiO2 material parameters from [Gräf2017]..."
 
@@ -250,7 +250,63 @@ def SilicaGraef2017(): #{{{
   return 0
 #}}}
 
+# Extends the Keldysh-Gruzdev model to parameters required by Hamed Merdji group (CEA > LYDIL France) for the nanocone irradiation in ZnO
+def ZnOMerdji2017():#{{{
+  print "Defining ZnO material parameters from [Huang2014]..."
+
+  Egap = 3.42*e; #band gap of ZnO [Tsoi2006: Tsoi, S. and Lu, X. and Ramdas, A. K. and Alawadhi, H. and Grimsditch, M. and Cardona, M. and Lauck, R., "Isotopic-mass dependence of the A, B, and C excitonic band gaps in ZnO at low temperatures", Physical Review B (2006).]
+  meff = 0.19e0; #Effective mass of ZnO [Huang2014] #TODO: not so serious paper on ZnO! Find a pump probe of ZnO to be more sure. 
+  Ntotal=10.*5E28; #valence band electron density #to avoid limitation
+
+  wavelength = 3200e-9;
+  tau=100e-15; dt = 1E-17; CEP=0e0
+  intensity = 1E12*1E4
+  PeakFluence = intensity * tau
+  PeakField   = np.sqrt(2e0 * PeakFluence / (tau * c * epsilon_0))
+
+  t0=0. #defines the instant 0.
+  Delay = 0. #delay between maxima of the pulses
+  tmin=-1.*tau + t0; tmax=1.*tau + Delay + t0
+
+  instants = np.arange(tmin, tmax, dt)
+  #print "Time range: "+str(instants.min())+", "+str(instants.max())+"."
+
+  PeakField2  = 0. #/ 2.
+  CEP2        = 0. #pi/3.
+  #wavelength2 = wavelength
+  
+  print Header+"** Test: building single pulse centered on 0..."
+  FieldEnvelope1, RealField1 = PulseSquaredSinTemporalShape(instants, tau, PeakField, wavelength, CEP, t0, 0.)
+
+  #print Header+"** Test: We build a second pulse with a delay..."
+  #FieldEnvelope2, RealField2 = PulseSquaredSinTemporalShape(instants, tau, PeakField2, wavelength2, CEP, t0, Delay)
+
+  #print Header+"** Test: building a bicolor double pulse"
+
+  #FieldEnvelopeTot, RealFieldTot = PulseSquaredSinTemporalShapeDoublePulse(instants, tau, tau, PeakField, PeakField, wavelength, wavelength2, CEP, CEP2, t0, Delay)
+
+  plt.plot(instants, RealField1.real, '-')
+  plt.plot(instants, FieldEnvelope1.real, '--')
+  #plt.plot(instants, RealField2.real, '-')
+  #plt.plot(instants, FieldEnvelope2.real, '--')
+  #plt.plot(instants, RealFieldTot.real, '-')
+  #plt.plot(instants, FieldEnvelopeTot.real, '--')
+  plt.xlabel('')
+  plt.savefig('PulseEnvelopes.eps')
+  plt.savefig('PulseEnvelopes.png')
+  #plt.show()
+
+  print Header+"** Info: PulseEnvelope.EPS and PNG were written in the current folder. "
+
+  order = 50
+  ShowPlot = True
+
+  print Header+"** Test 1: computing the W_PI values from self-coded and validated Gruzdev theory..."
+  timeKeldysh, N_Keldysh_SI, N_Gruzdev_SI = plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelope1.real, dt, order, ShowPlot, 0e0, Ntotal)
+#}}}  
+
 
 #SilicaGulley2012()
-SiliconLDAbandGap()
+#SiliconLDAbandGap()
 #SilicaGraef2017()
+ZnOMerdji2017()

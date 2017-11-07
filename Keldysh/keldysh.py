@@ -174,7 +174,7 @@ def SilicaGulley2012(): #{{{
 #}}}
 
 # Extends the Keldysh-Gruzdev models to parameters required by Stephane Gräf to analyze nanostructure formation in SiO2. 
-def SilicaGraef2017(): #{{{
+def SilicaGraef2017(PeakFluence): #{{{
   print "Defining SiO2 material parameters from [Gräf2017]..."
 
   Egap = 8.024234328*e; #band gap of SiO2
@@ -248,16 +248,20 @@ def SilicaGraef2017(): #{{{
   #print Header+"           WE DONT HAVE THEM FOR THIS BAND GAP. Contact zukov@ict.nsc.ru."
   #wPI_Zhukov = VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength, wavelength2, CEP, CEP2, Egap, meff, tau, tau, Delay, dt, Ntotal, t0)
   
-  return 0
+  return N_Gruzdev_SI.max()
 #}}}
 
 # Extends the Keldysh-Gruzdev model to parameters required by Hamed Merdji group (CEA > LYDIL France) for the nanocone irradiation in ZnO
 def ZnOMerdji2017(intensity):#{{{
   print "Defining ZnO material parameters from [Huang2014]..."
 
+  VolumicMass = 5.606e3 #kg/m-3
+  MolarMass   = 81.38e-3 #kg/mol
+ 
   Egap = 3.42*e; #band gap of ZnO [Tsoi2006: Tsoi, S. and Lu, X. and Ramdas, A. K. and Alawadhi, H. and Grimsditch, M. and Cardona, M. and Lauck, R., "Isotopic-mass dependence of the A, B, and C excitonic band gaps in ZnO at low temperatures", Physical Review B (2006).]
   meff = 0.19e0; #Effective mass of ZnO [Huang2014] #TODO: not so serious paper on ZnO! Find a pump probe of ZnO to be more sure. 
-  Ntotal=10.*5E28; #valence band electron density #to avoid limitation
+  Ntotal=VolumicMass * Avogadro / MolarMass #10.*5E28; #valence band electron density #to avoid limitation
+  print Header+"Limiting the excitation degree to Z*=1. Density: "+str(Ntotal*1E-6)+" cm-3"
 
   wavelength = 3200e-9;
   tau=100e-15; dt = 1E-17; CEP=0e0
@@ -321,14 +325,15 @@ print intensities
 count = 0
 Nexc = np.zeros(intensities.size)
 for intensity in intensities:
-  Nexc[count] = ZnOMerdji2017(intensity)
+  #Nexc[count] = ZnOMerdji2017(intensity)
+  Nexc[count] = SilicaGraef2017(intensity*300e-15)
   count += 1
   
 print Nexc
 
 plt.figure()
-plt.loglog(intensities, Nexc)
-plt.xlabel(r"$I_{max}$")
-plt.ylabel(r'$N_{exc}^{max}$')
+plt.loglog(1E-4*intensities, 1E-6*Nexc)
+plt.xlabel(r"$I_{max}$, $W/cm^2$")
+plt.ylabel(r'$N_{exc}^{max}$, $cm^{-3}$')
 #plt.title(r"Wavelength $\lambda = $"+str(wavelength*1E6)+r" $\mu$m.")
-plt.savefig('Keldysh-NexcOfIntensity.eps')
+plt.savefig('Keldysh-NexcOfIntensity-Graf-SiO2-1025nm-300fs.eps')

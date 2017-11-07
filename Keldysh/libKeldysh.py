@@ -39,8 +39,6 @@ ShortRefKeldysh = "[Keldysh (1964)]"
 ShortRefGruzdev = "[Gruzdev (2014)]"
 ShortRefGulley  = "[Gulley (2012)]"
 
-
-
 ## Computes the adiabadicity parameter
 # @param gamma: Adiabadicity parameter (non-dimensional number)
 # @param Egap: band gap energy (in Joules)

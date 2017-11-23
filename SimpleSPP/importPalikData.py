@@ -28,6 +28,7 @@
 # IMPORT LIBRARIES
 from libSPP import *
 from libUnits import *
+from libDatabase import *
 
 Header="[importPalikData] "
 
@@ -427,6 +428,48 @@ def importFromTable(wavelength, folder, filename, plotting): #{{{
   return epsilon
 #}}}
 
+## Combines 2 sets of optical data using harmonic interpolation. 
+# @param wavelength1: mesh set of the 1st optical data
+# @param wavelength2: mesh set of the 2nd optical data
+# @param eps1: complex scalar field of 1st optical data
+# @param eps2: complex scalar field of 2nd optical data
+# @param unit: base unit for the file
+def interpolateTwoSetsOfOpticalData(wavelength1, wavelength2, eps1, eps2):
+  # import wavelength, n and k from Palik
+  numrows = 10000
+  base = 10
+  # interpolate n and k on new wavelength mesh
+  order=1
+  #wavelengths = np.arange(np.amin(wavelength2),np.amax(wavelength2), precision) #regular mesh, AWFUL for memory
+  wavelength_min = np.amin([wavelength1.min(), wavelength2.min()])
+  wavelength_max = np.amax([wavelength1.max(), wavelength2.max()]) 
+  print "Generating new wavelength mesh: ("+str(np.amin(wavelength_min))+", "+str(np.amax(wavelength_max))+")"
+  wavelengths = np.logspace(np.amin(np.log10(wavelength_min)), np.amax(np.log10(wavelength_max)), num=numrows, base=base, endpoint = True)
+
+  print "New wavelength mesh has "+str(numrows)+" rows."
+  #print wavelengths
+  eps1r = eps1.real; eps1c = eps1.imag
+  eps2r = eps2.real; eps2c = eps2.imag
+  feps1r = InterpolatedUnivariateSpline(wavelength1, eps1r, k=order, ext=1)
+  feps1c = InterpolatedUnivariateSpline(wavelength1, eps1c, k=order, ext=1)
+  feps2r = InterpolatedUnivariateSpline(wavelength2, eps2r, k=order, ext=1)
+  feps2c = InterpolatedUnivariateSpline(wavelength2, eps2c, k=order, ext=1)
+  print Header+"Interpolation functions are ready."
+  
+  ## METHOD ?
+  ## Harmonic average? Does not work with bounded-energy permittivities
+  ## Algebraic average? Have no physical meaning. 
+  ## Adding them? If they are with separate support, then yes. 
+  ## Maxwell Garnett? With which fraction then? 
+  
+  print "Combining sets of optical data via ADDING them [!they must have different support!]..."
+  #print feps2r(wavelengths)+1j*feps2c(wavelengths)
+  #epsilon_final = feps1r(wavelengths)+1.j*feps1c(wavelengths) + feps2r(wavelengths)+1.j*feps2c(wavelengths) #they have different support, hence it should be fine]
+  epsilon_final = feps1r(wavelengths) #+ feps2r(wavelengths)
+  #print np.shape(wavelengths), np.shape(epsilon_final)
+  #return wavelengths, epsilonR_final+1j*epsilonC_final
+  return wavelengths, epsilon_final
+
 #==============================
 
 if(len(sys.argv)<=2):
@@ -494,11 +537,23 @@ try: #TODO: should we select by author? Or by units?
     print epsilon
     print "You can add the following directly inside 'MaterialOpticalDatabaseForPlasmonics.csv'"
     print filename+"\t"+"?"+"\t"+str(int(wavelength))+"\t"+str(epsilon.real)+"\t"+str(epsilon.imag)+"\t?\t?\t?\t?\t?"
+  elif(source == "GoriAndBond"):
+    folder = "Database/"
+    filename = "ZnO-GoriAndBond"
+    print "Material: "+filename+"."
+    print "Wavelength = "+str(wavelength)+" nm"
+    nk = importFromTable(wavelength*1e-9, folder, filename, plotting)
+    epsilon = nk**2
+    print epsilon
+    print "You can add the following directly inside 'MaterialOpticalDatabaseForPlasmonics.csv'"
+    print filename+"\t"+"?"+"\t"+str(int(wavelength))+"\t"+str(epsilon.real)+"\t"+str(epsilon.imag)+"\t?\t?\t?\t?\t?"
   elif(source == "Gori"):
     # We plot Gori data along with Bond data. 
     # Gori is meshed on (energy (eV), epsilon)
     # Bond is meshed on (wavelength (, n, k)
     print "** Warning: ZnO-Gori data must be completed around 4 eV using Bond data."
+    print "WE NOW GENERATE THE INTERPOLATED FILES TO ALLOW FOR MERGING."
+    print "To use the merged Gori-Bond files, type GoriAndBond source instead of Gori."
     print ""
     print "Importing ZnO-Gori data..."
     plotting = True
@@ -512,24 +567,27 @@ try: #TODO: should we select by author? Or by units?
     energiesGori_J   = e*energiesGori
     #print energiesGori_J, epsilonGori #output format: J, epsilon
     wavelengthsGori  = h*c/(energiesGori_J) #output format: meters
-    print wavelengthsGori, epsilonGori
+    #print wavelengthsGori, epsilonGori
+    GoriFile = np.array([wavelengthsGori*1E9, epsilonGori.real, epsilonGori.imag])
+    ExportToTxt(np.flipud(np.transpose(GoriFile)), "ZnO-Gori.csv")
+    print Header+"** Exported Gori file. "
     
-    print "Importing ZnO-Gori data..."
-    plotting = True
-    folderGori   = "Database/"
-    filenameGori = "ZnO-Gori"
+    print "Importing more detailed ZnO-Gori data..."
+    filenameGori2 = "ZnO-Gori2"
     
     energiesGori2, epsilonGori2  = importFromEpsilonTable_batch(folderGori, filenameGori2, plotting, 1E0) #unit in nm
-    #print energiesGori, epsilonGori #output format: eV, epsilon
-    # BUG: impossible to call Energy_SI_to_Length ?
-    #wavelengthsGori = Energy_SI_to_Length(Energy_eV_to_Joules(energiesGori)) #BUG HERE
     energiesGori_J2   = e*energiesGori2
-    #print energiesGori_J, epsilonGori #output format: J, epsilon
     wavelengthsGori2  = h*c/(energiesGori_J2) #output format: meters
-    print wavelengthsGori2, epsilonGori2
+    Gori2File = np.array([wavelengthsGori2*1E9, epsilonGori2.real, epsilonGori2.imag])
+    ExportToTxt(np.flipud(np.transpose(Gori2File)), "ZnO-Gori2.csv")
+    print Header+"** Exported Gori2 file. "
+    #print "Combining the two Gori sets of data..."
+    #wavelengths_Gori_final, epsilonGori_final = interpolateTwoSetsOfOpticalData(wavelengthsGori, wavelengthsGori2, epsilonGori, epsilonGori2)
+    #print wavelengths_Gori_final, epsilonGori_final
     
+    print ""
     print Header+"Info: Successfully imported ZnO-Gori data."
-    
+    print ""
     print Header+"Completing with ZnO-Bond data..."
     folderBond   = "Database/PalikGraph/"
     filenameBond = "ZnO-Bond"
@@ -538,17 +596,20 @@ try: #TODO: should we select by author? Or by units?
     print Header+"Info: Imported ZnO-Bond data."
     epsilonBond  =  np.multiply(nkBond, nkBond) #converting (n,k) to (epsR, epsC)
     print Header+"Info: Converted ZnO-Bond to dielectric permittivity."
-    print wavelengthsBond, epsilonBond
-    
-    print "Now we can combine Gori and Bond data. "
+    BondFile = np.array([wavelengthsBond*1E9, epsilonBond.real, epsilonBond.imag])
+    ExportToTxt(np.transpose(BondFile), "ZnO-Bond.csv")
+    print Header+"** Exported Bond file. "
     
     plt.figure()
-    plt.semilogx(wavelengthsGori*1E9, epsilonGori.real, "b-", label='Gori')
-    plt.semilogx(wavelengthsGori*1E9, epsilonGori.imag, "r-", label='')
-    plt.semilogx(wavelengthsBond*1E9, epsilonBond.real, "b--", label='Bond')
-    plt.semilogx(wavelengthsBond*1E9, epsilonBond.imag, "r--", label='')
+    plt.semilogx(wavelengthsGori, epsilonGori.real, "r-", label='Gori')
+    plt.semilogx(wavelengthsGori2, epsilonGori2.real, "b-", label='Gori-2')
+    plt.semilogx(wavelengthsBond, epsilonBond.real, "g-", label='Bond')
+    plt.semilogx(wavelengthsGori, epsilonGori.imag, "r--", label='')
+    plt.semilogx(wavelengthsGori2, epsilonGori2.imag, "b--", label='')
+    plt.semilogx(wavelengthsBond, epsilonBond.imag, "g--", label='')
     plt.xlabel("Wavelength (nm)")
-    plt.ylabel("eps")
+    plt.ylabel(r"$\varepsilon$")
+    plt.legend()
     plt.grid()
     plt.savefig("ZnO-reconstructed.eps")
     plt.show()

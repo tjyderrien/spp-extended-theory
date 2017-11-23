@@ -19,26 +19,32 @@
 ## @package importPalikData
 # Importing data from Palik book using digitized plots. 
 # Optical data are input via using CSV-formatted input files, created using Engauge-digitizer software. 
-# The lib generates (wavelength, ReEps, ImEps) tables to be used inside the program.
+# The lib generates (wavelength, ReEps, ImEps) values to be used inside the program.
+# Two possibilities are available: 
+# - Interpolating one single value at a given wavelength (importFromTable). 
+# - Interpolating on a wide spectrum to combine several sources (other functions). 
 
-## Imports data (wavelength, n,k) from different wavelength meshes. 
+
+# IMPORT LIBRARIES
+from libSPP import *
+from libUnits import *
+
+Header="[importPalikData] "
+
+## Imports optical data (wavelength, n,k) from different wavelength meshes. 
 #  Such data can be captured using a software like Engauge Digitizer. 
 #  This leads to obtain (n,k) discretized on DIFFERENT MESHES. 
 #  
 #  NOTE: Warning: the data produced by this method are rather unprecise. SPP spectoscopy requires precision to 1E-3. 
 #  This method gives a precision worst then 1E0. Use only in case no other data are available. 
-
-# IMPORT LIBRARIES
-from libSPP import *
-
-def importFromNKtable(wavelength, folder, filename, plotting=1):#{{{
+def importFromNKtable(wavelength, folder, filename, plotting=1, unit=1E-6):#{{{
   nfile = folder+filename+"-n.csv"
   kfile = folder+filename+"-k.csv"
 
   narray = loadtxt(nfile, delimiter="\t", skiprows=1)
   karray = loadtxt(kfile, delimiter="\t", skiprows=1)
   
-  unit = 1E-6
+  #unit = 1E-6
   
   # import wavelength, n and k from Palik
   wavelength1 = narray[:,0]*unit
@@ -108,13 +114,77 @@ def importFromNKtable(wavelength, folder, filename, plotting=1):#{{{
   #plt.show()
 #}}}
 
+## Imports optical data of type (wavelength, n,k) from different wavelength meshes. 
+#  Such data can be captured using a software like Engauge Digitizer. 
+#  This leads to obtain (n,k) discretized on DIFFERENT MESHES. 
+#  
+#  NOTE: Warning: the data produced by this method are rather unprecise. SPP spectoscopy requires precision to 1E-3. 
+#  This method gives a precision worst then 1E0. Use only in case no other data are available. 
+def importFromNKtable_batch(folder, filename, plotting=1, unit=1E-6):#{{{
+  nfile = folder+filename+"-n.csv"
+  kfile = folder+filename+"-k.csv"
+
+  narray = loadtxt(nfile, delimiter="\t", skiprows=1)
+  karray = loadtxt(kfile, delimiter="\t", skiprows=1)
+  
+  #unit = 1E-6
+  
+  # import wavelength, n and k from Palik
+  wavelength1 = narray[:,0]*unit
+  wavelength2 = karray[:,0]*unit
+  n = narray[:,1]
+  k = karray[:,1]
+  numrows = 10000
+  base = 10
+  # interpolate n and k on new wavelength mesh
+  order=1
+  #wavelengths = np.arange(np.amin(wavelength2),np.amax(wavelength2), precision) #regular mesh, AWFUL for memory
+  print "Generating new wavelength mesh: ("+str(np.amin(wavelength2))+", "+str(np.amax(wavelength2))+")"
+  wavelengths = np.logspace(np.amin(np.log10(wavelength2)), np.amax(np.log10(wavelength2)), num=numrows, base=base, endpoint = True)
+
+  print "New wavelength mesh has "+str(numrows)+" rows."
+  #print wavelengths
+  
+  fni = InterpolatedUnivariateSpline(wavelength1, n, k=order)
+  fki = InterpolatedUnivariateSpline(wavelength2, k, k=order)
+
+  #Interpolated one optical constants
+  #try: 
+    ##wavelength = 800e-9
+    #ni = fni(wavelength); ki = fki(wavelength)
+    #epsilon = (ni+1j*ki)**2
+    #print "Interpolated permittivity at "+str(wavelength*1e9)+" nm = "+str(epsilon)
+  #except: 
+    #print "Interpolation for "+str(wavelength*1E9)+" nm failed."
+	  
+  # defining the new n and k on a common mesh
+  ni = fni(wavelengths)
+  ki = fki(wavelengths)
+
+  if(plotting==1): 
+    plt.figure()
+    plt.xlabel(r'$\mathcal{R}e(\varepsilon)$ (nm)')
+    plt.ylabel('n, k')
+    plt.semilogx(wavelength1*1e9, n, 'bs', label='n Palik')
+    plt.semilogx(wavelength2*1e9, k, 'rs', label='k Palik')
+    plt.semilogx(wavelengths*1e9, ni, 'b-', label='n interp')
+    plt.semilogx(wavelengths*1e9, ki, 'r-', label='k interp')
+    plt.grid()
+    plt.legend(loc=1)
+    plt.savefig('PalikData.eps')
+  
+  return wavelengths, ni+1.j*ki
+  #plt.show()
+#}}}
+
 ## Imports (wavelength, ReEps, ImEps) data captured using a software like Engauge Digitizer. 
 #   Input: (epsReal, epsImag) are discretized, also works on DIFFERENT MESHES. 
-#   Output: (n,k, epsilon) discretized on the same mesh. 
+#   Output: (epsilon) interpolated at a given value
+#           and plots the whole spectrum for verification. 
 #   
 #   NOTE: Warning: the data produced by this method are rather unprecise. SPP spectoscopy requires precision to 1E-3. 
 #   This method gives a precision worst then 1E0. Use only in case no other data are available. 
-def importFromEpsilonTable(wavelength, folder, filename, plotting=True): #{{{
+def importFromEpsilonTable(wavelength, folder, filename, plotting=True, unit=1E-10): #{{{
   nfile = folder+filename+"-epsR.csv" #TODO: rename nfile to ReEpsFile
   kfile = folder+filename+"-epsC.csv" #TODO: rename kfile to ImEpsFile
   
@@ -122,7 +192,7 @@ def importFromEpsilonTable(wavelength, folder, filename, plotting=True): #{{{
   narray = loadtxt(nfile, delimiter="\t", skiprows=1)
   karray = loadtxt(kfile, delimiter="\t", skiprows=1)
   
-  unit = 1E-10 #Unit of the wavelength found in databases <nfile> and <kfile>. 
+  #unit = 1E-10 #Unit of the wavelength found in databases <nfile> and <kfile>. 
   
   # import wavelength, epsilonR, epsilonC
   wavelength1 = narray[:,0]*unit
@@ -159,7 +229,8 @@ def importFromEpsilonTable(wavelength, folder, filename, plotting=True): #{{{
 	  
   # defining the new epsR and epsC on a common mesh
   ni = fni(wavelengths)
-  ki = fki(wavelengths)  
+  ki = fki(wavelengths)
+  epsilons = (ni+1j*ki) ##!! Names are misleading here: we actually work dielectric permittivities! 
 
   if(plotting):
     plt.figure()
@@ -176,6 +247,76 @@ def importFromEpsilonTable(wavelength, folder, filename, plotting=True): #{{{
 
   return epsilon
   
+#}}}
+
+## Imports (wavelength, ReEps, ImEps) data captured using a software like Engauge Digitizer. 
+#   Input: file with (wavelengths, epsReal, epsImag) are discretized, also works on DIFFERENT MESHES. 
+#   Output: epsilons interpolated on a whole mesh
+#   
+#   NOTE: Warning: the data produced by this method are rather unprecise. SPP spectoscopy requires precision to 1E-3. 
+#   This method gives a precision worst then 1E0. Use only in case no other data are available. 
+def importFromEpsilonTable_batch(folder, filename, plotting=True, unit=1E-10): #{{{
+  nfile = folder+filename+"-epsR.csv" #TODO: rename nfile to ReEpsFile
+  kfile = folder+filename+"-epsC.csv" #TODO: rename kfile to ImEpsFile
+  
+  print "** Info: opening "+nfile+" and "+kfile+"."
+  narray = loadtxt(nfile, delimiter="\t", skiprows=1)
+  karray = loadtxt(kfile, delimiter="\t", skiprows=1)
+  
+  #unit = 1E-10 #Unit of the wavelength found in databases <nfile> and <kfile>. 
+  
+  # import wavelength, epsilonR, epsilonC
+  wavelength1 = narray[:,0]*unit
+  wavelength2 = karray[:,0]*unit
+  n = narray[:,1]
+  kk = karray[:,1]
+  numrows = 10000 #Number of rows to interpolate the data on. 
+  base = 10
+  # interpolate on new wavelength mesh using 1st order
+  order=1
+  #wavelengths = np.arange(np.amin(wavelength2),np.amax(wavelength2), precision) #regular mesh, AWFUL for memory
+  print "** Info: Generating the new wavelength mesh: ("+str(np.amin(wavelength2))+", "+str(np.amax(wavelength2))+")"
+  wavelengths = np.logspace(np.amin(np.log10(wavelength2)), np.amax(np.log10(wavelength2)), num=numrows, base=base, endpoint = True)
+
+  print "New wavelength mesh has "+str(numrows)+" rows."
+  #print wavelengths
+  
+  print "** Info: definition of interpolation functions..."
+  wavelength1=np.sort(wavelength1)
+  wavelength2=np.sort(wavelength2)
+    
+  fni = InterpolatedUnivariateSpline(wavelength1, n, k=order)
+  fki = InterpolatedUnivariateSpline(wavelength2, kk, k=order)
+  
+  ##Interpolation for one optical constant
+  #try:
+    #ni = fni(wavelength); ki = fki(wavelength)
+    ##print wavelength, ni, ki
+    #epsilon = (ni+1j*ki) #NOTE: we are picking up the epsRe, and epsIm directly here
+    #print "" 
+    #print "Interpolated permittivity at "+str(wavelength*1E9)+" nm = "+str(epsilon)
+  #except: 
+    #print "Interpolation for "+str(wavelength*1E9)+" nm failed."
+	  
+  # defining the new epsR and epsC on a common mesh
+  ni = fni(wavelengths)
+  ki = fki(wavelengths)
+  epsilons = (ni+1.j*ki) ##!! Names are misleading here: we actually work dielectric permittivities! 
+
+  if(plotting):
+    plt.figure()
+    plt.xlabel(r'$\mathcal{R}e(\varepsilon)$ (nm)')
+    plt.ylabel(r'$Re(\varepsilon)$, $Im(\varepsilon)$')
+    plt.semilogx(wavelength1*1e9, n, 'bs', label='Re(eps) data')
+    plt.semilogx(wavelength2*1e9, kk, 'rs', label='Im(eps) data')
+    plt.semilogx(wavelengths*1e9, ni, 'b-', label='Re(eps) interp')
+    plt.semilogx(wavelengths*1e9, ki, 'r-', label='Im(eps) interp')
+    plt.grid()
+    plt.legend(loc=1)
+    plt.savefig('GraphData.eps')
+    #plt.show()
+
+  return wavelengths, epsilons
 #}}}
 
 ## Mere function? Generates (ReEps, ImEps) from absorption data (given in m^{-1}). 
@@ -307,6 +448,7 @@ except:
   source = "Palik"
   
 filename = material+"-"+source
+folder = ""
   
 #filename = "Au-Palik"
 #filename = "Be-Palik"
@@ -352,6 +494,65 @@ try: #TODO: should we select by author? Or by units?
     print epsilon
     print "You can add the following directly inside 'MaterialOpticalDatabaseForPlasmonics.csv'"
     print filename+"\t"+"?"+"\t"+str(int(wavelength))+"\t"+str(epsilon.real)+"\t"+str(epsilon.imag)+"\t?\t?\t?\t?\t?"
+  elif(source == "Gori"):
+    # We plot Gori data along with Bond data. 
+    # Gori is meshed on (energy (eV), epsilon)
+    # Bond is meshed on (wavelength (, n, k)
+    print "** Warning: ZnO-Gori data must be completed around 4 eV using Bond data."
+    print ""
+    print "Importing ZnO-Gori data..."
+    plotting = True
+    folderGori   = "Database/"
+    filenameGori = "ZnO-Gori"
+    
+    energiesGori, epsilonGori  = importFromEpsilonTable_batch(folderGori, filenameGori, plotting, 1E0) #unit in nm
+    #print energiesGori, epsilonGori #output format: eV, epsilon
+    # BUG: impossible to call Energy_SI_to_Length ?
+    #wavelengthsGori = Energy_SI_to_Length(Energy_eV_to_Joules(energiesGori)) #BUG HERE
+    energiesGori_J   = e*energiesGori
+    #print energiesGori_J, epsilonGori #output format: J, epsilon
+    wavelengthsGori  = h*c/(energiesGori_J) #output format: meters
+    print wavelengthsGori, epsilonGori
+    
+    print "Importing ZnO-Gori data..."
+    plotting = True
+    folderGori   = "Database/"
+    filenameGori = "ZnO-Gori"
+    
+    energiesGori2, epsilonGori2  = importFromEpsilonTable_batch(folderGori, filenameGori2, plotting, 1E0) #unit in nm
+    #print energiesGori, epsilonGori #output format: eV, epsilon
+    # BUG: impossible to call Energy_SI_to_Length ?
+    #wavelengthsGori = Energy_SI_to_Length(Energy_eV_to_Joules(energiesGori)) #BUG HERE
+    energiesGori_J2   = e*energiesGori2
+    #print energiesGori_J, epsilonGori #output format: J, epsilon
+    wavelengthsGori2  = h*c/(energiesGori_J2) #output format: meters
+    print wavelengthsGori2, epsilonGori2
+    
+    print Header+"Info: Successfully imported ZnO-Gori data."
+    
+    print Header+"Completing with ZnO-Bond data..."
+    folderBond   = "Database/PalikGraph/"
+    filenameBond = "ZnO-Bond"
+    wavelengthsBond, nkBond       = importFromNKtable_batch(folderBond, filenameBond, plotting, 1E-6) #unit in um
+    print wavelengthsBond, nkBond
+    print Header+"Info: Imported ZnO-Bond data."
+    epsilonBond  =  np.multiply(nkBond, nkBond) #converting (n,k) to (epsR, epsC)
+    print Header+"Info: Converted ZnO-Bond to dielectric permittivity."
+    print wavelengthsBond, epsilonBond
+    
+    print "Now we can combine Gori and Bond data. "
+    
+    plt.figure()
+    plt.semilogx(wavelengthsGori*1E9, epsilonGori.real, "b-", label='Gori')
+    plt.semilogx(wavelengthsGori*1E9, epsilonGori.imag, "r-", label='')
+    plt.semilogx(wavelengthsBond*1E9, epsilonBond.real, "b--", label='Bond')
+    plt.semilogx(wavelengthsBond*1E9, epsilonBond.imag, "r--", label='')
+    plt.xlabel("Wavelength (nm)")
+    plt.ylabel("eps")
+    plt.grid()
+    plt.savefig("ZnO-reconstructed.eps")
+    plt.show()
+    
   else:
     folder = "Database/PalikGraph/" #TODO: Ag-Johnson is in ./Database actually.
     #folder = "Database/"

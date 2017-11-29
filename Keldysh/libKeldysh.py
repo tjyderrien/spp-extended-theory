@@ -28,7 +28,7 @@
 from libKeldyshZhukov import *
 
 rc('font', **{'family':'serif', 'serif':['Helvetica'], 'size':'16'})
-rc('text', usetex=True)
+rc('text', usetex=False)
 mp.rcParams['legend.numpoints'] = 1
 
 Header="[libKeldysh] "

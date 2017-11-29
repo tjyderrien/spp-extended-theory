@@ -36,7 +36,7 @@ import matplotlib.pyplot as plt
 from scipy.interpolate import interp2d, InterpolatedUnivariateSpline
 from matplotlib import rc
 # from pylab import *
-from scipy.constants import c, epsilon_0, mu_0, pi, e, m_e, h, hbar
+from scipy.constants import c, epsilon_0, mu_0, pi, e, m_e, h, hbar, Avogadro
 #from matplotlib.legend_handler import HandlerLine2D
 #import sys
 

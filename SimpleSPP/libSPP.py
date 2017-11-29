@@ -54,13 +54,13 @@ LevelOfSPPaccuracy=2
 
 # Settings for matplotlib: taken from https://stackoverflow.com/questions/12322738/how-do-i-change-the-axis-tick-font-in-a-matplotlib-plot-when-rendering-using-lat
 sizeOfFont = 18
-FontName='cm'
+FontName='Helvetica' #'cm'
 fontProperties = {'family':'sans-serif','sans-serif':[FontName],
     'weight' : 'normal', 'size' : sizeOfFont}
 ticks_font = font_manager.FontProperties(family=FontName, style='italic',
     size=sizeOfFont, weight='normal', stretch='normal')	
 rc('font',**fontProperties)
-rc('text.latex', preamble=r'\usepackage{cmbright}')
+#rc('text.latex', preamble=r'\usepackage{cmbright}')
 #rc('font',**{'family':'sans-serif','sans-serif':['Arial'], 'size':'18'})
 ## for Palatino and other serif fonts use:
 #rc('font', **{'family':'serif', 'serif':['Palatino'], 'size':'18'})
@@ -324,7 +324,12 @@ def deltaLspp(wavelength, eps1, eps2, deps1r, deps1c, deps2r, deps2c): #{{{
 
 ## Computes the SPP decay depth in one slab
 def DecayDepth(kzSPP):#{{{
-  return 2e0*pi/kzSPP.real
+  if(kzSPP.real != 0): 
+    result=2e0*pi/kzSPP.real
+  else: 
+    result = -1.
+    #print "Singular case for DecayDepth."
+  return result
 #}}}
 
 ## Computes the complex wavenumber in direction of incident laser, perp. to SPP propagation. 

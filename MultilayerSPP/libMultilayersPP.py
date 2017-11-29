@@ -39,7 +39,6 @@ def func(betaR, eps1, eps2, eps3, k0, t, sgn1, sgn2, sgn3):
     k1 = sgn1*cmath.sqrt(beta*beta - k0*k0*eps1)
     k2 = sgn2*cmath.sqrt(beta*beta - k0*k0*eps2)
     k3 = sgn3*cmath.sqrt(beta*beta - k0*k0*eps3)
-
     try:
         out = (k1/eps1 - k2/eps2) * (k1/eps1 - k3/eps3) * cmath.exp(-2*k1*t) - (k1/eps1 + k2/eps2) * (k1/eps1 + k3/eps3)
     except:
@@ -63,8 +62,8 @@ def func(betaR, eps1, eps2, eps3, k0, t, sgn1, sgn2, sgn3):
 # @param y_max: higher boundary of Im(roots)
 # @param x_steps: number of steps used to mesh the Re(roots) space. 
 # @param y_steps: number of steps used to mesh the Im(roots) space. 
-# @param t_blur: tolerance to merge the identified solutions. 
-def findroots(eps1, eps2, eps3, k0, t, x_min, x_max, y_min, y_max, x_steps, y_steps, t_blur):
+# @param tol_merge: tolerance to merge the identified solutions. 
+def findroots(eps1, eps2, eps3, k0, t, x_min, x_max, y_min, y_max, x_steps, y_steps, tol_merge):
     broots = []
     for sgn1, sgn2, sgn3 in product((-1,1), (-1,1), (-1,1)):
         roots = []
@@ -76,12 +75,12 @@ def findroots(eps1, eps2, eps3, k0, t, x_min, x_max, y_min, y_max, x_steps, y_st
                     roots.append(nrt.x)
 
         ln = len(roots)
-        while ln > 0:                                                                                       #this part should remove duplicate roots (considering tolerance t_blur)
+        while ln > 0:                                                                                       #this part should remove duplicate roots (considering tolerance tol_merge)
             center = roots[0]                                                                               #take the first element of the list and put it in 'center'
             aux = [center]
             aux2 = []
             for rt in roots[1:]:                                                                            #go thru the rest of roots
-                if norm(rt - center) < t_blur:                                                              #if the current root 'rt' is sufficiently near center, add it to the new list of similar roots 'aux'
+                if norm(rt - center) < tol_merge:                                                              #if the current root 'rt' is sufficiently near center, add it to the new list of similar roots 'aux'
                     aux.append(rt)
                     center = np.mean(aux, axis = 0)                                                         #update 'center' to include the new root, 'center' always lies in the middle
                 else:
@@ -102,7 +101,7 @@ findroots = np.vectorize(findroots)
 #             x_min, x_max,       }
 #             y_min, y_max,       } mesh parameters
 #             x_steps, y_steps,   }
-#             t_blur)
+#             tol_merge)
 #
 #returns a list of branches, each branch is a list of roots, each root is a 1D numpy array containing two values, first value = Re(beta), second value = Im(beta)
 

@@ -42,9 +42,9 @@
      inkscape:window-height="1025"
      id="namedview733"
      showgrid="false"
-     inkscape:zoom="1.6388888"
-     inkscape:cx="347.12638"
-     inkscape:cy="323.43023"
+     inkscape:zoom="0.8194444"
+     inkscape:cx="344.54783"
+     inkscape:cy="233.63222"
      inkscape:window-x="0"
      inkscape:window-y="27"
      inkscape:window-maximized="1"
@@ -2982,4 +2982,32 @@
        x="223.96017"
        y="347.08603"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;font-family:'CMU Sans Serif';-inkscape-font-specification:'CMU Sans Serif';stroke-width:1.18812382;stroke-linecap:butt;stroke-linejoin:round">Au</tspan></text>
-</svg>
+  <flowRoot
+     xml:space="preserve"
+     id="flowRoot4976"
+     style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     transform="matrix(0.5127522,0,0,0.5127522,131.39718,112.53343)"><flowRegion
+       id="flowRegion4978"
+       style="stroke-linecap:butt;stroke-linejoin:round"><rect
+         id="rect4980"
+         width="206.23724"
+         height="103.72879"
+         x="679.72882"
+         y="489.35593"
+         style="stroke-linecap:butt;stroke-linejoin:round" /></flowRegion><flowPara
+       id="flowPara4982"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'CMU Sans Serif';-inkscape-font-specification:'CMU Sans Serif';text-align:center;text-anchor:middle;stroke-linecap:butt;stroke-linejoin:round">High regularity</flowPara></flowRoot>  <flowRoot
+     xml:space="preserve"
+     id="flowRoot4976-4"
+     style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     transform="matrix(0.5127522,0,0,0.5127522,134.10358,-231.15178)"><flowRegion
+       id="flowRegion4978-4"
+       style="stroke-linecap:butt;stroke-linejoin:round"><rect
+         id="rect4980-9"
+         width="206.23724"
+         height="103.72879"
+         x="679.72882"
+         y="489.35593"
+         style="stroke-linecap:butt;stroke-linejoin:round" /></flowRegion><flowPara
+       id="flowPara4982-9"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'CMU Sans Serif';-inkscape-font-specification:'CMU Sans Serif';text-align:center;text-anchor:middle;stroke-linecap:butt;stroke-linejoin:round">Low regularity</flowPara></flowRoot></svg>

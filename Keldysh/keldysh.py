@@ -6,7 +6,11 @@
 # Two types of usage are planned :
 # * Generating tables to use directly into simulation codes
 # * Outputing density in certain conditions. 
-from libKeldysh import *
+
+from libKeldysh       import * 
+from libKeldyshPulses import *
+from libKeldyshZhukov import *
+#from libKeldyshUlrich import *
 
 Header="[keldysh] "
 
@@ -20,7 +24,7 @@ print "** Loaded Gruzdev formula [Gruzdev, Optical Engineering 53, 122515 (2014)
 print "** Info: this file contains examples how to use the Keldysh library. "
 print "         It also contains validation cases of the present theory on Si and known references. "
 
-# Test the Keldysh model using silicon band gap given by the LDA functionals. 
+## Test the Keldysh model using silicon band gap given by the LDA functionals. 
 def SiliconLDAbandGap(): #{{{
   print "Defining Si material parameters..."
 
@@ -34,7 +38,7 @@ def SiliconLDAbandGap(): #{{{
   PeakField   = np.sqrt(2e0 * PeakFluence / (tau * c * epsilon_0))
 
   t0=0. #defines the instant 0.
-  Delay = 10e-15 #delay between maxima of the pulses
+  Delay = 20e-15 #delay between maxima of the pulses
   tmin=-1.*tau + t0; tmax=1.*tau + Delay + t0
 
   instants = np.arange(tmin, tmax, dt)
@@ -42,7 +46,7 @@ def SiliconLDAbandGap(): #{{{
 
   PeakField2  = PeakField
   CEP2        = pi/3.
-  wavelength2 = wavelength #/ 2.
+  wavelength2 = wavelength / 2.
 
   print Header+"** Test: building single pulse centered on 0..."
   FieldEnvelope1, RealField1 = PulseSquaredSinTemporalShape(instants, tau, PeakField, wavelength, CEP, t0, 0.)
@@ -61,8 +65,9 @@ def SiliconLDAbandGap(): #{{{
   plt.plot(instants, RealFieldTot.real, 'k-')
   plt.plot(instants, FieldEnvelopeTot.real, 'k--')
   plt.xlabel('')
-  plt.savefig('PulseEnvelopes.eps')
-  plt.savefig('PulseEnvelopes.png')
+  filename = 'PulseEnvelopes-'+str(wavelength*1E9)+'nm-'+str(wavelength2*1E9)+'nm-CEP2'+str(CEP/pi * 180.)+'+delay'+str(Delay*1E15)+'fs'
+  plt.savefig(filename+'.eps')
+  plt.savefig(filename+'.png')
   #plt.show()
 
   print Header+"** Info: PulseEnvelope.EPS and PNG were written in the current folder. "
@@ -83,14 +88,14 @@ def SiliconLDAbandGap(): #{{{
   plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, dt, 40, ShowPlot)
   plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, dt, 50, ShowPlot)
 
-  print Header+"** Test 2: computing the W_PI values from self-coded and validated Gruzdev theory..."
+  print Header+"** Test 2: computing the W_PI values from self-coded and Gruzdev theory..."
   timeKeldysh, N_Keldysh_SI, N_Gruzdev_SI = plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelope.real, dt, order, ShowPlot, 0e0, Ntotal)
 
   print Header+"** Test 3: computing the W_PI values from Vladimir Zhukov tables..."
   wPI_Zhukov = VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength, wavelength2, CEP, CEP2, Egap, meff, tau, tau, Delay, dt, Ntotal, t0)
 #}}}
 
-# Repeats the results obtained in Gulley, Opt. Eng. 51, 121805 (2012). 
+## Repeats the results obtained in Gulley, Opt. Eng. 51, 121805 (2012). 
 def SilicaGulley2012(): #{{{
   print "Defining SiO2 material parameters from [Gulley 2012]..."
 
@@ -169,4 +174,54 @@ def SilicaGulley2012(): #{{{
 #}}}
 
 #SilicaGulley2012()
-SiliconLDAbandGap()
+#SiliconLDAbandGap()
+#SilicaGraef2017()
+
+## Build the famous mapping of N_exc(intensity) from Keldysh theory. 
+
+StephaneGraf = "SiO2"
+HamedMerdji = "ZnO"
+
+choice = "SiO2"
+
+if(choice == StephaneGraf):
+  fluencies = 1E4*np.arange(0.1, 10, 0.5) #array([1E10, 1E11, 1E12, 1E13])*1E4 #W/m2
+  tau = 300e-15
+  intensities = fluencies #warning, it's a trick! 
+
+elif(choice == HamedMerdji): 
+  # Hamed Merdji group case
+  intensities = np.power(10., 4.+np.arange(10., 13., 0.1)) #array([1E10, 1E11, 1E12, 1E13])*1E4 #W/m2
+else: 
+  print Header+"Please define a new set of laser parameters in libKeldysh.py."
+
+print intensities 
+
+count = 0
+Nexc = np.zeros(intensities.size)
+for intensity in intensities:
+  if(choice == HamedMerdji): 
+    Nexc[count] = ZnOMerdji2017(intensity)
+  elif(choice == StephaneGraf):
+    Nexc[count] = SilicaGraef2017(intensity)
+  else: 
+    print Header+"** Error in Keldysh.py when computing N_exc. "
+  count += 1
+  
+print Nexc
+
+plt.figure()
+plt.loglog(1E-4*intensities, 1E-6*Nexc)
+plt.ylabel(r'$N_{exc}^{max}$, $cm^{-3}$')
+
+if(choice == HamedMerdji):
+  plt.xlabel(r"$I_{max}$, $W/cm^2$")
+  plt.savefig('Keldysh-NexcOfIntensity-Merdji-ZnO-3200nm-100fs.eps')
+
+elif(choice == StephaneGraf): 
+  plt.xlabel(r"$\phi_0$, $J/cm^2$")
+  plt.title(r"Wavelength $\lambda = $"+str(wavelength*1E6)+r" $\mu$m.")
+  plt.savefig('Keldysh-NexcOfIntensity-Graf-SiO2-1025nm-300fs.eps')
+  
+else: 
+  print Header+"Error when plotting the final figure."

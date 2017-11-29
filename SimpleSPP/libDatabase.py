@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
-## @package libDatabase
-# Functions to manage the material databases
 
 # Copyright (C) 2013-2017 T. J.-Y. Derrien
 #
@@ -17,6 +15,9 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>
+
+## @package libDatabase
+# Functions to manage the material databases
 
 import numpy as np
 from numpy import genfromtxt, loadtxt, chararray

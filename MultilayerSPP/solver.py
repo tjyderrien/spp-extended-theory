@@ -39,17 +39,17 @@ ne = 5E27 #np.arange(1E25, 1E28, 10) #(m^-3) quantity of electrons in conduction
 nu = (1.1E-15)**-1 #collision time between conduction band electrons
 meff = 0.18
 
-eps2 = -1.+2.j       #environment
-eps3 = 13.64+0.048j #substrate Si (no excitation)
+eps2 = 1+0.j       #environment
+eps3 = -6.206969+25.2j #substrate Si (no excitation)
 
 #for ne in neList:
-eps1 = Drude(wavelength, ne, eps3, nu, meff)
+eps1 = Drude(wavelength, ne, 7.7841+0.j, nu, meff)
 
 k0 = 2.*np.pi/wavelength
-t = 300E-9 #thickness of the layer in meters
+t = 150E-9 #thickness of the layer in meters
 
 #branches
-branches = [0, 1, 2, 3, 4, 5, 6, 7] #list of branches you want to use
+branches = [0, 1, 2, 3] #list of branches you want to use
 
 #0 (-, -, -)
 #1 (-, -, +)
@@ -66,17 +66,17 @@ branches = [0, 1, 2, 3, 4, 5, 6, 7] #list of branches you want to use
 maxvalue = 1E8
 maxsteps = 100
 
-x_min   = -maxvalue
-x_max   =  maxvalue
+x_min   = 1E4
+x_max   = 1E9
 
-y_min   = -maxvalue
-y_max   =  maxvalue
+y_min   = -10E8
+y_max   = 10E8
 
-x_steps =  maxsteps
-y_steps =  maxsteps
+x_steps =  100
+y_steps =  150
 
 #tolerances
-tol_merge = 10 #from the space of betas
+tol_merge = 1E5 #from the space of betas
 
 #-----------------------------------------------------------------------------
 
@@ -175,10 +175,19 @@ for rts in broots:
         if rt[1] > bounds[3]:
             bounds[3] = rt[1]
 
-plothyp(eps1, 'r-')
-plothyp(eps2, 'g-')
-plothyp(eps3, 'b-')
+#plothyp(eps1, 'r-')
+#plothyp(eps2, 'g-')
+#plothyp(eps3, 'b-')
 
+broots2 = []
+for branch in broots:
+  aux = []
+  for rt in branch:
+    #print(rt, 2*np.pi/rt[0], .5/rt[1])
+    aux.append([1E6*np.pi/rt[0], 1E9*.5/rt[1]])
+  broots2.append(aux)
+  
+#print(broots2)
 colors = ['r', 'g', 'b', 'k', 'm', 'c', 'lime', 'orangered']
 for rts, col in zip(broots, colors):
     if len(rts) > 0:
@@ -186,9 +195,15 @@ for rts, col in zip(broots, colors):
 
 #ExportToTxt(broots, 'betaSolution-Ne'+str(ne)+'-t'+str(t)+'.log')
 
-plt.xlabel('Re')
-plt.ylabel('Im')
-plt.axis([1.1*bnd for bnd in bounds])
+axes = plt.gca()
+#axes.set_xlim([-1E7,1E7])
+#axes.set_ylim([-1E7,1E7])
+#axes.set_xscale('log')
+alphainv = 1.E9/((4.*np.pi/wavelength * np.sqrt(eps1)).imag)
+plt.title(r'$\varepsilon_1=$'+str(eps1)+', '+r'$N_e=$'+str(ne)+', '+r'$\alpha=$'+str(alphainv))
+plt.xlabel('Period (um)')
+plt.ylabel('Decay length (nm)')
+#plt.axis([1.1*bnd for bnd in bounds])
 plt.grid()
 #plt.legend(loc=4)
 #plt.savefig('betaSolution-wavelength'+str(wavelength*1E9)+'-thickness'+str(t)+'-density-'+str(ne)+'m-3.eps')

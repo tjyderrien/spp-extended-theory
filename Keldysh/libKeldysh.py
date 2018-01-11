@@ -26,11 +26,11 @@
 # - Keldysh-Corkum model, allowing for analytical treatment of mulltiwavelength fields [Physical Review Letters, 2017, 118, 173601]
 
 from libKeldyshZhukov import *
-#from libKeldyshMcDonald import *
+#from libKeldyshUlrich import * #NOT READY YET
 from libKeldyshPulses import *
 
 rc('font', **{'family':'serif', 'serif':['Helvetica'], 'size':'16'})
-rc('text', usetex=True)
+rc('text', usetex=False)
 mp.rcParams['legend.numpoints'] = 1
 
 Header="[libKeldysh] "
@@ -596,7 +596,8 @@ def ZnOMerdji2017(intensity):#{{{
   ShowPlot = True
 
   print Header+"** Test 1: computing the W_PI values from self-coded and validated Gruzdev theory..."
-  timeKeldysh, N_Keldysh_SI, N_Gruzdev_SI = plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelope1.real, dt, order, ShowPlot, 0e0, Ntotal)
-  
+  timeKeldysh, N_Keldysh_SI, N_Gruzdev_SI = plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelope1.real, dt, order, ShowPlot, 0e0, Ntotal)  
+
   return N_Gruzdev_SI.max()
 #}}}  
+

@@ -136,17 +136,17 @@ def InstabilityGrowthRate_Levchenko(kinematic_viscosity, k, omega, thickness, so
 laser_wavelength = 1025e-9 #m
 laser_fluence = 4E4 #J/m2
 laser_FWHM = 300e-15 #s
-thickness = 100e-9 #molten depth thickness [m]
+thickness = 50e-9 #molten depth thickness [m]
 
 #T=np.arange(1300.,2000., 10.) #length should be greater than 1, strictly. 
-T = 1300. #K
+T = 2000. #K
 print Header+"Temperature of the liquid [K]: "+str(T)
 
 surface_tension, surface_tension_deriv = Silica_SurfaceTension(T)
 print Header+"Surface tension [N.m2]: "+str(surface_tension)
 
 k_laser = 2.*pi/laser_wavelength #m-1
-k = np.arange(0., 2.*k_laser, k_laser/100.) #NOTE: this is vector style. 
+k = np.arange(k_laser/10., 10.*k_laser, k_laser/100.) #NOTE: this is vector style. 
 #k = k_laser #index-based programming style
 
 print Header+"** Selected modes (1/m): "+str(k)+" 1/m, equiv. to "+str(1E9*2.*pi/k)+" nm."
@@ -218,7 +218,13 @@ gamma_Levchenko      = InstabilityGrowthRate_Levchenko(kinematic_viscosity, k, o
 print Header+"Thermo-convective instability growth rate [1/s]: "+str(gamma_Levchenko)
 
 plt.figure()
-plt.semilogx(np.divide(2*pi,k),-gamma_Levchenko)
-plt.xlabel(r"$\Lambda$ (m)")
+#plt.loglog(np.divide(2*pi,k),-gamma_Levchenko)
+plt.loglog(np.divide(2*pi,k)/laser_wavelength,-gamma_Levchenko)
+#plt.xlabel(r"$\Lambda$ (m)")
+plt.xlabel(r"$\Lambda/\lambda$")
 plt.ylabel(r"$\gamma$ (s$^-1$)")
-plt.show()
+filename = "T"+str(T)+"K-h"+str(thickness*1E9)+"nm"
+plt.title(filename)
+plt.savefig(filename+".png")
+#plt.show()
+

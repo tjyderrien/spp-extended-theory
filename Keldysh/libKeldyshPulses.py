@@ -28,8 +28,7 @@
 from scipy.constants import c, epsilon_0, mu_0, pi, e, m_e, h, hbar
 import numpy as np
 
-## Computes a step function
-# Heaviside function
+## Computes a step Heaviside function. 
 def step(x):
     return 1.0 * (x > 0.0)
 

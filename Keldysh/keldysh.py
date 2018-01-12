@@ -213,6 +213,7 @@ print Nexc
 plt.figure()
 plt.loglog(1E-4*intensities, 1E-6*Nexc)
 plt.ylabel(r'$N_{exc}^{max}$, $cm^{-3}$')
+#plt.title(r"Wavelength $\lambda = $"+str(wavelength*1E6)+r" $\mu$m.")
 
 if(choice == HamedMerdji):
   plt.xlabel(r"$I_{max}$, $W/cm^2$")
@@ -220,7 +221,6 @@ if(choice == HamedMerdji):
 
 elif(choice == StephaneGraf): 
   plt.xlabel(r"$\phi_0$, $J/cm^2$")
-  plt.title(r"Wavelength $\lambda = $"+str(wavelength*1E6)+r" $\mu$m.")
   plt.savefig('Keldysh-NexcOfIntensity-Graf-SiO2-1025nm-300fs.eps')
   
 else: 

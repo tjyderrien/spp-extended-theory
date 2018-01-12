@@ -16,10 +16,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>
 
+import numpy as np
 
 ## @package libUnits
 ## Provides routines to safely convert in SI units or CGS units. 
-
 
 ## Convert length units from CGS to SI
 # Validated on https://en.wikipedia.org/wiki/Centimetre%E2%80%93gram%E2%80%93second_system_of_units#Electromagnetic_units_in_various_CGS_systems
@@ -103,3 +103,19 @@ def Field_SI_to_CGS(SI):
   conversion = 1E6 / c_CGS
   return SI*conversion
 
+def Energy_SI_to_Length(energy):
+  wavelength = 2.*pi*c/energy
+  return wavelength
+
+def Length_SI_to_energy(wavelength):
+  energy = 2.*pi*c/wavelength
+  return energy
+
+def Energy_Joules_to_eV(energy):
+  return energy / e
+
+def Energy_eV_to_Joules(energy):
+  return energy * e
+
+Energy_eV_to_Joules = np.vectorize(Energy_eV_to_Joules)
+Energy_SI_to_Length = np.vectorize(Energy_SI_to_Length)

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 #-*- coding: utf-8 -*-
 
 # Copyright (C) 2013-2017 T. J.-Y. Derrien
@@ -56,7 +56,6 @@ from libSipe import *
 Header="[plotSipe.py] "
 
 
-
 #==== Attempting a 1D plot
 # Known quantities
 theta = 0e0 #Single value here, but we can vectorize functions easily later. 
@@ -71,12 +70,12 @@ s = 0.4e0 #Shape factor: taken from Bonse et al, JAP (2009)
 #kappay = np.arange(0, 4, 0.1)
 #kappa = np.array([wavelength * 1, wavelength * 0]); #test values
 kappax = 4e0 ; kappay = 0e0*kappax; #test values
-numberlevels = 8 #for the final 2D plot
+numberlevels = 12 #for the final 2D plot
 #for kappax in meshkappa:
 
 #ftab = np.arange(0, 1, 0.1)
 print "Info: Generating the mesh..."
-kapparange = np.arange(0.1,4,0.1)
+kapparange = np.arange(0.1,2.,0.1)
 #for wavelength in wavelengths
 #for f in ftab:
 #idtab = 0
@@ -113,11 +112,12 @@ query = 'Air'
 #query2= 'InP (Bonse 2005)'
 #query2= 'Mo (Ordal 1988)'
 #query2= 'Cu (Palik)'
-query2='SiO2 (Palik)'
-print "Caution: the expression must be exactly the one of MaterialDatabase.csv."
+#query2='SiO2 (Palik)'
+print "Caution: the values of queries must be exactly the one of MaterialDatabase.csv."
 
-wavelength = 1025.
-select = str(wavelength)
+wavelength = 1026.0
+select = str(int(wavelength))
+request = select+".0"
 unit = 1E-9
 wavelength = wavelength * unit
 print "Wavelength = "+str(wavelength/unit)+" nm."
@@ -127,7 +127,7 @@ print "Wavelength = "+str(wavelength/unit)+" nm."
 # @param query2: <string> linking to a material given in ../MaterialDatabase.csv.
 # NOTE: Sipe model is limited to air-material interface. Cannot be used with water-material for example. 
 #       For more advanced combinations of materials, see [T.J.-Y. Derrien et al, Journal of Optics 18, 115007 (2016)]
-def plotSipeFromDatabase(wavelength, query2, query='Air'): #{{{
+def plotSipeFromDatabase(select, query2, k_precision=5e-2, query='Air'): #{{{
   ## Generate the database
   SPPdb = GenerateDatabase() #Generate from MaterialDatabase.csv
   print "SPP database has "+str(len(SPPdb))+" entries."
@@ -139,31 +139,32 @@ def plotSipeFromDatabase(wavelength, query2, query='Air'): #{{{
   SPPdb = FilterDatabase(SPPdb, query, 0)
   print "Filter on materials: SPP database has now "+str(len(SPPdb))+" entries."
 
-  #print SPPdb #works well
-
-  # Filter database on wavelength
+  
+  # Filter database on materials
   try: 
-	  title = select+' nm'
-	  SPPdb = FilterDatabase(SPPdb, select+".0", 2)
-	  print "Filter on wavelength: SPP database "+title+" has "+str(len(SPPdb))+" entries."
+    title = query2
+    SPPdb = FilterDatabase(SPPdb, query2, 1)
+    print "Filter on material: SPP database "+title+" has "+str(len(SPPdb))+" entries."
+    print Header+"Check the level of tolerance in libSPP.py."
+    #print SPPdb
   except:
-	  print "Exception: no optical data is available for "+query+" at "+title+"."
-	  print SPPdb
-	  exit()
+    print "Exception: no optical data is available for "+query+" at "+title+"."
+    print SPPdb
+    exit()
+
+  print SPPdb #works well
+  # Filter database on wavelength
+  title = select+' nm'
+  try: 
+    SPPdb = FilterDatabase(SPPdb, select, 2)
+    print "Filter on wavelength: SPP database "+title+" has "+str(len(SPPdb))+" entries."
+  except:
+    print "Exception: no optical data is available for "+query+" at "+title+"."
+    print SPPdb
+    exit()
     
 
 
-  # Filter database on materials
-
-  try: 
-	  title = query2
-	  SPPdb = FilterDatabase(SPPdb, query2, 1)
-	  print "Filter on material: SPP database "+title+" has "+str(len(SPPdb))+" entries."
-	  #print SPPdb
-  except:
-	  print "Exception: no optical data is available for "+query+" at "+title+"."
-	  print SPPdb
-	  exit()
 
   if(len(SPPdb)==0):
     print "SPP database returned 0 matching result."
@@ -182,7 +183,7 @@ def plotSipeFromDatabase(wavelength, query2, query='Air'): #{{{
   epsilon2 = np.add(eps2rM,np.multiply(1e0j, eps2cM))
     
   print "Mesh generation..."
-  k_precision = 5e-2
+  k_precision = 1e-2
   SipeRanges = 2e0
   kx = np.arange(-SipeRanges,SipeRanges,k_precision)
   ky = np.arange(-SipeRanges,SipeRanges,k_precision)
@@ -228,84 +229,92 @@ def plotSipeFromDatabase(wavelength, query2, query='Air'): #{{{
   plt.show()
 #}}}
 
-#====================== GENERIC PLOTTING of the Sipe model =================
-print Header+"Plot the kappaX for which maximum efficiency is found as function of dielectric permittivity. "
-# This could help to localize problems and limitations of the Sipe theory. 
+## Prepare a generalized plot2d of the Sipe model for any material at equilibrium. 
+def plotGenericSipeMaps(): #{{{
+  print Header+"Plot the kappaX for which maximum efficiency is found as function of dielectric permittivity. "
+  # This could help to localize problems and limitations of the Sipe theory. 
 
-# Generating kappaX, kappaY meshes. 
-print "Mesh generation..."
-k_precision = 0.5
-SipeRanges = 2e0
-#kx = np.arange(0.,SipeRanges,k_precision)
-#ky = np.arange(0.,SipeRanges,k_precision)
+  # Generating kappaX, kappaY meshes. 
+  print "Mesh generation..."
+  k_precision = 0.5
+  SipeRanges = 2e0
+  #kx = np.arange(0.,SipeRanges,k_precision)
+  #ky = np.arange(0.,SipeRanges,k_precision)
 
-# Manual definition of kappa_x, kappa_y. 
-kx = [0.0e0]; ky = [0.6e0] #single value of kx,ky
-#kxx, kyy = np.meshgrid(ky, kx)
+  # Manual definition of kappa_x, kappa_y. 
+  kx = [0.0e0]; ky = [0.6e0] #single value of kx,ky
+  #kxx, kyy = np.meshgrid(ky, kx)
 
-# calculating Sipe efficiency for many materials
-title = select+' nm'
+  # calculating Sipe efficiency for many materials
+  title = select+' nm'
 
-# Generating mapping of dielectric permittivities
-epsR = np.arange(-20, 10., 0.05) #eta: precision on epsilon could be inherited from libSPP.py by using the variable "precision". 
-epsI = np.arange(  0., 10., 0.05) #eta: precision on epsilon could be inherited from libSPP.py by using the variable "precision"
+  # Generating mapping of dielectric permittivities
+  epsR = np.arange(-20, 10., 0.05) #eta: precision on epsilon could be inherited from libSPP.py by using the variable "precision". 
+  epsI = np.arange(  0., 10., 0.05) #eta: precision on epsilon could be inherited from libSPP.py by using the variable "precision"
 
-epsI2, epsR2 = np.meshgrid(epsI, epsR)
-epsilon2 = np.add(epsR2,np.multiply(1e0j, epsI2)) #map of all possible dielectric permittivities
+  epsI2, epsR2 = np.meshgrid(epsI, epsR)
+  epsilon2 = np.add(epsR2,np.multiply(1e0j, epsI2)) #map of all possible dielectric permittivities
 
-print "Calculating efficiency for all (kx, ky) values at wavelength "+title+"."
+  print "Calculating efficiency for all (kx, ky) values at wavelength "+title+"."
 
-#print "kxx shape = "+str(kxx.shape)+"."
-etaSipe = np.zeros((len(kx), len(ky), len(epsR), len(epsI)))
-print Header+"Memory usage: "+str(len(kx)*len(ky)*len(epsR)*len(epsI)*64./8./1024./1024.)+" MB."
-#print Header+"Memory usage: "+str(len(etaSipe)*64./8./1024.)+" kB."
+  #print "kxx shape = "+str(kxx.shape)+"."
+  etaSipe = np.zeros((len(kx), len(ky), len(epsR), len(epsI)))
+  print Header+"Memory usage: "+str(len(kx)*len(ky)*len(epsR)*len(epsI)*64./8./1024./1024.)+" MB."
+  #print Header+"Memory usage: "+str(len(etaSipe)*64./8./1024.)+" kB."
 
-print Header+"Shape (kx,ky,epsR,epsI)="+str(np.shape(etaSipe))
+  print Header+"Shape (kx,ky,epsR,epsI)="+str(np.shape(etaSipe))
 
-# Building the etaSipe(kx,ky) distribution for all values of permittivities and all kappa_x, kappa_y.
-for j in np.arange(0,len(epsR),1):
-  for k in np.arange(0,len(epsI),1):
-    for m in np.arange(0,len(kx),1):
-      for n in np.arange(0,len(ky),1):
-        #print "[Debug] kx["+str(m)+"], ky["+str(n)+"], epsR["+str(j)+"], epsI["+str(k)+"]."
-        kappa = np.array([kx[m], ky[n]])
-        kappai = np.array([-cmath.sin(theta), 0])
-        kappap = kappai + kappa; kappam = kappai - kappa
-        try:
-          etaSipe[m,n,j,k] = etap(theta, f, s, epsilon2[j,k], kappa, kappap, kappam)
-        except:
-          etaSipe[m,n,j,k] = 0.
+  # Building the etaSipe(kx,ky) distribution for all values of permittivities and all kappa_x, kappa_y.
+  for j in np.arange(0,len(epsR),1):
+    for k in np.arange(0,len(epsI),1):
+      for m in np.arange(0,len(kx),1):
+        for n in np.arange(0,len(ky),1):
+          #print "[Debug] kx["+str(m)+"], ky["+str(n)+"], epsR["+str(j)+"], epsI["+str(k)+"]."
+          kappa = np.array([kx[m], ky[n]])
+          kappai = np.array([-cmath.sin(theta), 0])
+          kappap = kappai + kappa; kappam = kappai - kappa
+          try:
+            etaSipe[m,n,j,k] = etap(theta, f, s, epsilon2[j,k], kappa, kappap, kappam)
+          except:
+            etaSipe[m,n,j,k] = 0.
 
-#print etaSipe
-maximum = np.amax(etaSipe) #finds maximum value of efficiency
+  #print etaSipe
+  maximum = np.amax(etaSipe) #finds maximum value of efficiency
 
-print Header+"** Info: Maximum value of efficacy: "+str(maximum)
-#print etaSipe[0,0,:,:]
-# TODO: find the value of kappaX, kappaY and epsilon for which efficiency is maximum. 
+  print Header+"** Info: Maximum value of efficacy: "+str(maximum)
+  #print etaSipe[0,0,:,:]
+  # TODO: find the value of kappaX, kappaY and epsilon for which efficiency is maximum. 
 
-# Ok, it's time to get a picture mapping of the efficiency.
+  # Ok, it's time to get a picture mapping of the efficiency.
 
-plt.figure()
-plt.contourf(etaSipe[:,:,0,0]) #eta(kx,ky;epsR=-2, epsI=0)
-plt.xlabel(r'$\kappa_x$')
-plt.ylabel(r'$\kappa_y$')
-plt.title(r"$\eta (\kappa_x, \kappa_y; \varepsilon_r=$"+str(epsR[0])+r", $\varepsilon_i=$"+str(epsI[0])+")")
-plt.colorbar()
+  plt.figure()
+  plt.contourf(etaSipe[:,:,0,0]) #eta(kx,ky;epsR=-2, epsI=0)
+  plt.xlabel(r'$\kappa_x$')
+  plt.ylabel(r'$\kappa_y$')
+  plt.title(r"$\eta (\kappa_x, \kappa_y; \varepsilon_r=$"+str(epsR[0])+r", $\varepsilon_i=$"+str(epsI[0])+")")
+  plt.colorbar()
 
-plt.figure()
-levels = [-2, -1, 0, 1, 2]
-CS=plt.contourf(epsR2,epsI2,np.log10(etaSipe[0,0,:,:]),levels=levels, cmap=plt.cm.RdBu_r)
-plt.colorbar(CS)
-plt.title(r"$\eta (\kappa_x=$"+str(kx[0])+r"$, \kappa_y=$"+str(ky[0])+r", $\varepsilon_r, \varepsilon_i$)")
-plt.xlabel(r'Re($\varepsilon$)')
-plt.ylabel(r'Im($\varepsilon$)')
-plt.show()
+  plt.figure()
+  levels = [-2, -1, 0, 1, 2]
+  CS=plt.contourf(epsR2,epsI2,np.log10(etaSipe[0,0,:,:]),levels=levels, cmap=plt.cm.RdBu_r)
+  plt.colorbar(CS)
+  plt.title(r"$\eta (\kappa_x=$"+str(kx[0])+r"$, \kappa_y=$"+str(ky[0])+r", $\varepsilon_r, \varepsilon_i$)")
+  plt.xlabel(r'Re($\varepsilon$)')
+  plt.ylabel(r'Im($\varepsilon$)')
+  plt.show()
+  # Or we can integrate on a certain range of kx in 1. to 1.10. 
+  # TODO: About LIPSS regularity: Efficiency factor is maybe not the best quantity to look at, as highest factor is obtained for materials where -Re(eps) ~ Im(eps). If efficacy factor correspond to field enhancement, why do we find a low coupling with Au and Ag? And high coupling with W and Ti ? 
+  # TODO: About LIPSS period: Shall we automatically capture the (kx,ky) where efficiency is the highest in the Sipe(kx,ky)? Then we could plot Most_probable_period ( Re(eps) , Im(eps) ). 
 
-# Or we can integrate on a certain range of kx in 1. to 1.10. 
-# TODO: About LIPSS regularity: Efficiency factor is maybe not the best quantity to look at, as highest factor is obtained for materials where -Re(eps) ~ Im(eps). If efficacy factor correspond to field enhancement, why do we find a low coupling with Au and Ag? And high coupling with W and Ti ? 
-# TODO: About LIPSS period: Shall we automatically capture the (kx,ky) where efficiency is the highest in the Sipe(kx,ky)? Then we could plot Most_probable_period ( Re(eps) , Im(eps) ). 
+  # TODO 
+  # - Automatize the inverse Fourier transform to check regularity and pattern shape: see formula in my thesis. 
+  # - Automatic calculation of orientation angle precision
+  # - Can be great to plot directly precision angle as a function of materials. 
+  
+  return 0
+#}}}
 
-# TODO 
-# - Automatize the inverse Fourier transform to check regularity and pattern shape: see formula in my thesis. 
-# - Automatic calculation of orientation angle precision
-# - Can be great to plot directly precision angle as a function of materials. 
+#executing typical Sipe figure (like in [Bonse et al, Journal of Applied Physics (2009)]
+#plotSipeFromDatabase(request, "Cr (Palik)", 0.5E-2) 
+plotSipeFromDatabase(request, "Cr (Johnson 1974)", 0.5E-2) 
+#plotGenericSipeMaps() #map prepared for Stephane Gräf on generalized Sipe model (2018)

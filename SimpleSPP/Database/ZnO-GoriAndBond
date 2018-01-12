@@ -1,6 +1,6 @@
-# Bond et al
-# Gori et al
-# Merged by Thibault J.-Y. Derrien <derrien@fzu.cz>
+# Bond, W. L. Measurement of the Refractive Indices of Several Crystals, Journal of Applied Physics, 1965, 36, 1674
+# Gori, P.; Rakel, M.; Cobet, C.; Richter, W.; Esser, N.; Hoffmann, A.; Del Sole, R.; Cricenti, A. & Pulci, O., Optical spectra of ZnO in the far ultraviolet: First-principles calculations and ellipsometric measurements, Physical Review B, 2010, 81
+# 
 # wavelength (nm)	Re(eps)	Im(eps)
 38.8381504794	0.180947275676	0.246753
 38.8462498621	0.180210038336	0.246753

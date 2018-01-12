@@ -89,6 +89,7 @@ def etas(theta, f, s, epsilon, kappa, kappap, kappam):
 
 def etap(theta, f, s, epsilon, kappa, kappap, kappam):
 	return 2.*pi*abs(vpp(theta, f, s, epsilon, kappa, kappap)+(vpm(theta, f, s, epsilon, kappa, kappam).conjugate()))
+
 ## Unfortunately, the way that functions were coded is not possible to vectorize automatically. 
 # We have to use loops then :-( 
 #G      = np.vectorize(G)

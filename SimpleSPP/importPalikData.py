@@ -614,17 +614,17 @@ try: #TODO: should we select by author? Or by units?
     plt.savefig("ZnO-reconstructed.eps")
     plt.show()
     
-  else:
-    folder = "Database/PalikGraph/" #TODO: Ag-Johnson is in ./Database actually.
-    #folder = "Database/"
+  else: #TODO: revise the design here. 
+    #folder = "Database/PalikGraph/" #TODO: Ag-Johnson and BK7-Maliton are in ./Database actually.
+    folder = "Database/"
     print "Material: "+filename+"."
     print "Wavelength = "+str(wavelength)+" nm"
     try: 
-      epsilon=importFromTable(wavelength*1e-6, folder, filename)
+      epsilon=importFromTable(wavelength*1e-9, folder, filename, True) #NOTE: sometimes have to change the unit here. 
     except:
       print "Import failed using importFromTable(). Trying with importFromNKtable()."
       try: 
-        importFromNKtable(wavelength*1e-6, folder, filename)
+        importFromNKtable(wavelength*1e-6, folder, filename) #BUG: error in 
       except:
         print "Failed even using importFromNKtable(). Call that damn developer. "
         exit()

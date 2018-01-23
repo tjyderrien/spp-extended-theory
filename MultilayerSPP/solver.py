@@ -34,19 +34,27 @@ from libMaterials import Drude
 prec = 8 #printing precision
 
 #data
-wavelength = 800E-9
-ne = 5E27 #np.arange(1E25, 1E28, 10) #(m^-3) quantity of electrons in conduction band
+wavelength = 1026E-9
+ne = 1E16 #np.arange(1E25, 1E28, 10) #(m^-3) quantity of electrons in conduction band
 nu = (1.1E-15)**-1 #collision time between conduction band electrons
 meff = 0.18
 
-eps2 = 1+0.j       #environment
-eps3 = -6.206969+25.2j #substrate Si (no excitation)
+epsTibare   = -6.206969+25.2j #800 nm
+epsTiO2bare = 7.7841+0.j   #800 nm
+epsCr       = -0.67+24.87j    #1026 nm
+epsBK7      = 2.10277365777   #1026 nm
+epsCr2O3    = 4.9713+0.1784j  #1 um [JDT Kruschwitz et al, Appl. Opt. 1997]
+epsSi       = 12.8159503769+0.0114635303918j #1026 nm, Palik
+
+eps1 = epsCr        #thin film
+eps2 = 1+0.j        #environment
+eps3 = epsSi # epsBK7       #substrate
 
 #for ne in neList:
-eps1 = Drude(wavelength, ne, 7.7841+0.j, nu, meff)
+#eps1 = Drude(wavelength, ne, epsTiO2bare, nu, meff) #thin film
 
 k0 = 2.*np.pi/wavelength
-t = 150E-9 #thickness of the layer in meters
+t = 100E-9 #thickness of the layer in meters
 
 #branches
 branches = [0, 1, 2, 3] #list of branches you want to use
@@ -184,12 +192,12 @@ for branch in broots:
   aux = []
   for rt in branch:
     #print(rt, 2*np.pi/rt[0], .5/rt[1])
-    aux.append([1E6*np.pi/rt[0], 1E9*.5/rt[1]])
+    aux.append([1E6*2.*np.pi/rt[0], 1E9*.5/rt[1]])
   broots2.append(aux)
   
 #print(broots2)
 colors = ['r', 'g', 'b', 'k', 'm', 'c', 'lime', 'orangered']
-for rts, col in zip(broots, colors):
+for rts, col in zip(broots2, colors):
     if len(rts) > 0:
         plt.scatter(*zip(*rts), c=col)
 
@@ -200,7 +208,7 @@ axes = plt.gca()
 #axes.set_ylim([-1E7,1E7])
 #axes.set_xscale('log')
 alphainv = 1.E9/((4.*np.pi/wavelength * np.sqrt(eps1)).imag)
-plt.title(r'$\varepsilon_1=$'+str(eps1)+', '+r'$N_e=$'+str(ne)+', '+r'$\alpha=$'+str(alphainv))
+plt.title(r'$\varepsilon_1=$'+str(eps1)+', '+r'$N_e=$'+str(ne)+', '+r'$\alpha^{-1}=$'+str(alphainv))
 plt.xlabel('Period (um)')
 plt.ylabel('Decay length (nm)')
 #plt.axis([1.1*bnd for bnd in bounds])

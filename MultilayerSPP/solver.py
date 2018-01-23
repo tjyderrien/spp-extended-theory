@@ -41,7 +41,7 @@ meff = 0.18
 
 epsTibare   = -6.206969+25.2j #800 nm
 epsTiO2bare = 7.7841+0.j   #800 nm
-epsCr       = -0.67+24.87j    #1026 nm
+epsCr       = -0.672122310000001+24.8657476j #-0.67+24.87j    #1026 nm
 epsBK7      = 2.10277365777   #1026 nm
 epsCr2O3    = 4.9713+0.1784j  #1 um [JDT Kruschwitz et al, Appl. Opt. 1997]
 epsSi       = 12.8159503769+0.0114635303918j #1026 nm, Palik

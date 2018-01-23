@@ -48,7 +48,7 @@ epsSi       = 12.8159503769+0.0114635303918j #1026 nm, Palik
 
 eps1 = epsCr        #thin film
 eps2 = 1+0.j        #environment
-eps3 = epsSi # epsBK7       #substrate
+eps3 = epsBK7       #substrate
 
 #for ne in neList:
 #eps1 = Drude(wavelength, ne, epsTiO2bare, nu, meff) #thin film

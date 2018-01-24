@@ -1,10 +1,33 @@
+#!/usr/bin/env python3
+#-*- coding: utf-8 -*-
+
+# Copyright (C) 2017 F. Preucil, T.J.-Y. Derrien
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>
+
+# Module libMultilayer explores the SPP theory at a thin film located 
+# between two semi-infinite media. The formal model is presented in 
+# T.J.-Y. Derrien et al, J. Appl. Phys. 116, 074902 (2014) and references 
+# therein. 
+
 import matplotlib.pyplot as plt
 import numpy as np
 import cmath
 from scipy.constants import c, epsilon_0
 
 #which field you want to plot
-switch = 0
+switch = 2
 #0 Hy
 #1 Ex
 #2 Ez
@@ -35,7 +58,7 @@ t = 100E-9 #thickness of the layer in meters
 omegaeps0 = k0*c*epsilon_0
 
 #field amplitude
-A = 1
+A = 1.
 
 #beta
 SPPperiod = 708E-9
@@ -52,8 +75,8 @@ k2 = sgn2*cmath.sqrt(beta*beta - k0*k0*eps2)
 k3 = sgn3*cmath.sqrt(beta*beta - k0*k0*eps3)
 
 #plotting
-xrange = 2*wavelength
-zrange = wavelength/2
+xrange = 2.*wavelength
+zrange = wavelength/2.
 steps = 200
 
 x = np.linspace(0, xrange, steps)
@@ -88,10 +111,13 @@ Ez = Hy*beta/(omegaeps0*eps1)
 
 if switch == 0:
     field = Hy
+    name = "Hy"
 elif switch == 1:
     field = Ex
+    name = "Ex"
 elif switch == 2:
     field = Ez
+    name = "Ez"
 plt.contourf(x*1E6, z*1E6, abs(field))
 
 #I
@@ -109,4 +135,9 @@ elif switch == 2:
     field = Ez
 plt.contourf(x*1E6, z*1E6, abs(field))
 
-plt.show()
+plt.xlabel(r"X ($\mu$ m)")
+plt.ylabel(r"Z ($\mu$ m)")
+plt.colorbar()
+filename=name+"-t"+str(t*1E9)+"nm"
+plt.savefig(filename+".eps")
+#plt.show()

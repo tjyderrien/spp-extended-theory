@@ -27,10 +27,20 @@ import cmath
 from scipy.constants import c, epsilon_0
 
 #which field you want to plot
-switch = 1
+whichfield = 5
 #0 Hy
 #1 Ex
 #2 Ez
+#3 Sx
+#4 Sz
+#5 |E|
+#6 |S|
+
+#which part you want to plot (only for whichfield < 5)
+whichpart = 0
+#0 Re
+#1 Im
+#2 Abs
 
 #data
 wavelength = 1026E-9
@@ -77,9 +87,9 @@ sgn1 = 1
 sgn2 = 1
 sgn3 = 1
 
-k1 = sgn1*cmath.sqrt(beta*beta - k0*k0*eps1)
-k2 = sgn2*cmath.sqrt(beta*beta - k0*k0*eps2)
-k3 = sgn3*cmath.sqrt(beta*beta - k0*k0*eps3)
+k1 = sgn1*cmath.sqrt(beta**2 - k0**2*eps1)
+k2 = sgn2*cmath.sqrt(beta**2 - k0**2*eps2)
+k3 = sgn3*cmath.sqrt(beta**2 - k0**2*eps3)
 
 #plotting
 xrange = 1.*wavelength
@@ -93,6 +103,46 @@ C = A*np.exp((-k1-k3)*t/2)*(k1*eps3-k3*eps1)/(2*k1*eps3) #might produce error (d
 D = A*np.exp((k1-k3)*t/2)*(k1*eps3+k3*eps1)/(2*k1*eps3)
 B = C*np.exp((k2-k1)*t/2) + D*np.exp((k2+k1)*t/2)
 
+def plotfield():
+    global name, part
+    toplot = 0*xx*zz
+    if whichfield == 0:
+        name = 'Hy'
+        field = Hy
+    elif whichfield == 1:
+        name = 'Ex'
+        field = Ex
+    elif whichfield == 2:
+        name = 'Ez'
+        field = Ez
+    elif whichfield == 3:
+        name = 'Sx'
+        field = Sx
+    elif whichfield == 4:
+        name = 'Sz'
+        field = Sz
+    elif whichfield == 5:
+        name = ']E['
+        toplot = np.sqrt(abs(Ex)**2 + abs(Ez)**2)
+    elif whichfield == 6:
+        name = ']S['
+        toplot = np.sqrt(abs(Sx)**2 + abs(Sz)**2)
+
+    if whichfield in (0, 1, 2, 3, 4):
+        if whichpart == 0:
+            part = 'RealPart'
+            toplot = field.real
+        elif whichpart == 1:
+            part = 'ImaginaryPart'
+            toplot = field.imag
+        elif whichpart == 2:
+            part = 'AbsoluteValue'
+            toplot = abs(field)
+    elif whichfield in (5, 6):
+        part = 'TotalValue'
+
+    plt.contourf(x*1E6, z*1E6, toplot)
+
 #regions
 #III
 z = np.linspace(t/2, zrange, steps)
@@ -100,14 +150,9 @@ xx, zz = np.meshgrid(x, z, sparse=True)
 Hy = A*np.exp(1j*beta*xx-k3*zz)
 Ex = Hy*1j*k3/(omegaeps0*eps3)
 Ez = -Hy*beta/(omegaeps0*eps3)
-
-if switch == 0:
-    field = Hy.real
-elif switch == 1:
-    field = Ex.real
-elif switch == 2:
-    field = Ez.real
-plt.contourf(x*1E6, z*1E6, field)
+Sx = -Ez*Hy
+Sz = Ex*Hy
+plotfield()
 
 #II
 z = np.linspace(-t/2, t/2, steps)
@@ -115,17 +160,9 @@ xx, zz = np.meshgrid(x, z, sparse=True)
 Hy = C*np.exp(1j*beta*xx+k1*zz) + D*np.exp(1j*beta*xx-k1*zz)
 Ex = C*np.exp(1j*beta*xx+k1*zz)*(-1j*k1)/(omegaeps0*eps1) + D*np.exp(1j*beta*xx-k1*zz)*(1j*k1)/(omegaeps0*eps1)
 Ez = Hy*beta/(omegaeps0*eps1)
-
-if switch == 0:
-    field = Hy.real
-    name = "Hy"
-elif switch == 1:
-    field = Ex.real
-    name = "Ex"
-elif switch == 2:
-    field = Ez.real
-    name = "Ez"
-plt.contourf(x*1E6, z*1E6, (field))
+Sx = -Ez*Hy
+Sz = Ex*Hy
+plotfield()
 
 #I
 z = np.linspace(-zrange, -t/2, steps)
@@ -133,18 +170,13 @@ xx, zz = np.meshgrid(x, z, sparse=True)
 Hy = B*np.exp(1j*beta*xx+k2*zz)
 Ex = -Hy*1j*k2/(omegaeps0*eps2)
 Ez = -Hy*beta/(omegaeps0*eps2)
+Sx = -Ez*Hy
+Sz = Ex*Hy
+plotfield()
 
-if switch == 0:
-    field = Hy.real
-elif switch == 1:
-    field = Ex.real
-elif switch == 2:
-    field = Ez.real
-plt.contourf(x*1E6, z*1E6, (field))
-
-plt.xlabel(r"X ($\mu$ m)")
-plt.ylabel(r"Z ($\mu$ m)")
+plt.xlabel(r'x ($\mu$m)')
+plt.ylabel(r'z ($\mu$m)')
 plt.colorbar()
-filename="Period"+str(SPPperiod*1E9)+"nm-Lspp"+str(SPPlength*1E6)+"um-"+name+"-t"+str(t*1E9)+"nm"
-plt.savefig(filename+".eps")
+filename='Period'+str(SPPperiod*1E9)+'nm-Lspp'+str(SPPlength*1E6)+'um-'+name+'-'+part+'-t'+str(t*1E9)+'nm'
+plt.savefig(filename+'.eps')
 plt.show()

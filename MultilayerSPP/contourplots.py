@@ -27,7 +27,7 @@ import cmath
 from scipy.constants import c, epsilon_0
 
 #which field you want to plot
-switch = 2
+switch = 1
 #0 Hy
 #1 Ex
 #2 Ez
@@ -52,8 +52,8 @@ eps3 = epsBK7 # epsBK7       #substrate
 #for ne in neList:
 #eps1 = Drude(wavelength, ne, epsTiO2bare, nu, meff) #thin film
 
-k0 = 2*np.pi/wavelength
-t = 100E-9 #thickness of the layer in meters
+k0 = 2.*np.pi/wavelength
+#t = 100e-9 #thickness of the layer in meters
 
 omegaeps0 = k0*c*epsilon_0
 
@@ -61,9 +61,16 @@ omegaeps0 = k0*c*epsilon_0
 A = 1.
 
 #beta
-SPPperiod = 708E-9
-SPPlength = 1.37E-6
-beta = 2*np.pi/SPPperiod + .5/SPPlength*1j
+
+#SPPperiod = 1030E-9; SPPlength = 5.36E-6; t = 42e-9   #SPP          42nm
+SPPperiod = 723E-9; SPPlength = 2.47E-6 ; t = 42e-9   #Hybride      42nm
+#SPPperiod = 295E-9; SPPlength = 23E-9   ; t = 42e-9   #LambdaOverN  42nm
+
+#SPPperiod = 1025E-9; SPPlength = 4.37E-6 ; t = 100E-9 #SPP         100nm
+#SPPperiod = 708E-9;  SPPlength = 1.37E-6 ; t = 100E-9 #Hybride     100nm
+#SPPperiod = 295E-9;  SPPlength = 23E-9   ; t = 100E-9 #LambdaOverN 100nm
+
+beta = 2.*np.pi/SPPperiod + 1.j*.5/SPPlength
 
 #branch
 sgn1 = 1
@@ -75,9 +82,9 @@ k2 = sgn2*cmath.sqrt(beta*beta - k0*k0*eps2)
 k3 = sgn3*cmath.sqrt(beta*beta - k0*k0*eps3)
 
 #plotting
-xrange = 2.*wavelength
-zrange = wavelength/2.
-steps = 200
+xrange = 1.*wavelength
+zrange = wavelength/4.
+steps = 500
 
 x = np.linspace(0, xrange, steps)
 
@@ -95,12 +102,12 @@ Ex = Hy*1j*k3/(omegaeps0*eps3)
 Ez = -Hy*beta/(omegaeps0*eps3)
 
 if switch == 0:
-    field = Hy
+    field = Hy.real
 elif switch == 1:
-    field = Ex
+    field = Ex.real
 elif switch == 2:
-    field = Ez
-plt.contourf(x*1E6, z*1E6, abs(field))
+    field = Ez.real
+plt.contourf(x*1E6, z*1E6, field)
 
 #II
 z = np.linspace(-t/2, t/2, steps)
@@ -110,15 +117,15 @@ Ex = C*np.exp(1j*beta*xx+k1*zz)*(-1j*k1)/(omegaeps0*eps1) + D*np.exp(1j*beta*xx-
 Ez = Hy*beta/(omegaeps0*eps1)
 
 if switch == 0:
-    field = Hy
+    field = Hy.real
     name = "Hy"
 elif switch == 1:
-    field = Ex
+    field = Ex.real
     name = "Ex"
 elif switch == 2:
-    field = Ez
+    field = Ez.real
     name = "Ez"
-plt.contourf(x*1E6, z*1E6, abs(field))
+plt.contourf(x*1E6, z*1E6, (field))
 
 #I
 z = np.linspace(-zrange, -t/2, steps)
@@ -128,16 +135,16 @@ Ex = -Hy*1j*k2/(omegaeps0*eps2)
 Ez = -Hy*beta/(omegaeps0*eps2)
 
 if switch == 0:
-    field = Hy
+    field = Hy.real
 elif switch == 1:
-    field = Ex
+    field = Ex.real
 elif switch == 2:
-    field = Ez
-plt.contourf(x*1E6, z*1E6, abs(field))
+    field = Ez.real
+plt.contourf(x*1E6, z*1E6, (field))
 
 plt.xlabel(r"X ($\mu$ m)")
 plt.ylabel(r"Z ($\mu$ m)")
 plt.colorbar()
-filename=name+"-t"+str(t*1E9)+"nm"
+filename="Period"+str(SPPperiod*1E9)+"nm-Lspp"+str(SPPlength*1E6)+"um-"+name+"-t"+str(t*1E9)+"nm"
 plt.savefig(filename+".eps")
-#plt.show()
+plt.show()

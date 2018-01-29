@@ -42,12 +42,16 @@ epsBK7      = 2.10277365777   #1026 nm
 epsCr2O3    = 4.9713+0.1784j  #1 um [JDT Kruschwitz et al, Appl. Opt. 1997]
 epsSi       = 12.8159503769+0.0114635303918j #1026 nm, Palik
 
+# Medium 1: thin film. 
 eps1 = epsCr        #thin film
-eps2 = 1.           #environment
-eps3 = epsBK7       #epsBK7 #substrate
+# Medium 2: substrate. 
+eps2 = epsBK7       #epsBK7 #environment | substrate
+# Medium 3: environment
+eps3 = 1.+0.j       #environment | substrate
+# Note: Inverting eps2 and eps3 should have no effect on the possible modes, but only on field amplification. 
 
 k0 = 2.*np.pi/wavelength
-t = 100E-9 #thickness of the layer in meters
+t = 1000E-9 #thickness of the layer in meters
 
 #branches
 #0 (-, -, -) (+, -, -)
@@ -64,8 +68,8 @@ x_max = 2.5E7
 y_min = -1E9
 y_max = 1E9
 
-x_steps = 10
-y_steps =  50
+x_steps = 100
+y_steps =  100
 
 #tolerances
 tol_merge = 1E3 #from the space of betas

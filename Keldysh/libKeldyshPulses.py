@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2013-2017 T. J.-Y. Derrien
+# Copyright (C) 2013-2018 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,12 +18,6 @@
 
 ## @package libKeldyshPulses
 # This module defines various types of laser pulses and belongs to the libKeldysh package. 
-# Several flavors of the Keldysh theory are available: 
-# - Keldysh original paper in solid, for Kane band structure [compared with td-dft]
-# - Keldysh paper with few terms corrected by Gruzdev [compared with td-dft]
-# - Keldysh-Zhukov tables, where Keldysh theory was computed numerically without using the saddle point method
-# - Keldysh-Shcheblanov model, improving rigor on the analytical integration [https://arxiv.org/abs/1706.07303]
-# - Keldysh-Corkum model, allowing for analytical treatment of mulltiwavelength fields [Physical Review Letters, 2017, 118, 173601]
 
 from scipy.constants import c, epsilon_0, mu_0, pi, e, m_e, h, hbar
 import numpy as np

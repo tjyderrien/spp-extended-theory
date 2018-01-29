@@ -27,7 +27,7 @@ import cmath
 from scipy.constants import c, epsilon_0
 
 #which field you want to plot
-whichfield = 5
+whichfield = 3
 #0 Hy
 #1 Ex
 #2 Ez
@@ -72,8 +72,8 @@ A = 1.
 
 #beta
 
-#SPPperiod = 1030E-9; SPPlength = 5.36E-6; t = 42e-9   #SPP          42nm
-SPPperiod = 723E-9; SPPlength = 2.47E-6 ; t = 42e-9   #Hybride      42nm
+SPPperiod = 1030E-9; SPPlength = 5.36E-6; t = 42e-9   #SPP          42nm
+#SPPperiod = 723E-9; SPPlength = 2.47E-6 ; t = 42e-9   #Hybride      42nm
 #SPPperiod = 295E-9; SPPlength = 23E-9   ; t = 42e-9   #LambdaOverN  42nm
 
 #SPPperiod = 1025E-9; SPPlength = 4.37E-6 ; t = 100E-9 #SPP         100nm
@@ -92,7 +92,7 @@ k2 = sgn2*cmath.sqrt(beta**2 - k0**2*eps2)
 k3 = sgn3*cmath.sqrt(beta**2 - k0**2*eps3)
 
 #plotting
-xrange = 1.*wavelength
+xrange = 10.*wavelength
 zrange = wavelength/4.
 steps = 500
 
@@ -123,10 +123,10 @@ def plotfield():
         field = Sz
     elif whichfield == 5:
         name = ']E['
-        toplot = np.sqrt(abs(Ex)**2 + abs(Ez)**2)
+        toplot = np.sqrt(Ex*np.conj(Ex) + Ez*np.conj(Ez))
     elif whichfield == 6:
         name = ']S['
-        toplot = np.sqrt(abs(Sx)**2 + abs(Sz)**2)
+        toplot = np.sqrt(Sx*np.conj(Sx) + Sz*np.conj(Sz))
 
     if whichfield in (0, 1, 2, 3, 4):
         if whichpart == 0:

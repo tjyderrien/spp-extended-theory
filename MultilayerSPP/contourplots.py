@@ -30,15 +30,15 @@ from scipy.constants import c, epsilon_0
 with open('roots.pkl', 'rb') as f:
     branches = pickle.load(f)
 
-branch_index = 1
-root_index = 10
+branch_index = 3
+root_index = 73
 
 betaR = branches[branch_index][root_index]
 beta = betaR[0] + 1j*betaR[1]
 #which field you want to plot
-whichfield = 3
-#0 Hy
-#1 Ex
+whichfield = 1
+#0 Hy #must be continuous
+#1 Ex #must be continuous
 #2 Ez
 #3 Sx
 #4 Sz
@@ -83,7 +83,7 @@ A = 1.
 
 #beta
 
-SPPperiod = 1030E-9; SPPlength = 5.36E-6; t = 42e-9   #SPP          42nm
+#SPPperiod = 1030E-9; SPPlength = 5.36E-6; t = 42e-9   #SPP          42nm
 #SPPperiod = 723E-9; SPPlength = 2.47E-6 ; t = 42e-9   #Hybride      42nm
 #SPPperiod = 295E-9; SPPlength = 23E-9   ; t = 42e-9   #LambdaOverN  42nm
 
@@ -187,7 +187,7 @@ plt.plot([2*xrange*1E6/5, 3*xrange*1E6/5], [-t/2*1E6, -t/2*1E6], 'k-', linewidth
 
 plt.xlabel(r'x ($\mu$m)')
 plt.ylabel(r'z ($\mu$m)')
-#plt.colorbar()
+plt.colorbar()
 #filename='Period'+str(SPPperiod*1E9)+'nm-Lspp'+str(SPPlength*1E6)+'um-'+name+'-'+part+'-t'+str(t*1E9)+'nm'
 #plt.savefig(filename+'.eps')
 plt.show()

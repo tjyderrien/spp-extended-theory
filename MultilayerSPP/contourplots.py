@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2017 F. Preucil, T.J.-Y. Derrien
+# Copyright (C) 2018 F. Preucil, T.J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,11 +23,20 @@
 
 import matplotlib.pyplot as plt
 import numpy as np
-import cmath
+import cmath, pickle
+from itertools import product
 from scipy.constants import c, epsilon_0
 
+with open('roots.pkl', 'rb') as f:
+    branches = pickle.load(f)
+
+branch_index = 1
+root_index = 10
+
+betaR = branches[branch_index][root_index]
+beta = betaR[0] + 1j*betaR[1]
 #which field you want to plot
-whichfield = 5
+whichfield = 0
 #0 Hy
 #1 Ex
 #2 Ez
@@ -63,36 +72,35 @@ eps3 = epsBK7 # epsBK7       #substrate
 #eps1 = Drude(wavelength, ne, epsTiO2bare, nu, meff) #thin film
 
 k0 = 2.*np.pi/wavelength
-#t = 100e-9 #thickness of the layer in meters
+t = 100e-9 #thickness of the layer in meters
 
+with open('params.pkl', 'rb') as f:
+    eps1, eps2, eps3, t, k0 = pickle.load(f)
 omegaeps0 = k0*c*epsilon_0
 
 #field amplitude
 A = 1.
 
-#beta
-
+#beta =  7.593326478142351e+06  + 1j*6.229229632723185e+07
 #SPPperiod = 1030E-9; SPPlength = 5.36E-6; t = 42e-9   #SPP          42nm
-SPPperiod = 723E-9; SPPlength = 2.47E-6 ; t = 42e-9   #Hybride      42nm
+#SPPperiod = 723E-9; SPPlength = 2.47E-6 ; t = 42e-9   #Hybride      42nm
 #SPPperiod = 295E-9; SPPlength = 23E-9   ; t = 42e-9   #LambdaOverN  42nm
 
 #SPPperiod = 1025E-9; SPPlength = 4.37E-6 ; t = 100E-9 #SPP         100nm
 #SPPperiod = 708E-9;  SPPlength = 1.37E-6 ; t = 100E-9 #Hybride     100nm
 #SPPperiod = 295E-9;  SPPlength = 23E-9   ; t = 100E-9 #LambdaOverN 100nm
 
-beta = 2.*np.pi/SPPperiod + 1.j*.5/SPPlength
+#beta = 2.*np.pi/SPPperiod + 1.j*.5/SPPlength
 
 #branch
-sgn1 = 1
-sgn2 = 1
-sgn3 = 1
+sgn1, sgn2 = list(product((-1,1), (-1,1)))[branch_index]
 
-k1 = sgn1*cmath.sqrt(beta**2 - k0**2*eps1)
-k2 = sgn2*cmath.sqrt(beta**2 - k0**2*eps2)
-k3 = sgn3*cmath.sqrt(beta**2 - k0**2*eps3)
+k1 = cmath.sqrt(beta**2 - k0**2*eps1)
+k2 = sgn1*cmath.sqrt(beta**2 - k0**2*eps2)
+k3 = sgn2*cmath.sqrt(beta**2 - k0**2*eps3)
 
 #plotting
-xrange = 1.*wavelength
+xrange = .1*wavelength
 zrange = wavelength/4.
 steps = 500
 
@@ -140,7 +148,6 @@ def plotfield():
             toplot = abs(field)
     elif whichfield in (5, 6):
         part = 'TotalValue'
-
     plt.contourf(x*1E6, z*1E6, toplot)
 
 #regions
@@ -150,8 +157,8 @@ xx, zz = np.meshgrid(x, z, sparse=True)
 Hy = A*np.exp(1j*beta*xx-k3*zz)
 Ex = Hy*1j*k3/(omegaeps0*eps3)
 Ez = -Hy*beta/(omegaeps0*eps3)
-Sx = -Ez*Hy
-Sz = Ex*Hy
+Sx = -Ez.real*Hy.real
+Sz = Ex.real*Hy.real
 plotfield()
 
 #II
@@ -160,8 +167,8 @@ xx, zz = np.meshgrid(x, z, sparse=True)
 Hy = C*np.exp(1j*beta*xx+k1*zz) + D*np.exp(1j*beta*xx-k1*zz)
 Ex = C*np.exp(1j*beta*xx+k1*zz)*(-1j*k1)/(omegaeps0*eps1) + D*np.exp(1j*beta*xx-k1*zz)*(1j*k1)/(omegaeps0*eps1)
 Ez = Hy*beta/(omegaeps0*eps1)
-Sx = -Ez*Hy
-Sz = Ex*Hy
+Sx = -Ez.real*Hy.real
+Sz = Ex.real*Hy.real
 plotfield()
 
 #I
@@ -170,13 +177,16 @@ xx, zz = np.meshgrid(x, z, sparse=True)
 Hy = B*np.exp(1j*beta*xx+k2*zz)
 Ex = -Hy*1j*k2/(omegaeps0*eps2)
 Ez = -Hy*beta/(omegaeps0*eps2)
-Sx = -Ez*Hy
-Sz = Ex*Hy
+Sx = -Ez.real*Hy.real
+Sz = Ex.real*Hy.real
 plotfield()
+
+plt.plot([2*xrange*1E6/5, 3*xrange*1E6/5], [t/2*1E6, t/2*1E6], 'k-', linewidth = .5)
+plt.plot([2*xrange*1E6/5, 3*xrange*1E6/5], [-t/2*1E6, -t/2*1E6], 'k-', linewidth = .5)
 
 plt.xlabel(r'x ($\mu$m)')
 plt.ylabel(r'z ($\mu$m)')
-plt.colorbar()
-filename='Period'+str(SPPperiod*1E9)+'nm-Lspp'+str(SPPlength*1E6)+'um-'+name+'-'+part+'-t'+str(t*1E9)+'nm'
-plt.savefig(filename+'.eps')
+#plt.colorbar()
+#filename='Period'+str(SPPperiod*1E9)+'nm-Lspp'+str(SPPlength*1E6)+'um-'+name+'-'+part+'-t'+str(t*1E9)+'nm'
+#plt.savefig(filename+'.eps')
 plt.show()

@@ -117,7 +117,7 @@ findroots = np.vectorize(findroots)
 #print(roots[0])     #prints roots belonging to the zeroth branch (-, -, -)
 #print(roots[7][0])  #prints the first root from the last branch (+, +, +)
 
-#List of branch indexes:
+#List of branch indices:
 #   0 (-, -, -)
 #   1 (-, -, +)
 #   2 (-, +, -)

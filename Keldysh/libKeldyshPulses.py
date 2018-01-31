@@ -61,6 +61,23 @@ def PulseSquaredSinTemporalShape(t, tau, PeakField, wavelength, CEP=0., t0=0., P
   Field = Envelope * Phase
   return Envelope, Field
 
+## Single pulse with smooth top hat profile. 
+# @param t: array of discretized instants
+# @param tau: duration of the pulse FWHM
+# @param tauRise: duration of the rising edge of the envelope
+# @param PeakField: maximum amplitude of the field (S.I.)
+# @param wavelength: wavelength of the electromagnetic field (m)
+# @param CEP: carrier envelope phase inside the envelope (rad)
+# @param t0: origin of the time axis
+# @param PulseDelay: adds a delay to the pulse with respect to origin. 
+def PulseSmoothTopHatShape(t, tau, tauRise, PeakField, wavelength, CEP=0., t0=0., PulseDelay=0.):
+  t1 = t0 + PulseDelay
+  omega = 2e0*pi*c/wavelength
+  Envelope = PeakField * ( np.sin( 0.5*pi*((t-t1-tauRise)/(tauRise)) )**2 * step(t-t1+tauRise) * (1.-step(t-t1)) + np.sin( 0.5*pi*((t-t2-tauRise)/(tauRise)))**2 * step(t-t2) * (1. - step(t-(t2+tauRise))) + step(t-t1) * (1.-step(t-t2)) ) #Checked and plotted with Maple.
+  Phase = np.exp(1e0j*(omega*t+CEP))
+  Field = Envelope * Phase
+  return Envelope, Field
+
 ## Bi-color double pulse [table of TotalEnvelope(time), TotalField(time)] evolution with time (POLARIZATION IS FOR NOW NEGLECTED!)
 # Output: Total envelope <array>, total field <array> at a given space point. 
 # Construct the temporal shape of two-color laser pulses mixed together using a squared sinus law and a time delay. 

@@ -49,7 +49,7 @@ eps2 = epsBK7       #epsBK7 #environment | substrate
 eps3 = 1.+0.j       #environment | substrate
 # Note: Inverting eps2 and eps3 should have no effect on the possible modes, but only on field amplification. 
 
-t = 100E-9 #thickness of the layer in meters
+t = 30E-9 #thickness of the layer in meters
 
 #branch indices
 #0 (-, -, -) (+, -, -)
@@ -58,11 +58,11 @@ t = 100E-9 #thickness of the layer in meters
 #3 (-, +, +) (+, +, +)
 
 #meshes the initial guess area, all numbers are from the space of betas
-x_min = -2.5E7
-x_max = 2.5E7
+x_min = -3E7
+x_max = 3E7
 
-y_min = -1E8
-y_max = 1E8
+y_min = -1E9
+y_max = 1E9
 
 x_steps = 50
 y_steps = 50
@@ -77,14 +77,14 @@ ke2 = (k0**2)*eps2
 ke3 = (k0**2)*eps3
 
 def func(betaR):
-    beta = betaR[0] + betaR[1]*1j
+    beta = betaR[0] + betaR[1]*1.j
     kappa1 = cmath.sqrt(beta**2 - ke1)/eps1
     kappa2 = sgn1*cmath.sqrt(beta**2 - ke2)/eps2
     kappa3 = sgn2*cmath.sqrt(beta**2 - ke3)/eps3
     try:
         value = (kappa1-kappa2)*(kappa1-kappa3)*cmath.exp(-2*kappa1*eps1*t)-(kappa1+kappa2)*(kappa1+kappa3)
     except:
-        value = 1e99
+        value = 1E99
     return (value.real, value.imag)
 
 def norm(vec):
@@ -100,11 +100,15 @@ def cntr(inpt):
     return (px/ln, py/ln)
 
 def plothyp(eps, col):
-    brpoint = cmath.sqrt(eps*k0*k0).real
-    domain = np.linspace(-brpoint, -1E-9*brpoint, num=1000)
-    plt.plot(domain, (k0*k0*eps.imag/(2*domain)), col)
-    domain = np.linspace(1E-9*brpoint, brpoint, num=1000)
-    plt.plot(domain, (k0*k0*eps.imag/(2*domain)), col)
+    radius = k0*k0*eps.imag/2.
+    domain = np.linspace(xmi, min(xma, cmath.sqrt(eps*k0*k0).real), num=1000)
+    plt.plot(domain, radius/domain, col)
+
+def plotinvhyp(eps, col):
+    radius = k0*k0*eps.imag/2.
+    if radius != 0:
+        domain = np.linspace(xmi, min(xma, cmath.sqrt(eps*k0*k0).real), num=1000)
+        plt.plot(cx/domain, domain*cy/radius, col)
 
 def prnt(string):
     aux = '[%.1f s]' % (time() - start)
@@ -155,9 +159,9 @@ for sgn1, sgn2 in product((-1,1), (-1,1)):
                 aux2.append(rt)
         if len(aux) > 4: #merging criterion
             if center[0] > 0:
-                unique.append(aux[0])
+                unique.append(center)
             else:
-                unique.append([-aux[0][0], -aux[0][1]])
+                unique.append([-center[0], -center[1]])
         roots = list(aux2)
         ln = len(roots)
 
@@ -196,10 +200,10 @@ for branch in branches:
         if yi > iyma:
             iyma = yi
     ibranches.append(ibranch)
-sx = (xma - xmi)/10
-sy = (yma - ymi)/10
-isx = (ixma - ixmi)/10
-isy = (iyma - iymi)/10
+sx = (xma - xmi)/20
+sy = (yma - ymi)/20
+isx = (ixma - ixmi)/20
+isy = (iyma - iymi)/20
 
 #saves the roots and the parameters into a file
 with open('params.pkl', 'wb') as f:
@@ -208,14 +212,14 @@ with open('roots.pkl', 'wb') as f:
     pickle.dump(branches, f)
 
 #plotting
-plothyp(eps1, 'r-')
-plothyp(eps2, 'g-')
-plothyp(eps3, 'b-')
-
 colors = ('r', 'g', 'b', 'k')
 plt.figure(1)
 plt.gca().set_xlim((xmi-sx, xma+sx))
 plt.gca().set_ylim((ymi-sy, yma+sy))
+
+plothyp(eps1, 'r-')
+plothyp(eps2, 'g-')
+plothyp(eps3, 'b-')
 bnum = 0
 for branch in branches:
     rnum = 0
@@ -234,6 +238,10 @@ plt.show()
 plt.figure(2)
 plt.gca().set_xlim((ixmi-isx, ixma+isx))
 plt.gca().set_ylim((iymi-isy, iyma+isy))
+
+plotinvhyp(eps1, 'r-')
+plotinvhyp(eps2, 'g-')
+plotinvhyp(eps3, 'b-')
 bnum = 0
 for branch in ibranches:
     rnum = 0

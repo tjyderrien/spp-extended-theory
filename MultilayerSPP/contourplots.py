@@ -26,14 +26,14 @@ import cmath, pickle
 from itertools import product
 from scipy.constants import c, epsilon_0
 
-branch_index = 1
-root_index = 1
+branch_index = 3
+root_index = 0
 
 #two black lines to show the boundaries
-showlines = 1
+showlines = True
 
 #contourlevels
-levels = 30
+levels = 10
 
 #branch indices
 #0 (-, -, -) (+, -, -)
@@ -47,7 +47,7 @@ with open('roots.pkl', 'rb') as f:
 
 #retrieves beta
 betaR = branches[branch_index][root_index]
-beta = betaR[0] + 1j*betaR[1]
+beta = betaR[0] + 1.j*betaR[1]
 SPPperiod = 2.*np.pi/betaR[0]
 SPPlength = .5/betaR[1]
 
@@ -88,7 +88,7 @@ whichpart = 0
 ##k0 = 2.*np.pi/wavelength
 ##t = 40E-9 #thickness of the layer in meters
 
-##beta =  7.593326478142351e+06  + 1j*6.229229632723185e+07
+##beta =  7.593326478142351e+06  + 1.j*6.229229632723185e+07
 ##SPPperiod = 1030E-9; SPPlength = 5.36E-6; t = 42e-9   #SPP          42nm
 ##SPPperiod = 723E-9; SPPlength = 2.47E-6 ; t = 42e-9   #Hybride      42nm
 ##SPPperiod = 295E-9; SPPlength = 23E-9   ; t = 42e-9   #LambdaOverN  42nm
@@ -134,25 +134,25 @@ B = C*cmath.exp((k2-k1)*t/2) + D*cmath.exp((k2+k1)*t/2)
 #field functions
 def Hy(x, z):
     if z >= t/2:
-        return A*np.exp(1j*beta*x-k3*z)
+        return A*np.exp(1.j*beta*x-k3*z)
     elif t/2 > z > -t/2:
-        return C*np.exp(1j*beta*x+k1*z) + D*np.exp(1j*beta*x-k1*z)
+        return C*np.exp(1.j*beta*x+k1*z) + D*np.exp(1.j*beta*x-k1*z)
     else:
-        return B*np.exp(1j*beta*x+k2*z)
+        return B*np.exp(1.j*beta*x+k2*z)
 def Ex(x, z):
     if z >= t/2:
-        return A*np.exp(1j*beta*x-k3*z)*1j*k3/(omegaeps0*eps3)
+        return A*np.exp(1.j*beta*x-k3*z)*1.j*k3/(omegaeps0*eps3)
     elif t/2 > z > -t/2:
-        return (-C*np.exp(1j*beta*x+k1*z) + D*np.exp(1j*beta*x-k1*z))*1j*k1/(omegaeps0*eps1)
+        return (-C*np.exp(1.j*beta*x+k1*z) + D*np.exp(1.j*beta*x-k1*z))*1.j*k1/(omegaeps0*eps1)
     else:
-        return -B*np.exp(1j*beta*x+k2*z)*1j*k2/(omegaeps0*eps2)
+        return -B*np.exp(1.j*beta*x+k2*z)*1.j*k2/(omegaeps0*eps2)
 def Ez(x, z):
     if z >= t/2:
-        return -A*np.exp(1j*beta*x-k3*z)*beta/(omegaeps0*eps3)
+        return -A*np.exp(1.j*beta*x-k3*z)*beta/(omegaeps0*eps3)
     elif t/2 > z > -t/2:
-        return -(C*np.exp(1j*beta*x+k1*z) + D*np.exp(1j*beta*x-k1*z))*beta/(omegaeps0*eps1)
+        return -(C*np.exp(1.j*beta*x+k1*z) + D*np.exp(1.j*beta*x-k1*z))*beta/(omegaeps0*eps1)
     else:
-        return B*np.exp(1j*beta*x+k2*z)*beta/(omegaeps0*eps2)
+        return B*np.exp(1.j*beta*x+k2*z)*beta/(omegaeps0*eps2)
 Hy_vect = np.vectorize(Hy)
 Ex_vect = np.vectorize(Ex)
 Ez_vect = np.vectorize(Ez)

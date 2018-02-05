@@ -61,11 +61,11 @@ t = 30E-9 #thickness of the layer in meters
 x_min = -3E7
 x_max = 3E7
 
-y_min = -1E9
-y_max = 1E9
+y_min = -1E8
+y_max = 1E8
 
-x_steps = 50
-y_steps = 50
+x_steps = 20
+y_steps = 20
 
 #tolerances
 tol_merge = 1E3
@@ -102,13 +102,13 @@ def cntr(inpt):
 def plothyp(eps, col):
     radius = k0*k0*eps.imag/2.
     domain = np.linspace(xmi, min(xma, cmath.sqrt(eps*k0*k0).real), num=1000)
-    plt.plot(domain, radius/domain, col)
+    plt.plot(domain, radius/domain, col, linewidth=.75)
 
 def plotinvhyp(eps, col):
     radius = k0*k0*eps.imag/2.
     if radius != 0:
         domain = np.linspace(xmi, min(xma, cmath.sqrt(eps*k0*k0).real), num=1000)
-        plt.plot(cx/domain, domain*cy/radius, col)
+        plt.plot(cx/domain, domain*cy/radius, col, linewidth=.75)
 
 def prnt(string):
     aux = '[%.1f s]' % (time() - start)
@@ -220,15 +220,12 @@ plt.gca().set_ylim((ymi-sy, yma+sy))
 plothyp(eps1, 'r-')
 plothyp(eps2, 'g-')
 plothyp(eps3, 'b-')
-bnum = 0
-for branch in branches:
-    rnum = 0
-    for rt in branch:
-        plt.scatter(*rt, c=colors[bnum], marker='.')
+plotinvhyp(eps3, 'b-')
+for bind in range(len(branches)):
+    for rind in range(len(branches[bind])):
+        plt.scatter(*branches[bind][rind], c=colors[bind], marker='.')
         if showinfo:
-            plt.gca().text(*rt, ' [%d, %d]' % (bnum, rnum))
-        rnum += 1
-    bnum += 1
+            plt.gca().text(*branches[bind][rind], ' [%d, %d]' % (bind, rind))
 plt.xlabel(r'Re $\beta$ [m$^{-1}$]')
 plt.ylabel(r'Im $\beta$ [m$^{-1}$]')
 plt.grid()
@@ -242,15 +239,11 @@ plt.gca().set_ylim((iymi-isy, iyma+isy))
 plotinvhyp(eps1, 'r-')
 plotinvhyp(eps2, 'g-')
 plotinvhyp(eps3, 'b-')
-bnum = 0
-for branch in ibranches:
-    rnum = 0
-    for rt in branch:
-        plt.scatter(*rt, c=colors[bnum], marker='.')
+for bind in range(len(ibranches)):
+    for rind in range(len(ibranches[bind])):
+        plt.scatter(*ibranches[bind][rind], c=colors[bind], marker='.')
         if showinfo:
-            plt.gca().text(*rt, ' [%d, %d]' % (bnum, rnum), size='10')
-        rnum += 1
-    bnum += 1
+            plt.gca().text(*ibranches[bind][rind], ' [%d, %d]' % (bind, rind))
 plt.xlabel(r'Period [$\mu$m]')
 plt.ylabel('Decay length [nm]')
 plt.grid()

@@ -61,11 +61,11 @@ t = 30E-9 #thickness of the layer in meters
 x_min = -3E7
 x_max = 3E7
 
-y_min = -1E8
-y_max = 1E8
+y_min = -1E9
+y_max = 1E9
 
-x_steps = 20
-y_steps = 20
+x_steps = 50
+y_steps = 50
 
 #tolerances
 tol_merge = 1E3
@@ -206,10 +206,8 @@ isx = (ixma - ixmi)/20
 isy = (iyma - iymi)/20
 
 #saves the roots and the parameters into a file
-with open('params.pkl', 'wb') as f:
-    pickle.dump((eps1, eps2, eps3, t, k0), f)
-with open('roots.pkl', 'wb') as f:
-    pickle.dump(branches, f)
+with open('sppdata.pkl', 'wb') as f:
+    pickle.dump((branches, eps1, eps2, eps3, t, k0), f)
 
 #plotting
 colors = ('r', 'g', 'b', 'k')
@@ -220,7 +218,6 @@ plt.gca().set_ylim((ymi-sy, yma+sy))
 plothyp(eps1, 'r-')
 plothyp(eps2, 'g-')
 plothyp(eps3, 'b-')
-plotinvhyp(eps3, 'b-')
 for bind in range(len(branches)):
     for rind in range(len(branches[bind])):
         plt.scatter(*branches[bind][rind], c=colors[bind], marker='.')

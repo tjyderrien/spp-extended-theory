@@ -41,9 +41,9 @@ levels = 10
 #2 (-, +, -) (+, +, -)
 #3 (-, +, +) (+, +, +)
 
-#loads the roots from a file
-with open('roots.pkl', 'rb') as f:
-    branches = pickle.load(f)
+#loads the roots and the parameters from a file
+with open('sppdata.pkl', 'rb') as f:
+    branches, eps1, eps2, eps3, t, k0 = pickle.load(f)
 
 #retrieves beta
 betaR = branches[branch_index][root_index]
@@ -99,10 +99,7 @@ whichpart = 0
 ##
 ##beta = 2.*np.pi/SPPperiod + 1.j*.5/SPPlength
 
-#loads the parameters from a file
-with open('params.pkl', 'rb') as f:
-    eps1, eps2, eps3, t, k0 = pickle.load(f)
-
+#constants precache
 omegaeps0 = k0*c*epsilon_0
 wavelength = 2.*np.pi/k0
 

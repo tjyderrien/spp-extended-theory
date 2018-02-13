@@ -27,10 +27,10 @@ from itertools import product
 from scipy.constants import c, epsilon_0
 
 branch_index = 3
-root_index = 0
+root_index = 19
 
 #two black lines to show the boundaries
-showlines = True
+showlines = False
 
 #contourlevels
 levels = 10
@@ -52,7 +52,7 @@ SPPperiod = 2.*np.pi/betaR[0]
 SPPlength = .5/betaR[1]
 
 #which field you want to plot
-whichfield = 0
+whichfield = 1
 #0 Hy
 #1 Ex
 #2 Ez
@@ -113,11 +113,11 @@ k2 = sgn1*cmath.sqrt(beta**2 - k0**2*eps2)
 k3 = sgn2*cmath.sqrt(beta**2 - k0**2*eps3)
 
 #plotting
-xrange = .5*wavelength
-zrange = wavelength/5.
-steps = 400
+xrange = 2.5*wavelength
+zrange = wavelength*2.
+steps = 1000
 
-x = np.linspace(-xrange, xrange, steps)
+x = np.linspace(0., xrange, steps)
 z = np.linspace(-zrange, zrange, steps)
 x_mesh, z_mesh = np.meshgrid(x, z, sparse=True)
 #x_mesh, z_mesh = x[None,:], z[:,None] #this might be faster than meshgrid but it seems it's not
@@ -126,7 +126,15 @@ x_mesh, z_mesh = np.meshgrid(x, z, sparse=True)
 C = A*cmath.exp((-k1-k3)*t/2)*(k1*eps3-k3*eps1)/(2*k1*eps3) #might produce error (dividing by k1)
 D = A*cmath.exp((k1-k3)*t/2)*(k1*eps3+k3*eps1)/(2*k1*eps3)
 B = C*cmath.exp((k2-k1)*t/2) + D*cmath.exp((k2+k1)*t/2)
-#Balt = (C*cmath.exp((k2-k1)*t/2) - D*cmath.exp((k2+k1)*t/2))*(k1*eps2)/(k2*eps1)
+Balt = (C*cmath.exp((k2-k1)*t/2) - D*cmath.exp((k2+k1)*t/2))*(k1*eps2)/(k2*eps1) #theoretically should be the same as B
+
+print('Field amplitudes:')
+print()
+print('A:', A)
+print('C:', C)
+print('D:', D)
+print('B:', B, abs(B))
+print('Balt:', Balt, abs(Balt))
 
 #field functions
 def Hy(x, z):
@@ -158,7 +166,7 @@ if whichfield == 0:
     name = 'Hy'
     field = Hy_vect(x_mesh, z_mesh)
 elif whichfield == 1:
-      name = 'Ex'
+    name = 'Ex'
     field = Ex_vect(x_mesh, z_mesh)
 elif whichfield == 2:
     name = 'Ez'

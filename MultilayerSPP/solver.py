@@ -32,7 +32,7 @@ from time import time
 showinfo = True
 
 #data
-wavelength = 1026E-9
+wavelength = 1026e-9 #355e-9 #1030E-9 #1026
 
 epsTibare   = -6.206969+25.2j #800 nm
 epsTiO2bare = 7.7841+0.j      #800 nm
@@ -40,17 +40,21 @@ epsCr       = -0.672122310000001+24.8657476j #-0.67+24.87j    #1026 nm
 epsBK7      = 2.10277365777   #1026 nm
 epsCr2O3    = 4.9713+0.1784j  #1 um [JDT Kruschwitz et al, Appl. Opt. 1997]
 epsSi       = 12.8159503769+0.0114635303918j #1026 nm, Palik
+epsAir      = 1.+0.j          #air
+
+#epsCu       = -46.6046581932 + 4.7188669976j #1030 nm
+epsCu       = -1.9937293241+4.9290716854j     #355  nm
 
 # Medium 1: thin film. 
 eps1 = epsCr        #thin film
 # Medium 2: substrate. 
-eps2 = epsBK7       #epsBK7 #environment | substrate
+eps3 = epsAir       #environment | substrate
 # Medium 3: environment
-eps3 = 1.+0.j       #environment | substrate
+eps2 = epsAir       #epsBK7 #environment | substrate
 # Note: Inverting eps2 and eps3 should have no effect on the possible modes, but only on field amplification. 
 
 k0 = 2.*np.pi/wavelength
-t = 30E-9 #thickness of the layer in meters
+t = 1000e-9 #thickness of the layer in meters
 
 #branch indices
 #0 (-, -, -) (+, -, -)
@@ -60,13 +64,13 @@ t = 30E-9 #thickness of the layer in meters
 
 #meshes the initial guess area, all numbers are from the space of betas
 x_min = -3E7
-x_max = 3E7
+x_max =  3E7
 
-y_min = -1E9
-y_max = 1E9
+y_min =  -1E8
+y_max =  1E8
 
-x_steps = 100
-y_steps =  100
+x_steps = 30
+y_steps = 30
 
 #tolerances
 tol_merge = 1E3

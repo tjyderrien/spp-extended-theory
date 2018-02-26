@@ -48,13 +48,12 @@ epsCu       = -1.9937293241+4.9290716854j     #355  nm
 # Medium 1: thin film. 
 eps1 = epsCr        #thin film
 # Medium 2: substrate. 
-eps3 = epsAir       #environment | substrate
+eps2 = epsBK7       #epsBK7 #environment | substrate
 # Medium 3: environment
-eps2 = epsAir       #epsBK7 #environment | substrate
+eps3 = 1.+0.j       #environment | substrate
 # Note: Inverting eps2 and eps3 should have no effect on the possible modes, but only on field amplification. 
 
-k0 = 2.*np.pi/wavelength
-t = 1000e-9 #thickness of the layer in meters
+t = 1000E-9 #thickness of the layer in meters
 
 #branch indices
 #0 (-, -, -) (+, -, -)
@@ -64,16 +63,17 @@ t = 1000e-9 #thickness of the layer in meters
 
 #meshes the initial guess area, all numbers are from the space of betas
 x_min = -3E7
-x_max =  3E7
+x_max = 3E7
 
-y_min =  -1E8
-y_max =  1E8
+y_min = -1E9
+y_max = 1E9
 
-x_steps = 30
-y_steps = 30
+x_steps = 50
+y_steps = 50
 
 #tolerances
-tol_merge = 1E3
+tol_merge = 1E3   #absolute
+tol_valid = 1E-1  #relative
 
 #constants precache
 k0 = 2.*np.pi/wavelength
@@ -169,10 +169,25 @@ for sgn1, sgn2 in product((-1,1), (-1,1)):
                 unique.append([-center[0], -center[1]])
         roots = list(aux2)
         ln = len(roots)
-
     prnt('Total (merged): %d' % len(unique))
+
+    valid = []
+    start = time()
+    for rt in unique:
+        beta = rt[0] + 1.j*rt[1]
+        k1 = cmath.sqrt(beta**2 - ke1)
+        k2 = sgn1*cmath.sqrt(beta**2 - ke2)
+        k3 = sgn2*cmath.sqrt(beta**2 - ke3)
+        C = cmath.exp((-k1-k3)*t/2)*(k1*eps3-k3*eps1)/(2*k1*eps3)
+        D = cmath.exp((k1-k3)*t/2)*(k1*eps3+k3*eps1)/(2*k1*eps3)
+        B1 = C*cmath.exp((k2-k1)*t/2) + D*cmath.exp((k2+k1)*t/2)
+        B2 = (C*cmath.exp((k2-k1)*t/2) - D*cmath.exp((k2+k1)*t/2))*(k1*eps2)/(k2*eps1)
+        if abs(1 - abs(B2/B1)) < tol_valid:
+            valid.append(rt)
+    prnt('Total (validated): %d' % len(valid))
+
     print()
-    branches.append(unique)
+    branches.append(valid)
 #end of algorithm
 
 #processing

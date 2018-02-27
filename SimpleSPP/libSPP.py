@@ -43,14 +43,14 @@ from libMaterials import *
 from libMath import *
 
 lengthunit = 1e-9
-eta = 5.0 #assumed precision error on the dielectric permittivity
+eta = 0.5 #assumed precision error on the dielectric permittivity
 UsingTeX=True #TODO: set to False for Windows users
 
 ## 0: all permisive, no verification on SPP excitation condition
 ## 1: use the RegularLIPSScondition, softer than pure SPP excitation condition
 ## 2: Period != 0 is necessary for a material to be listed in results
 ## 3: Extreme level: use ExperimentallyAchievable() to verify possibility of decay depth > optical penetration depth
-LevelOfSPPaccuracy=0
+LevelOfSPPaccuracy=2
 
 # Settings for matplotlib
 #rc('font',**{'family':'sans-serif','sans-serif':['Helvetica'], 'size':'16'})
@@ -460,7 +460,7 @@ def SPPactiveInterfaces(dbarray, comment):#{{{
         ## 2: use the generalized SPP excitation condition
         ## 3: Extreme level: use ExperimentallyAchievable() to verify possibility of decay depth > optical penetration depth
         if(LevelOfSPPaccuracy == 1):
-          Condition = (SPPdecayLength < 20000e0) #and (abs(eps2.real) < eps2.imag)
+          Condition = (SPPdecayLength < 20e-6) #and (abs(eps2.real) < eps2.imag)
         elif (LevelOfSPPaccuracy >= 2):
           Condition = ExperimentalAchievable and (Period!=0)
         else: #super permissive case

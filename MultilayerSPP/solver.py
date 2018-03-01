@@ -53,7 +53,7 @@ eps2 = epsBK7       #epsBK7 #environment | substrate
 eps3 = 1.+0.j       #environment | substrate
 # Note: Inverting eps2 and eps3 should have no effect on the possible modes, but only on field amplification. 
 
-t = 1000E-9 #thickness of the layer in meters
+t = 100E-9 #thickness of the layer in meters
 
 #branch indices
 #0 (-, -, -) (+, -, -)

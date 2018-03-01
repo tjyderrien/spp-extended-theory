@@ -26,8 +26,8 @@ import cmath, pickle
 from itertools import product
 from scipy.constants import c, epsilon_0
 
-branch_index = 3
-root_index = 2
+branch_index = 1 #3
+root_index = 0
 
 #two black lines to show the boundaries
 showlines = True
@@ -52,7 +52,7 @@ SPPperiod = 2.*np.pi/betaR[0]
 SPPlength = .5/betaR[1]
 
 #which field you want to plot
-whichfield = 0
+whichfield = 6
 #0 Hy
 #1 Ex
 #2 Ez
@@ -113,9 +113,9 @@ k2 = sgn1*cmath.sqrt(beta**2 - k0**2*eps2)
 k3 = sgn2*cmath.sqrt(beta**2 - k0**2*eps3)
 
 #plotting
-xrange = 2.5*wavelength
-zrange = wavelength*2.
-steps = 1000
+xrange = SPPlength
+zrange = wavelength*0.02
+steps = 200
 
 x = np.linspace(0., xrange, steps)
 z = np.linspace(-zrange, zrange, steps)
@@ -212,7 +212,7 @@ if whichfield in (0, 1, 2, 3, 4):
         toplot = abs(field)
 elif whichfield in (5, 6, 7):
     part = 'TotalValue'
-plt.contourf(x*1E6, z*1E6, toplot, levels)
+plt.contourf(x*1E6, z*1E6, toplot, levels, cmap=plt.get_cmap('Blues'))
 
 if showlines:
     plt.plot([x[0]*1E6, x[-1]*1E6], [t/2*1E6, t/2*1E6], 'k-', linewidth = .2)

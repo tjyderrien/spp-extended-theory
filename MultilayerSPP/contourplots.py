@@ -26,8 +26,8 @@ import cmath, pickle
 from itertools import product
 from scipy.constants import c, epsilon_0
 
-branch_index = 1 #3
-root_index = 0
+branch_index = 3
+root_index = 1
 
 #two black lines to show the boundaries
 showlines = True
@@ -114,7 +114,7 @@ k3 = sgn2*cmath.sqrt(beta**2 - k0**2*eps3)
 
 #plotting
 xrange = SPPlength
-zrange = wavelength*0.02
+zrange = wavelength*0.2
 steps = 200
 
 x = np.linspace(0., xrange, steps)

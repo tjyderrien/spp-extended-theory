@@ -50,7 +50,7 @@ eps1 = epsCr        #thin film
 # Medium 2: substrate. 
 eps2 = epsBK7       #epsBK7 #environment | substrate
 # Medium 3: environment
-eps3 = 1.+0.j       #environment | substrate
+eps3 = epsAir       #environment | substrate
 # Note: Inverting eps2 and eps3 should have no effect on the possible modes, but only on field amplification. 
 
 t = 100E-9 #thickness of the layer in meters
@@ -62,14 +62,14 @@ t = 100E-9 #thickness of the layer in meters
 #3 (-, +, +) (+, +, +)
 
 #meshes the initial guess area, all numbers are from the space of betas
-x_min = -3E7
-x_max = 3E7
+x_min = -1E10
+x_max = 1E10
 
 y_min = -1E9
 y_max = 1E9
 
-x_steps = 50
-y_steps = 50
+x_steps = 200
+y_steps = 100
 
 #tolerances
 tol_merge = 1E3   #absolute

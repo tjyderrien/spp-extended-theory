@@ -157,7 +157,7 @@ def Ez(x, z):
     elif t/2 > z > -t/2:
         return -(C*np.exp(1.j*beta*x+k1*z) + D*np.exp(1.j*beta*x-k1*z))*beta/(omegaeps0*eps1)
     else:
-        return B*np.exp(1.j*beta*x+k2*z)*beta/(omegaeps0*eps2)
+        return -B*np.exp(1.j*beta*x+k2*z)*beta/(omegaeps0*eps2)
 Hy_vect = np.vectorize(Hy)
 Ex_vect = np.vectorize(Ex)
 Ez_vect = np.vectorize(Ez)

@@ -16,10 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>
 
-# Module libMultilayer explores the SPP theory at a thin film located 
+# Package @libMultilayer explores the SPP theory at a thin film located 
 # between two semi-infinite media. The formal model is presented in 
 # T.J.-Y. Derrien et al, J. Appl. Phys. 116, 074902 (2014) and references 
 # therein.
+
 import matplotlib.pyplot as plt
 import numpy as np
 import cmath
@@ -61,10 +62,10 @@ eps2 = epsBK7       #epsBK7 #environment | substrate
 eps3 = 1.+0.j       #environment | substrate
 # Note: Inverting eps2 and eps3 should have no effect on the possible modes, but only on field amplification. 
 
-t = 300E-9 #thickness of the layer in meters
+t = 30E-9 #thickness of the layer in meters
 k0 = 2.*np.pi/wavelength
 
-betaR = (500000, 600000)
+betaR = (500000, 600000) #What is this? 
 
 #retrieves beta
 beta = betaR[0] + 1.j*betaR[1]
@@ -129,7 +130,7 @@ k2 = sgn1*cmath.sqrt(beta**2 - k0**2*eps2)
 k3 = sgn2*cmath.sqrt(beta**2 - k0**2*eps3)
 
 #plotting
-xrange = wavelength*2.5
+xrange = wavelength*50
 zrange = wavelength*.5
 steps = 200
 

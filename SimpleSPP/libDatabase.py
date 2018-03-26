@@ -1,22 +1,23 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
+
+# Copyright (C) 2013-2017 T. J.-Y. Derrien
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>
+
 ## @package libDatabase
 # Functions to manage the material databases
-
-## Copyright (C) 2013-2017 T. J.-Y. Derrien
-##
-## This program is free software: you can redistribute it and/or modify
-## it under the terms of the GNU General Public License as published by
-## the Free Software Foundation, either version 3 of the License, or
-## (at your option) any later version.
-##
-## This program is distributed in the hope that it will be useful,
-## but WITHOUT ANY WARRANTY; without even the implied warranty of
-## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-## GNU General Public License for more details.
-##
-## You should have received a copy of the GNU General Public License
-## along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 import numpy as np
 from numpy import genfromtxt, loadtxt, chararray
@@ -36,12 +37,18 @@ def CleanStrArray(Material2): #{{{
 #}}}
 #print Material2clean
 
-
+## Exact (but any type) filter for the SPP database using any type of query to compare with the field number <index>. 
+# @param SPPdb: a numpy array of strings | integers | reals | complex
+# @param query: a string | integer | real | complex to compare with. 
+# @param FieldIndex: number of the field of interest #TODO: change for a dictionnary of fields
 def FilterDatabase(SPPdb, query, FieldIndex):
   SPPdbFiltered = np.array(SPPdb[SPPdb[:,FieldIndex]==query,:]) #uses a table of booleans to select
   return SPPdbFiltered
 
-## Filters the SPP database using query and returns a smaller database
+## Filter for the SPP database using a string <query> which should be *contained* in field of nmuber <index>. 
+# @param SPPdb: a numpy array of strings
+# @param query: a string to compare with
+# @param FieldIndex: number of the field of interest #TODO: change for a dictionnary of fields
 def FilterDatabaseContains(SPPdb, query, FieldIndex):
   SPPdbFiltered = SPPdb[np.array(np.core.defchararray.find(SPPdb[:,FieldIndex], query)==0),:]
   return SPPdbFiltered
@@ -51,6 +58,10 @@ def FilterDatabaseContains(SPPdb, query, FieldIndex):
 #
 def FilterDatabaseLowerThan(SPPdb, query, FieldIndex):
   SPPdbFiltered = np.array(SPPdb[SPPdb[:,FieldIndex]<query,:]) #uses a table of booleans to select
+  return SPPdbFiltered
+
+def FilterDatabaseGreaterThan(SPPdb, query, FieldIndex):
+  SPPdbFiltered = np.array(SPPdb[SPPdb[:,FieldIndex]>query,:]) #uses a table of booleans to select
   return SPPdbFiltered
 
 ## Unfold data from database of materials (5 columns)

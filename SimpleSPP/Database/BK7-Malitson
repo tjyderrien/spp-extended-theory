@@ -1,6 +1,6 @@
 # Optical data
 # Material SiO2 BK7 glass
-# Wavelength	n
+# Wavelength (um)	n	k
 # Ref: I. H. Malitson. Interspecimen Comparison of the Refractive Index of Fused Silica, J. Opt. Soc. Am. 55, 1205-1208 (1965)
 0.2100	1.5383576204905	0.00
 0.2450	1.5102724365895	0.00

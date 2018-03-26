@@ -9,7 +9,9 @@ The code is now made of 3 branches.
 
 # Main developers
 
-* T.J.-Y. Derrien: developing theory, programming. 
+* T.J.-Y. Derrien: developing spp and keldysh theory, programming. 
+
+* F. Preucil: programming the multilayer solver
 
 * Y. Levy: LIPSS database contributor.
 
@@ -38,17 +40,17 @@ SPPs can be used with light to enhance local power density, but also to induce L
 
 ## Concept
 
-This code contains optical data for many materials on a large range of wavelengths. These databasis were tabulated from Palik (Handbook of optical constants, Academic Press 1985), and sometimes refractiveindex.info databases. There exists possibility to import optical data using importPalikData.py. 
+This code contains optical data for many materials on a large range of wavelengths. These databasis were tabulated from Palik (Handbook of optical constants, Academic Press 1985), and sometimes refractiveindex.info databases. There exists possibility to import optical data using importPalikData.py. An automatic documentation can be found in the folder ./doc. If not up to date, run <bash generate.sh> (Linux). 
 
 ## Contents
 
-For each of these data, the following theories can be applied. 
+For each (material, wavelength), the following theories can be applied. 
 
-* SPP theory for single interface (coded, validated, multi-material, published), 
+* SPP theory for single interface (coded in Python 2, validated, multi-material, published), 
 
-* SPP theory for multilayer systems: 3 layer model (available with Maple: to be coded in Python), published.
+* SPP theory for multilayer systems: 3 layer model (available with Maple: under developement in Python 3), published.
 
-* SPP theory for rough interfaces: Sipe model (coded, validated), Sipe-Drude model (coded in Python, validated, published by Jörn Bonse in 2005, 2009).
+* SPP theory for rough interfaces: Sipe model (coded in Python 2, validated), Sipe-Drude model (coded in Python 2, validated, published by Jörn Bonse in 2005, 2009).
 
 # Installation 
 
@@ -80,11 +82,9 @@ Most of routines were not tested with Windows, so feel free to address any probl
 
 # How to contribute ?
 
-* Write message in the forum
+* Write message about the encountered problems in the forum
 
 * Develop / correct a part of the program. Please document your contributions using dOyxgen style (see https://www.stack.nl/~dimitri/doxygen/manual/docblocks.html#pythonblocks).
-
-* Point out some mistakes. Suggest corrections. 
 
 * Cite this work if it was useful in your publications.  
 

@@ -1,20 +1,20 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 #-*- coding: utf-8 -*-
 
-## Copyright (C) 2013-2017 T. J.-Y. Derrien
-##
-## This program is free software: you can redistribute it and/or modify
-## it under the terms of the GNU General Public License as published by
-## the Free Software Foundation, either version 3 of the License, or
-## (at your option) any later version.
-##
-## This program is distributed in the hope that it will be useful,
-## but WITHOUT ANY WARRANTY; without even the implied warranty of
-## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-## GNU General Public License for more details.
-##
-## You should have received a copy of the GNU General Public License
-## along with this program.  If not, see <http://www.gnu.org/licenses/>
+# Copyright (C) 2013-2018 T. J.-Y. Derrien
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 ## @package libSPP
 # Module libSPP explores the SPP theory at a single interface between 
@@ -29,7 +29,7 @@ import cmath
 import matplotlib as mp
 import matplotlib.pyplot as plt
 from scipy.interpolate import InterpolatedUnivariateSpline
-from matplotlib import rc
+from matplotlib import rc, font_manager
 # from pylab import *
 from scipy.constants import c, epsilon_0, mu_0, pi, e, m_e, h
 from matplotlib.legend_handler import HandlerLine2D
@@ -43,19 +43,27 @@ from libMaterials import *
 from libMath import *
 
 lengthunit = 1e-9
-eta = 5.0 #assumed precision error on the dielectric permittivity
+eta = 0.1 #assumed precision error on the dielectric permittivity
 UsingTeX=True #TODO: set to False for Windows users
 
 ## 0: all permisive, no verification on SPP excitation condition
 ## 1: use the RegularLIPSScondition, softer than pure SPP excitation condition
 ## 2: Period != 0 is necessary for a material to be listed in results
 ## 3: Extreme level: use ExperimentallyAchievable() to verify possibility of decay depth > optical penetration depth
-LevelOfSPPaccuracy=0
+LevelOfSPPaccuracy=1
 
-# Settings for matplotlib
-#rc('font',**{'family':'sans-serif','sans-serif':['Helvetica'], 'size':'16'})
+# Settings for matplotlib: taken from https://stackoverflow.com/questions/12322738/how-do-i-change-the-axis-tick-font-in-a-matplotlib-plot-when-rendering-using-lat
+sizeOfFont = 18
+FontName='Helvetica' #'cm'
+fontProperties = {'family':'sans-serif','sans-serif':[FontName],
+    'weight' : 'normal', 'size' : sizeOfFont}
+ticks_font = font_manager.FontProperties(family=FontName, style='italic',
+    size=sizeOfFont, weight='normal', stretch='normal')	
+rc('font',**fontProperties)
+#rc('text.latex', preamble=r'\usepackage{cmbright}')
+#rc('font',**{'family':'sans-serif','sans-serif':['Arial'], 'size':'18'})
 ## for Palatino and other serif fonts use:
-rc('font', **{'family':'serif', 'serif':['Palatino'], 'size':'18'})
+#rc('font', **{'family':'serif', 'serif':['Palatino'], 'size':'18'})
 rc('text', usetex=UsingTeX)
 mp.rcParams['legend.numpoints'] = 1
 
@@ -70,7 +78,6 @@ mp.rcParams['legend.numpoints'] = 1
 # @param wavelength (float), 
 # @param eps1 (complex), 
 # @param eps2 (complex)
-#
 def betaSPP(wavelength, eps1, eps2):#{{{
 
     omega = 2.0*pi*c/wavelength
@@ -317,7 +324,12 @@ def deltaLspp(wavelength, eps1, eps2, deps1r, deps1c, deps2r, deps2c): #{{{
 
 ## Computes the SPP decay depth in one slab
 def DecayDepth(kzSPP):#{{{
-  return 2e0*pi/kzSPP.real
+  if(kzSPP.real != 0): 
+    result=2e0*pi/kzSPP.real
+  else: 
+    result = -1.
+    #print "Singular case for DecayDepth."
+  return result
 #}}}
 
 ## Computes the complex wavenumber in direction of incident laser, perp. to SPP propagation. 
@@ -461,7 +473,9 @@ def SPPactiveInterfaces(dbarray, comment):#{{{
         ## 3: Extreme level: use ExperimentallyAchievable() to verify possibility of decay depth > optical penetration depth
         if(LevelOfSPPaccuracy == 1):
           Condition = (SPPdecayLength < 20000e0) #and (abs(eps2.real) < eps2.imag)
-        elif (LevelOfSPPaccuracy >= 2):
+        elif (LevelOfSPPaccuracy == 2):
+          Condition = (Period!=0)
+        elif (LevelOfSPPaccuracy >= 3):
           Condition = ExperimentalAchievable and (Period!=0)
         else: #super permissive case
           Condition = True

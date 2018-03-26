@@ -1,20 +1,20 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
 
-## Copyright (C) 2013-2017 T. J.-Y. Derrien
-##
-## This program is free software: you can redistribute it and/or modify
-## it under the terms of the GNU General Public License as published by
-## the Free Software Foundation, either version 3 of the License, or
-## (at your option) any later version.
-##
-## This program is distributed in the hope that it will be useful,
-## but WITHOUT ANY WARRANTY; without even the implied warranty of
-## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-## GNU General Public License for more details.
-##
-## You should have received a copy of the GNU General Public License
-## along with this program.  If not, see <http://www.gnu.org/licenses/>
+# Copyright (C) 2013-2017 T. J.-Y. Derrien
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 ## @package plotMultimaterials
 ## Generate plots for many materials contained into a given database.
@@ -213,8 +213,8 @@ else:
 	CS = plt.contourf(eps2r, eps2c, Period, levels=levels, cmap=plt.cm.RdBu_r)
 #}
 	
-plt.xlabel(r'$Re(\varepsilon)$')
-plt.ylabel(r'$Im(\varepsilon)$')
+plt.xlabel(r'Re($\varepsilon$)')
+plt.ylabel(r'Im($\varepsilon$)')
 
 # adding the dots for materials
 if(reverse): #{
@@ -244,8 +244,9 @@ else:
 	CS = plt.contourf(eps2r, eps2c, deltaPeriod, levels=levels, cmap=plt.cm.Blues)
 #}
 	
-plt.xlabel(r'$Re(\varepsilon)$')
-plt.ylabel(r'$Im(\varepsilon)$')
+plt.xlabel(r'Re($\varepsilon$)')
+plt.ylabel(r'Im($\varepsilon$)')
+
 
 # adding the dots for materials
 if(reverse): #{
@@ -281,8 +282,8 @@ else:
 	CS = plt.contourf(eps2r, eps2c, LsppTable, levels=levels, cmap=plt.cm.Blues)
 #}
 	
-plt.xlabel(r'$Re(\varepsilon)$')
-plt.ylabel(r'$Im(\varepsilon)$')
+plt.xlabel(r'Re($\varepsilon$)')
+plt.ylabel(r'Im($\varepsilon$)')
 
 # adding the materials information !
 if(reverse): #{
@@ -295,9 +296,11 @@ else:
 #plt.clabel(CS, inline=1, fontsize=20)
 #plt.legend(pos=1)
 plt.colorbar(CS)
-plt.title(r'SPP mean-free-path $L_{SPP}$ ($\mu$m), $\lambda=$'+niceWavelength+' nm.')
-plt.savefig('Lspp2d'+niceWavelength+'.eps')
-plt.savefig('Lspp2d'+niceWavelength+'.png')
+plt.title(r'SPP mean-free-path L$_\textrm{\large{} SPP}$ ($\mu$m), $\lambda=$'+niceWavelength+' nm')
+plt.savefig('Lspp2d'+niceWavelength+'.eps', format='eps')
+plt.savefig('Lspp2d'+niceWavelength+'.png', format='png')
+plt.savefig('Lspp2d'+niceWavelength+'.svg', format='svg')
+plt.savefig('Lspp2d'+niceWavelength+'.pdf', format='pdf')
 #plt.show()
 
 ####### "Plotting the Lspp uncertainty due to dispersion over dielectric permittivity."
@@ -315,8 +318,8 @@ else:
 	CS = plt.contourf(eps2r, eps2c, deltaLsppTable, levels=levels, cmap=plt.cm.Blues)
 #}
 	
-plt.xlabel(r'$Re(\varepsilon)$')
-plt.ylabel(r'$Im(\varepsilon)$')
+plt.xlabel(r'Re($\varepsilon$)')
+plt.ylabel(r'Im($\varepsilon$)')
 
 # adding the materials information !
 if(reverse): #{
@@ -332,4 +335,4 @@ plt.colorbar(CS)
 plt.title(r'Fluctuations $\delta L_{SPP}$ ($\mu$m), $\lambda=$'+niceWavelength+' nm.')
 plt.savefig('deltaLspp'+niceWavelength+'.eps')
 plt.savefig('deltaLspp'+niceWavelength+'.png')
-plt.show()
+#plt.show()

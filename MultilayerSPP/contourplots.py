@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>
 
-# Module libMultilayer explores the SPP theory at a thin film located 
+# Package @libMultilayer explores the SPP theory at a thin film located 
 # between two semi-infinite media. The formal model is presented in 
 # T.J.-Y. Derrien et al, J. Appl. Phys. 116, 074902 (2014) and references 
 # therein.
@@ -26,8 +26,8 @@ import cmath, pickle
 from itertools import product
 from scipy.constants import c, epsilon_0
 
-branch_index = 1 #3
-root_index = 0
+branch_index = 3
+root_index = 1
 
 #two black lines to show the boundaries
 showlines = True
@@ -114,7 +114,7 @@ k3 = sgn2*cmath.sqrt(beta**2 - k0**2*eps3)
 
 #plotting
 xrange = SPPlength
-zrange = wavelength*0.02
+zrange = wavelength*0.2
 steps = 200
 
 x = np.linspace(0., xrange, steps)

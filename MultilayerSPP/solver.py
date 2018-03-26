@@ -53,7 +53,7 @@ eps2 = epsBK7       #epsBK7 #environment | substrate
 eps3 = 1.+0.j       #environment | substrate
 # Note: Inverting eps2 and eps3 should have no effect on the possible modes, but only on field amplification. 
 
-t = 100E-9 #thickness of the layer in meters
+t = 25E-9 #thickness of the layer in meters
 
 #branch indices
 #0 (-, -, -) (+, -, -)
@@ -104,6 +104,7 @@ def cntr(inpt):
         py += pt[1]
     return (px/ln, py/ln)
 
+## Plot the hyperbola
 def plothyp(eps, col):
     radius = k0*k0*eps.imag/2.
     domain = np.linspace(xmi, min(xma, cmath.sqrt(eps*k0*k0).real), num=1000)

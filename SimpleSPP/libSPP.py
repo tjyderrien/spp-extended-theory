@@ -323,13 +323,13 @@ def deltaLspp(wavelength, eps1, eps2, deps1r, deps1c, deps2r, deps2c): #{{{
 
 
 ## Computes the SPP decay depth in one slab
-def DecayDepth(kzSPP):#{{{
+def DecayDepth(kzSPP):#{{{ #trying with module instead of real part
   if(kzSPP.real != 0): 
-    result=2e0*pi/kzSPP.real
-  else: 
-    result = -1.
-    #print "Singular case for DecayDepth."
-  return result
+      kzSPPnorm=np.sqrt(kzSPP.real**2 + kzSPP.imag**2)
+  else:
+      result = -1
+  return 1e0/kzSPPnorm
+  #return 2e0*pi/kzSPP.real
 #}}}
 
 ## Computes the complex wavenumber in direction of incident laser, perp. to SPP propagation. 

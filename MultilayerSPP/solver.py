@@ -28,6 +28,8 @@ from scipy.optimize import root
 from itertools import product
 from time import time
 
+from libMaterials import *
+
 #to show info
 showinfo = True
 
@@ -36,24 +38,31 @@ wavelength = 1026e-9 #355e-9 #1030E-9 #1026
 
 epsTibare   = -6.206969+25.2j #800 nm
 epsTiO2bare = 7.7841+0.j      #800 nm
+
 epsCr       = -0.672122310000001+24.8657476j #-0.67+24.87j    #1026 nm
+epsCrO2     = 1.5093+6.0676j #1 um [Dostovalov Opex 2018]
+#epsCr2O3    = 4.9713+0.1784j  #1 um [JDT Kruschwitz et al, Appl. Opt. 1997]
+epsCr2O3    = 4.41+0.j       #1 um [Dostovalov Opex 2018]
+
 epsBK7      = 2.10277365777   #1026 nm
-epsCr2O3    = 4.9713+0.1784j  #1 um [JDT Kruschwitz et al, Appl. Opt. 1997]
 epsSi       = 12.8159503769+0.0114635303918j #1026 nm, Palik
 epsAir      = 1.+0.j          #air
 
 #epsCu       = -46.6046581932 + 4.7188669976j #1030 nm
 epsCu       = -1.9937293241+4.9290716854j     #355  nm
 
+fractionOfCrO2 = 0.5
+t = 80E-9 #thickness of the layer in meters
+
 # Medium 1: thin film. 
-eps1 = epsCr        #thin film
+eps1 = MaxwellGarnett2(epsCr, epsCrO2, fractionOfCrO2)
+#eps1 = MaxwellGarnett3(epsCr, epsCrO2, epsCr2O3, fraction) #TODO: develop Maxwell-Garnett3 in libMaterials.py. 
 # Medium 2: substrate. 
 eps2 = epsBK7       #epsBK7 #environment | substrate
 # Medium 3: environment
 eps3 = epsAir       #environment | substrate
 # Note: Inverting eps2 and eps3 should have no effect on the possible modes, but only on field amplification. 
 
-t = 25E-9 #thickness of the layer in meters
 
 #branch indices
 #0 (-, -, -) (+, -, -)

@@ -77,8 +77,8 @@ x_max = 1E10
 y_min = -1E9
 y_max = 1E9
 
-x_steps = 200
-y_steps = 100
+x_steps = 40
+y_steps = 40
 
 #tolerances
 tol_merge = 1E3   #absolute

@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2013-2017 T. J.-Y. Derrien
+# Copyright (C) 2013-2018 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -54,57 +54,61 @@ from libSipe import *
 #from plotGraph import *
 
 Header="[plotSipe.py] "
+numberlevels = 100 #for the final 2D plot
 
 
-#==== Attempting a 1D plot
-# Known quantities
-theta = 0e0 #Single value here, but we can vectorize functions easily later. 
-f = 0.1e0 #Filling factor: taken from Bonse et al, JAP (2009)
-s = 0.4e0 #Shape factor: taken from Bonse et al, JAP (2009)
-#wavelength = 800e-9
-#epsilon = 12.80259+0.00109j
-#epsilon = -97.593456+25.2698472743j
+## Compute efficacy factor for a table of filling factors. 
+#@param theta: angle of incidence (rad) 
+#@param f: Filling factor
+#@param s: Shape factor
+def plotSipe1D_sectionX(wavelength, epsilon, f=0.1e0, s=0.4e0, theta=0e0): #{{{
+    # Meshes for solution
+    #kappax = np.arange(0, 4, 0.1)
+    #kappay = np.arange(0, 4, 0.1)
+    #kappa = np.array([wavelength * 1, wavelength * 0]); #test values
+    #kappax = 4e0 ; kappay = 0e0*kappax; #test values
+    kappa_max = 4E0
+    kappa_min = 0.1E0
+    k_precision = 1000 #NOTE: be generous here, otherwise peaks will not be well resolved. 
+    #for kappax in meshkappa:
+    #ftab = np.arange(0, 1, 0.1)
+    print "Info: Generating the mesh..."
+    kapparange = np.arange(kappa_min,kappa_max,(kappa_max-kappa_min)/k_precision)
+    #for wavelength in wavelengths:
+    #for f in ftab:
+    idtab = 0
+    etaSresult = np.zeros(kapparange.shape)
+    etaPresult = np.zeros(kapparange.shape)
+    kappax = 0e0
+    for kappay in kapparange:
+        ## Defining simple quantities for Sipe model
+        kappa = np.array([kappax, kappay])
+        kappai = np.array([-cmath.sin(theta), 0.])
+        kappap = kappai + kappa; kappam = kappai - kappa
 
-# Meshes for solution
-#kappax = np.arange(0, 4, 0.1)
-#kappay = np.arange(0, 4, 0.1)
-#kappa = np.array([wavelength * 1, wavelength * 0]); #test values
-kappax = 4e0 ; kappay = 0e0*kappax; #test values
-numberlevels = 12 #for the final 2D plot
-#for kappax in meshkappa:
+        #print "kappax = "+str(kappax)
+        #print idtab
+        etaPresult[idtab] = etap(theta, f, s, epsilon, kappa, kappap, kappam)
+        etaSresult[idtab] = etas(theta, f, s, epsilon, kappa, kappap, kappam)
+        #print etaresult[idtab]
+        #print "eta = "+str(etaresult)
+        idtab = idtab+1
 
-#ftab = np.arange(0, 1, 0.1)
-print "Info: Generating the mesh..."
-kapparange = np.arange(0.1,2.,0.1)
-#for wavelength in wavelengths
-#for f in ftab:
-#idtab = 0
-#etaresult = np.zeros(kapparange.shape)
-#kappax = 0e0
-#for kappay in kapparange:
-  
-  ### Defining simple quantities for Sipe model
-  #kappa = np.array([kappax, kappay])
-  #kappai = np.array([-cmath.sin(theta), 0])
-  #kappap = kappai + kappa; kappam = kappai - kappa
+    #=========== Make a 1D plot
 
-  ##print "kappax = "+str(kappax)
-  ##print idtab
-  #etaresult[idtab] = etas(theta, f, s, epsilon, kappa, kappap, kappam)
-  ##print etaresult[idtab]
-  ##print "eta = "+str(etaresult)
-  #idtab = idtab+1
-
-##=========== Make a 1D plot
-
-#plt.figure()
-#plt.xlabel(r'$\kappa_x$')
-#plt.ylabel(r'$\eta$')
-#print kapparange.shape, etaresult.shape
-#plt.plot(kapparange, etaresult, '-', label='Sipe')
-#print etaresult
-#plt.savefig('SipeEtaKappaX.eps')
-##exit()
+    plt.figure()
+    plt.xlabel(r'$\kappa_x$')
+    plt.ylabel(r'$\eta$')
+    print kapparange.shape, etaSresult.shape
+    plt.plot(kapparange, etaPresult, '-', label=r'$\eta_P$')
+    plt.plot(kapparange, etaSresult, '-', label=r'$\eta_S$')
+    print etaSresult
+    plt.grid()
+    plt.legend()
+    plt.savefig('SipeEtaKappaX.eps')
+    plt.show()
+    #exit()
+#}}}
 
 #=========== 2D plot
 
@@ -115,19 +119,12 @@ query = 'Air'
 #query2='SiO2 (Palik)'
 print "Caution: the values of queries must be exactly the one of MaterialDatabase.csv."
 
-wavelength = 1026.0
-select = str(int(wavelength))
-request = select+".0"
-unit = 1E-9
-wavelength = wavelength * unit
-print "Wavelength = "+str(wavelength/unit)+" nm."
-
 ## Prepares the usual SipeEfficiencyFactor(kx, ky) for a specific material query2 immersed in Air. 
-# @param wavelength: photon energy given in SI (meters)
+# @param wavelength: photon energy given in SI (m)
 # @param query2: <string> linking to a material given in ../MaterialDatabase.csv.
 # NOTE: Sipe model is limited to air-material interface. Cannot be used with water-material for example. 
 #       For more advanced combinations of materials, see [T.J.-Y. Derrien et al, Journal of Optics 18, 115007 (2016)]
-def plotSipeFromDatabase(select, query2, k_precision=5e-2, query='Air'): #{{{
+def plotSipeFromDatabase(select, query2, wavelength, k_precision=5e-2, query='Air', theta=0, f=0.1, s=0.4): #{{{
   ## Generate the database
   SPPdb = GenerateDatabase() #Generate from MaterialDatabase.csv
   print "SPP database has "+str(len(SPPdb))+" entries."
@@ -183,8 +180,8 @@ def plotSipeFromDatabase(select, query2, k_precision=5e-2, query='Air'): #{{{
   epsilon2 = np.add(eps2rM,np.multiply(1e0j, eps2cM))
     
   print "Mesh generation..."
-  k_precision = 1e-2
-  SipeRanges = 2e0
+  #k_precision = 1e-2
+  SipeRanges = 4e0
   kx = np.arange(-SipeRanges,SipeRanges,k_precision)
   ky = np.arange(-SipeRanges,SipeRanges,k_precision)
   kxx, kyy = np.meshgrid(ky, kx)
@@ -218,7 +215,7 @@ def plotSipeFromDatabase(select, query2, k_precision=5e-2, query='Air'): #{{{
   print Header+"Plot the graph for one given dielectric permittivity."
   plt.figure()
   levels = np.arange(0,maximum,maximum/numberlevels)
-  CS = plt.contourf(kxx, kyy, etaSipe, levels=levels, cmap=plt.cm.Blues)
+  CS = plt.contourf(kxx, kyy, etaSipe, levels=levels, cmap=plt.cm.Greys) #plt.cm.Blues
   plt.title(query+"/"+query2+r": $\lambda=$"+str(int(wavelength/unit))+" nm	")
   plt.xlabel(r'$\kappa_x$')
   plt.ylabel(r'$\kappa_y$')
@@ -230,13 +227,13 @@ def plotSipeFromDatabase(select, query2, k_precision=5e-2, query='Air'): #{{{
 #}}}
 
 ## Prepare a generalized plot2d of the Sipe model for any material at equilibrium. 
-def plotGenericSipeMaps(): #{{{
+def plotGenericSipeMaps(k_precision): #{{{
   print Header+"Plot the kappaX for which maximum efficiency is found as function of dielectric permittivity. "
   # This could help to localize problems and limitations of the Sipe theory. 
 
   # Generating kappaX, kappaY meshes. 
   print "Mesh generation..."
-  k_precision = 0.5
+  #k_precision = 0.5
   SipeRanges = 2e0
   #kx = np.arange(0.,SipeRanges,k_precision)
   #ky = np.arange(0.,SipeRanges,k_precision)
@@ -314,7 +311,32 @@ def plotGenericSipeMaps(): #{{{
   return 0
 #}}}
 
+wavelength = 800.0 #1064.0
+select = str(int(wavelength))
+request = select+".0"
+unit = 1E-9
+wavelength = wavelength * unit
+print "Wavelength = "+str(wavelength/unit)+" nm."
+k_precision = 0.5E-2
+
+## VALIDATION CASES
+
+# Bonse 2005 provides a 1D plot that can be compared quantitatively. 
+# Bonse, J.; Munz, M. & Sturm, H. Structure formation on the surface of indium phosphide irradiated by femtosecond laser pulses J. Appl. Phys., 2005, 97, 013538
+#plotSipe1D_sectionX(wavelength, 11.9296534741+1.4568728233j) #c-InP at 800 nm [Bonse2005]
+#plotSipe1D_sectionX(wavelength, 12.21+1.4j) #c-InP at 800 nm [Bonse2005] NOTE: optical refractive index given in caption is not accurate, although a reference to Palik has been indicated. Data from pure Palik look to match better with the results provided in the article. 
+#plotSipe1D_sectionX(wavelength, 14.4+1.52j)  #a-InP at 800 nm [Bonse2005]
+
+plotSipeFromDatabase(request, "InP (Palik)", wavelength, 20.*k_precision)
+
 #executing typical Sipe figure (like in [Bonse et al, Journal of Applied Physics (2009)]
-#plotSipeFromDatabase(request, "Cr (Palik)", 0.5E-2) 
-plotSipeFromDatabase(request, "Cr (Johnson 1974)", 0.5E-2) 
+#plotSipeFromDatabase(request, "Si (Palik)", wavelength, 10.*k_precision)
+# Results are qualitatively okay', but it remains difficult to be sure of the complete repetition of the obtained ones. 
+
+# Repeat figures from Colombier et al
+
+# This paper provides Sipe maps computed by FDTD, but no amplitude is given on the efficacy factor. 
+# Zhang, H.; Colombier, J.-P.; Li, C.; Faure, N.; Cheng, G. & Stoian, R. Coherence in ultrafast laser-induced periodic surface structures Physical Review B, 2015, 92. 
+
+#plotSipeFromDatabase(request, "Cr (Johnson 1974)", k_precision)
 #plotGenericSipeMaps() #map prepared for Stephane Gräf on generalized Sipe model (2018)

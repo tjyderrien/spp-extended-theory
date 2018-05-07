@@ -69,11 +69,11 @@ def plotSipe1D_sectionX(wavelength, epsilon, f=0.1e0, s=0.4e0, theta=0e0): #{{{
     #kappax = 4e0 ; kappay = 0e0*kappax; #test values
     kappa_max = 4E0
     kappa_min = 0.1E0
-    k_precision = 1000 #NOTE: be generous here, otherwise peaks will not be well resolved. 
+    numberofkpoints = 1000 #NOTE: be generous here, otherwise peaks will not be well resolved. 
     #for kappax in meshkappa:
     #ftab = np.arange(0, 1, 0.1)
     print "Info: Generating the mesh..."
-    kapparange = np.arange(kappa_min,kappa_max,(kappa_max-kappa_min)/k_precision)
+    kapparange = np.arange(kappa_min,kappa_max,(kappa_max-kappa_min)/numberofkpoints)
     #for wavelength in wavelengths:
     #for f in ftab:
     idtab = 0
@@ -112,19 +112,19 @@ def plotSipe1D_sectionX(wavelength, epsilon, f=0.1e0, s=0.4e0, theta=0e0): #{{{
 
 #=========== 2D plot
 
-query = 'Air'
 #query2= 'InP (Bonse 2005)'
 #query2= 'Mo (Ordal 1988)'
 #query2= 'Cu (Palik)'
 #query2='SiO2 (Palik)'
 print "Caution: the values of queries must be exactly the one of MaterialDatabase.csv."
 
-## Prepares the usual SipeEfficiencyFactor(kx, ky) for a specific material query2 immersed in Air. 
+## Prepares the classical SipeEfficiencyFactor(kx, ky) for a specific material query2 immersed in Air. 
 # @param wavelength: photon energy given in SI (m)
 # @param query2: <string> linking to a material given in ../MaterialDatabase.csv.
+# @param numberofkpoints: be generous here. At least 100 points are required per dimension. 
 # NOTE: Sipe model is limited to air-material interface. Cannot be used with water-material for example. 
 #       For more advanced combinations of materials, see [T.J.-Y. Derrien et al, Journal of Optics 18, 115007 (2016)]
-def plotSipeFromDatabase(select, query2, wavelength, k_precision=5e-2, query='Air', theta=0, f=0.1, s=0.4): #{{{
+def plotSipeFromDatabase(select, query2, wavelength, numberofkpoints=100, query='Air', theta=0, f=0.1, s=0.4): #{{{
   ## Generate the database
   SPPdb = GenerateDatabase() #Generate from MaterialDatabase.csv
   print "SPP database has "+str(len(SPPdb))+" entries."
@@ -136,7 +136,6 @@ def plotSipeFromDatabase(select, query2, wavelength, k_precision=5e-2, query='Ai
   SPPdb = FilterDatabase(SPPdb, query, 0)
   print "Filter on materials: SPP database has now "+str(len(SPPdb))+" entries."
 
-  
   # Filter database on materials
   try: 
     title = query2
@@ -180,10 +179,10 @@ def plotSipeFromDatabase(select, query2, wavelength, k_precision=5e-2, query='Ai
   epsilon2 = np.add(eps2rM,np.multiply(1e0j, eps2cM))
     
   print "Mesh generation..."
-  #k_precision = 1e-2
+  
   SipeRanges = 4e0
-  kx = np.arange(-SipeRanges,SipeRanges,k_precision)
-  ky = np.arange(-SipeRanges,SipeRanges,k_precision)
+  kx = np.arange(-SipeRanges,SipeRanges,(2.*SipeRanges)/numberofkpoints)
+  ky = np.arange(-SipeRanges,SipeRanges,(2.*SipeRanges)/numberofkpoints)
   kxx, kyy = np.meshgrid(ky, kx)
 
   # calculating Sipe efficiency for many materials
@@ -196,7 +195,9 @@ def plotSipeFromDatabase(select, query2, wavelength, k_precision=5e-2, query='Ai
   materialIndex = 0
   print "Preparing 2D figure for material "+str(Material2[materialIndex])
   print epsilon2[materialIndex]
-
+  matrixsize = kx.size*ky.size
+  print Header+"Size: "+str(matrixsize)
+  index = 0
   for m in np.arange(0,(kx.size),1):
 	  #idy=0
 	  for n in np.arange(0,ky.size,1):
@@ -206,8 +207,8 @@ def plotSipeFromDatabase(select, query2, wavelength, k_precision=5e-2, query='Ai
 		  kappap = kappai + kappa; kappam = kappai - kappa
 		  etaSipe[m,n] = etap(theta, f, s, epsilon2[materialIndex], kappa, kappap, kappam)
 		  #idy=idy+1
-	  #idx=idx+1	
-
+		  index = index + 1
+		  print Header+"** Progress: "+str(round(float(index)/float(matrixsize)*100.))+" percents."
   print etaSipe
 
   maximum = np.amax(etaSipe)
@@ -317,7 +318,7 @@ request = select+".0"
 unit = 1E-9
 wavelength = wavelength * unit
 print "Wavelength = "+str(wavelength/unit)+" nm."
-k_precision = 0.5E-2
+kpointnumber = 1000
 
 ## VALIDATION CASES
 
@@ -327,10 +328,10 @@ k_precision = 0.5E-2
 #plotSipe1D_sectionX(wavelength, 12.21+1.4j) #c-InP at 800 nm [Bonse2005] NOTE: optical refractive index given in caption is not accurate, although a reference to Palik has been indicated. Data from pure Palik look to match better with the results provided in the article. 
 #plotSipe1D_sectionX(wavelength, 14.4+1.52j)  #a-InP at 800 nm [Bonse2005]
 
-plotSipeFromDatabase(request, "InP (Palik)", wavelength, 20.*k_precision)
+plotSipeFromDatabase(request, "InP (Palik)", wavelength, kpointnumber)
 
 #executing typical Sipe figure (like in [Bonse et al, Journal of Applied Physics (2009)]
-#plotSipeFromDatabase(request, "Si (Palik)", wavelength, 10.*k_precision)
+#plotSipeFromDatabase(request, "Si (Palik)", wavelength, kpointnumber)
 # Results are qualitatively okay', but it remains difficult to be sure of the complete repetition of the obtained ones. 
 
 # Repeat figures from Colombier et al
@@ -338,5 +339,5 @@ plotSipeFromDatabase(request, "InP (Palik)", wavelength, 20.*k_precision)
 # This paper provides Sipe maps computed by FDTD, but no amplitude is given on the efficacy factor. 
 # Zhang, H.; Colombier, J.-P.; Li, C.; Faure, N.; Cheng, G. & Stoian, R. Coherence in ultrafast laser-induced periodic surface structures Physical Review B, 2015, 92. 
 
-#plotSipeFromDatabase(request, "Cr (Johnson 1974)", k_precision)
+#plotSipeFromDatabase(request, "Cr (Johnson 1974)", kpointnumber)
 #plotGenericSipeMaps() #map prepared for Stephane Gräf on generalized Sipe model (2018)

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2017 F. Preucil, T.J.-Y. Derrien
+# Copyright (C) 2018 F. Preucil, T.J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,40 +21,38 @@
 # between two semi-infinite media. The formal model is presented in 
 # T.J.-Y. Derrien et al, J. Appl. Phys. 116, 074902 (2014) and references 
 # therein. 
-
-import cmath
+import math, cmath
 import numpy as np
-
 from scipy.optimize import root
-from numpy.linalg import norm
 from itertools import product
 
-## Function f(x,y)=0 to solve in the R^2 space. 
-# f(x,y) = 0 is an equation defined in complex space. 
-# All parameters can be complex-valued. 
-# See: T.J.-Y. Derrien et al, J. Appl. Phys. 116, 074902 (2014) and references 
-# therein. 
-def func(betaR, eps1, eps2, eps3, k0, t, sgn1, sgn2, sgn3):
-    beta = betaR[0] + betaR[1]*1j
-    k1 = sgn1*cmath.sqrt(beta*beta - k0*k0*eps1)
-    k2 = sgn2*cmath.sqrt(beta*beta - k0*k0*eps2)
-    k3 = sgn3*cmath.sqrt(beta*beta - k0*k0*eps3)
+def func(betaR, eps1, eps2, eps3, k0, t, sgn1, sgn2):
+    beta = betaR[0] + betaR[1]*1.j
+    kappa1 = cmath.sqrt(beta**2 - ke1)/eps1
+    kappa2 = sgn1*cmath.sqrt(beta**2 - ke2)/eps2
+    kappa3 = sgn2*cmath.sqrt(beta**2 - ke3)/eps3
     try:
-        out = (k1/eps1 - k2/eps2) * (k1/eps1 - k3/eps3) * cmath.exp(-2*k1*t) - (k1/eps1 + k2/eps2) * (k1/eps1 + k3/eps3)
+        value = (kappa1-kappa2)*(kappa1-kappa3)*cmath.exp(-2*kappa1*eps1*t)-(kappa1+kappa2)*(kappa1+kappa3)
     except:
-        out = 1e99
-    return [out.real, out.imag]
+        value = 1E99
+    return (value.real, value.imag)
 
-## Finds many (all?) roots of the "func" function using two numerical solvers in RxR. 
-# The solver is adapted to the function "func" and its mathematical dependencies. 
-# WARNING: This routine cannot be used with another equation without modification. 
-# In present state, the solver investigates the 8 possible branches of the thin film equation 
-# for Surface Plasmon Polaritons. See T.J.-Y. Derrien et al, J. Appl. Phys. 116, 074902 (2014) and references 
-# therein. 
+def norm(vec):
+    return math.sqrt(vec[0]*vec[0] + vec[1]*vec[1])
+
+def cntr(inpt):
+    px = 0
+    py = 0
+    ln = len(inpt)
+    for pt in inpt:
+        px += pt[0]
+        py += pt[1]
+    return (px/ln, py/ln)
+
 # @param eps1: Dielectric permittivity of the thin film
 # @param eps2: Dielectric permittivity of the half-plane below the thin film. 
 # @param eps3: Dielectric permittivity of the half-plane above the thin film. Source light is supposed to come from this direction. 
-# @param k0: wavenumber of the source light (SI units). 
+# @param wavelength: wavelength of the source light (SI units). 
 # @param t: thickness of the film
 # @param x_min: lower boundary of Re(roots)
 # @param x_max: higher boundary of Re(roots)
@@ -63,68 +61,93 @@ def func(betaR, eps1, eps2, eps3, k0, t, sgn1, sgn2, sgn3):
 # @param x_steps: number of steps used to mesh the Re(roots) space. 
 # @param y_steps: number of steps used to mesh the Im(roots) space. 
 # @param tol_merge: tolerance to merge the identified solutions. 
-def findroots(eps1, eps2, eps3, k0, t, x_min, x_max, y_min, y_max, x_steps, y_steps, tol_merge):
-    broots = []
-    for sgn1, sgn2, sgn3 in product((-1,1), (-1,1), (-1,1)):
+def findroots(eps1, eps2, eps3, wavelength, t, x_min, x_max, y_min, y_max, x_steps, y_steps):
+    global k0, ke1, ke2, ke3
+    k0 = 2.*np.pi/wavelength
+    ke1 = (k0**2)*eps1
+    ke2 = (k0**2)*eps2
+    ke3 = (k0**2)*eps3
+
+    tol_merge = 1E3
+    branches = []
+    for sgn1, sgn2 in product((-1,1), (-1,1)):
         roots = []
         unique = []
         for x in np.linspace(x_min, x_max, num=x_steps):
-            for y in np.linspace(y_min, y_max, num=y_steps):                                                #take an initial guess [x, y] from within the specified grid, x_steps and y_steps determine the grid density
-                nrt = root(func, [x, y], args=(eps1, eps2, eps3, k0, t, sgn1, sgn2, sgn3), method='hybr')   #uses the MINPACK method: http://www.netlib.org/minpack/
-                if nrt.success:                                                                             #if it converges, add it to the list of roots
+            for y in np.linspace(y_min, y_max, num=y_steps):
+                nrt = root(func, (x, y), args=(eps1, eps2, eps3, k0, t, sgn1, sgn2), method='hybr')
+                if nrt.success:
                     roots.append(nrt.x)
 
         ln = len(roots)
-        while ln > 0:                                                                                       #this part should remove duplicate roots (considering tolerance tol_merge)
-            center = roots[0]                                                                               #take the first element of the list and put it in 'center'
+        while ln > 0:
+            center = roots[0]
             aux = [center]
             aux2 = []
-            for rt in roots[1:]:                                                                            #go thru the rest of roots
-                if norm(rt - center) < tol_merge:                                                              #if the current root 'rt' is sufficiently near center, add it to the new list of similar roots 'aux'
+            for rt in roots[1:]:
+                if norm(rt-center) < tol_merge:
                     aux.append(rt)
-                    center = np.mean(aux, axis = 0)                                                         #update 'center' to include the new root, 'center' always lies in the middle
+                    center = cntr(aux)
+                elif norm(rt+center) < tol_merge:
+                    aux.append(-rt)
+                    center = cntr(aux)
                 else:
                     aux2.append(rt)
-            if len(aux) > 2:
-                unique.append(center)                                                                       #'unique' contains separated roots
-            roots = list(aux2)                                                                              #continue the algorithm with the rest
+            if len(aux) > 4: #merging criterion
+                if center[0] > 0:
+                    unique.append(center)
+                else:
+                    unique.append([-center[0], -center[1]])
+            roots = list(aux2)
             ln = len(roots)
 
-        broots.append(unique)
-    return broots
-findroots = np.vectorize(findroots)
+##        valid = []
+##        start = time()
+##        for rt in unique:
+##            beta = rt[0] + 1.j*rt[1]
+##            k1 = cmath.sqrt(beta**2 - ke1)
+##            k2 = sgn1*cmath.sqrt(beta**2 - ke2)
+##            k3 = sgn2*cmath.sqrt(beta**2 - ke3)
+##            C = cmath.exp((-k1-k3)*t/2)*(k1*eps3-k3*eps1)/(2*k1*eps3)
+##            D = cmath.exp((k1-k3)*t/2)*(k1*eps3+k3*eps1)/(2*k1*eps3)
+##            B1 = C*cmath.exp((k2-k1)*t/2) + D*cmath.exp((k2+k1)*t/2)
+##            B2 = (C*cmath.exp((k2-k1)*t/2) - D*cmath.exp((k2+k1)*t/2))*(k1*eps2)/(k2*eps1)
+##            if abs(1 - abs(B2/B1)) < tol_valid:
+##                valid.append(rt)
+##        prnt('Total (validated): %d' % len(valid))
+
+##        print()
+        branches.append(unique)
+
+    outs = []
+    for branch in branches:
+        maxy = 0
+        maxx = 0
+        for rt in branch:
+            xi = 1E6*2.*np.pi/rt[0]
+            yi = 1E9*.5/rt[1]
+            if yi > maxy:
+                maxy = yi
+                maxx = xi
+        outs.append([maxx, maxy])
+    return outs
+
+#end of algorithm
 
 #Usage:
 #
 #   findroots(eps1, eps2, eps3,
-#             k0, t,
+#             wavelength, t,
 #             x_min, x_max,       }
 #             y_min, y_max,       } mesh parameters
-#             x_steps, y_steps,   }
-#             tol_merge)
+#             x_steps, y_steps}   }
 #
-#returns a list of branches, each branch is a list of roots, each root is a 1D numpy array containing two values, first value = Re(beta), second value = Im(beta)
 
 #Example:
 roots = findroots(-1+1j, 1, 1,
                   1, 1,
-                  -10, 10,
-                  -10, 10,
-                  5, 5,
-                  .0001)
+                  -1E10, 1E10,
+                  -1E9, 1E9,
+                  30, 30)
 
-print(roots) #list of arrays
-#print(roots[0])     #prints roots belonging to the zeroth branch (-, -, -)
-#print(roots[7][0])  #prints the first root from the last branch (+, +, +)
-
-#List of branch indices:
-#   0 (-, -, -)
-#   1 (-, -, +)
-#   2 (-, +, -)
-#   3 (-, +, +)
-#   4 (+, -, -)
-#   5 (+, -, +)
-#   6 (+, +, -)
-#   7 (+, +, +)
-
-# Attempt to vectorize the solver
+print(roots)

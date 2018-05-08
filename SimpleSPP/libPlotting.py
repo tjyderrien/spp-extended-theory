@@ -87,8 +87,8 @@ def makePlot(x_data, y_data, tags, filename, plottitle, labelx, labely, function
   plt.ylim(0.,max(text_positions)+2*txt_height)
   #plt.xlim(-0.1,1.1)
   
-  #plt.show()
   plt.savefig(filename)
+  plt.show()
   return 0
   
 ## Plots the visual list (ReEps, ImEps) of materials present in a database, for a given wavelength. 

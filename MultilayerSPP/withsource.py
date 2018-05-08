@@ -16,10 +16,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>
 
-# Package @libMultilayer explores the SPP theory at a thin film located 
+## Package @withsources (experimental) explores the SPP theory at a thin film located 
 # between two semi-infinite media. The formal model is presented in 
-# T.J.-Y. Derrien et al, J. Appl. Phys. 116, 074902 (2014) and references 
-# therein.
+# T.J.-Y. Derrien et al, J. Appl. Phys. 116, 074902 (2014) and has been 
+# enriched by F. Preucil (HiLASE Centre) to take into account more accurate
+# source by adding a propagating wave in the ambient medium of irradiation.
+# This module remains experimental and may not be valid. 
 
 import matplotlib.pyplot as plt
 import numpy as np

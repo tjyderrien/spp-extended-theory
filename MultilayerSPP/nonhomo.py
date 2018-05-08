@@ -16,10 +16,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>
 
-# Package @libMultilayer explores the SPP theory at a thin film located 
+# Package @nonhomo explores the SPP theory at a thin film located 
 # between two semi-infinite media. The formal model is presented in 
 # T.J.-Y. Derrien et al, J. Appl. Phys. 116, 074902 (2014) and references 
-# therein.
+# therein and was enriched by F. Preucil (Hilase/FZU) to account for 
+# improved boundary conditions. In particular, non-homogeneous equation
+# was solved to compute, for a GIVEN SPP wavenumber,  
+
 import matplotlib.pyplot as plt
 import numpy as np
 import cmath, pickle

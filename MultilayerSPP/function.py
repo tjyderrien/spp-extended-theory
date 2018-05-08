@@ -172,8 +172,8 @@ eps2 = epsBK7       #epsBK7 #environment | substrate
 eps3 = epsAir       #environment | substrate
 # Note: Inverting eps2 and eps3 should have no effect on the possible modes, but only on field amplification. 
 
-t = 100E-9 #thickness of the layer in meters
-
+#t = 100E-9 #thickness of the layer in meters
+t_list = np.arange(10e-9, 100e-9, 10e-9)
 #meshes the initial guess area, all numbers are from the space of betas
 x_min = -1E10
 x_max = 1E10
@@ -184,10 +184,11 @@ y_max = 1E9
 x_steps = 40
 y_steps = 40
 
-roots = findroots(eps1, eps2, eps3,
-          wavelength, t,
+for thickness in t_list:
+    roots = findroots(eps1, eps2, eps3,
+          wavelength, thickness,
           x_min, x_max,    
           y_min, y_max,    
           x_steps, y_steps)
-print("SPP modes: [Period, Lspp]")
-print(roots)
+    print("thickness, [[period, Lspp]]: ", thickness, roots, "\n")
+    #print("")

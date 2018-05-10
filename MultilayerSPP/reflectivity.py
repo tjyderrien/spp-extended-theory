@@ -1,0 +1,43 @@
+#!/usr/bin/env python2
+#-*- coding: utf-8 -*-
+## @package MultilayerReflectivity 
+# Functions describing materials and their interaction with light. 
+
+# Copyright (C) 2013-2018 T. J.-Y. Derrien
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>
+
+from libMaterials import *
+import matplotlib.pyplot as plt
+
+## EXAMPLE OF USAGE at 800 nm
+wavelength=1064e-9
+
+eps1=1.;
+if(wavelength == 1064e-9): 
+    eps2=-14.083065233570098+20.789041764340013j; eps3=1.4496**2
+elif(wavelength == 800e-9): 
+    eps2=2.08+24.52j; eps3=1.4533**2
+thickness2 = np.arange(1e-9, 200e-9, 1e-9)
+R = BiLayerReflectivity(wavelength, eps1, eps2, eps3, thickness2)
+
+filename = "Mo-"+str(int(1E9*wavelength))+"-Reflectivity"
+
+plt.figure()
+plt.xlabel("Film thickness (nm)")
+plt.ylabel("Reflectivity")
+plt.plot(1E9*thickness2, R)
+plt.grid()
+plt.savefig(filename+".eps")
+plt.show()

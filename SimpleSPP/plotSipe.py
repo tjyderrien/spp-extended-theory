@@ -423,7 +423,7 @@ request = select+".0"
 unit = 1E-9
 wavelength = wavelength * unit
 print "Wavelength = "+str(wavelength/unit)+" nm."
-kpointnumber = 50
+kpointnumber = 2000
 
 # ======================= VALIDATION CASES ======================
 
@@ -449,6 +449,5 @@ kpointnumber = 50
 
 # ======================= SCIENTIFIC PRODUCTION DATA =====================
 #plotSipeFromDatabase(request, "Cr (Johnson 1974)", 1026e-9, kpointnumber)
-
-plotGenericSipeMaps(0.15) #map prepared for Stephane Gräf on generalized Sipe model (2018)
-#plotSipeFromDatabase(request, "Cr (Johnson 1974)", 1026e-9, kpointnumber)
+plotSipe1D_sectionX(800e-9, -0.6721223+24.8657476j)
+#plotGenericSipeMaps(0.15) #map prepared for Stephane Gräf on generalized Sipe model (2018)

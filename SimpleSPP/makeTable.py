@@ -43,7 +43,7 @@ print
 ExportToTxt(SPPdb, SppOutput)
 # Writing table caption
 f=open(SppOutput, "a")
-f.write("#Material1\tMaterial2\tWavelength\tOldSPPactiveBool\tNewSPPactiveBool\tSPPperiod\tSPPperiodError\tSPPdecayDepth1\tSPPdecayDepth2\tReflectivity\tOpticalPenetration1\tOpticalPenetration2\tSPPdecayLength\teps1.real\teps1.imag\teps2.real\teps2.imag\tSPPdepthImagk1\tSPPdepthImagk2")
+f.write("#1:Material1\t2:Material2\t3:Wavelength\t4:OldSPPactiveBool\t5:NewSPPactiveBool\t6:SPPperiod\t7:SPPperiodError\t8:SPPdecayDepth1\t9:SPPdecayDepth2\t10:Reflectivity\t11:OpticalPenetration1\t12:OpticalPenetration2\t13:SPPdecayLength\t14:eps1.real\t15:eps1.imag\t16:eps2.real\t17:eps2.imag\t18:SPPdepthImagk1\t19:SPPdepthImagk2")
 f.close()
 print "Exported. Please open file "+SppOutput+"."
 

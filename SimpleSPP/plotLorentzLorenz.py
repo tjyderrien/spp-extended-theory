@@ -18,10 +18,14 @@
 
 ## @package LorentzLorenz
 # Computes the dielectric permittivity as function of fraction of one material at a single wavelength. 
+# Computes the SPP properties as function of the materials fraction
 
 # IMPORT LIBRARIES
 from libSPP import *
 from libMaterials import *
+from libMultilayerSPP import *
+
+Header="[plotLorentzLorenz] "
 
 wavelength = 1026e-9
 epsCr2O3   = 3.8273816+ 0.0483803j
@@ -48,3 +52,9 @@ plt.grid()
 plt.savefig(filename+'.eps')
 plt.savefig(filename+'.png')
 plt.show()
+
+print Header+"** Preparing multilayer SPP computation..."
+
+
+
+

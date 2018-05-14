@@ -42,6 +42,10 @@ set xrange [wavelengthmin:wavelengthmax]
 plot n(energy(x)) w l t 'n', \
 k(x) w l t 'k'
 
+set table 'Cr2O3'
+replot
+unset table
+
 print "Extrapolation to 1026 nm:"
 wavelength0=1026e-9
 ncomplexRe = n(energy(wavelength0))

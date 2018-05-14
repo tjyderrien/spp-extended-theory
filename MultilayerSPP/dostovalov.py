@@ -37,7 +37,7 @@ Header="# [dostovalov.py]: "
 #data
 wavelength = 1026e-9 #355e-9 #1030E-9 #1026
 
-epsCr2O3   = 3.8273816+ 0.0483803j
+epsCr2O3   = 3.8273816+0.0483803j
 #epsCr2O3    = 4.9713+0.1784j  #1 um [JDT Kruschwitz et al, Appl. Opt. 1997]
 epsCr      = -0.6721223+24.8657476j
 
@@ -48,8 +48,12 @@ epsAir      = 1.+0.j          #air
 epsCu       = -1.9937293241+4.9290716854j     #355  nm
 
 print(Header, "# Info: Considering a mixed fraction of Cr with Cr2O3.")
-fraction_size = 1
-fraction = np.arange(0., 1., 1./fraction_size)
+
+fraction_size = 2 #NOTE: dont put too many there ! Maybe 2 or 5... 
+fraction_min = 0.9
+fraction_max = 1.0
+
+fraction = np.arange(fraction_min, fraction_max, (fraction_max-fraction_min)/float(fraction_size)) #fraction of Cr
 epsCrCr2O3_list = MaxwellGarnett2(epsCr, epsCr2O3, 1.-fraction)
 print(Header, "# Info: size of the fraction matrix: ", fraction_size)
 
@@ -69,8 +73,10 @@ y_steps = 40
 #t = 100E-9 #thickness of the layer in meters
 #thickness = 10e-9
 
+print("# Fraction of Cr: ", fraction)
+
 ## Preparation of the thin film modeling for various compositions
-for fraction_index in np.arange(0,fraction_size,1):
+for fraction_index in np.arange(0,fraction_size): #arange excludes the last one
     # Medium 1: thin film. 
     eps1 = epsCrCr2O3_list[fraction_index]        #thin film
     # Medium 2: substrate. 
@@ -80,6 +86,7 @@ for fraction_index in np.arange(0,fraction_size,1):
     # Note: Inverting eps2 and eps3 should have no effect on the possible modes, but only on field amplification. 
     t_list = np.arange(10e-9, 300e-9, 10e-9)
     for thickness in t_list:
+        print("#", fraction[fraction_index], thickness, eps1)
         roots = findroots(eps1, eps2, eps3,
                 wavelength, thickness,
                 x_min, x_max,    

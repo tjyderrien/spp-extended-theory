@@ -6,7 +6,7 @@ set log x
 set format "%g"
 set xlabel 'Thickness (m)'
 set ylabel 'Period (m)'
-plot "Dostovalov-PeriodWithThickness.csv" u 1:2 w p t '{/Symbol L}_{SPP}'
+plot "Dostovalov-PeriodWithThickness.csv" u 2:3 w p t columnhead(1)
 
 set output
 set terminal x11

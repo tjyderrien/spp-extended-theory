@@ -47,23 +47,6 @@ epsAir      = 1.+0.j          #air
 #epsCu       = -46.6046581932 + 4.7188669976j #1030 nm
 epsCu       = -1.9937293241+4.9290716854j     #355  nm
 
-print(Header, "# Info: Considering a mixed fraction of Cr with Cr2O3 with several thicknesses.")
-
-fraction_size = 10 #NOTE: dont put too many there ! Maybe 2 or 5... 
-fraction_min = 0.7
-fraction_max = 1.0
-
-thickness_size = 30
-thickness_min  = 10e-9
-thickness_max  = 300e-9
-
-## Running 
-
-fraction = np.arange(fraction_min, fraction_max, (fraction_max-fraction_min)/float(fraction_size)) #fraction of Cr
-epsCrCr2O3_list = MaxwellGarnett2(epsCr, epsCr2O3, 1.-fraction)
-print(Header, "# Info: size of the fraction matrix: ", fraction_size)
-
-print(Header, "# Info: preparation of the root finder.")
 #meshes the initial guess area, all numbers are from the space of betas
 x_min = -1E10
 x_max = 1E10
@@ -74,22 +57,20 @@ y_max = 1E9
 x_steps = 40
 y_steps = 40
 
-#results = Parallel(n_jobs=num_cores)(delayed(processInput)(i) for i in inputs)
-
-#t = 100E-9 #thickness of the layer in meters
-#thickness = 10e-9
-
-print("# Fraction of Cr: ", fraction)
-
-## Preparation of the thin film modeling for various compositions
-for fraction_index in np.arange(0,fraction_size): #arange excludes the last one
-    # Medium 1: thin film. 
-    eps1 = epsCrCr2O3_list[fraction_index]        #thin film
+# Scenario proposed by Thibault: an oxide layer grows at the top of the Cr sample, reducing progressively the periodicity by lambda/n. 
+def ScenarioOfOxidePrecipitation(): 
+    # Medium 1: thin film.
+    eps1 = epsCr     #thin film
     # Medium 2: substrate. 
-    eps2 = epsBK7       #epsBK7 #environment | substrate
+    eps2 = epsCr2O3       #epsBK7 #environment | substrate
     # Medium 3: environment
-    eps3 = epsAir       #environment | substrate
+    eps3 = epsBK7       #environment | substrate
     # Note: Inverting eps2 and eps3 should have no effect on the possible modes, but only on field amplification. 
+    
+    thickness_size = 20
+    thickness_min  = 10e-9
+    thickness_max  = 300e-9
+    
     t_list = np.linspace(thickness_min, thickness_max, thickness_size, endpoint=True)
     for thickness in t_list:
         roots = findroots(eps1, eps2, eps3,
@@ -106,8 +87,64 @@ for fraction_index in np.arange(0,fraction_size): #arange excludes the last one
         num_property = roots_shape[1]
 
         for branch in np.arange(0,num_branches-1):
-            print(fraction[fraction_index], thickness, roots[branch][0], roots[branch][1], eps1.real, eps1.imag)
-    print("\n")
+            print("1.", thickness, roots[branch][0], roots[branch][1], eps1.real, eps1.imag)
+
+# Scenario proposed by Nadya
+def ScenarioOfCrOxideMixture():
+    print(Header, "# Info: Considering a mixed fraction of Cr with Cr2O3 with several thicknesses.")
+
+    fraction_size = 20
+    fraction_min = 0.5
+    fraction_max = 1.0
+
+    thickness_size = 1
+    thickness_min  = 28e-9
+    thickness_max  = 28e-9
+
+    ## Running 
+
+    fraction = np.arange(fraction_min, fraction_max, (fraction_max-fraction_min)/float(fraction_size)) #fraction of Cr
+    epsCrCr2O3_list = MaxwellGarnett2(epsCr, epsCr2O3, 1.-fraction)
+    print(Header, "# Info: size of the fraction matrix: ", fraction_size)
+
+    print(Header, "# Info: preparation of the root finder.")
+    
+    #results = Parallel(n_jobs=num_cores)(delayed(processInput)(i) for i in inputs)
+
+    #t = 100E-9 #thickness of the layer in meters
+    #thickness = 10e-9
+
+    print("# Fraction of Cr: ", fraction)
+
+    ## Preparation of the thin film modeling for various compositions
+    for fraction_index in np.arange(0,fraction_size): #arange excludes the last one
+        # Medium 1: thin film. 
+        eps1 = epsCrCr2O3_list[fraction_index]        #thin film
+        # Medium 2: substrate. 
+        eps2 = epsBK7       #epsBK7 #environment | substrate
+        # Medium 3: environment
+        eps3 = epsAir       #environment | substrate
+        # Note: Inverting eps2 and eps3 should have no effect on the possible modes, but only on field amplification. 
+        t_list = np.linspace(thickness_min, thickness_max, thickness_size, endpoint=True)
+        for thickness in t_list:
+            roots = findroots(eps1, eps2, eps3,
+                    wavelength, thickness,
+                    x_min, x_max,    
+                    y_min, y_max,    
+                    x_steps, y_steps)
+
+            # Shaping the data to plot them with GNUplot
+            roots_shape = np.shape(roots)
+            #print(roots_shape)
+            num_thickness= np.shape(thickness)
+            num_branches = roots_shape[0]
+            num_property = roots_shape[1]
+
+            for branch in np.arange(0,num_branches-1):
+                print(fraction[fraction_index], thickness, roots[branch][0], roots[branch][1], eps1.real, eps1.imag)
+        print("\n")
 
 # ** Info: computing 3-layer reflectivity..."
-R = BiLayerReflectivity(epsAir, epsCrCr2O3_list, epsBK7, t_list) #dimension is good for a HeatMap picture
+#R = BiLayerReflectivity(epsAir, epsCrCr2O3_list, epsBK7, t_list) #dimension is good for a HeatMap picture
+
+ScenarioOfOxidePrecipitation()

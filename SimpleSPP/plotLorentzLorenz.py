@@ -53,7 +53,7 @@ plt.savefig(filename+'.eps')
 plt.savefig(filename+'.png')
 plt.show()
 
-print Header+"** Preparing multilayer SPP computation..."
+#print Header+"** Preparing multilayer SPP computation..."
 
 
 

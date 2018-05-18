@@ -115,21 +115,28 @@ def findroots(eps1, eps2, eps3, wavelength, t, x_min, x_max, y_min, y_max, x_ste
 ##            if abs(1 - abs(B2/B1)) < tol_valid:
 ##                valid.append(rt)
 ##        prnt('Total (validated): %d' % len(valid))
-
 ##        print()
         branches.append(unique)
-  # Selection of the maximum Lspp
+
+    #selection of the maximum Lspp
     outs = []
     for branch in branches:
-        maxy = 0
-        maxx = 0
+        maxy, maxx, maxy2, maxx2 = float('-inf'), float('-inf'), float('-inf'), float('-inf')
         for rt in branch:
             xi = 2.*np.pi/rt[0]
             yi = .5/rt[1]
-            if yi > maxy: #select the branches with absolute maximum Lspp
-                maxy = yi
-                maxx = xi
-        outs.append([maxx, maxy])
+            if yi >= maxy:
+                maxy, maxy2 = yi, maxy
+                maxx, maxx2 = xi, maxx
+            elif yi > maxy2:
+                maxy2 = yi
+                maxx2 = xi
+        if len(branch) == 0:
+            outs.append([[0, 0], [0, 0]])
+        elif len(branch) == 1:
+            outs.append([[maxx, maxy], [0, 0]])
+        if len(branch) >= 2:
+            outs.append([[maxx, maxy], [maxx2, maxy2]])
     return outs
 
 #end of algorithm
@@ -144,8 +151,8 @@ def findroots(eps1, eps2, eps3, wavelength, t, x_min, x_max, y_min, y_max, x_ste
 #
 
 #Example:
-#roots = findroots(-1+1j, 1, 1,
-                  #1, 1,
-                  #-1E10, 1E10,
-                  #-1E9, 1E9,
+#roots = findroots(-1+1j, 1, 3,
+                  #1, .4,
+                  #-1E2, 1E2,
+                  #-1E4, 1E4,
                   #30, 30)

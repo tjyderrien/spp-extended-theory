@@ -125,7 +125,7 @@ def findroots(eps1, eps2, eps3, wavelength, t, x_min, x_max, y_min, y_max, x_ste
         for rt in branch:
             xi = 2.*np.pi/rt[0]
             yi = .5/rt[1]
-            if yi >= maxy:
+            if yi > maxy:
                 maxy, maxy2 = yi, maxy
                 maxx, maxx2 = xi, maxx
             elif yi > maxy2:
@@ -135,7 +135,7 @@ def findroots(eps1, eps2, eps3, wavelength, t, x_min, x_max, y_min, y_max, x_ste
             outs.append([[0, 0], [0, 0]])
         elif len(branch) == 1:
             outs.append([[maxx, maxy], [0, 0]])
-        if len(branch) >= 2:
+        else:
             outs.append([[maxx, maxy], [maxx2, maxy2]])
     return outs
 

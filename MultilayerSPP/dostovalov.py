@@ -34,6 +34,9 @@ import matplotlib.pyplot as plt
 Header="# [dostovalov.py]: "
 # === PRODUCTION OF SCIENTIFIC RESULTS ===
 
+#precision
+NumberOfPoints=50
+
 #data
 wavelength = 1026e-9 #355e-9 #1030E-9 #1026
 
@@ -133,17 +136,20 @@ def ScenarioOfCrOxideMixture():
                     y_min, y_max,    
                     x_steps, y_steps)
 
-            # Shaping the data to plot them with GNUplot
-            roots_shape = np.shape(roots)
-            #print(roots_shape)
-            num_thickness= np.shape(thickness)
-            num_branches = roots_shape[0]
-            num_property = roots_shape[1]
+        # Shaping the data to plot them with GNUplot
+        roots_shape = np.shape(roots)
+        #print(roots_shape)
+        num_thickness = np.shape(thickness) #NOTE: is this used? 
+        num_branches  = roots_shape[0]
+        num_roots     = roots_shape[1]
+        num_property  = roots_shape[2]
 
-            for branch in np.arange(0,num_branches-1):
-                print(fraction[fraction_index], thickness, roots[branch][0], roots[branch][1], eps1.real, eps1.imag)
-        print("\n")
+        for branch in np.arange(0,num_branches):
+            for root_number in np.arange(0,num_roots): 
+                print(thickness, roots[branch][root_number][0], roots[branch][root_number][1])
+            print("\n")
 
+# =====================
 # ** Info: computing 3-layer reflectivity..."
 #R = BiLayerReflectivity(epsAir, epsCrCr2O3_list, epsBK7, t_list) #dimension is good for a HeatMap picture
 

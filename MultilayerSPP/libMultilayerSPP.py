@@ -49,6 +49,7 @@ def cntr(inpt):
         py += pt[1]
     return (px/ln, py/ln)
 
+## Computes the roots of SPP period and propagation length in a 3-layer system for many sample thicknesses
 # @param eps1: Dielectric permittivity of the thin film
 # @param eps2: Dielectric permittivity of the half-plane below the thin film. 
 # @param eps3: Dielectric permittivity of the half-plane above the thin film. Source light is supposed to come from this direction. 
@@ -61,6 +62,36 @@ def cntr(inpt):
 # @param x_steps: number of steps used to mesh the Re(roots) space. 
 # @param y_steps: number of steps used to mesh the Im(roots) space. 
 # @param tol_merge: tolerance to merge the identified solutions. 
+#Usage:
+#
+#   findroots(eps1, eps2, eps3,
+#             wavelength, t,
+#             x_min, x_max,       }
+#             y_min, y_max,       } mesh parameters
+#             x_steps, y_steps)   }
+#
+#
+#Example:
+#roots = findroots(-1+1j, 1, 1,
+#                  #1, 1,
+#                  #-10, 10,
+#                  #-10, 10,
+#                  #5, 5,
+#                  #.0001)
+#
+#print(roots) #list of arrays
+#print(roots[0])     #prints roots belonging to the zeroth branch (-, -, -)
+#print(roots[7][0])  #prints the first root from the last branch (+, +, +)
+#
+#List of branch indices:
+#   0 (-, -, -)
+#   1 (-, -, +)
+#   2 (-, +, -)
+#   3 (-, +, +)
+#   4 (+, -, -)
+#   5 (+, -, +)
+#   6 (+, +, -)
+#   7 (+, +, +)
 def findroots(eps1, eps2, eps3, wavelength, t, x_min, x_max, y_min, y_max, x_steps, y_steps):
     global k0, ke1, ke2, ke3
     k0 = 2.*np.pi/wavelength
@@ -115,52 +146,31 @@ def findroots(eps1, eps2, eps3, wavelength, t, x_min, x_max, y_min, y_max, x_ste
 ##            if abs(1 - abs(B2/B1)) < tol_valid:
 ##                valid.append(rt)
 ##        prnt('Total (validated): %d' % len(valid))
-
 ##        print()
         branches.append(unique)
-  # Selection of the maximum Lspp
+
+    #selection of the maximum Lspp
     outs = []
     for branch in branches:
-        maxy = 0
-        maxx = 0
+        maxy, maxx, maxy2, maxx2 = float('-inf'), float('-inf'), float('-inf'), float('-inf')
         for rt in branch:
             xi = 2.*np.pi/rt[0]
             yi = .5/rt[1]
-            if yi > maxy: #select the branches with absolute maximum Lspp
-                maxy = yi
-                maxx = xi
-        outs.append([maxx, maxy])
+            if yi > maxy:
+                maxy, maxy2 = yi, maxy
+                maxx, maxx2 = xi, maxx
+            elif yi > maxy2:
+                maxy2 = yi
+                maxx2 = xi
+        if len(branch) == 0:
+            outs.append([[0, 0], [0, 0]])
+        elif len(branch) == 1:
+            outs.append([[maxx, maxy], [0, 0]])
+        else:
+            outs.append([[maxx, maxy], [maxx2, maxy2]])
     return outs
 
 #end of algorithm
 
-#Usage:
-#
-#   findroots(eps1, eps2, eps3,
-#             wavelength, t,
-#             x_min, x_max,       }
-#             y_min, y_max,       } mesh parameters
-#             x_steps, y_steps)   }
-#
 
-#Example:
-#roots = findroots(-1+1j, 1, 1,
-                  #1, 1,
-                  #-10, 10,
-                  #-10, 10,
-                  #5, 5,
-                  #.0001)
 
-#print(roots) #list of arrays
-#print(roots[0])     #prints roots belonging to the zeroth branch (-, -, -)
-#print(roots[7][0])  #prints the first root from the last branch (+, +, +)
-
-#List of branch indices:
-#   0 (-, -, -)
-#   1 (-, -, +)
-#   2 (-, +, -)
-#   3 (-, +, +)
-#   4 (+, -, -)
-#   5 (+, -, +)
-#   6 (+, +, -)
-#   7 (+, +, +)

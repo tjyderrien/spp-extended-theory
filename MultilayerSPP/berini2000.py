@@ -31,24 +31,20 @@ import matplotlib.pyplot as plt
 #precision
 NumberOfPoints=50
 
+#Charbonneau and Berini, Optics Letters Vol. 25, No. 11 (2000). 
+
 #data
-wavelength = 1026e-9 #355e-9 #1030E-9 #1026
-epsTibare   = -6.206969+25.2j #800 nm
-epsTiO2bare = 7.7841+0.j      #800 nm
-epsCr       = -0.672122310000001+24.8657476j #-0.67+24.87j    #1026 nm
-epsBK7      = 2.10277365777   #1026 nm
-epsCr2O3    = 4.9713+0.1784j  #1 um [JDT Kruschwitz et al, Appl. Opt. 1997]
-epsSi       = 12.8159503769+0.0114635303918j #1026 nm, Palik
-epsAir      = 1.+0.j          #air
-#epsCu       = -46.6046581932 + 4.7188669976j #1030 nm
-epsCu       = -1.9937293241+4.9290716854j     #355  nm
+wavelength = 1550e-9
+#epsAu       = -95.95924741872399+10.972582438155513j #1550 nm, Palik
+epsAu       = -131.9475+12.65j
+epsSiO2     = 2.085 #Berini #(1.4440+0j)**2 #Palik
 
 # Medium 1: thin film. 
-eps1 = epsCr        #thin film
+eps1 = epsAu        #thin film
 # Medium 2: substrate. 
-eps2 = epsBK7       #epsBK7 #environment | substrate
+eps2 = epsSiO2       #epsBK7 #environment | substrate
 # Medium 3: environment
-eps3 = epsAir       #environment | substrate
+eps3 = epsSiO2       #environment | substrate
 # Note: Inverting eps2 and eps3 should have no effect on the possible modes, but only on field amplification. 
 
 #t = 100E-9 #thickness of the layer in meters

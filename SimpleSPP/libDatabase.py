@@ -45,6 +45,14 @@ def FilterDatabase(SPPdb, query, FieldIndex):
   SPPdbFiltered = np.array(SPPdb[SPPdb[:,FieldIndex]==query,:]) #uses a table of booleans to select
   return SPPdbFiltered
 
+## Removes the matching entries from the database. Query is working with field <index>. 
+# @param SPPdb: a numpy array of strings | integers | reals | complex
+# @param query: a string | integer | real | complex to compare with. 
+# @param FieldIndex: number of the field of interest
+def FilterDatabaseRemove(SPPdb, query, FieldIndex):
+  SPPdbFiltered = np.array(SPPdb[SPPdb[:,FieldIndex]!=query,:])
+  return SPPdbFiltered
+
 ## Filter for the SPP database using a string <query> which should be *contained* in field of nmuber <index>. 
 # @param SPPdb: a numpy array of strings
 # @param query: a string to compare with

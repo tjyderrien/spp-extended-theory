@@ -34,6 +34,8 @@ from matplotlib import rc, font_manager
 from scipy.constants import c, epsilon_0, mu_0, pi, e, m_e, h
 from matplotlib.legend_handler import HandlerLine2D
 import sys
+from colorama import Fore
+from colorama import Style
 
 # IMPORT CUSTOM LIBRARIES
 # from libKeldysh import *

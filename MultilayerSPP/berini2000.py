@@ -23,7 +23,7 @@
 # T.J.-Y. Derrien et al, J. Appl. Phys. 116, 074902 (2014) and references 
 # therein. 
 
-from function import *
+from libMultilayerSPP import *
 import matplotlib.pyplot as plt
 
 # === PRODUCTION OF SCIENTIFIC RESULTS ===
@@ -79,5 +79,3 @@ for thickness in t_list:
       for root_number in np.arange(0,num_roots): 
         print(thickness, roots[branch][root_number][0], roots[branch][root_number][1])
       #print("\n")
-
-##TODO: from this, we would like to add a layer which will variate eps1 as function of oxide concentration

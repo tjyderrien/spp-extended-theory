@@ -3,10 +3,10 @@
 # Produces the plot submitted to MetaNano conference proceeding 2018 with Prof. Bulgakova and A. Dostovalov. 
 
 set -e
-infile="Dostovalov-PeriodWithThickness.csv"
+infile="PeriodWithThickness.csv"
 if [ -e ${infile} ]; then
   echo "Input file ${infile} already exists. Plotting directly. "
 else
-  ./dostovalov.py &> Dostovalov-PeriodWithThickness.csv
+  ./dostovalov.py &> PeriodWithThickness.csv
 fi
 gnuplot plotThicknessPeriod.gnu --persist

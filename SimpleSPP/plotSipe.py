@@ -406,7 +406,7 @@ def plotGenericSipeMaps(kx_value, ky_value, epsilon_precision = 0.05, theta=0., 
   plt.figure(figsize=(SizeX,SizeY))
   #levels = np.arange(0,10,1) 
   levels = np.arange(-2,4,1)
-  CS=plt.contourf(epsR2,epsI2,np.log10(etaSipe[0,0,:,:]),levels=levels, cmap=plt.cm.RdBu_r) #Greys
+  CS=plt.contourf(epsR2,epsI2,np.log10(etaSipe[0,0,:,:]),levels=levels, cmap=plt.cm.RdYlBu_r) #RdBu_r: this one has white in center. Uncool. #Greys
   plt.xlabel(r'Re($\varepsilon$)')
   plt.ylabel(r'Im($\varepsilon$)')
   

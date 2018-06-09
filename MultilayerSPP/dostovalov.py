@@ -118,7 +118,7 @@ def ScenarioOfCrOxideMixture():
     #thickness = 10e-9
 
     print("# Fraction of Cr: ", fraction)
-
+    summary = np.zeros((0, 7))
     ## Preparation of the thin film modeling for various compositions
     for fraction_index in np.arange(0,fraction_size): #arange excludes the last one
         # Medium 1: thin film. 
@@ -129,6 +129,8 @@ def ScenarioOfCrOxideMixture():
         eps3 = epsAir       #environment | substrate
         # Note: Inverting eps2 and eps3 should have no effect on the possible modes, but only on field amplification. 
         t_list = np.linspace(thickness_min, thickness_max, thickness_size, endpoint=True)
+        
+        
         for thickness in t_list:
             roots = findroots(eps1, eps2, eps3,
                     wavelength, thickness,
@@ -144,10 +146,49 @@ def ScenarioOfCrOxideMixture():
         num_roots     = roots_shape[1]
         num_property  = roots_shape[2]
 
-        for branch in np.arange(0,num_branches):
-            for root_number in np.arange(0,num_roots): 
-                print(thickness, roots[branch][root_number][0], roots[branch][root_number][1])
-            print("\n")
+        for branch in np.arange(0,num_branches-1):
+                for root_number in np.arange(0,num_roots): 
+                    ToBeAdded = [thickness, branch, root_number, roots[branch][root_number][0], roots[branch][root_number][1], fraction[fraction_index], eps1]
+                    print(ToBeAdded)
+                    if(roots[branch][root_number][0] != 0e0): 
+                        summary = np.vstack((summary, ToBeAdded ))
+
+#== Extract the constructed table
+    thickness     = summary[:, 0] 
+    branch        = summary[:, 1]
+    root_number   = summary[:, 2]
+    period        = summary[:, 3]
+    lspp          = summary[:, 4]
+    fractionOxide = summary[:, 5]
+    epsilonFilm   = summary[:, 6]
+
+    print(summary)
+
+    # Now, we shall sort out the data
+    lists = sorted(zip(*[root_number, branch, thickness, period, lspp, fractionOxide, epsilonFilm]))
+    root_number_s, branch_s, thickness_s, period_s, lspp_s, fractionOxide_s, epsilonFilm_s = list(zip(*lists))
+
+    #ReBeta = np.divide(2.*np.pi,period_s)
+    #ImBeta = np.divide(0.5,lspp_s)
+
+    plt.figure()
+    ax1 = plt.subplot(111)
+    plt.xlabel(r'Fraction of Cr$_2$O$_3$ (perc.)')
+    plt.ylabel('SPP period (m)')
+    ax12 = ax1.twinx()
+    plt.ylabel(r'SPP mean free path $L_{SPP}$ (m)')
+    # Then we could plot them in the right order
+    plot11, = ax1.loglog(fractionOxide, period_s, 'r+', label=r'Period $\Lambda$')
+    plot12, = ax1.loglog(fractionOxide, wavelength*np.ones(np.shape(thickness_s)), '-', label=r'$\lambda$')
+    plot13, = ax12.loglog(fractionOxide, lspp_s, 'b+', label=r'$L_{SPP}$')
+    plt.tight_layout()
+
+    plt.legend(loc='best')
+    plt.tight_layout()
+    plt.savefig("Dostovalov_Cr2O3mixedWithCr_Thickness.eps")
+    plt.show()
+    
+#}}}
 
 # =====================
 # ** Info: computing 3-layer reflectivity..."

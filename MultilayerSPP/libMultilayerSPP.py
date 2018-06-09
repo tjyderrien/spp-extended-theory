@@ -21,10 +21,12 @@
 # between two semi-infinite media. The formal model is presented in 
 # T.J.-Y. Derrien et al, J. Appl. Phys. 116, 074902 (2014) and references 
 # therein. 
+from libMaterials import *
+
 import math, cmath
-import numpy as np
-from scipy.optimize import root
-from itertools import product
+import numpy             as np
+from   scipy.optimize    import root
+from   itertools         import product
 import matplotlib.pyplot as plt
 
 def func(betaR, eps1, eps2, eps3, k0, t, sgn1, sgn2):
@@ -257,7 +259,7 @@ def Berini2000(NumberOfPoints=5): #{{{
     # Then we could plot them in the right order
     plot11,  = ax1.loglog(thickness_s, period_s, 'r+', label=r'Period $\Lambda$')
     plot12,  = ax1.loglog(thickness_s, wavelength*np.ones(np.shape(thickness_s)), '-', label=r'$\lambda$')
-    plot13, = ax12.loglog(thickness, lspp, 'b+', label=r'$L_{SPP}$')
+    plot13, = ax12.loglog(thickness, lspp_s, 'b+', label=r'$L_{SPP}$')
     plt.tight_layout()
 
     ax2 = plt.subplot(122)
@@ -275,3 +277,327 @@ def Berini2000(NumberOfPoints=5): #{{{
     plt.show()
 #}}}
 
+## Repeats results from Derrien, Bonse et al J. Appl. Phys. (2014), Fig. 6. 
+# Air / Si* film / Si
+# TODO: add more number of branches to obtain the points that are missing from the article. 
+# NOTE: for now, only 2-3 solutions are selected with the following criterion max{L_spp}
+def DerrienBonse2014_Air_SiExcited_Si(NumberOfPoints=20): #{{{
+    #data
+    wavelength = 790e-9 #355e-9 #1030E-9 #1026
+    neSi = np.power(10.,np.linspace(27.,29.,NumberOfPoints)) #the most violent change
+    #epsTibare   = -6.206969+25.2j #800 nm
+    #epsTiO2bare = 7.7841+0.j      #800 nm
+    #epsCr       = -0.672122310000001+24.8657476j #-0.67+24.87j    #1026 nm
+    #epsBK7      = 2.10277365777   #1026 nm
+    #epsCr2O3    = 4.9713+0.1784j  #1 um [JDT Kruschwitz et al, Appl. Opt. 1997]
+    epsSi       = (3.693+0.006j)**2
+    epsAir      = 1.+0.j          #air
+    #epsCu       = -46.6046581932 + 4.7188669976j #1030 nm
+    #epsCu       = -1.9937293241+4.9290716854j     #355  nm
+    epsH2O      = 1.326**2
+    #epsSiO2     = 1.453**2
+    
+    # Medium 1: thin film. 
+    # Varying. See below. 
+    # Medium 2: substrate. 
+    eps2 = epsSi
+    # Medium 3: environment
+    eps3 = epsAir       #environment | substrate
+    # Note: Inverting eps2 and eps3 should have no effect on the possible modes, but only on field amplification. 
+
+    #t = 100E-9 #thickness of the layer in meters
+    #thickness = 10e-9
+    t_list = np.array([100e-9, 10e-9]) #, 10e-9, 20e-9])
+    #meshes the initial guess area, all numbers are from the space of betas
+    x_min = -1E10
+    x_max = 1E10
+
+    y_min = -1E9
+    y_max = 1E9
+
+    x_steps = 40
+    y_steps = 40
+    
+    summary = np.zeros((0, 7))
+    for neSiLocal in neSi:
+        eps1 = Drude(wavelength, neSiLocal, epsSi, 1.1e-15**-1, 0.18)     #environment | substrate
+        for thickness in t_list:
+            roots = findroots(eps1, eps2, eps3,
+                    wavelength, thickness,
+                    x_min, x_max,    
+                    y_min, y_max,    
+                    x_steps, y_steps)
+
+            # Shaping the data to plot them with GNUplot
+            roots_shape = np.shape(roots)
+            #print(roots_shape)
+            num_thickness = np.shape(thickness)
+            num_branches  = roots_shape[0]
+            num_roots     = roots_shape[1] #In each branch, we select 2-3 roots. But there are infinitly of them. 
+            num_property  = roots_shape[2] #Period and Lspp
+            #num_epsilons  = np.shape(eps3)
+
+            for branch in np.arange(0,num_branches-1):
+                for root_number in np.arange(0,num_roots): 
+                    ToBeAdded = [thickness, branch, root_number, roots[branch][root_number][0], roots[branch][root_number][1], neSiLocal, eps1]
+                    print(ToBeAdded)
+                    if(roots[branch][root_number][0] != 0e0): 
+                        summary = np.vstack((summary, ToBeAdded ))
+                #print("\n")
+            
+#== Extract the constructed table
+    thickness    = summary[:, 0] 
+    branch       = summary[:, 1]
+    root_number  = summary[:, 2]
+    period       = summary[:, 3]
+    lspp         = summary[:, 4]
+    densitySi    = summary[:, 5]
+    epsilonFilm  = summary[:, 6]
+
+    print(summary)
+
+    # Now, we shall sort out the data
+    lists = sorted(zip(*[root_number, branch, thickness, period, lspp, densitySi, epsilonFilm]))
+    root_number_s, branch_s, thickness_s, period_s, lspp_s, densitySi_s, epsilonFilm_s = list(zip(*lists))
+
+    #ReBeta = np.divide(2.*np.pi,period_s)
+    #ImBeta = np.divide(0.5,lspp_s)
+
+    plt.figure()
+    ax1 = plt.subplot(111)
+    plt.xlabel(r'Density of excited electrons in Si film (m$^{-3}$)')
+    plt.ylabel('SPP period (m)')
+    ax12 = ax1.twinx()
+    plt.ylabel(r'SPP mean free path $L_{SPP}$ (m)')
+    # Then we could plot them in the right order
+    plot11, = ax1.loglog(densitySi_s, period_s, 'r+', label=r'Period $\Lambda$')
+    plot12, = ax1.loglog(densitySi_s, wavelength*np.ones(np.shape(thickness_s)), '-', label=r'$\lambda$')
+    plot13, =ax12.loglog(densitySi_s, lspp_s, 'b+', label=r'$L_{SPP}$')
+    plt.tight_layout()
+
+    plt.legend(loc='best')
+    plt.tight_layout()
+    plt.savefig("Derrien2014_Fig5.eps")
+    plt.show()
+    
+#}}}
+
+
+
+## Repeats results from Derrien, Bonse et al J. Appl. Phys. (2014), Fig. 6. 
+# H20 / Si* film / Si
+# TODO: add more number of branches to obtain the points that are missing from the article. 
+# NOTE: for now, only 2-3 solutions are selected with the following criterion max{L_spp}
+def DerrienBonse2014_H20_SiExcited_Si(NumberOfPoints=20): #{{{
+    #data
+    wavelength = 790e-9 #355e-9 #1030E-9 #1026
+    neSi = np.power(10.,np.linspace(27.,29.,NumberOfPoints)) #the most violent change
+    #epsTibare   = -6.206969+25.2j #800 nm
+    #epsTiO2bare = 7.7841+0.j      #800 nm
+    #epsCr       = -0.672122310000001+24.8657476j #-0.67+24.87j    #1026 nm
+    #epsBK7      = 2.10277365777   #1026 nm
+    #epsCr2O3    = 4.9713+0.1784j  #1 um [JDT Kruschwitz et al, Appl. Opt. 1997]
+    epsSi       = (3.693+0.006j)**2
+    epsAir      = 1.+0.j          #air
+    #epsCu       = -46.6046581932 + 4.7188669976j #1030 nm
+    #epsCu       = -1.9937293241+4.9290716854j     #355  nm
+    epsH2O      = 1.326**2
+    #epsSiO2     = 1.453**2
+    
+    # Medium 1: thin film. 
+    # Varying. See below. 
+    # Medium 2: substrate. 
+    eps2 = epsSi
+    # Medium 3: environment
+    eps3 = epsH2O       #environment | substrate
+    # Note: Inverting eps2 and eps3 should have no effect on the possible modes, but only on field amplification. 
+
+    #t = 100E-9 #thickness of the layer in meters
+    #thickness = 10e-9
+    t_list = np.array([100e-9, 10e-9]) #, 10e-9, 20e-9])
+    #meshes the initial guess area, all numbers are from the space of betas
+    x_min = -1E10
+    x_max = 1E10
+
+    y_min = -1E9
+    y_max = 1E9
+
+    x_steps = 40
+    y_steps = 40
+    
+    summary = np.zeros((0, 7))
+    for neSiLocal in neSi:
+        eps1 = Drude(wavelength, neSiLocal, epsSi, 1.1e-15**-1, 0.18)     #environment | substrate
+        for thickness in t_list:
+            roots = findroots(eps1, eps2, eps3,
+                    wavelength, thickness,
+                    x_min, x_max,    
+                    y_min, y_max,    
+                    x_steps, y_steps)
+
+            # Shaping the data to plot them with GNUplot
+            roots_shape = np.shape(roots)
+            #print(roots_shape)
+            num_thickness = np.shape(thickness)
+            num_branches  = roots_shape[0]
+            num_roots     = roots_shape[1] #In each branch, we select 2-3 roots. But there are infinitly of them. 
+            num_property  = roots_shape[2] #Period and Lspp
+            #num_epsilons  = np.shape(eps3)
+
+            for branch in np.arange(0,num_branches-1):
+                for root_number in np.arange(0,num_roots): 
+                    ToBeAdded = [thickness, branch, root_number, roots[branch][root_number][0], roots[branch][root_number][1], neSiLocal, eps1]
+                    print(ToBeAdded)
+                    if(roots[branch][root_number][0] != 0e0): 
+                        summary = np.vstack((summary, ToBeAdded ))
+                #print("\n")
+            
+#== Extract the constructed table
+    thickness    = summary[:, 0] 
+    branch       = summary[:, 1]
+    root_number  = summary[:, 2]
+    period       = summary[:, 3]
+    lspp         = summary[:, 4]
+    densitySi    = summary[:, 5]
+    epsilonFilm  = summary[:, 6]
+
+    print(summary)
+
+    # Now, we shall sort out the data
+    lists = sorted(zip(*[root_number, branch, thickness, period, lspp, densitySi, epsilonFilm]))
+    root_number_s, branch_s, thickness_s, period_s, lspp_s, densitySi_s, epsilonFilm_s = list(zip(*lists))
+
+    #ReBeta = np.divide(2.*np.pi,period_s)
+    #ImBeta = np.divide(0.5,lspp_s)
+
+    plt.figure()
+    ax1 = plt.subplot(111)
+    plt.xlabel(r'Density of excited electrons in Si film (m$^{-3}$)')
+    plt.ylabel('SPP period (m)')
+    ax12 = ax1.twinx()
+    plt.ylabel(r'SPP mean free path $L_{SPP}$ (m)')
+    # Then we could plot them in the right order
+    plot11, = ax1.loglog(densitySi_s, period_s, 'r+', label=r'Period $\Lambda$')
+    plot12, = ax1.loglog(densitySi_s, wavelength*np.ones(np.shape(thickness_s)), '-', label=r'$\lambda$')
+    plot13, =ax12.loglog(densitySi_s, lspp_s, 'b+', label=r'$L_{SPP}$')
+    plt.tight_layout()
+
+    plt.legend(loc='best')
+    plt.tight_layout()
+    plt.savefig("Derrien2014_Fig6.eps")
+    plt.show()
+    
+#}}}
+
+
+## Repeats results from Derrien, Bonse et al J. Appl. Phys. (2014), Fig. 7. 
+# H20* (ne) / SiO2 / Si*
+# TODO: add more number of branches to obtain the points that are missing from the article. 
+# NOTE: for now, only 2-3 solutions are selected with the following criterion max{L_spp}
+def DerrienBonse2014_H20_SiO2_SiExcited(NumberOfPoints=20): #{{{
+    #data
+    wavelength = 790e-9 #355e-9 #1030E-9 #1026
+    neH20 = np.power(10.,np.linspace(27.,29.,NumberOfPoints)) #the most violent change
+    #epsTibare   = -6.206969+25.2j #800 nm
+    #epsTiO2bare = 7.7841+0.j      #800 nm
+    #epsCr       = -0.672122310000001+24.8657476j #-0.67+24.87j    #1026 nm
+    #epsBK7      = 2.10277365777   #1026 nm
+    #epsCr2O3    = 4.9713+0.1784j  #1 um [JDT Kruschwitz et al, Appl. Opt. 1997]
+    epsSi       = (3.693+0.006j)**2
+    epsAir      = 1.+0.j          #air
+    #epsCu       = -46.6046581932 + 4.7188669976j #1030 nm
+    #epsCu       = -1.9937293241+4.9290716854j     #355  nm
+    epsH2O      = 1.326**2
+    epsSiO2     = 1.453**2
+    # Medium 1: thin film. 
+    eps1 = epsSiO2
+    # Medium 2: substrate. 
+    eps2 = Drude(wavelength, 5.1E27, epsSi, 1.1e-15**-1, 0.18)        
+    # Medium 3: environment
+    #eps3 = epsAir       #environment | substrate
+    # Note: Inverting eps2 and eps3 should have no effect on the possible modes, but only on field amplification. 
+
+    #t = 100E-9 #thickness of the layer in meters
+    #thickness = 10e-9
+    t_list = np.array([5e-9]) #, 10e-9, 20e-9])
+    #meshes the initial guess area, all numbers are from the space of betas
+    x_min = -1E10
+    x_max = 1E10
+
+    y_min = -1E9
+    y_max = 1E9
+
+    x_steps = 40
+    y_steps = 40
+    
+    summary = np.zeros((0, 7))
+    for neH20Local in neH20:
+        eps3 = Drude(wavelength, neH20Local, epsH2O, 1.7e-15**-1, 0.5)      #epsBK7 #environment | substrate
+        for thickness in t_list:
+            roots = findroots(eps1, eps2, eps3,
+                    wavelength, thickness,
+                    x_min, x_max,    
+                    y_min, y_max,    
+                    x_steps, y_steps)
+
+            # Shaping the data to plot them with GNUplot
+            roots_shape = np.shape(roots)
+            #print(roots_shape)
+            num_thickness = np.shape(thickness)
+            num_branches  = roots_shape[0]
+            num_roots     = roots_shape[1] #In each branch, we select 2-3 roots. But there are infinitly of them. 
+            num_property  = roots_shape[2] #Period and Lspp
+            #num_epsilons  = np.shape(eps3)
+
+            for branch in np.arange(0,num_branches-1):
+                for root_number in np.arange(0,num_roots): 
+                    ToBeAdded = [thickness, branch, root_number, roots[branch][root_number][0], roots[branch][root_number][1], neH20Local, eps3]
+                    print(ToBeAdded)
+                    if(roots[branch][root_number][0] != 0e0): 
+                        summary = np.vstack((summary, ToBeAdded ))
+                #print("\n")
+            
+#== Extract the constructed table
+    thickness    = summary[:, 0] 
+    branch       = summary[:, 1]
+    root_number  = summary[:, 2]
+    period       = summary[:, 3]
+    lspp         = summary[:, 4]
+    densityWater = summary[:, 5]
+    epsilonWater = summary[:, 6]
+
+    print(summary)
+
+    # Now, we shall sort out the data
+    lists = sorted(zip(*[root_number, branch, thickness, period, lspp, densityWater, epsilonWater]))
+    root_number_s, branch_s, thickness_s, period_s, lspp_s, densityWater_s, epsilonWater_s = list(zip(*lists))
+
+    #ReBeta = np.divide(2.*np.pi,period_s)
+    #ImBeta = np.divide(0.5,lspp_s)
+
+    plt.figure()
+    ax1 = plt.subplot(111)
+    plt.xlabel(r'Density of excited electrons in H$_2$O (m$^{-3}$)')
+    plt.ylabel('SPP period (m)')
+    ax12 = ax1.twinx()
+    plt.ylabel(r'SPP mean free path $L_{SPP}$ (m)')
+    # Then we could plot them in the right order
+    plot11, = ax1.loglog(densityWater_s, period_s, 'r+', label=r'Period $\Lambda$')
+    plot12, = ax1.loglog(densityWater_s, wavelength*np.ones(np.shape(thickness_s)), '-', label=r'$\lambda$')
+    plot13, = ax12.loglog(densityWater_s, lspp_s, 'b+', label=r'$L_{SPP}$')
+    plt.tight_layout()
+
+    plt.legend(loc='best')
+    plt.tight_layout()
+    plt.savefig("Derrien2014_Fig7.eps")
+    plt.show()
+    
+#}}}
+
+#berini2000() #VALID
+#DerrienBonse2014_H20_SiO2_SiExcited() #Incomplete: further roots should be captured to make the complete figure. 
+#DerrienBonse2014_H20_SiExcited_Si()   #More than complete. NOTE: Novel results are available, we can already find transition betweel plasmon polaritons and phonons polaritons by using discontinuity of L_spp. 
+DerrienBonse2014_Air_SiExcited_Si()
+
+
+    ##TODO: from this, we would like to add a layer which will variate eps1 as function of oxide concentration

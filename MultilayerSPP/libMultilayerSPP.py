@@ -25,6 +25,7 @@ import math, cmath
 import numpy as np
 from scipy.optimize import root
 from itertools import product
+import matplotlib.pyplot as plt
 
 def func(betaR, eps1, eps2, eps3, k0, t, sgn1, sgn2):
     beta = betaR[0] + betaR[1]*1.j
@@ -172,5 +173,105 @@ def findroots(eps1, eps2, eps3, wavelength, t, x_min, x_max, y_min, y_max, x_ste
 
 #end of algorithm
 
+## Repeat results from Charbonneau and Berini, Optics Letters Vol. 25, No. 11 (2000). 
+def Berini2000(NumberOfPoints=5): #{{{
+    
+    #data
+    wavelength = 1550e-9
+    #epsAu       = -95.95924741872399+10.972582438155513j #1550 nm, Palik
+    epsAu       = -131.9475+12.65j
+    epsSiO2     = 2.085 #Berini #(1.4440+0j)**2 #Palik
 
+    # Medium 1: thin film. 
+    eps1 = epsAu        #thin film
+    # Medium 2: substrate. 
+    eps2 = epsSiO2       #epsBK7 #environment | substrate
+    # Medium 3: environment
+    eps3 = epsSiO2       #environment | substrate
+    # Note: Inverting eps2 and eps3 should have no effect on the possible modes, but only on field amplification. 
+
+    #t = 100E-9 #thickness of the layer in meters
+    #thickness = 100e-9
+    t_list = np.power(10., np.linspace(np.log10(1e-9), np.log10(300e-9), NumberOfPoints))
+    #meshes the initial guess area, all numbers are from the space of betas
+    x_min = -1E10
+    x_max = 1E10
+
+    y_min = -1E9
+    y_max = 1E9
+
+    x_steps = 40
+    y_steps = 40
+
+    summary = np.zeros((0, 5))
+
+    for thickness in t_list:
+        roots = findroots(eps1, eps2, eps3,
+                wavelength, thickness,
+                x_min, x_max,    
+                y_min, y_max,    
+                x_steps, y_steps)
+
+        # Shaping the data to plot them with GNUplot
+        roots_shape = np.shape(roots)
+        #print(roots_shape)
+        num_thickness = np.shape(thickness) 
+        num_branches  = roots_shape[0] #We have 2 or 4 branches
+        num_roots     = roots_shape[1] #In each branch, we select 2-3 roots. But there are infinitly of them. 
+        num_property  = roots_shape[2] #Period and Lspp
+
+        for branch in np.arange(0,num_branches):
+            #thickness_t  = np.zeros((1,0))    
+            #spp_period_t = np.zeros((1,0))
+            #l_spp_t      = np.zeros((1,0))
+            for root_number in np.arange(0,num_roots): 
+                ToBeAdded = [thickness, branch, root_number, roots[branch][root_number][0], roots[branch][root_number][1]]
+                print(ToBeAdded)
+                if(roots[branch][root_number][0] != 0e0): 
+                    summary = np.vstack((summary, ToBeAdded ))
+
+    ## === PLOTTING THE RESULTS ==
+
+    # Extract the constructed table
+    thickness   = summary[:, 0] 
+    branch      = summary[:, 1]
+    root_number = summary[:, 2]
+    period      = summary[:, 3]
+    lspp        = summary[:, 4]
+
+    print(summary)
+
+    # Now, we shall sort out the data
+    lists = sorted(zip(*[root_number, branch, thickness, period, lspp]))
+    root_number_s, branch_s, thickness_s, period_s, lspp_s = list(zip(*lists))
+
+    ReBeta = np.divide(2.*np.pi,period_s)
+    ImBeta = np.divide(0.5,lspp_s)
+
+    plt.figure()
+    ax1 = plt.subplot(121)
+    plt.xlabel('Film thickness (m)')
+    plt.ylabel('SPP period (m)')
+    ax12 = ax1.twinx()
+    plt.ylabel(r'SPP mean free path $L_{SPP}$ (m)')
+    # Then we could plot them in the right order
+    plot11,  = ax1.loglog(thickness_s, period_s, 'r+', label=r'Period $\Lambda$')
+    plot12,  = ax1.loglog(thickness_s, wavelength*np.ones(np.shape(thickness_s)), '-', label=r'$\lambda$')
+    plot13, = ax12.loglog(thickness, lspp, 'b+', label=r'$L_{SPP}$')
+    plt.tight_layout()
+
+    ax2 = plt.subplot(122)
+    plt.xlabel('Film thickness (m)')
+    plt.ylabel(r'Re(k) (m$^{-1}$)')
+    ax22 = ax2.twinx()
+    plt.ylabel(r'Im(k) (m$^{-1}$)')
+    # Then we could plot them in the right order
+    plot21, = ax2.loglog(thickness_s, ReBeta, '+', label=r'Re($\beta$)')
+    #ax2.loglog(thickness_s, wavelength*np.ones(np.shape(thickness_s)), '-', label=r'$\lambda$')
+    plot22, = ax22.loglog(thickness, ImBeta, 'b+', label=r'Im($\beta$)')
+    plt.legend(loc='best')
+    plt.tight_layout()
+    plt.savefig("Berini2000.eps")
+    plt.show()
+#}}}
 

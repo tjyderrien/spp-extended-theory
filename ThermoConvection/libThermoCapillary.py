@@ -25,6 +25,9 @@
 from libThermalPropertiesMaterials import *
 from libNonDimensionalNumbers import *
 
+from cycler import cycler
+import matplotlib as mpl
+
 #============== THESE ROUTINES ARE MESSY AND DONT EXACTLY FOLLOW THE SIMPLEST FORMULATION GIVEN IN ORIGINAL PAPER. 
 def Term1(T, k, depth, dynamic_viscosity, density, surface_tension):
   num1 = dynamic_viscosity * k**2
@@ -218,21 +221,24 @@ def plotThermoConvectiveInstability(wavelength, fluence, pulseFWHM, thickness, T
 
     print Header+"Thermo-convective instability growth rate [1/s]: "+str(gamma_Levchenko)
 
-    plt.figure()
-    #plt.loglog(np.divide(2*pi,k),-gamma_Levchenko)
-    plt.loglog(np.divide(2*pi,k)/laser_wavelength,-gamma_Levchenko)
-    #plt.xlabel(r"$\Lambda$ (m)")
-    plt.xlabel(r"$\Lambda/\lambda$")
-    plt.ylabel(r"$\gamma$ (s$^-1$)")
-    title    = r"$T=$"+str(int(T))+r" K, $h=$"+str(int(thickness*1E9))+" nm"
-    filename = "T"+str(T)+"K-h"+str(thickness*1E9)+"nm"
-    plt.title(title)
-    plt.grid()
-    plt.tight_layout()
-    plt.savefig(filename+".png")
-    plt.savefig(filename+".eps")
-    print Header+"** Info: wrote "+filename+".png."
+    #plt.figure()
+    ##plt.loglog(np.divide(2*pi,k),-gamma_Levchenko)
+    #plt.loglog(np.divide(2*pi,k)/laser_wavelength,-gamma_Levchenko)
+    ##plt.xlabel(r"$\Lambda$ (m)")
+    #plt.xlabel(r"$\Lambda/\lambda$")
+    #plt.ylabel(r"$\gamma$ (s$^-1$)")
+    #plt.ylim((1e5,1e14))
+    #title    = r"$T=$"+str(int(T))+r" K, $h=$"+str(int(thickness*1E9))+" nm"
+    #filename = "T"+str(T)+"K-h"+str(thickness*1E9)+"nm"
+    #plt.title(title)
+    #plt.grid()
+    #plt.tight_layout()
+    #plt.savefig(filename+".png")
+    #plt.savefig(filename+".eps")
+    #print Header+"** Info: wrote "+filename+".png."
     #plt.show()
+    
+    return np.divide(2*pi,k), -gamma_Levchenko
 
 laser_wavelength = 1025e-9 #m
 laser_fluence    = 4E4 #J/m2
@@ -240,10 +246,28 @@ laser_FWHM       = 300e-15 #s
 #thickness        = 50e-9 #molten depth thickness [m]
 #T                = 2000. #K
 
-plotThermoConvectiveInstability(laser_wavelength, laser_fluence, laser_FWHM, 50e-9 , 1300.)
-plotThermoConvectiveInstability(laser_wavelength, laser_fluence, laser_FWHM, 100e-9, 1300.)
-plotThermoConvectiveInstability(laser_wavelength, laser_fluence, laser_FWHM, 200e-9, 1300.)
+#plotThermoConvectiveInstability(laser_wavelength, laser_fluence, laser_FWHM, 50e-9 , 1300.)
+#plotThermoConvectiveInstability(laser_wavelength, laser_fluence, laser_FWHM, 100e-9, 1300.)
+#plotThermoConvectiveInstability(laser_wavelength, laser_fluence, laser_FWHM, 200e-9, 1300.)
 
-for T in [1900, 2000, 2500]:
+mpl.rcParams['axes.prop_cycle'] = cycler('color', ['#5729ce', '#0652ff', '#069af3', '#7bb274', '#fbeeac', '#feb308',  '#f4320c', '#c44240']) # mbcgyrk')
+
+for T in [2000]:
+    plt.figure()
     for thickness in [20e-9, 50e-9, 75e-9, 100e-9, 150e-9, 200e-9, 300e-9, 500e-9]:
-        plotThermoConvectiveInstability(laser_wavelength, laser_fluence, laser_FWHM, thickness, T)
+        NormalizedPeriod, gamma = plotThermoConvectiveInstability(laser_wavelength, laser_fluence, laser_FWHM, thickness, T)
+        plt.loglog(NormalizedPeriod, gamma, '', label=r'$h=$'+str(int(thickness*1e9))+ " nm")
+    #plt.xlabel(r"$\Lambda$ (m)")
+    plt.xlabel(r"$\Lambda/\lambda$")
+    plt.ylabel(r"$\gamma$ (s$^-1$)")
+    plt.ylim((1e5,1e14))
+    title    = r"$T=$"+str(int(T))+r" K"
+    filename = "T"+str(T)+"K-h-MultipleThicknesses"
+    plt.title(title)
+    plt.grid()
+    plt.tight_layout()
+    plt.legend(loc='best')
+    plt.savefig(filename+".png")
+    plt.savefig(filename+".eps")
+    print Header+"** Info: wrote "+filename+".png."
+    plt.show()

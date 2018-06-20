@@ -601,18 +601,11 @@ def DerrienBonse2014_H20_SiO2_SiExcited(NumberOfPoints=20): #{{{
 def DostovalovMetanano2018(NumberOfPoints=20): #{{{
     #data
     wavelength = 1026e-9 #355e-9 #1030E-9 #1026
-    #neH20 = np.power(10.,np.linspace(27.,29.,NumberOfPoints)) #the most violent change
-    #epsTibare   = -6.206969+25.2j #800 nm
-    #epsTiO2bare = 7.7841+0.j      #800 nm
-    #epsCr       = -0.672122310000001+24.8657476j #-0.67+24.87j    #1026 nm
-    #epsBK7      = 2.10277365777   #1026 nm
+    epsCr       = -0.672122310000001+24.8657476j #-0.67+24.87j    #1026 nm
+    epsBK7      = 2.10277365777   #1026 nm
     #epsCr2O3    = 4.9713+0.1784j  #1 um [JDT Kruschwitz et al, Appl. Opt. 1997]
-    epsSi       = (3.693+0.006j)**2
+    #epsSi       = (3.693+0.006j)**2
     epsAir      = 1.+0.j          #air
-    #epsCu       = -46.6046581932 + 4.7188669976j #1030 nm
-    #epsCu       = -1.9937293241+4.9290716854j     #355  nm
-    epsH2O      = 1.326**2
-    epsSiO2     = 1.453**2
     # Medium 1: thin film. 
     eps1 = epsSiO2
     # Medium 2: substrate. 
@@ -705,6 +698,6 @@ def DostovalovMetanano2018(NumberOfPoints=20): #{{{
 #DerrienBonse2014_Air_SiExcited_Si()   # More than complete as well. TODO: show to Jörn !!!!
 
 # =============== NOVEL CONCLUSIONS ==========
-
+#DostovalovMetanano2018()
 
     ##TODO: from this, we would like to add a layer which will variate eps1 as function of oxide concentration

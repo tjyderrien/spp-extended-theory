@@ -263,10 +263,10 @@ for T in [2000]:
     plt.ylim((1e5,1e14))
     title    = r"$T=$"+str(int(T))+r" K"
     filename = "T"+str(T)+"K-h-MultipleThicknesses"
-    plt.title(title)
+    #plt.title(title)
     plt.grid()
     plt.tight_layout()
-    plt.legend(loc='best')
+    #plt.legend(loc='best')
     plt.savefig(filename+".png")
     plt.savefig(filename+".eps")
     print Header+"** Info: wrote "+filename+".png."

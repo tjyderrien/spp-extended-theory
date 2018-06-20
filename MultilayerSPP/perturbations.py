@@ -25,17 +25,17 @@ import cmath
 import numpy as np
 
 #parameters
-wavelength = 1
-eps1 = 1
-eps2 = 2
-eps3 = 3
+wavelength = 1026e-9
+eps1 = -0.672122310000001+24.8657476j
+eps2 = 2.10277365777
+eps3 = 1.
 
-dt = 1 #dt << wavelength
+dt = 1E-9 #dt << wavelength
 
 #signs:
 sbeta0 = 1
-sgn1 = 1
-sgn2 = -1
+sgn1 = -1
+sgn2 = 1
 sgn3 = 1
 
 k0 = 2.*np.pi/wavelength

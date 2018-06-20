@@ -54,8 +54,8 @@ set log y2
 
 set yrange [:1e-7]
 
-plot datafile u ($2*xscale):3 w p ps 2 lw 3 lc 1           t '{/Symbol L}_{SPP}', \
-     datafile u ($2*xscale):4 w p ps 2 lw 3 lc 2 axis x1y2 t 'L_{SPP}'
+plot datafile u ($2*xscale):3 w p ps 1 lw 3 lc 1           t '{/Symbol L}_{SPP}', \
+     datafile u ($2*xscale):4 w p ps 1 lw 3 lc 2 axis x1y2 t 'L_{SPP}'
      
 
 

@@ -193,7 +193,7 @@ def ScenarioOfCrOxideMixture():
     plt.ylim((0.,1.1e9*wavelength))
     #ax12 = ax1.twinx()
     #plt.ylabel(r'SPP mean free path $L_{SPP}$ (m)')
-    plt.ylabel(r'Re($\varepsilon$), Im($\varepsilon$)')
+    #plt.ylabel(r'Re($\varepsilon$), Im($\varepsilon$)')
     # Then we could plot them in the right order
     plot11, = ax1.plot(fractionOxide_s, np.multiply(1e9,period_s), 'r+', label=r'Period $\Lambda$')
     plot12, = ax1.plot(fractionOxide_s, np.multiply(1e9,wavelength*np.ones(np.shape(thickness_s))), 'k--', label=r'$\lambda$')

@@ -86,7 +86,7 @@ def betaSPP(wavelength, eps1, eps2):#{{{
     try:
         value = omega/c * cmath.sqrt(eps1 * eps2 / (eps1 + eps2))
     except: 
-        print "betaSPP: singular case"
+        print "**Info: betaSPP: singular case"
         value = -1e0+0e0j
     return value
 #}}}

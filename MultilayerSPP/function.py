@@ -50,18 +50,19 @@ def cntr(inpt):
     return (px/ln, py/ln)
 
 # @param eps1: Dielectric permittivity of the thin film
-# @param eps2: Dielectric permittivity of the half-plane below the thin film. 
-# @param eps3: Dielectric permittivity of the half-plane above the thin film. Source light is supposed to come from this direction. 
+# @param eps2: Dielectric permittivity of the half-plane below the thin film.
+# @param eps3: Dielectric permittivity of the half-plane above the thin film. Source light is supposed to come from this direction.
 # @param wavelength: wavelength of the source light (SI units). 
 # @param t: thickness of the film
 # @param x_min: lower boundary of Re(roots)
 # @param x_max: higher boundary of Re(roots)
 # @param y_min: lower boundary of Im(roots)
 # @param y_max: higher boundary of Im(roots)
-# @param x_steps: number of steps used to mesh the Re(roots) space. 
-# @param y_steps: number of steps used to mesh the Im(roots) space. 
-# @param tol_merge: tolerance to merge the identified solutions. 
-def findroots(eps1, eps2, eps3, wavelength, t, x_min, x_max, y_min, y_max, x_steps, y_steps):
+# @param x_steps: number of steps used to mesh the Re(roots) space.
+# @param y_steps: number of steps used to mesh the Im(roots) space.
+# @param tol_merge: tolerance to merge the identified solutions.
+# @param num_of_maxs: how many maxima to return
+def findroots(eps1, eps2, eps3, wavelength, t, x_min, x_max, y_min, y_max, x_steps, y_steps, num_of_maxs):
     global k0, ke1, ke2, ke3
     k0 = 2.*np.pi/wavelength
     ke1 = (k0**2)*eps1
@@ -118,25 +119,11 @@ def findroots(eps1, eps2, eps3, wavelength, t, x_min, x_max, y_min, y_max, x_ste
 ##        print()
         branches.append(unique)
 
-    #selection of the maximum Lspp
+    #selection of maximal Lspps
     outs = []
     for branch in branches:
-        maxy, maxx, maxy2, maxx2 = float('-inf'), float('-inf'), float('-inf'), float('-inf')
-        for rt in branch:
-            xi = 2.*np.pi/rt[0]
-            yi = .5/rt[1]
-            if yi > maxy:
-                maxy, maxy2 = yi, maxy
-                maxx, maxx2 = xi, maxx
-            elif yi > maxy2:
-                maxy2 = yi
-                maxx2 = xi
-        if len(branch) == 0:
-            outs.append([[0, 0], [0, 0]])
-        elif len(branch) == 1:
-            outs.append([[maxx, maxy], [0, 0]])
-        else:
-            outs.append([[maxx, maxy], [maxx2, maxy2]])
+        brinv = [[2.*np.pi/rt[0], .5/rt[1]] for rt in branch]
+        outs.append(sorted(brinv, key=lambda x:abs(x[1]), reverse=True)[:num_of_maxs])
     return outs
 
 #end of algorithm
@@ -147,12 +134,13 @@ def findroots(eps1, eps2, eps3, wavelength, t, x_min, x_max, y_min, y_max, x_ste
 #             wavelength, t,
 #             x_min, x_max,       }
 #             y_min, y_max,       } mesh parameters
-#             x_steps, y_steps)   }
-#
+#             x_steps, y_steps    }
+#             num_of_maxs)
 
 #Example:
 #roots = findroots(-1+1j, 1, 3,
                   #1, .4,
                   #-1E2, 1E2,
                   #-1E4, 1E4,
-                  #30, 30)
+                  #30, 30,
+                  #2)

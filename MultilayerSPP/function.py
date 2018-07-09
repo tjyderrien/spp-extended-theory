@@ -70,6 +70,7 @@ def findroots(eps1, eps2, eps3, wavelength, t, x_min, x_max, y_min, y_max, x_ste
     ke3 = (k0**2)*eps3
 
     tol_merge = 1E3
+    merge_treshold = 4
     branches = []
     for sgn1, sgn2 in product((-1,1), (-1,1)):
         roots = []
@@ -94,29 +95,13 @@ def findroots(eps1, eps2, eps3, wavelength, t, x_min, x_max, y_min, y_max, x_ste
                     center = cntr(aux)
                 else:
                     aux2.append(rt)
-            if len(aux) > 4: #merging criterion
+            if len(aux) > merge_treshold: #merging criterion
                 if center[0] > 0:
                     unique.append(center)
                 else:
                     unique.append([-center[0], -center[1]])
             roots = list(aux2)
             ln = len(roots)
-
-##        valid = []
-##        start = time()
-##        for rt in unique:
-##            beta = rt[0] + 1.j*rt[1]
-##            k1 = cmath.sqrt(beta**2 - ke1)
-##            k2 = sgn1*cmath.sqrt(beta**2 - ke2)
-##            k3 = sgn2*cmath.sqrt(beta**2 - ke3)
-##            C = cmath.exp((-k1-k3)*t/2)*(k1*eps3-k3*eps1)/(2*k1*eps3)
-##            D = cmath.exp((k1-k3)*t/2)*(k1*eps3+k3*eps1)/(2*k1*eps3)
-##            B1 = C*cmath.exp((k2-k1)*t/2) + D*cmath.exp((k2+k1)*t/2)
-##            B2 = (C*cmath.exp((k2-k1)*t/2) - D*cmath.exp((k2+k1)*t/2))*(k1*eps2)/(k2*eps1)
-##            if abs(1 - abs(B2/B1)) < tol_valid:
-##                valid.append(rt)
-##        prnt('Total (validated): %d' % len(valid))
-##        print()
         branches.append(unique)
 
     #selection of maximal Lspps
@@ -134,7 +119,7 @@ def findroots(eps1, eps2, eps3, wavelength, t, x_min, x_max, y_min, y_max, x_ste
 #             wavelength, t,
 #             x_min, x_max,       }
 #             y_min, y_max,       } mesh parameters
-#             x_steps, y_steps    }
+#             x_steps, y_steps,   }
 #             num_of_maxs)
 
 #Example:

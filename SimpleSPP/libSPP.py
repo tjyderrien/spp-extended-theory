@@ -53,8 +53,8 @@ UsingTeX=True #TODO: set to False for Windows users
 LevelOfSPPaccuracy=1
 
 # Settings for matplotlib: taken from https://stackoverflow.com/questions/12322738/how-do-i-change-the-axis-tick-font-in-a-matplotlib-plot-when-rendering-using-lat
-sizeOfFont = 18
-FontName='Helvetica' #'cm'
+sizeOfFont = 10
+FontName='cm' #Helvetica
 fontProperties = {'family':'sans-serif','sans-serif':[FontName],
     'weight' : 'normal', 'size' : sizeOfFont}
 ticks_font = font_manager.FontProperties(family=FontName, style='italic',

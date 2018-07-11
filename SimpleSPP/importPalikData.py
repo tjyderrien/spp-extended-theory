@@ -1,7 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2013-2017 T. J.-Y. Derrien
+# Copyright (C) 2013-2018 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -613,7 +613,16 @@ try: #TODO: should we select by author? Or by units?
     plt.grid()
     plt.savefig("ZnO-reconstructed.eps")
     plt.show()
-    
+  elif(source == "Chase"):
+    print "** Info: branching with CrO2 Chase optical data..."
+    folder = "Database/"
+    filename = "CrO2-Chase"
+    importFromEpsilonTable(wavelength, folder, filename, True, 1E-6)
+  elif(source == "Chase-X"):
+    print "** Info: branching with CrO2 Chase optical data..."
+    folder = "Database/"
+    filename = "CrO2-Chase-X"
+    importFromEpsilonTable(wavelength, folder, filename, True, 1E-6)
   else: #TODO: revise the design here. 
     #folder = "Database/PalikGraph/" #TODO: Ag-Johnson and BK7-Maliton are in ./Database actually.
     folder = "Database/"

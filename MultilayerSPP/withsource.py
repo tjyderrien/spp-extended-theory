@@ -16,19 +16,20 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>
 
-# Package @contourplot helps to visualize electromagnetic fields prepared with solver.py. 
-# The formal model is presented in 
-# T.J.-Y. Derrien et al, J. Appl. Phys. 116, 074902 (2014) and references 
-# therein.
+## Package @withsources (experimental) explores the SPP theory at a thin film located 
+# between two semi-infinite media. The formal model is presented in 
+# T.J.-Y. Derrien et al, J. Appl. Phys. 116, 074902 (2014) and has been 
+# enriched by F. Preucil (HiLASE Centre) to take into account more accurate
+# source by adding a propagating wave in the ambient medium of irradiation.
+# This module remains experimental and may not be valid. 
 
 import matplotlib.pyplot as plt
 import numpy as np
-import cmath, pickle
+import cmath
 from itertools import product
 from scipy.constants import c, epsilon_0
 
-branch_index = 3
-root_index = 1
+branch_index = 1 #3
 
 #two black lines to show the boundaries
 showlines = True
@@ -42,18 +43,39 @@ levels = 10
 #2 (-, +, -) (+, +, -)
 #3 (-, +, +) (+, +, +)
 
-#loads the roots and the parameters from a file
-with open('sppdata.pkl', 'rb') as f:
-    branches, eps1, eps2, eps3, t, k0 = pickle.load(f)
+wavelength = 1026e-9 #355e-9 #1030E-9 #1026
+
+epsTibare   = -6.206969+25.2j #800 nm
+epsTiO2bare = 7.7841+0.j      #800 nm
+epsCr       = -0.672122310000001+24.8657476j #-0.67+24.87j    #1026 nm
+epsBK7      = 2.10277365777   #1026 nm
+epsCr2O3    = 4.9713+0.1784j  #1 um [JDT Kruschwitz et al, Appl. Opt. 1997]
+epsSi       = 12.8159503769+0.0114635303918j #1026 nm, Palik
+epsAir      = 1.+0.j          #air
+
+#epsCu       = -46.6046581932 + 4.7188669976j #1030 nm
+epsCu       = -1.9937293241+4.9290716854j     #355  nm
+
+# Medium 1: thin film. 
+eps1 = epsCr        #thin film
+# Medium 2: substrate. 
+eps2 = epsBK7       #epsBK7 #environment | substrate
+# Medium 3: environment
+eps3 = 1.+0.j       #environment | substrate
+# Note: Inverting eps2 and eps3 should have no effect on the possible modes, but only on field amplification. 
+
+t = 30E-9 #thickness of the layer in meters
+k0 = 2.*np.pi/wavelength
+
+betaR = (500000, 600000) #What is this? 
 
 #retrieves beta
-betaR = branches[branch_index][root_index]
 beta = betaR[0] + 1.j*betaR[1]
 SPPperiod = 2.*np.pi/betaR[0]
 SPPlength = .5/betaR[1]
 
 #which field you want to plot
-whichfield = 6
+whichfield = 0
 #0 Hy
 #1 Ex
 #2 Ez
@@ -102,10 +124,6 @@ whichpart = 0
 
 #constants precache
 omegaeps0 = k0*c*epsilon_0
-wavelength = 2.*np.pi/k0
-
-#field amplitude
-A = 1.
 
 #setting the branch
 sgn1, sgn2 = list(product((-1,1), (-1,1)))[branch_index]
@@ -114,8 +132,8 @@ k2 = sgn1*cmath.sqrt(beta**2 - k0**2*eps2)
 k3 = sgn2*cmath.sqrt(beta**2 - k0**2*eps3)
 
 #plotting
-xrange = SPPlength
-zrange = wavelength*0.2
+xrange = wavelength*50
+zrange = wavelength*.5
 steps = 200
 
 x = np.linspace(0., xrange, steps)
@@ -124,10 +142,18 @@ x_mesh, z_mesh = np.meshgrid(x, z, sparse=True)
 #x_mesh, z_mesh = x[None,:], z[:,None] #this might be faster than meshgrid but it seems it's not
 
 #amplitudes precache
-C = A*cmath.exp((-k1-k3)*t/2)*(k1*eps3-k3*eps1)/(2*k1*eps3) #might produce error (dividing by k1)
-D = A*cmath.exp((k1-k3)*t/2)*(k1*eps3+k3*eps1)/(2*k1*eps3)
-B = C*cmath.exp((k2-k1)*t/2) + D*cmath.exp((k2+k1)*t/2)
-B2 = (C*cmath.exp((k2-k1)*t/2) - D*cmath.exp((k2+k1)*t/2))*(k1*eps2)/(k2*eps1) #theoretically should be the same as B
+S = 1
+matrix = [[cmath.exp(-t/2*k3), 0, -cmath.exp(t/2*k1), -cmath.exp(-t/2*k1)],
+[1j*cmath.exp(-t/2*k3)*k3/(eps3*omegaeps0), 0, 1j*cmath.exp(t/2*k1)*k1/(eps1*omegaeps0), -1j*cmath.exp(-t/2*k1)*k1/(eps1*omegaeps0)],
+[0, -cmath.exp(-t/2*k2), cmath.exp(-t/2*k1), cmath.exp(t/2*k1)],
+[0, 1j*cmath.exp(-t/2*k2)*k2/(eps2*omegaeps0), -1j*cmath.exp(-t/2*k1)*k1/(eps1*omegaeps0), 1j*cmath.exp(t/2*k1)*k1/(eps1*omegaeps0)]]
+
+GF = np.linalg.inv(matrix)
+
+source = [-S*cmath.exp(t/2*k3), 1j*S*cmath.exp(t/2*k3)*k3/(eps3*omegaeps0), 0, 0]
+result = np.matmul(GF, source)
+
+A, B, C, D = result
 
 print('Field amplitudes:')
 print()
@@ -135,26 +161,25 @@ print('A:', A)
 print('C:', C)
 print('D:', D)
 print('B:', B)
-print('B2:', B2)
 
 #field functions
 def Hy(x, z):
     if z >= t/2:
-        return A*np.exp(1.j*beta*x-k3*z)
+        return A*np.exp(1.j*beta*x-k3*z) + S*np.exp(1.j*beta*x+k3*z)
     elif t/2 > z > -t/2:
         return C*np.exp(1.j*beta*x+k1*z) + D*np.exp(1.j*beta*x-k1*z)
     else:
         return B*np.exp(1.j*beta*x+k2*z)
 def Ex(x, z):
     if z >= t/2:
-        return A*np.exp(1.j*beta*x-k3*z)*1.j*k3/(omegaeps0*eps3)
+        return A*np.exp(1.j*beta*x-k3*z)*1.j*k3/(omegaeps0*eps3) - S*np.exp(1.j*beta*x+k3*z)*1.j*k3/(omegaeps0*eps3)
     elif t/2 > z > -t/2:
         return (-C*np.exp(1.j*beta*x+k1*z) + D*np.exp(1.j*beta*x-k1*z))*1.j*k1/(omegaeps0*eps1)
     else:
         return -B*np.exp(1.j*beta*x+k2*z)*1.j*k2/(omegaeps0*eps2)
 def Ez(x, z):
     if z >= t/2:
-        return -A*np.exp(1.j*beta*x-k3*z)*beta/(omegaeps0*eps3)
+        return -A*np.exp(1.j*beta*x-k3*z)*beta/(omegaeps0*eps3) - S*np.exp(1.j*beta*x+k3*z)*beta/(omegaeps0*eps3)
     elif t/2 > z > -t/2:
         return -(C*np.exp(1.j*beta*x+k1*z) + D*np.exp(1.j*beta*x-k1*z))*beta/(omegaeps0*eps1)
     else:

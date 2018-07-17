@@ -1,5 +1,5 @@
 # Database of dielectric index for different materials for plasmonic applications						Make tables for these combinations							
-# 1	2	3	4	5	6	7	8	9	10	11	12	13	14
+# 1	2	3	4	5	6	7	8	9	10	11	12	13	14	15	16
 # Material	Bandgap(eV)/EF	wavelength	Real(eps)	Imag(eps)	MainProperty	SPPdecayDeptAir	SPPdecayLength	Lifetime	AtomicMass(uma)	MeltingTemperature	BoilingTemperature	CriticalPoint[VE_Fortov_ThePhysicsOfNon-idealPlasma]	HeatConductivity300K(W/m/K)
 Air	10?	1064	1	0	-	?	?	?	?	?	?	?	?
 Air	10?	1060	1	0	-	?	?	?	?	?	?	?	?

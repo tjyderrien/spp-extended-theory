@@ -1,9 +1,9 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python2
 #-*- coding: utf-8 -*-
 ## @package libMaterials 
 # Functions describing materials and their interaction with light. 
 
-# Copyright (C) 2013-2017 T. J.-Y. Derrien
+# Copyright (C) 2013-2018 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -46,6 +46,12 @@ def Drude(wavelength, ne, epsilon, nu, meff=1.0):#{{{
 def reflectivity(eps1, eps2):#{{{
   R=abs(((eps1**0.5e0-eps2**0.5e0)/(eps1**0.5e0+eps2**0.5e0))**2)
   return R
+#}}}
+
+## Computes complex valued reflectivity with normal angle of incidence. Useful for computing further media
+def ComplexReflectivity(eps1, eps2): #{{{
+  r = ((eps1**0.5e0-eps2**0.5e0)/(eps1**0.5e0+eps2**0.5e0))
+  return r
 #}}}
 
 ## Returns the complex refractive index
@@ -92,3 +98,16 @@ LorentzLorenz2 = np.vectorize(LorentzLorenz2)
 #print "Define a ratio of Material 1 (Material 2 = 1 - ratio)."
 
 #MaxwellGarnett2(eps1, eps2, ratio)
+
+## Computes Reflectivity in 3-material thin film configuration, where media 1 and 3 and half-infinite. 
+# @param wavelength: wavelength (in meters) of the indicent photon
+# @param eps123: complex dielectric permittivity of media 1 2 and 3
+# @param thickness2: thickness of medium 2
+def BiLayerReflectivity(wavelength, eps1, eps2, eps3, thickness2):
+  phi2 = np.multiply(2.*np.pi*thickness2/wavelength, (np.sqrt(eps2))) ##TODO: For the non-normal absorption, use Kovalenko formula of refraction. 
+  r12  = ComplexReflectivity(eps1, eps2)
+  r23  = ComplexReflectivity(eps2, eps3)
+  r13  = (r12 + r23*np.exp(2.j*phi2)) / (1.+r12*r23*np.exp(2.j*phi2))
+  return r13*np.conjugate(r13)
+
+BiLayerReflectivity = np.vectorize(BiLayerReflectivity)

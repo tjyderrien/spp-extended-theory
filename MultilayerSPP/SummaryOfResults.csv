@@ -1,0 +1,27 @@
+# Property of A. Dostovalov
+# Thickness dependent LIPSS period
+#Substrates		Material		Laser Fluence	TLIPSS	LIPSS HSFL	TFSPP-preucil	TFSPP-preucil	TFSPP-preucil	TFSPP-Maple
+#Names	thickness	Name	thickness	mJ/cm2	period	period	period1	period2	period3	modes
+Air/BK7	-	Cr	25	?	?	?	?	1040	295	227.21
+Air/BK7	-	Cr	28	62	687	?	740	1037	295	?
+Air/BK7	-	Cr	40	?	?	?	?	?	?	227.21
+Air/BK7	-	Cr	42	85	707	150	722	1030	295	?
+Air/BK7	-	Cr	45	?	?	?	?	?	?	711.53
+Air/BK7	-	Cr	50	?	?	?	?	?	?	709.95
+Air/BK7	-	Cr	70	57	880	178	709	1025	294	?
+Air/BK7	-	Cr	100	62	901	138	708	1025	295	709.95
+Air/BK7	-	Cr	125	62	939	111	709	1026	295	?
+Air/BK7	-	Cr	180	51	965	275	709	1026	345	?
+Air/BK7	-	Cr	240	51	965	268	709	1026	322	?
+Air/BK7	-	Cr	350	51	970	274	709	1027	307	?
+
+# BK7/Air	-	Cr              25	-               -               -               746	1039	295	?
+# BK7/Air         -               Cr              28	-               -               -	745	1037	295	?	
+# BK7/Air         -               Cr              42	-               -               -	723	1030	295	?
+# BK7/Air         -               Cr              50	-               -               -               717	1040	295	?
+# BK7/Air         -               Cr              70	-               -               -	707	1026	295	?
+# BK7/Air         -               Cr              100             -               -               -               707	1026	295	?
+# BK7/Air         -               Cr              125             -               -               -               708	1026	294	?
+# BK7/Air         -               Cr              180             -               -               -               709             1026            342             ?
+# BK7/Air         -               Cr              240             -               -               -               709             1026            321             ?
+# BK7/Air         -               Cr              350             -               -               -               709             1026            307             ?

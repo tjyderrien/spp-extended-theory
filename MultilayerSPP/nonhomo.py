@@ -16,10 +16,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>
 
-# Package @contourplot helps to visualize electromagnetic fields prepared with solver.py. 
-# The formal model is presented in 
+# Package @nonhomo explores the SPP theory at a thin film located 
+# between two semi-infinite media. The formal model is presented in 
 # T.J.-Y. Derrien et al, J. Appl. Phys. 116, 074902 (2014) and references 
-# therein.
+# therein and was enriched by F. Preucil (Hilase/FZU) to account for 
+# improved boundary conditions. In particular, non-homogeneous equation
+# was solved to compute, for a GIVEN SPP wavenumber,  
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -104,8 +106,9 @@ whichpart = 0
 omegaeps0 = k0*c*epsilon_0
 wavelength = 2.*np.pi/k0
 
-#field amplitude
-A = 1.
+#field amplitudes
+Ah = 1.
+S = 1.
 
 #setting the branch
 sgn1, sgn2 = list(product((-1,1), (-1,1)))[branch_index]
@@ -124,10 +127,30 @@ x_mesh, z_mesh = np.meshgrid(x, z, sparse=True)
 #x_mesh, z_mesh = x[None,:], z[:,None] #this might be faster than meshgrid but it seems it's not
 
 #amplitudes precache
-C = A*cmath.exp((-k1-k3)*t/2)*(k1*eps3-k3*eps1)/(2*k1*eps3) #might produce error (dividing by k1)
-D = A*cmath.exp((k1-k3)*t/2)*(k1*eps3+k3*eps1)/(2*k1*eps3)
-B = C*cmath.exp((k2-k1)*t/2) + D*cmath.exp((k2+k1)*t/2)
-B2 = (C*cmath.exp((k2-k1)*t/2) - D*cmath.exp((k2+k1)*t/2))*(k1*eps2)/(k2*eps1) #theoretically should be the same as B
+matrix = [[cmath.exp(-t/2*k3), 0, -cmath.exp(t/2*k1), -cmath.exp(-t/2*k1)],
+[1j*cmath.exp(-t/2*k3)*k3/(eps3*omegaeps0), 0, 1j*cmath.exp(t/2*k1)*k1/(eps1*omegaeps0), -1j*cmath.exp(-t/2*k1)*k1/(eps1*omegaeps0)],
+[0, -cmath.exp(-t/2*k2), cmath.exp(-t/2*k1), cmath.exp(t/2*k1)],
+[0, 1j*cmath.exp(-t/2*k2)*k2/(eps2*omegaeps0), -1j*cmath.exp(-t/2*k1)*k1/(eps1*omegaeps0), 1j*cmath.exp(t/2*k1)*k1/(eps1*omegaeps0)]]
+source = [-S*cmath.exp(t/2*k3), 1j*S*cmath.exp(t/2*k3)*k3/(eps3*omegaeps0), 0, 0]
+
+result = np.linalg.lstsq(matrix, source)
+
+Ap, Bp, Cp, Dp = result[0]
+
+#print('---')
+#print(result[0])
+#print(np.dot(matrix, result[0]))
+#print(source)
+#print('--')
+Ch = Ah*cmath.exp((-k1-k3)*t/2)*(k1*eps3-k3*eps1)/(2*k1*eps3) #might produce error (dividing by k1)
+Dh = Ah*cmath.exp((k1-k3)*t/2)*(k1*eps3+k3*eps1)/(2*k1*eps3)
+Bh = Ch*cmath.exp((k2-k1)*t/2) + Dh*cmath.exp((k2+k1)*t/2)
+Bh2 = (Ch*cmath.exp((k2-k1)*t/2) - Dh*cmath.exp((k2+k1)*t/2))*(k1*eps2)/(k2*eps1) #theoretically should be the same as B
+
+A = Ah + Ap
+B = Bh + Bp
+C = Ch + Cp
+D = Dh + Dp
 
 print('Field amplitudes:')
 print()
@@ -140,21 +163,21 @@ print('B2:', B2)
 #field functions
 def Hy(x, z):
     if z >= t/2:
-        return A*np.exp(1.j*beta*x-k3*z)
+        return A*np.exp(1.j*beta*x-k3*z) + S*np.exp(1.j*beta*x+k3*z)
     elif t/2 > z > -t/2:
         return C*np.exp(1.j*beta*x+k1*z) + D*np.exp(1.j*beta*x-k1*z)
     else:
         return B*np.exp(1.j*beta*x+k2*z)
 def Ex(x, z):
     if z >= t/2:
-        return A*np.exp(1.j*beta*x-k3*z)*1.j*k3/(omegaeps0*eps3)
+        return A*np.exp(1.j*beta*x-k3*z)*1.j*k3/(omegaeps0*eps3) - S*np.exp(1.j*beta*x+k3*z)*1.j*k3/(omegaeps0*eps3)
     elif t/2 > z > -t/2:
         return (-C*np.exp(1.j*beta*x+k1*z) + D*np.exp(1.j*beta*x-k1*z))*1.j*k1/(omegaeps0*eps1)
     else:
         return -B*np.exp(1.j*beta*x+k2*z)*1.j*k2/(omegaeps0*eps2)
 def Ez(x, z):
     if z >= t/2:
-        return -A*np.exp(1.j*beta*x-k3*z)*beta/(omegaeps0*eps3)
+        return -A*np.exp(1.j*beta*x-k3*z)*beta/(omegaeps0*eps3) - S*np.exp(1.j*beta*x+k3*z)*beta/(omegaeps0*eps3)
     elif t/2 > z > -t/2:
         return -(C*np.exp(1.j*beta*x+k1*z) + D*np.exp(1.j*beta*x-k1*z))*beta/(omegaeps0*eps1)
     else:

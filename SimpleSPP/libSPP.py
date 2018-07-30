@@ -34,6 +34,8 @@ from matplotlib import rc, font_manager
 from scipy.constants import c, epsilon_0, mu_0, pi, e, m_e, h
 from matplotlib.legend_handler import HandlerLine2D
 import sys
+from colorama import Fore
+from colorama import Style
 
 # IMPORT CUSTOM LIBRARIES
 # from libKeldysh import *
@@ -50,7 +52,7 @@ UsingTeX=True #TODO: set to False for Windows users
 ## 1: use the RegularLIPSScondition, softer than pure SPP excitation condition
 ## 2: Period != 0 is necessary for a material to be listed in results
 ## 3: Extreme level: use ExperimentallyAchievable() to verify possibility of decay depth > optical penetration depth
-LevelOfSPPaccuracy=1
+LevelOfSPPaccuracy=2
 
 # Settings for matplotlib: taken from https://stackoverflow.com/questions/12322738/how-do-i-change-the-axis-tick-font-in-a-matplotlib-plot-when-rendering-using-lat
 sizeOfFont = 18
@@ -84,7 +86,7 @@ def betaSPP(wavelength, eps1, eps2):#{{{
     try:
         value = omega/c * cmath.sqrt(eps1 * eps2 / (eps1 + eps2))
     except: 
-        print "betaSPP: singular case"
+        print "**Info: betaSPP: singular case"
         value = -1e0+0e0j
     return value
 #}}}
@@ -323,13 +325,13 @@ def deltaLspp(wavelength, eps1, eps2, deps1r, deps1c, deps2r, deps2c): #{{{
 
 
 ## Computes the SPP decay depth in one slab
-def DecayDepth(kzSPP):#{{{
+def DecayDepth(kzSPP):#{{{ #trying with module instead of real part
   if(kzSPP.real != 0): 
-    result=2e0*pi/kzSPP.real
-  else: 
-    result = -1.
-    #print "Singular case for DecayDepth."
-  return result
+      kzSPPnorm=np.sqrt(kzSPP.real**2 + kzSPP.imag**2)
+  else:
+      result = -1
+  return 1e0/kzSPPnorm
+  #return 2e0*pi/kzSPP.real
 #}}}
 
 ## Computes the complex wavenumber in direction of incident laser, perp. to SPP propagation. 

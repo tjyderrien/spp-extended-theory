@@ -20,11 +20,26 @@
 # Functions to describe the laser pulse
 
 import numpy as np
-from scipy.constants import c, epsilon_0, mu_0, pi, e, m_e, h
+from scipy.constants import c, epsilon_0, mu_0, pi, e, m_e, h, e
 
 ## calculate laser frequency (Hz) from wavelength (m)
 def omega(wavelength):#{{{
     return 2.0*pi*c/wavelength
 #}}}
 
-omega = np.vectorize(omega) 
+## Compute photon wavelength (m) from a band gap energy (eV)
+# @param Energy (eV)
+# Output: corresponding photon wavelength (m)
+def Energy_to_Wavelength(energy):
+  wavelength = h * c / Energy / e
+  return wavelength
+
+## Converts photon wavelength (m) to a band gap energy (eV)
+# @param Wavelength (m)
+# Output: corresponding photon wavelength (m)
+def Wavelength_to_Energy(wavelength):
+  Energy = h * c / wavelength / e
+  return Energy
+  
+omega                = np.vectorize(omega) 
+Wavelength_to_Energy = np.vectorize(Wavelength_to_Energy)

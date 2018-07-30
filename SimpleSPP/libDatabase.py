@@ -1,7 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2013-2017 T. J.-Y. Derrien
+# Copyright (C) 2013-2018 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -43,6 +43,14 @@ def CleanStrArray(Material2): #{{{
 # @param FieldIndex: number of the field of interest #TODO: change for a dictionnary of fields
 def FilterDatabase(SPPdb, query, FieldIndex):
   SPPdbFiltered = np.array(SPPdb[SPPdb[:,FieldIndex]==query,:]) #uses a table of booleans to select
+  return SPPdbFiltered
+
+## Removes the matching entries from the database. Query is working with field <index>. 
+# @param SPPdb: a numpy array of strings | integers | reals | complex
+# @param query: a string | integer | real | complex to compare with. 
+# @param FieldIndex: number of the field of interest
+def FilterDatabaseRemove(SPPdb, query, FieldIndex):
+  SPPdbFiltered = np.array(SPPdb[SPPdb[:,FieldIndex]!=query,:])
   return SPPdbFiltered
 
 ## Filter for the SPP database using a string <query> which should be *contained* in field of nmuber <index>. 

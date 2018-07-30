@@ -22,6 +22,8 @@
 from scipy.constants import c, epsilon_0, mu_0, pi, e, m_e, h, hbar
 import numpy as np
 
+import libKeldysh
+
 ## Computes a step Heaviside function. 
 def step(x):
     return 1.0 * (x > 0.0)
@@ -36,7 +38,7 @@ def step(x):
 # @param PeakIntensity: peak intensity (W/m^2)
 # @param t0: instant for the peak intensity (t0=0 by default)
 def PulseGaussianTemporalShape(t, tau, PeakIntensity, t0=0.):
-  sigmaTau = sigmaFWHM(tau)
+  sigmaTau = libKeldysh.sigmaFWHM(tau)
   #PeakIntensity = fluence/tau 
   #TODO: Missing coefficient on peak intensity ? 
   intensity = PeakIntensity * np.exp(-0.5 * ((t-t0)/(sigmaTau))**2 )

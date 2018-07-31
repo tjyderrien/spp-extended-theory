@@ -255,12 +255,13 @@ mpl.rcParams['axes.prop_cycle'] = cycler('color', ['#5729ce', '#0652ff', '#069af
 for T in [2000]:
     plt.figure()
     for thickness in [20e-9, 50e-9, 75e-9, 100e-9, 150e-9, 200e-9, 300e-9, 500e-9]:
-        NormalizedPeriod, gamma = plotThermoConvectiveInstability(laser_wavelength, laser_fluence, laser_FWHM, thickness, T)
-        plt.loglog(NormalizedPeriod, gamma, '', label=r'$h=$'+str(int(thickness*1e9))+ " nm")
-    #plt.xlabel(r"$\Lambda$ (m)")
-    plt.xlabel(r"$\Lambda/\lambda$")
+        Period, gamma = plotThermoConvectiveInstability(laser_wavelength, laser_fluence, laser_FWHM, thickness, T)
+        plt.loglog(Period, gamma, '', label=r'$h=$'+str(int(thickness*1e9))+ " nm")
+    plt.xlabel(r"$\Lambda$ (m)")
+    #plt.xlabel(r"$\Lambda/\lambda$")
     plt.ylabel(r"$\gamma$ (s$^-1$)")
     plt.ylim((1e5,1e14))
+    plt.axvline(x=laser_wavelength, color='k', linestyle='--', linewidth=0.5)
     title    = r"$T=$"+str(int(T))+r" K"
     filename = "T"+str(T)+"K-h-MultipleThicknesses"
     #plt.title(title)

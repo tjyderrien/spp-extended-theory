@@ -23,7 +23,7 @@
 # T.J.-Y. Derrien et al, J. Appl. Phys. 116, 074902 (2014) and references 
 # therein. 
 
-from function import *
+from libMultilayerSPP import *
 import matplotlib.pyplot as plt
 
 # === PRODUCTION OF SCIENTIFIC RESULTS ===
@@ -33,14 +33,14 @@ wavelength = 1064e-9
 epsAir      = 1.+0.j          #air
 
 if(wavelength == 1064e-9): 
-    epsMo=-14.083065233570098+20.789041764340013j; epsSiO2=1.4496**2
+    epsMo=-14.083065233570098+20.789041764340013j; epsSiO2=1.4496**2; epsSLG = 2.2889 + 0.000014899j
 elif(wavelength == 800e-9): 
-    epsMo=2.08+24.52j; epsSiO2=1.4533**2
+    epsMo=2.08+24.52j; epsSiO2=1.4533**2; epsSLG = 2.3018 + 0.0000075160j
 
 # Medium 1: thin film. 
 eps1 = epsMo        #thin film
 # Medium 2: substrate. 
-eps2 = epsSiO2       #epsBK7 #environment | substrate
+eps2 = epsSLG # | epsSiO2       #epsBK7 #environment | substrate
 # Medium 3: environment
 eps3 = epsAir       #environment | substrate
 # Note: Inverting eps2 and eps3 should have no effect on the possible modes, but only on field amplification. 

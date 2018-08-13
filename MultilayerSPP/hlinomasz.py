@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>
 
-# @package Multilayer_Hlinomasz
+## @package Multilayer_Hlinomasz
 # Preparation of results for Prof. Bulgakova and Krystof Hlinomasz. 
 # Explores the SPP theory at a thin film located 
 # between two semi-infinite media. The formal model is presented in 

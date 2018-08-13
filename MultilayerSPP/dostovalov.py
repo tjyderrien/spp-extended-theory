@@ -45,7 +45,6 @@ epsCr2O3   = 3.8273816+0.0483803j #Al-Kuhaili, M. & Durrani, S. Optical properti
 epsCr      = -0.6721223+24.8657476j
 epsCrO2   = 1.3587463082734004+9.00595525243578j #Chase, L. L. Optical properties of Cr O 2 and Mo O 2 from 0.1 to 6 eV Physical Review B, 1974, 10, 2226-2231
 
-
 epsBK7      = 2.10277365777   #1026 nm
 epsSi       = 12.8159503769+0.0114635303918j #1026 nm, Palik
 epsAir      = 1.+0.j          #air
@@ -63,7 +62,7 @@ x_steps = 40
 y_steps = 40
 
 # Scenario proposed by Thibault: an oxide layer grows at the top of the Cr sample, reducing progressively the periodicity by lambda/n. 
-def ScenarioOfOxidePrecipitation(): 
+def ScenarioOfOxidePrecipitation(epsMedium, epsSubstrate, epsEnvironment=1.): 
     # Medium 1: thin film.
     eps1 = epsCr     #thin film
     # Medium 2: substrate. 
@@ -98,21 +97,28 @@ def ScenarioOfOxidePrecipitation():
 # Pulse by pulse, oxygen from ambient air diffuses into the Cr, and leads to formation of Cr2O3. 
 # By making use of a Lorenz-Lorentz model, one can construct a dielectric permittivity of the oxide
 # and therefore observe the transition between SPP and waveguiding modes. 
-def ScenarioOfCrOxideMixture():
+def ScenarioOfCrOxideMixture(epsSample, epsOxide=1., epsSubstrate=1., fraction_size=60, SampleName='Cr', OxideName='Cr2O3', SubstrateName='BK7', PlotLspp=True):
     print(Header, "# Info: Considering a mixed fraction of Cr with Cr2O3 with several thicknesses.")
     wavelength = 1026e-9
-    fraction_size = 60
+    #fraction_size = 60
+    numberofroots = 3
+    
     fraction_min = 0.
     fraction_max = 1.
 
     thickness_size = 1
     thickness_min  = 28e-9
     thickness_max  = 28e-9
-
+    
+    #PlotLspp = False
+    if(PlotLspp): 
+        plotA=211; plotB=212
+    else: 
+        plotA=111; 
     ## Running 
 
     fraction = np.linspace(fraction_min, fraction_max, fraction_size) #fraction of Cr
-    epsCrCr2O3_list = MaxwellGarnett2(epsCr, epsCr2O3, 1.-fraction)
+    epsCrCr2O3_list = MaxwellGarnett2(epsSample, epsOxide, 1.-fraction)
     print(Header, "# Info: size of the fraction matrix: ", fraction_size)
 
     print(Header, "# Info: preparation of the root finder.")
@@ -141,7 +147,7 @@ def ScenarioOfCrOxideMixture():
                     wavelength, thickness,
                     x_min, x_max,    
                     y_min, y_max,    
-                    x_steps, y_steps)
+                    x_steps, y_steps, numberofroots)
 
         # Shaping the data to plot them with GNUplot
         roots_shape = np.shape(roots)
@@ -184,7 +190,7 @@ def ScenarioOfCrOxideMixture():
     #ImBeta = np.divide(0.5,lspp_s)
 
     plt.figure()
-    ax1 = plt.subplot(211)
+    ax1 = plt.subplot(plotA)
     plt.title(r'Film thickness $t=$'+str(round(np.real(thickness[0])*1e9))+' nm')
     #plt.xlabel(r'Fraction of Cr (perc.)')
     plt.ylabel(r'SPP period $\Lambda$ (nm)') 
@@ -206,6 +212,7 @@ def ScenarioOfCrOxideMixture():
     ax1.yaxis.label.set_color(plot11.get_color()) #colorizes the label
     ax1.spines["left"].set_edgecolor(plot11.get_color()) #colorizes the axis
     ax1.tick_params(axis='y', colors=plot11.get_color()) #colorizes the tics and numbers
+    plotComb= [plot11, plot12]; 
     
     #ax12.yaxis.label.set_color(plot14.get_color()) #colorizes the label
     #ax12.spines["right"].set_edgecolor(plot14.get_color()) #colorizes the axis
@@ -216,34 +223,36 @@ def ScenarioOfCrOxideMixture():
     #plot1   = [plot11, plot12, plot14, plot15]
     #labels1 = [l.get_label() for l in plot1]
     #ax1.legend(plot1, labels1, loc='best')
-    
-    ax2 = plt.subplot(212)
-    plt.ylabel(r'$L_{SPP}$ decay length (m)')
-    plt.xlabel(r'Fraction of Cr (perc.)')
-    plot21, = ax2.semilogy(fractionOxide_s, lspp_s,   'r^', label=r'SPP decay length $L_{SPP}$')
-    ax22 = ax2.twinx()    
-    plt.ylabel(r'Re($\varepsilon$), Im($\varepsilon$)')
-    plot22, = ax22.plot(fractionOxide_s, np.real(epsilonFilm_s), 'b+', label=r'Re($\varepsilon$)')
-    plot23, = ax22.plot(fractionOxide_s, np.imag(epsilonFilm_s), 'b^', label=r'Im($\varepsilon$)')
-    plot24, = ax22.plot(fractionOxide_s, np.multiply(epsBK7, np.ones(np.shape(fractionOxide_s))), 'b--', label=r'$Re[\varepsilon$(BK7)] ')
-    
-    ax2.yaxis.label.set_color(plot21.get_color()) #colorizes the label
-    ax2.spines["left"].set_edgecolor(plot21.get_color()) #colorizes the axis
-    ax2.tick_params(axis='y', colors=plot21.get_color()) #colorizes the tics and numbers
-    
-    ax22.yaxis.label.set_color(plot22.get_color()) #colorizes the label
-    ax22.spines["right"].set_edgecolor(plot22.get_color()) #colorizes the axis
-    ax22.tick_params(axis='y', colors=plot22.get_color()) #colorizes the tics and numbers
-    
-    plot2   = [plot21, plot22, plot23, plot24]
-    plotComb= [plot11, plot12, plot21, plot22, plot23, plot24]
-    #labels2 = [l.get_label() for l in plot2]
+    if(PlotLspp):
+        ax2 = plt.subplot(plotB)
+        plt.ylabel(r'$L_{SPP}$ decay length (m)')
+        plt.xlabel(r'Fraction of Cr (perc.)')
+        plot21, = ax2.semilogy(fractionOxide_s, lspp_s,   'r^', label=r'SPP decay length $L_{SPP}$')
+        ax22 = ax2.twinx()    
+        plt.ylabel(r'Re($\varepsilon$), Im($\varepsilon$)')
+        plot22, = ax22.plot(fractionOxide_s, np.real(epsilonFilm_s), 'b+', label=r'Re($\varepsilon$)')
+        plot23, = ax22.plot(fractionOxide_s, np.imag(epsilonFilm_s), 'b^', label=r'Im($\varepsilon$)')
+        plot24, = ax22.plot(fractionOxide_s, np.multiply(epsBK7, np.ones(np.shape(fractionOxide_s))), 'b--', label=r'$Re[\varepsilon$(BK7)] ')
+        
+        ax2.yaxis.label.set_color(plot21.get_color()) #colorizes the label
+        ax2.spines["left"].set_edgecolor(plot21.get_color()) #colorizes the axis
+        ax2.tick_params(axis='y', colors=plot21.get_color()) #colorizes the tics and numbers
+        
+        ax22.yaxis.label.set_color(plot22.get_color()) #colorizes the label
+        ax22.spines["right"].set_edgecolor(plot22.get_color()) #colorizes the axis
+        ax22.tick_params(axis='y', colors=plot22.get_color()) #colorizes the tics and numbers
+        
+        plot2   = [plot21, plot22, plot23, plot24]
+        plotComb+=plot2
+        #labels2 = [l.get_label() for l in plot2]
+        #ax2.legend(plot2, labels2, loc='best')
     labelsComb = [l.get_label() for l in plotComb]
-    #ax2.legend(plot2, labels2, loc='best')
-    ax2.legend(plotComb, labelsComb, loc='best')
+    ax1.legend(plotComb, labelsComb, loc='best')
     
     plt.tight_layout()
-    plt.savefig("Dostovalov_Cr2O3mixedWithCr_Thickness.eps")
+    filename="Dostovalov_"+OxideName+"-mixedWith-"+SampleName+"-Thickness-"+str(1E9*thickness_max)+"nm"
+    plt.savefig(filename+".eps")
+    plt.savefig(filename+".png")
     plt.show()
     
 #}}}
@@ -252,5 +261,8 @@ def ScenarioOfCrOxideMixture():
 # ** Info: computing 3-layer reflectivity..."
 #R = BiLayerReflectivity(epsAir, epsCrCr2O3_list, epsBK7, t_list) #dimension is good for a HeatMap picture
 
+Fraction_size = 50 #samples
+
 #ScenarioOfOxidePrecipitation()
-ScenarioOfCrOxideMixture()
+ScenarioOfCrOxideMixture(epsCr, epsCr2O3, epsBK7, Fraction_size, 'Cr', 'Cr2O3')
+#ScenarioOfCrOxideMixture(epsCr, epsCrO2, epsBK7, Fraction_size,  'Cr', 'CrO2')

@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>
 
-# @package Multilayer_Dostovalov
+## @package MultilayerDostovalov
 # Preparation of results for Prof. Bulgakova and Sasha Dostovalov. 
 # Explores the SPP theory at a thin film located 
 # between two semi-infinite media. The formal model is presented in 
@@ -25,10 +25,10 @@
 
 from libMultilayerSPP import *
 from libMaterials     import *
-from joblib import Parallel, delayed
-import multiprocessing
+#from joblib import Parallel, delayed
+#import multiprocessing
 
-num_cores = multiprocessing.cpu_count()
+#num_cores = multiprocessing.cpu_count()
 
 import matplotlib.pyplot as plt
 Header="# [dostovalov.py]: "
@@ -40,9 +40,11 @@ NumberOfPoints=50
 #data
 wavelength = 1026e-9 #355e-9 #1030E-9 #1026
 
-epsCr2O3   = 3.8273816+0.0483803j
+epsCr2O3   = 3.8273816+0.0483803j #Al-Kuhaili, M. & Durrani, S. Optical properties of chromium oxide thin films deposited by electron-beam evaporation Optical Materials, 2007, 29, 709-713
 #epsCr2O3    = 4.9713+0.1784j  #1 um [JDT Kruschwitz et al, Appl. Opt. 1997]
 epsCr      = -0.6721223+24.8657476j
+epsCrO2   = 1.3587463082734004+9.00595525243578j #Chase, L. L. Optical properties of Cr O 2 and Mo O 2 from 0.1 to 6 eV Physical Review B, 1974, 10, 2226-2231
+
 
 epsBK7      = 2.10277365777   #1026 nm
 epsSi       = 12.8159503769+0.0114635303918j #1026 nm, Palik
@@ -65,7 +67,7 @@ def ScenarioOfOxidePrecipitation():
     # Medium 1: thin film.
     eps1 = epsCr     #thin film
     # Medium 2: substrate. 
-    eps2 = epsCr2O3       #epsBK7 #environment | substrate
+    eps2 = epsCrO2 #2O3       #epsBK7 #environment | substrate
     # Medium 3: environment
     eps3 = epsBK7       #environment | substrate
     # Note: Inverting eps2 and eps3 should have no effect on the possible modes, but only on field amplification. 

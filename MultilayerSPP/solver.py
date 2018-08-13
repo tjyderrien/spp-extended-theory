@@ -22,6 +22,8 @@
 # therein.
 # This routine computes the multiple modes possible in a thin film, from its 
 # dielectric permittivity and thickness. 
+# It was successfully used to explain the experimental results from A. Dostovalov et al., 
+# Proceedings of MetaNano conference, IOP proceedings, 2018. 
 
 import math, cmath, pickle
 import numpy as np

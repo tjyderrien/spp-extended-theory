@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>
 
-## Package @withsources (experimental) explores the SPP theory at a thin film located 
+## Package @MultilayerWithsources (experimental) explores the SPP theory at a thin film located 
 # between two semi-infinite media. The formal model is presented in 
 # T.J.-Y. Derrien et al, J. Appl. Phys. 116, 074902 (2014) and has been 
 # enriched by F. Preucil (HiLASE Centre) to take into account more accurate
@@ -163,6 +163,7 @@ print('D:', D)
 print('B:', B)
 
 #field functions
+
 def Hy(x, z):
     if z >= t/2:
         return A*np.exp(1.j*beta*x-k3*z) + S*np.exp(1.j*beta*x+k3*z)

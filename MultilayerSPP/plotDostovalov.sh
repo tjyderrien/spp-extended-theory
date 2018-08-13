@@ -7,6 +7,6 @@ infile="PeriodWithThickness.csv"
 if [ -e ${infile} ]; then
   echo "Input file ${infile} already exists. Plotting directly. "
 else
-  ./dostovalov.py &> PeriodWithThickness.csv
+  ./dostovalov.py &> $infile
 fi
 gnuplot plotThicknessPeriod.gnu --persist

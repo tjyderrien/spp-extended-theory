@@ -97,11 +97,11 @@ def ScenarioOfOxidePrecipitation(epsMedium, epsSubstrate, epsEnvironment=1.):
 # Pulse by pulse, oxygen from ambient air diffuses into the Cr, and leads to formation of Cr2O3. 
 # By making use of a Lorenz-Lorentz model, one can construct a dielectric permittivity of the oxide
 # and therefore observe the transition between SPP and waveguiding modes. 
-def ScenarioOfCrOxideMixture(epsSample, epsOxide=1., epsSubstrate=1., fraction_size=60, SampleName='Cr', OxideName='Cr2O3', SubstrateName='BK7', PlotLspp=True):
+def ScenarioOfCrOxideMixture(epsSample, epsOxide=1., epsSubstrate=1., fraction_size=60, SampleName='Cr', OxideName='Cr2O3', SubstrateName='BK7', PlotLspp=False):
     print(Header, "# Info: Considering a mixed fraction of Cr with Cr2O3 with several thicknesses.")
     wavelength = 1026e-9
     #fraction_size = 60
-    numberofroots = 3
+    numberofroots = 6 #BUG: does not work if numberofroots > 1. 
     
     fraction_min = 0.
     fraction_max = 1.
@@ -117,7 +117,7 @@ def ScenarioOfCrOxideMixture(epsSample, epsOxide=1., epsSubstrate=1., fraction_s
         plotA=111; 
     ## Running 
 
-    fraction = np.linspace(fraction_min, fraction_max, fraction_size) #fraction of Cr
+    fraction = np.linspace(fraction_min, fraction_max, fraction_size) #fraction of Cr (includes the final value)
     epsCrCr2O3_list = MaxwellGarnett2(epsSample, epsOxide, 1.-fraction)
     print(Header, "# Info: size of the fraction matrix: ", fraction_size)
 
@@ -127,11 +127,11 @@ def ScenarioOfCrOxideMixture(epsSample, epsOxide=1., epsSubstrate=1., fraction_s
 
     #t = 100E-9 #thickness of the layer in meters
     #thickness = 10e-9
-
+    print("\n")
     print("# Fraction of Cr: ", fraction)
     summary = np.zeros((0, 7))
     ## Preparation of the thin film modeling for various compositions
-    for fraction_index in np.arange(0,fraction_size): #arange excludes the last one
+    for fraction_index in np.arange(0,fraction_size): #arange excludes the last one, linspace includes it
         # Medium 1: thin film. 
         eps1 = epsCrCr2O3_list[fraction_index]        #thin film
         # Medium 2: substrate. 
@@ -141,28 +141,59 @@ def ScenarioOfCrOxideMixture(epsSample, epsOxide=1., epsSubstrate=1., fraction_s
         # Note: Inverting eps2 and eps3 should have no effect on the possible modes, but only on field amplification. 
         t_list = np.linspace(thickness_min, thickness_max, thickness_size, endpoint=True)
         
-        
-        for thickness in t_list:
-            roots = findroots(eps1, eps2, eps3,
+        #for thickness in t_list: #BUG: works only if using 1 thickness
+        thickness = t_list[0] 
+        roots = findroots(eps1, eps2, eps3,
                     wavelength, thickness,
                     x_min, x_max,    
                     y_min, y_max,    
                     x_steps, y_steps, numberofroots)
 
-        # Shaping the data to plot them with GNUplot
-        roots_shape = np.shape(roots)
-        #print(roots_shape)
-        num_thickness = np.shape(thickness) #NOTE: is this used? 
-        num_branches  = roots_shape[0]
-        num_roots     = roots_shape[1]
-        num_property  = roots_shape[2]
+        # Preparation of the data for plotting
+        print("\nOxide fraction #"+str(fraction_index)+"="+str(fraction[fraction_index]))
+        num_branches = len(roots) 
+        print("Number of branches: "+str(num_branches)) #number of SPP branches for this sample. 
+        #print("ndimn: "+str(np.ndim(roots)))
+        
+        # This means we have tested <roots_oxidationDegree> samples with different oxidations. 
+        
+        #roots_t = np.ndarray(roots)
+        
+        #print(Header+"** Summary of the roots. Number of oxidation degrees: "+str(roots_oxidationDegree))
+        #print("Roots")
+        #print(roots) #For each branch, each sample, we have two data Period, and L_spp
+        
+        ### This version is not general enough for number_of_roots > 1. 
+        num_thickness = np.shape(t_list) #NOTE: number of tested thicknesses
+        for branch in np.arange(0,num_branches):
+            roots_in_branch = roots[branch]
+            #print("\n")
+            print("Roots in branch #"+str(branch))
+            for order in np.arange(0,len(roots_in_branch)):
+                roots_in_branch_order = roots_in_branch[order]
+                #print("\n")
+                print("Order #"+str(order)+": Period="+str(roots_in_branch_order[0])+" Lspp="+str(roots_in_branch_order[1]))
+                ToBeAdded = [thickness, branch, order, roots_in_branch_order[0], roots_in_branch_order[1], fraction[fraction_index], eps1]
+                if(abs(roots_in_branch[order][0]) > 1E-15 and abs(roots_in_branch[order][1]) > 1E-10): 
+                    # We remove modes were Lspp < 0.1 nm or period < 0. 
+                    summary = np.vstack((summary, ToBeAdded ))
+                    
+        #num_branches  = roots_oxidationDegree[0]
+        #return(roots, num_thickness, num_branches)
+        #num_roots     = roots_oxidationDegree[1] #BUG: this crashes since MultilayerSPP repository was merged in develop... 
+        #num_property  = roots_oxidationDegree[2]
 
-        for branch in np.arange(0,num_branches-1):
-                for root_number in np.arange(0,num_roots): 
-                    ToBeAdded = [thickness, branch, root_number, roots[branch][root_number][0], roots[branch][root_number][1], fraction[fraction_index], eps1]
-                    print(ToBeAdded)
-                    if(roots[branch][root_number][0] != 0e0): 
-                        summary = np.vstack((summary, ToBeAdded ))
+        #for branch in np.arange(0,num_branches-1):
+                #for root_number in np.arange(0,num_roots): 
+                    #ToBeAdded = [thickness, branch, root_number, roots[branch][root_number][0], roots[branch][root_number][1], fraction[fraction_index], eps1]
+                    #print(ToBeAdded)
+                    #if(roots[branch][root_number][0] != 0e0): 
+                        #
+    #print(summary)
+    #exit()
+    #return(summary)
+    
+    print(Header+"** Preparation of the plots")
 
     ExperimentalData_velocity   = np.array([1e-6, 10e-16, 50e-6, 100e-6, 200e-6, 300e-6]) #m/s
     ExperimentalData_LSFL       = np.array([696e-9, 704e-9, 816e-9, 858e-9, -100e0, -100e-9]) #m #better observed for low velocities, i.e., high number of pulses, i.e., largest amounts of oxide
@@ -203,7 +234,7 @@ def ScenarioOfCrOxideMixture(epsSample, epsOxide=1., epsSubstrate=1., fraction_s
     #plt.ylabel(r'SPP mean free path $L_{SPP}$ (m)')
     #plt.ylabel(r'Re($\varepsilon$), Im($\varepsilon$)')
     # Then we could plot them in the right order
-    plot11, = ax1.plot(fractionOxide_s, np.multiply(1e9,period_s), 'r+', label=r'Period $\Lambda$')
+    plot11, = ax1.plot(fractionOxide_s, np.multiply(1e9,period_s), '+', label=r'Period $\Lambda$')
     plot12, = ax1.plot(fractionOxide_s, np.multiply(1e9,wavelength*np.ones(np.shape(thickness_s))), 'k--', label=r'$\lambda$')
     
     #plot14, = ax12.plot(fractionOxide_s, np.real(epsilonFilm_s), 'b+', label=r'Re($\varepsilon$)')
@@ -261,8 +292,9 @@ def ScenarioOfCrOxideMixture(epsSample, epsOxide=1., epsSubstrate=1., fraction_s
 # ** Info: computing 3-layer reflectivity..."
 #R = BiLayerReflectivity(epsAir, epsCrCr2O3_list, epsBK7, t_list) #dimension is good for a HeatMap picture
 
-Fraction_size = 50 #samples
+Fraction_size = 60 #samples
 
 #ScenarioOfOxidePrecipitation()
+#roots, num_thickness, num_branches = 
 ScenarioOfCrOxideMixture(epsCr, epsCr2O3, epsBK7, Fraction_size, 'Cr', 'Cr2O3')
 #ScenarioOfCrOxideMixture(epsCr, epsCrO2, epsBK7, Fraction_size,  'Cr', 'CrO2')

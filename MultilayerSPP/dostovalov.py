@@ -327,8 +327,11 @@ def ScenarioOfCrOxideMixture(epsSample, epsOxide=1., epsSubstrate=1., fraction_s
         plotComb+=plot2
         #labels2 = [l.get_label() for l in plot2]
         #ax2.legend(plot2, labels2, loc='best')
+    else:
+        ax1.xlabel('Fraction of Cr (perc.)')
     labelsComb = [l.get_label() for l in plotComb]
-    ax1.legend(plotComb, labelsComb, loc='upper left')
+    #ax1.legend(plotComb, labelsComb, loc='upper left')
+    ax1.legend(plotComb, labelsComb, loc='lower left')
     
     
     plt.xlim((0,1))
@@ -346,14 +349,59 @@ def ScenarioOfCrOxideMixture(epsSample, epsOxide=1., epsSubstrate=1., fraction_s
 
 Fraction_size = 100 #samples
 
+
+
+
+## Computes the heating of the sample
+# @param wavelength: wavelength of the irradiating photons
+# @param epsCr: complex dielectric permittivity of the material
+def ThinFilmHeating(wavelength, epsCr):
+    # Estimation of the sample heating
+    omega = 2e0*np.pi*c/wavelength
+    n_opt = cmath.sqrt(epsCr)
+    alpha = 2E0*omega/c * n_opt.imag
+    tau = 232e-15
+    spot_diam = 15e-6 #defined at 1/e2 
+    experimental_energy = 100e-9 #[J]
+
+    print("INPUT: experimental energy ", experimental_energy, "J")
+    print("INPUT: spot size at 1/e2 ", spot_diam, "m")
+    r_size = 5000
+    rmin = 0; rmax = 10*spot_diam; dr = ( rmax - rmin ) / r_size
+    r  = np.arange(rmin, rmax, dr)
+    intensity_peak = 48811597717.70232E0
+    print("ESTIMATION: peak intensity: %5.2e" % intensity_peak, "W/m2")
+
+    intensity_r = intensity_peak * np.exp(-2e0*(r**2/spot_diam**2))
+
+    total_power = np.trapz(intensity_r, r, dx=dr)
+    print("total_power: ", total_power, "W")
+
+    total_energy = tau * total_power * np.sqrt(4e0 * np.log(2E0) / np.pi) #normalization due to Gaussian pulse temporal envelope
+    print("Total energy: ", total_energy, "J")
+    intensity_peak_norm = (total_energy / experimental_energy)**-1
+    print("Normalized intensity peak to: ", intensity_peak_norm)
+    peak_fluence = intensity_peak * tau * np.sqrt(4e0 * np.log(2E0) / np.pi)
+
+    print("Resulting peak fluence for 1/e2 spot size convention: ", peak_fluence*1E3, "mJ/m2")
+
+    S = alpha * intensity_peak
+    C_l = 0.46E3 * 7.2E3 #Bauerle, Edition 4. 
+    kappa = 0.97E2 #Bauerle, Edition 4. 
+    dt = tau
+    Length = 30e-9
+    T_surf = 500e0
+    T0 = 300E0 #K
+    dT_x = T_surf-T0 #temperature gradient over the film depth
+    # Equation: C_l * dT / dt = nabla( kappa \nabla ( T ) ) + S
+    dT_t = (1E0 / Length**2 * kappa * dT_x + S) / C_l * dt #increase per dt
+
+    print("Increase of lattice temperature:", dT_t, "K")
+
+
 #ScenarioOfOxidePrecipitation()
-#roots, num_thickness, num_branches = 
+
 ScenarioOfCrOxideMixture(epsCr, epsCr2O3, epsBK7, Fraction_size, 'Cr', 'Cr2O3')
 #ScenarioOfCrOxideMixture(epsCr, epsCrO2, epsBK7, Fraction_size,  'Cr', 'CrO2')
 
-# Estimation of the sample heating
-
-# n_opt = cmath.sqrt(epsilon)
-# alpha = 2*omega/c * n_opt.imag
-# S = alpha * I
-# Equation: C_l * dT / dt = nabla( kappa \nabla ( T ) ) + S
+#ThinFilmHeating(wavelength, epsCr)

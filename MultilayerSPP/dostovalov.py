@@ -266,20 +266,20 @@ def ScenarioOfCrOxideMixture(epsSample, epsOxide=1., epsSubstrate=1., fraction_s
     #plt.xlabel(r'Fraction of Cr (perc.)')
     plt.ylabel(r'SPP period $\Lambda$ (nm)') 
     #ax1y = ax1.twiny()
-    plot1y1 = ax1.errorbar(CrFraction_Fitted, 1e9*ExperimentalData_LSFL, yerr=1e9*ExperimentalData_LSFL_error, fmt='ro', label=r'Period LSFL')
-    plot1y2 = ax1.errorbar(CrFraction_Fitted, 1e9*ExperimentalData_HSFL, yerr=1e9*ExperimentalData_HSFL_error, fmt='r^', label=r'Period HSFL')
+    plot1y1 = ax1.errorbar(np.multiply(CrFraction_Fitted,100), 1e9*ExperimentalData_LSFL, yerr=1e9*ExperimentalData_LSFL_error, fmt='ro', label=r'Period LSFL')
+    plot1y2 = ax1.errorbar(np.multiply(CrFraction_Fitted,100), 1e9*ExperimentalData_HSFL, yerr=1e9*ExperimentalData_HSFL_error, fmt='r^', label=r'Period HSFL')
     #ax1.set_yscale('log')
     plt.ylim((0.,1.1e9*wavelength))
     #ax12 = ax1.twinx()
     #plt.ylabel(r'SPP mean free path $L_{SPP}$ (m)')
     #plt.ylabel(r'Re($\varepsilon$), Im($\varepsilon$)')
     
-    plot110, = ax1.plot(fractionOxide0, np.multiply(1e9,period0), 'r+', label=r'SPP period $\Lambda$, branch (-,-)')
-    plot111, = ax1.plot(fractionOxide1, np.multiply(1e9,period1), 'k+', label=r'SPP period $\Lambda$, branch (-,+)')
-    plot112, = ax1.plot(fractionOxide2, np.multiply(1e9,period2), 'b+', label=r'SPP period $\Lambda$, branch (+,-)')
-    plot113, = ax1.plot(fractionOxide3, np.multiply(1e9,period3), 'go', label=r'SPP period $\Lambda$, branch ( +,+)')
+    plot110, = ax1.plot(np.multiply(100,fractionOxide0), np.multiply(1e9,period0), 'r+', label=r'SPP period $\Lambda$, branch (-,-)')
+    plot111, = ax1.plot(np.multiply(100,fractionOxide1), np.multiply(1e9,period1), 'k+', label=r'SPP period $\Lambda$, branch (-,+)')
+    plot112, = ax1.plot(np.multiply(100,fractionOxide2), np.multiply(1e9,period2), 'b+', label=r'SPP period $\Lambda$, branch (+,-)')
+    plot113, = ax1.plot(np.multiply(100,fractionOxide3), np.multiply(1e9,period3), 'go', label=r'SPP period $\Lambda$, branch ( +,+)')
     
-    plot12, = ax1.plot(fractionOxide, np.multiply(1e9,wavelength*np.ones(np.shape(fractionOxide))), 'k-', linewidth=0.5, label=r'Laser wavelength $\lambda$')
+    plot12, = ax1.plot(np.multiply(100, fractionOxide), np.multiply(1e9,wavelength*np.ones(np.shape(fractionOxide))), 'k-', linewidth=0.5, label=r'Laser wavelength $\lambda$')
     
     #plot14, = ax12.plot(fractionOxide_s, np.real(epsilonFilm_s), 'b+', label=r'Re($\varepsilon$)')
     #plot15, = ax12.plot(fractionOxide_s, np.imag(epsilonFilm_s), 'b^', label=r'Im($\varepsilon$)')
@@ -301,12 +301,12 @@ def ScenarioOfCrOxideMixture(epsSample, epsOxide=1., epsSubstrate=1., fraction_s
     if(PlotLspp):
         ax2 = plt.subplot(plotB)
         plt.ylabel(r'$L_{SPP}$ decay length (m)')
-        plt.xlabel(r'Fraction of Cr (perc.)')
+        ax2.set_xlabel(r'Fraction of Cr (%)')
         #plot21, = ax2.semilogy(fractionOxide_s, lspp_s,   'r^', label=r'SPP decay length $L_{SPP}$')
-        plot211, = ax2.semilogy(fractionOxide0, np.abs(lspp0),   'r^', label=r'SPP decay length $L_{SPP}$, --')
-        plot212, = ax2.semilogy(fractionOxide1, np.abs(lspp1),   'k^', label=r'SPP decay length $L_{SPP}$, -+')
-        plot213, = ax2.semilogy(fractionOxide2, np.abs(lspp2),   'b^', label=r'SPP decay length $L_{SPP}$, +-')
-        plot214, = ax2.semilogy(fractionOxide3, np.abs(lspp3),   'g^', label=r'SPP decay length $L_{SPP}$, ++')
+        plot211, = ax2.semilogy(1E2*fractionOxide0, np.abs(lspp0),   'r^', label=r'SPP decay length $L_{SPP}$, --')
+        plot212, = ax2.semilogy(1E2*fractionOxide1, np.abs(lspp1),   'k^', label=r'SPP decay length $L_{SPP}$, -+')
+        plot213, = ax2.semilogy(1E2*fractionOxide2, np.abs(lspp2),   'b^', label=r'SPP decay length $L_{SPP}$, +-')
+        plot214, = ax2.semilogy(1E2*fractionOxide3, np.abs(lspp3),   'g^', label=r'SPP decay length $L_{SPP}$, ++')
         
         ax22 = ax2.twinx()    
         plt.ylabel(r'Re($\varepsilon$), Im($\varepsilon$)')
@@ -328,13 +328,13 @@ def ScenarioOfCrOxideMixture(epsSample, epsOxide=1., epsSubstrate=1., fraction_s
         #labels2 = [l.get_label() for l in plot2]
         #ax2.legend(plot2, labels2, loc='best')
     else:
-        ax1.xlabel('Fraction of Cr (perc.)')
+        ax1.set_xlabel('Fraction of Cr (%)')
     labelsComb = [l.get_label() for l in plotComb]
     #ax1.legend(plotComb, labelsComb, loc='upper left')
     ax1.legend(plotComb, labelsComb, loc='lower left')
     
     
-    plt.xlim((0,1))
+    plt.xlim((0,100))
     plt.tight_layout()
     filename="Dostovalov_"+OxideName+"-mixedWith-"+SampleName+"-Thickness-"+str(1E9*thickness_max)+"nm"
     plt.savefig(filename+".eps")
@@ -369,10 +369,10 @@ def ThinFilmHeating(wavelength, epsCr):
     r_size = 5000
     rmin = 0; rmax = 10*spot_diam; dr = ( rmax - rmin ) / r_size
     r  = np.arange(rmin, rmax, dr)
-    intensity_peak = 48811597717.70232E0
+    intensity_peak = 97623195435.4045E0
     print("ESTIMATION: peak intensity: %5.2e" % intensity_peak, "W/m2")
 
-    intensity_r = intensity_peak * np.exp(-2e0*(r**2/spot_diam**2))
+    intensity_r = intensity_peak * np.exp(-2e0*(r**2/(0.5*spot_diam)**2))
 
     total_power = np.trapz(intensity_r, r, dx=dr)
     print("total_power: ", total_power, "W")
@@ -383,7 +383,7 @@ def ThinFilmHeating(wavelength, epsCr):
     print("Normalized intensity peak to: ", intensity_peak_norm)
     peak_fluence = intensity_peak * tau * np.sqrt(4e0 * np.log(2E0) / np.pi)
 
-    print("Resulting peak fluence for 1/e2 spot size convention: ", peak_fluence*1E3, "mJ/m2")
+    print("Resulting peak fluence for 1/e2 spot size convention: ", peak_fluence, "J/m2")
 
     S = alpha * intensity_peak
     C_l = 0.46E3 * 7.2E3 #Bauerle, Edition 4. 
@@ -401,7 +401,7 @@ def ThinFilmHeating(wavelength, epsCr):
 
 #ScenarioOfOxidePrecipitation()
 
-ScenarioOfCrOxideMixture(epsCr, epsCr2O3, epsBK7, Fraction_size, 'Cr', 'Cr2O3')
+#ScenarioOfCrOxideMixture(epsCr, epsCr2O3, epsBK7, Fraction_size, 'Cr', 'Cr2O3')
 #ScenarioOfCrOxideMixture(epsCr, epsCrO2, epsBK7, Fraction_size,  'Cr', 'CrO2')
 
-#ThinFilmHeating(wavelength, epsCr)
+ThinFilmHeating(wavelength, epsCr)

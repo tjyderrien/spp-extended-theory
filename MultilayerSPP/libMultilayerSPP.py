@@ -62,6 +62,10 @@ def cntr(inpt):
 # @param y_steps: number of steps used to mesh the Im(roots) space.
 # @param tol_merge: tolerance to merge the identified solutions.
 # @param num_of_maxs: how many maxima to return
+
+# Outputs: branch number correspond to the signs of (k2, k3). There is invariance per sign inversion of k1.  
+# (0: --, 1: -+, 2:+-, 3:++). 
+
 def findroots(eps1, eps2, eps3, wavelength, t, x_min, x_max, y_min, y_max, x_steps, y_steps, num_of_maxs=1):
     global k0, ke1, ke2, ke3
     k0 = 2.*np.pi/wavelength

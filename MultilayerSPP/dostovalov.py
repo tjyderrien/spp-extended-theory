@@ -25,6 +25,7 @@
 
 from libMultilayerSPP import *
 from libMaterials     import *
+# import libDatabase
 #from joblib import Parallel, delayed
 #import multiprocessing
 
@@ -201,28 +202,60 @@ def ScenarioOfCrOxideMixture(epsSample, epsOxide=1., epsSubstrate=1., fraction_s
     ExperimentalData_HSFL       = np.array([170e-9, 159e-9, 217e-9, 244e-9, 249e-9, 238e-9]) #m
     ExperimentalData_HSFL_error = np.array([64e-9,38e-9,101e-9,110e-9,128e-9,72.5e-9]) #m
     CrFraction_Fitted           = np.array([0.6e0, 0.7e0, 0.8e0, 0.86e0, 0.90e0, 0.95e0]) #hand fitted to match period with existing modes [on request of Nadya]
-
-#== Extract the constructed table
-    thickness     = summary[:, 0] 
-    branch        = summary[:, 1]
-    root_number   = summary[:, 2]
-    period        = summary[:, 3]
-    lspp          = summary[:, 4]
-    fractionOxide = summary[:, 5]
-    epsilonFilm   = summary[:, 6]
-
+    
     print(summary)
 
-    # Now, we shall sort out the data
-    lists = sorted(zip(*[root_number, branch, thickness, period, lspp, fractionOxide, epsilonFilm]))
-    root_number_s, branch_s, thickness_s, period_s, lspp_s, fractionOxide_s, epsilonFilm_s = list(zip(*lists))
+#== Extract the constructed table
+    print("Filtering the negative Lspp / Imag(beta) < 0 ...")
+    summary_filtered = np.array(summary[summary[:,4]>0,:])
+    del summary
+    summary = summary_filtered
+    ## We shall split the results by branch number. 
+    # 1. Conditional filtering of the table for branch_s == 0, 1, 2 or 3. Similar filtering is available in libDatabase.py. 
+    summary_branch0 = np.array(summary[summary[:,1]==0,:])
+    summary_branch1 = np.array(summary[summary[:,1]==1,:])
+    summary_branch2 = np.array(summary[summary[:,1]==2,:])
+    summary_branch3 = np.array(summary[summary[:,1]==3,:])
+    
+    
+    def SplitSummaryTable(summary):
+        if(len(summary[:,0])==0): #if table is empty, avoids the crash
+            thickness_s = 0e0; branch_s=-1; root_number_s=-1; period_s=-1; lspp_s=-1; fractionOxide_s=-1; epsilonFilm_s=1E99
+        else:
+            thickness     = summary[:, 0] 
+            branch        = summary[:, 1]
+            root_number   = summary[:, 2]
+            period        = summary[:, 3]
+            lspp          = summary[:, 4]
+            fractionOxide = summary[:, 5]
+            epsilonFilm   = summary[:, 6]
+            
+            lists = sorted(zip(*[root_number, branch, thickness, period, lspp, fractionOxide, epsilonFilm]))
+            root_number_s, branch_s, thickness_s, period_s, lspp_s, fractionOxide_s, epsilonFilm_s = list(zip(*lists))
+        return root_number_s, branch_s, thickness_s, period_s, lspp_s, fractionOxide_s, epsilonFilm_s
+
 
     #ReBeta = np.divide(2.*np.pi,period_s)
     #ImBeta = np.divide(0.5,lspp_s)
-
+    
+    # Then we could plot them in the right order
+    thickness, branch, root_number, period, lspp, fractionOxide, epsilonFilm = SplitSummaryTable(summary)
+    
+    thickness, branch0, root_number, period0, lspp, fractionOxide0, epsilonFilm = SplitSummaryTable(summary_branch0)
+    thickness, branch1, root_number, period1, lspp, fractionOxide1, epsilonFilm = SplitSummaryTable(summary_branch1)
+    thickness, branch2, root_number, period2, lspp, fractionOxide2, epsilonFilm = SplitSummaryTable(summary_branch2)
+    thickness, branch3, root_number, period3, lspp, fractionOxide3, epsilonFilm = SplitSummaryTable(summary_branch3)
+        
+    print("SPP branches are ready. Exporting to CSV...")
+    filename = "Dostovalov-SPPmodes-branch"
+    np.savetxt(filename+"0"+".csv", summary_branch0)
+    np.savetxt(filename+"1"+".csv", summary_branch1)
+    np.savetxt(filename+"2"+".csv", summary_branch2)
+    np.savetxt(filename+"3"+".csv", summary_branch3)
+    
     plt.figure()
     ax1 = plt.subplot(plotA)
-    plt.title(r'Film thickness $t=$'+str(round(np.real(thickness[0])*1e9))+' nm')
+    #plt.title(r'Film thickness $t=$'+str(round(np.real(thickness[0])*1e9))+' nm')
     #plt.xlabel(r'Fraction of Cr (perc.)')
     plt.ylabel(r'SPP period $\Lambda$ (nm)') 
     #ax1y = ax1.twiny()
@@ -233,17 +266,21 @@ def ScenarioOfCrOxideMixture(epsSample, epsOxide=1., epsSubstrate=1., fraction_s
     #ax12 = ax1.twinx()
     #plt.ylabel(r'SPP mean free path $L_{SPP}$ (m)')
     #plt.ylabel(r'Re($\varepsilon$), Im($\varepsilon$)')
-    # Then we could plot them in the right order
-    plot11, = ax1.plot(fractionOxide_s, np.multiply(1e9,period_s), '+', label=r'Period $\Lambda$')
-    plot12, = ax1.plot(fractionOxide_s, np.multiply(1e9,wavelength*np.ones(np.shape(thickness_s))), 'k--', label=r'$\lambda$')
+    
+    plot110, = ax1.plot(fractionOxide0, np.multiply(1e9,period0), 'r+', label=r'SPP period $\Lambda$, branch (-,-)')
+    plot111, = ax1.plot(fractionOxide1, np.multiply(1e9,period1), 'k+', label=r'SPP period $\Lambda$, branch (-,+)')
+    plot112, = ax1.plot(fractionOxide2, np.multiply(1e9,period2), 'b+', label=r'SPP period $\Lambda$, branch (+,-)')
+    plot113, = ax1.plot(fractionOxide3, np.multiply(1e9,period3), 'go', label=r'SPP period $\Lambda$, branch ( +,+)')
+    
+    plot12, = ax1.plot(fractionOxide, np.multiply(1e9,wavelength*np.ones(np.shape(fractionOxide))), 'k-', linewidth=0.5, label=r'Laser wavelength $\lambda$')
     
     #plot14, = ax12.plot(fractionOxide_s, np.real(epsilonFilm_s), 'b+', label=r'Re($\varepsilon$)')
     #plot15, = ax12.plot(fractionOxide_s, np.imag(epsilonFilm_s), 'b^', label=r'Im($\varepsilon$)')
     
-    ax1.yaxis.label.set_color(plot11.get_color()) #colorizes the label
-    ax1.spines["left"].set_edgecolor(plot11.get_color()) #colorizes the axis
-    ax1.tick_params(axis='y', colors=plot11.get_color()) #colorizes the tics and numbers
-    plotComb= [plot11, plot12]; 
+    #ax1.yaxis.label.set_color(plot110.get_color()) #colorizes the label
+    #ax1.spines["left"].set_edgecolor(plot110.get_color()) #colorizes the axis
+    #ax1.tick_params(axis='y', colors=plot110.get_color()) #colorizes the tics and numbers
+    plotComb= [plot110, plot111, plot112, plot113, plot12]; 
     
     #ax12.yaxis.label.set_color(plot14.get_color()) #colorizes the label
     #ax12.spines["right"].set_edgecolor(plot14.get_color()) #colorizes the axis
@@ -278,8 +315,10 @@ def ScenarioOfCrOxideMixture(epsSample, epsOxide=1., epsSubstrate=1., fraction_s
         #labels2 = [l.get_label() for l in plot2]
         #ax2.legend(plot2, labels2, loc='best')
     labelsComb = [l.get_label() for l in plotComb]
-    ax1.legend(plotComb, labelsComb, loc='best')
+    ax1.legend(plotComb, labelsComb, loc='upper left')
     
+    
+    plt.xlim((0,1))
     plt.tight_layout()
     filename="Dostovalov_"+OxideName+"-mixedWith-"+SampleName+"-Thickness-"+str(1E9*thickness_max)+"nm"
     plt.savefig(filename+".eps")
@@ -298,3 +337,10 @@ Fraction_size = 60 #samples
 #roots, num_thickness, num_branches = 
 ScenarioOfCrOxideMixture(epsCr, epsCr2O3, epsBK7, Fraction_size, 'Cr', 'Cr2O3')
 #ScenarioOfCrOxideMixture(epsCr, epsCrO2, epsBK7, Fraction_size,  'Cr', 'CrO2')
+
+# Estimation of the sample heating
+
+# n_opt = cmath.sqrt(epsilon)
+# alpha = 2*omega/c * n_opt.imag
+# S = alpha * I
+# Equation: C_l * dT / dt = nabla( kappa \nabla ( T ) ) + S

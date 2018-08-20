@@ -94,15 +94,18 @@ def ScenarioOfOxidePrecipitation(epsMedium, epsSubstrate, epsEnvironment=1.):
         for branch in np.arange(0,num_branches-1):
             print("1.", thickness, roots[branch][0], roots[branch][1], eps1.real, eps1.imag)
 
-## Scenario proposed by Nadya
-# Pulse by pulse, oxygen from ambient air diffuses into the Cr, and leads to formation of Cr2O3. 
+## Compute the spatial period and mean-free path of Surface Plasmon Polaritons 
+# at the interface between three materials. 
+# Here we investigate the role of the materials mixing happening pulse by pulse, oxygen from ambient air diffuses into the Cr, and leads to formation of Cr2O3. 
 # By making use of a Lorenz-Lorentz model, one can construct a dielectric permittivity of the oxide
 # and therefore observe the transition between SPP and waveguiding modes. 
-def ScenarioOfCrOxideMixture(epsSample, epsOxide=1., epsSubstrate=1., fraction_size=60, SampleName='Cr', OxideName='Cr2O3', SubstrateName='BK7', PlotLspp=False):
+# Note: Some results exist showing that L_spp < 0. These modes may be physical, and should be discussed 
+# in the frame of the works of P. Berini. 
+def ScenarioOfCrOxideMixture(epsSample, epsOxide=1., epsSubstrate=1., fraction_size=60, SampleName='Cr', OxideName='Cr2O3', SubstrateName='BK7', PlotLspp=False, FilterNegativeLspp=False):
     print(Header, "# Info: Considering a mixed fraction of Cr with Cr2O3 with several thicknesses.")
     wavelength = 1026e-9
     #fraction_size = 60
-    numberofroots = 6 #BUG: does not work if numberofroots > 1. 
+    numberofroots = 10 #BUG: does not work if numberofroots > 1. 
     
     fraction_min = 0.
     fraction_max = 1.
@@ -206,10 +209,14 @@ def ScenarioOfCrOxideMixture(epsSample, epsOxide=1., epsSubstrate=1., fraction_s
     print(summary)
 
 #== Extract the constructed table
-    print("Filtering the negative Lspp / Imag(beta) < 0 ...")
-    summary_filtered = np.array(summary[summary[:,4]>0,:])
-    del summary
-    summary = summary_filtered
+    
+    if(FilterNegativeLspp): 
+        print("Filtering the negative Lspp / Imag(beta) < 0 ...")
+        summary_filtered = np.array(summary[summary[:,4]>0,:])
+        del summary
+        summary = summary_filtered
+        del summary_filtered
+    
     ## We shall split the results by branch number. 
     # 1. Conditional filtering of the table for branch_s == 0, 1, 2 or 3. Similar filtering is available in libDatabase.py. 
     summary_branch0 = np.array(summary[summary[:,1]==0,:])
@@ -241,10 +248,10 @@ def ScenarioOfCrOxideMixture(epsSample, epsOxide=1., epsSubstrate=1., fraction_s
     # Then we could plot them in the right order
     thickness, branch, root_number, period, lspp, fractionOxide, epsilonFilm = SplitSummaryTable(summary)
     
-    thickness, branch0, root_number, period0, lspp, fractionOxide0, epsilonFilm = SplitSummaryTable(summary_branch0)
-    thickness, branch1, root_number, period1, lspp, fractionOxide1, epsilonFilm = SplitSummaryTable(summary_branch1)
-    thickness, branch2, root_number, period2, lspp, fractionOxide2, epsilonFilm = SplitSummaryTable(summary_branch2)
-    thickness, branch3, root_number, period3, lspp, fractionOxide3, epsilonFilm = SplitSummaryTable(summary_branch3)
+    thickness, branch0, root_number, period0, lspp0, fractionOxide0, epsilonFilm = SplitSummaryTable(summary_branch0)
+    thickness, branch1, root_number, period1, lspp1, fractionOxide1, epsilonFilm = SplitSummaryTable(summary_branch1)
+    thickness, branch2, root_number, period2, lspp2, fractionOxide2, epsilonFilm = SplitSummaryTable(summary_branch2)
+    thickness, branch3, root_number, period3, lspp3, fractionOxide3, epsilonFilm = SplitSummaryTable(summary_branch3)
         
     print("SPP branches are ready. Exporting to CSV...")
     filename = "Dostovalov-SPPmodes-branch"
@@ -295,22 +302,28 @@ def ScenarioOfCrOxideMixture(epsSample, epsOxide=1., epsSubstrate=1., fraction_s
         ax2 = plt.subplot(plotB)
         plt.ylabel(r'$L_{SPP}$ decay length (m)')
         plt.xlabel(r'Fraction of Cr (perc.)')
-        plot21, = ax2.semilogy(fractionOxide_s, lspp_s,   'r^', label=r'SPP decay length $L_{SPP}$')
+        #plot21, = ax2.semilogy(fractionOxide_s, lspp_s,   'r^', label=r'SPP decay length $L_{SPP}$')
+        plot211, = ax2.semilogy(fractionOxide0, np.abs(lspp0),   'r^', label=r'SPP decay length $L_{SPP}$, --')
+        plot212, = ax2.semilogy(fractionOxide1, np.abs(lspp1),   'k^', label=r'SPP decay length $L_{SPP}$, -+')
+        plot213, = ax2.semilogy(fractionOxide2, np.abs(lspp2),   'b^', label=r'SPP decay length $L_{SPP}$, +-')
+        plot214, = ax2.semilogy(fractionOxide3, np.abs(lspp3),   'g^', label=r'SPP decay length $L_{SPP}$, ++')
+        
         ax22 = ax2.twinx()    
         plt.ylabel(r'Re($\varepsilon$), Im($\varepsilon$)')
-        plot22, = ax22.plot(fractionOxide_s, np.real(epsilonFilm_s), 'b+', label=r'Re($\varepsilon$)')
-        plot23, = ax22.plot(fractionOxide_s, np.imag(epsilonFilm_s), 'b^', label=r'Im($\varepsilon$)')
-        plot24, = ax22.plot(fractionOxide_s, np.multiply(epsBK7, np.ones(np.shape(fractionOxide_s))), 'b--', label=r'$Re[\varepsilon$(BK7)] ')
+        #plot22, = ax22.plot(fractionOxide_s, np.real(epsilonFilm_s), 'b+', label=r'Re($\varepsilon$)')
+        #plot23, = ax22.plot(fractionOxide_s, np.imag(epsilonFilm_s), 'b^', label=r'Im($\varepsilon$)')
+        #plot24, = ax22.plot(fractionOxide, np.multiply(epsBK7, np.ones(np.shape(fractionOxide))), 'b--', label=r'$Re[\varepsilon$(BK7)] ')
         
-        ax2.yaxis.label.set_color(plot21.get_color()) #colorizes the label
-        ax2.spines["left"].set_edgecolor(plot21.get_color()) #colorizes the axis
-        ax2.tick_params(axis='y', colors=plot21.get_color()) #colorizes the tics and numbers
+        #ax2.yaxis.label.set_color(plot21.get_color()) #colorizes the label
+        #ax2.spines["left"].set_edgecolor(plot21.get_color()) #colorizes the axis
+        #ax2.tick_params(axis='y', colors=plot21.get_color()) #colorizes the tics and numbers
         
-        ax22.yaxis.label.set_color(plot22.get_color()) #colorizes the label
-        ax22.spines["right"].set_edgecolor(plot22.get_color()) #colorizes the axis
-        ax22.tick_params(axis='y', colors=plot22.get_color()) #colorizes the tics and numbers
+        #ax22.yaxis.label.set_color(plot22.get_color()) #colorizes the label
+        #ax22.spines["right"].set_edgecolor(plot22.get_color()) #colorizes the axis
+        #ax22.tick_params(axis='y', colors=plot22.get_color()) #colorizes the tics and numbers
         
-        plot2   = [plot21, plot22, plot23, plot24]
+        #plot2   = [plot21, plot22, plot23, plot24]
+        plot2   = [plot211, plot212, plot213, plot214] #, plot24]
         plotComb+=plot2
         #labels2 = [l.get_label() for l in plot2]
         #ax2.legend(plot2, labels2, loc='best')
@@ -331,7 +344,7 @@ def ScenarioOfCrOxideMixture(epsSample, epsOxide=1., epsSubstrate=1., fraction_s
 # ** Info: computing 3-layer reflectivity..."
 #R = BiLayerReflectivity(epsAir, epsCrCr2O3_list, epsBK7, t_list) #dimension is good for a HeatMap picture
 
-Fraction_size = 60 #samples
+Fraction_size = 100 #samples
 
 #ScenarioOfOxidePrecipitation()
 #roots, num_thickness, num_branches = 

@@ -106,16 +106,19 @@ def MaxwellGarnett2(eps1, eps2, fraction):
   epsilon_effective = epsilon_effective_real + 1.0j*epsilon_effective_imag
   return epsilon_effective
 
-## Maxwell-Garnett method for mixing 2 materials together. 
-# Returns the effective dielectric permittivity of 2-mixed materials. 
+## Maxwell-Garnett method for mixing 3 materials together. 
+# Returns the effective dielectric permittivity of 3-mixed materials. 
+# Here we keep freedom in definition of fraction1-3 independent.
+# It helps for plotting data more easily
 # @param eps1: dielectric permittivity (epsilon <complex>) of first medium
 # @param eps2: dielectric permittivity (epsilon <complex>) of second medium
-# @param eps2: dielectric permittivity (epsilon <complex>) of third medium
+# @param eps3: dielectric permittivity (epsilon <complex>) of third medium
+# @param fraction1: fraction of epsilon1
 # @param fraction2: fraction of epsilon2
 # @param fraction3: fraction of epsilon3
 # Applicable for dielectric - metal mixtures. Maybe not applicable for 
 # metal-metal mixtures. 
-def MaxwellGarnett3(eps1, eps2, eps3, fraction2, fraction3):
+def MaxwellGarnett3(eps1, eps2, eps3, fraction1, fraction2, fraction3):
   eps1r = eps1.real; eps1c = eps1.imag
   eps2r = eps2.real; eps2c = eps2.imag
   eps3r = eps3.real; eps3c = eps3.imag

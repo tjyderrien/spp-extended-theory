@@ -525,13 +525,17 @@ def ScenarioOfCrOxideMixture3(epsSample, epsOxide1=1., epsOxide2=1., epsSubstrat
     print(Header+"** Preparation of the plots as function of oxide ratio")
 
     ExperimentalData_velocity   = np.array([1e-6, 10e-16, 50e-6, 100e-6, 200e-6, 300e-6]) #m/s
-    #NOTE: the content of the scanning_velocities should be more precise. 
+    #NOTE: with increasing the scanning velocity, the period of LIPSS increases
+    #NOTE: with increasing the scanning velocity, the ratio Cr2O3/CrO2 increases, Cr2O3 still dominates
+    #NOTE: hence, logically, the period of LIPSS should increase with increasing Cr2O3 ratio (or equivalently decreasing CrO2 ratio), i.e., Period decreases if increasing CrO2 ratio.
+    # Therefore, d(period)/d(CrO2 ratio) < 0. <CrO2Fraction_Fitted> should match with this. 
+    #NOTE: the content of <scanning_velocities> variable should be much more precise. 
     ExperimentalData_LSFL       = np.array([696e-9, 704e-9, 816e-9, 858e-9, -100e0, -100e-9]) #m #better observed for low velocities, i.e., high number of pulses, i.e., largest amounts of oxide
     ExperimentalData_LSFL_error = np.array([78e-9,71e-9,139e-9,140e-9,0e-9,0e-9]) #m
     ExperimentalData_HSFL       = np.array([170e-9, 159e-9, 217e-9, 244e-9, 249e-9, 238e-9]) #m
     ExperimentalData_HSFL_error = np.array([64e-9,38e-9,101e-9,110e-9,128e-9,72.5e-9]) #m
-    CrO2Fraction_Fitted         = np.array([0.6e0, 0.7e0, 0.8e0, 0.86e0, 0.90e0, 0.95e0]) #hand fitted to match period with existing modes [on request of Nadya]
-    #CrO2Fraction_Fitted         = np.array([0.6,]) #there is now more CrO2 when increasing scanning speed
+    #CrO2Fraction_Fitted         = np.array([0.6e0, 0.7e0, 0.8e0, 0.86e0, 0.90e0, 0.95e0]) #there is now more Cr2O3 when increasing scanning speed 
+    CrO2Fraction_Fitted         = 0.5*np.array([0.6, 0.5, 0.4, 0.3, 0.2, 0.1]) #there is now more Cr2O3 when increasing scanning speed
     # To compute the resulting fraction of Cr2O3, just pass CrO2Fraction_Fitted to f(scanning_velocity). 
     Cr2O3overCrO2_av     = 0.5*(f_Cr2O3overCrO2_ratio_min(v_exp_min)+f_Cr2O3overCrO2_ratio_max(v_exp_max)) #experimental ratio f(v) = Cr2O3/CrO2
     #print(Header, "Test: Cr2O3overCrO2_av: ", np.min(Cr2O3overCrO2_av), np.max(Cr2O3overCrO2_av)) #Passed
@@ -665,8 +669,8 @@ def ScenarioOfCrOxideMixture3(epsSample, epsOxide1=1., epsOxide2=1., epsSubstrat
         ax3 = plt.subplot(plotB)
     if(PlotEpsilons):
         plt.ylabel(r'Re($\varepsilon$), Im($\varepsilon$)')
-        plot31, = ax3.plot(np.multiply(1E2,fractionOxide), np.real(epsilonFilm), 'b+', label=r'Re$(\varepsilon)$ (Cr + oxide)')
-        plot32, = ax3.plot(np.multiply(1E2,fractionOxide), np.imag(epsilonFilm), 'b^', label=r'Im$(\varepsilon)$ (Cr + oxide)')
+        plot31, = ax3.plot(np.multiply(1E2,fractionOxide), np.real(epsilonFilm), 'b+', label=r'Re$(\varepsilon)$ (Cr + oxides)')
+        plot32, = ax3.plot(np.multiply(1E2,fractionOxide), np.imag(epsilonFilm), 'b^', label=r'Im$(\varepsilon)$ (Cr + oxides)')
         plot33, = ax3.plot(np.multiply(1E2,fractionOxide), np.multiply(epsBK7, np.ones(np.shape(fractionOxide))), 'k-', label=r'$Re[\varepsilon$(BK7)] ')
         plot3   = [plot31, plot32, plot33]
         plotComb3 = plot3
@@ -700,7 +704,7 @@ def ScenarioOfCrOxideMixture3(epsSample, epsOxide1=1., epsOxide2=1., epsSubstrat
         ax1.set_xlabel(r'Fraction of CrO$_2$ (%)')
     
     labelsComb1 = [l.get_label() for l in plotComb1]
-    ax1.legend(plotComb1, labelsComb1, loc='best')
+    ax1.legend(plotComb1, labelsComb1, loc='upper right')
     
     
     plt.xlim((0,100))

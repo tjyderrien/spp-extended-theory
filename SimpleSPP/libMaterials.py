@@ -67,7 +67,7 @@ def IndexToEpsilon(n):
 # @param eps1: dielectric permittivity (epsilon <complex>) of first medium
 # @param eps2: dielectric permittivity (epsilon <complex>) of second medium
 # @param fraction: fraction of epsilon2 mixed with (1.-fraction)*epsilon1 medium
-# This function was validated by comparison with Inam Mirza. 
+# This function was validated by exact comparison with Sergei Lisunov. 
 # Applicable for dielectric - metal mixtures. Maybe not applicable for metal-metal mixtures. 
 def MaxwellGarnett2(eps1, eps2, fraction):
   eps1r = eps1.real; eps1c = eps1.imag
@@ -81,6 +81,29 @@ def MaxwellGarnett2(eps1, eps2, fraction):
   
   epsilon_effective = epsilon_effective_real + 1.0j*epsilon_effective_imag
   return epsilon_effective
+
+## Maxwell-Garnett method for mixing 2 materials together. 
+# Returns the effective dielectric permittivity of 2-mixed materials. 
+# @param eps1: dielectric permittivity (epsilon <complex>) of first medium
+# @param eps2: dielectric permittivity (epsilon <complex>) of second medium
+# @param eps2: dielectric permittivity (epsilon <complex>) of third medium
+# @param fraction2: fraction of epsilon2
+# @param fraction3: fraction of epsilon3
+# Applicable for dielectric - metal mixtures. Maybe not applicable for metal-metal mixtures. 
+def MaxwellGarnett3(eps1, eps2, eps3, fraction2, fraction3):
+  eps1r = eps1.real; eps1c = eps1.imag
+  eps2r = eps2.real; eps2c = eps2.imag
+  eps3r = eps3.real; eps3c = eps3.imag
+  # Space for optimization is not so big: 23*storage+23*assignments+50*multiplications+37*additions+divisions. 
+  # Whereas direct writing uses: 37*additions+104*multiplications+divisions+assignments
+  epsilon_effective_real = -(1.*(2.*eps1c**2*fraction**2-2.*fraction*eps2r**2-4.*eps1r+eps1r*fraction*eps2c**2-1.*eps1c**2*fraction*eps2r+4.*eps1r*fraction-1.*eps1r**2*fraction*eps2r+eps1r*fraction*eps2r**2+4.*eps1r*fraction*eps2r-1.*eps1r*eps2c**2-2.*eps1c**2*fraction+4.*eps1c*eps2c*fraction+2.*eps2c**2*fraction**2-2.*eps1r**2*fraction-1.*eps1r*eps2r**2-4.*eps1r*eps2r+2.*eps1r**2*fraction**2-4.*fraction*eps2r-2.*fraction*eps2c**2-4.*eps2c*fraction**2*eps1c+2.*fraction**2*eps2r**2-4.*fraction**2*eps2r*eps1r))/(2.*eps1r*fraction*eps2r+4.+4.*eps1r*fraction-2.*fraction*eps2r**2-4.*fraction*eps2r-2.*fraction*eps2c**2+eps2r**2+4.*eps2r+eps2c**2+2.*eps1c*eps2c*fraction+eps1r**2*fraction**2+fraction**2*eps2r**2-2.*fraction**2*eps2r*eps1r-2.*eps2c*fraction**2*eps1c+eps2c**2*fraction**2+eps1c**2*fraction**2)
+  # This version uses: 26*additions+68*multiplications+divisions+assignments
+  # Optimization would use: 10*storage+10*assignments+46*multiplications+26*additions+divisions
+  epsilon_effective_imag = (4.*eps2c*fraction-1.*eps1c*fraction*eps2c**2+4.*eps1c*eps2r-4.*eps1c*fraction*eps2r+4.*eps2c*fraction*eps1r+eps2c*fraction*eps1c**2-4.*eps1c*fraction+eps2c*fraction*eps1r**2+4.*eps1c+eps1c*eps2c**2+eps1c*eps2r**2-1.*eps1c*fraction*eps2r**2)/(2.*eps1r*fraction*eps2r+4.+4.*eps1r*fraction-2.*fraction*eps2r**2-4.*fraction*eps2r-2.*fraction*eps2c**2+eps2r**2+4.*eps2r+eps2c**2+2.*eps1c*eps2c*fraction+eps1r**2*fraction**2+fraction**2*eps2r**2-2.*fraction**2*eps2r*eps1r-2.*eps2c*fraction**2*eps1c+eps2c**2*fraction**2+eps1c**2*fraction**2)
+  
+  epsilon_effective = epsilon_effective_real + 1.0j*epsilon_effective_imag
+  return epsilon_effective
+
 
 ## Lorentz-Lorenz method: see the Maxwell-Garnett model ( MaxwellGarnett2() function ).
 def LorentzLorenz2(eps1, eps2, fraction):

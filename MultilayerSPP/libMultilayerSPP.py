@@ -76,13 +76,17 @@ def findroots(eps1, eps2, eps3, wavelength, t, x_min, x_max, y_min, y_max, x_ste
     tol_merge = 1E3
     merge_treshold = 4
     branches = []
-    for sgn1, sgn2 in product((-1,1), (-1,1)):
+    #for sgn1, sgn2 in product((-1,1), (-1,1)): 
+    #for sgn1, sgn2 in product((1,1), (1,1)): #DEBUG LINE
+    for sgn1, sgn2 in ((1, 1), (-1, 1), (1,-1), (1,1)): #DEBUG LINE
         roots = []
         unique = []
         for x in np.linspace(x_min, x_max, num=x_steps):
             for y in np.linspace(y_min, y_max, num=y_steps):
                 nrt = root(func, (x, y), args=(eps1, eps2, eps3, k0, t, sgn1, sgn2), method='hybr')
-                if nrt.success:
+                #checking = func(nrt.x, eps1, eps2, eps3, k0, t, sgn1, sgn2)
+                if (nrt.success):
+                #if (nrt.success and (checking.all() < 1E-10 ) ): #checking if solution verifies the equation
                     roots.append(nrt.x)
 
         ln = len(roots)
@@ -113,6 +117,7 @@ def findroots(eps1, eps2, eps3, wavelength, t, x_min, x_max, y_min, y_max, x_ste
     for branch in branches:
         brinv = [[2.*np.pi/rt[0], .5/rt[1]] for rt in branch]
         outs.append(sorted(brinv, key=lambda x:abs(x[1]), reverse=True)[:num_of_maxs])
+        #outs.append(sorted(brinv, key=lambda x:x[0], reverse=True)[:num_of_maxs])
     return outs
 
 #end of algorithm

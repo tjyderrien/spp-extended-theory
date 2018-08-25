@@ -122,11 +122,11 @@ def SplitSummaryTable(summary): #{{{
 # and therefore observe the transition between SPP and waveguiding modes. 
 # Note: Some results exist showing that L_spp < 0. These modes may be physical, and should be discussed 
 # in the frame of the works of P. Berini. 
-def ScenarioOfCrOxideMixture(epsSample, epsOxide=1., epsSubstrate=1., fraction_size=60, SampleName='Cr', OxideName='Cr2O3', SubstrateName='BK7', PlotLspp=False, FilterNegativeLspp=False, PlotEpsilons=True):
+def ScenarioOfCrOxideMixture(epsSample, epsOxide=1., epsSubstrate=1., epsEnvironment=1., fraction_size=10, SampleName='Cr', OxideName='Cr2O3', SubstrateName='BK7', PlotLspp=False, FilterNegativeLspp=False, PlotEpsilons=True):
     print(Header, "# Info: Considering a mixed fraction of Cr with Cr2O3 with several thicknesses.")
     wavelength = 1026e-9
     #fraction_size = 60
-    numberofroots = 10 #BUG: does not work if numberofroots > 1. 
+    numberofroots = 10 #per branch. 10 exceeds the final number of roots per branch
     
     fraction_min = 0.
     fraction_max = 1.
@@ -135,18 +135,17 @@ def ScenarioOfCrOxideMixture(epsSample, epsOxide=1., epsSubstrate=1., fraction_s
     thickness_min  = 28e-9
     thickness_max  = 28e-9
     
-    #PlotLspp = False
-    
     if(PlotLspp and PlotEpsilons):
         plotA = 311; plotB=312; plotC=313
     elif((PlotLspp and not PlotEpsilons) or (not PlotLspp and PlotEpsilons)): 
         plotA=211; plotB=212
     else: 
         plotA=111; 
+        
     ## Running 
-
-    fraction = np.linspace(fraction_min, fraction_max, fraction_size) #fraction of Cr (includes the final value)
-    epsCrCr2O3_list = MaxwellGarnett2(epsSample, epsOxide, 1.-fraction) #NOTE: epsOxide here is Cr oxide, not environment! Environment has been introduced by hand below. It is air. 
+    fraction = np.linspace(fraction_min, fraction_max, fraction_size) #fraction of CrO2 (includes the final value)
+    epsCrCr2O3_list = MaxwellGarnett2(epsSample, epsOxide, fraction) #fraction refers to the fraction oxide here! 
+    #NOTE: epsOxide here is Cr oxide, not environment. 
     print(Header, "# Info: size of the fraction matrix: ", fraction_size)
 
     print(Header, "# Info: preparation of the root finder.")
@@ -156,7 +155,7 @@ def ScenarioOfCrOxideMixture(epsSample, epsOxide=1., epsSubstrate=1., fraction_s
     #t = 100E-9 #thickness of the layer in meters
     #thickness = 10e-9
     print("\n")
-    print("# Fraction of Cr: ", fraction)
+    print("# Fraction of CrO2: ", fraction)
     summary = np.zeros((0, 7))
     ## Preparation of the thin film modeling for various compositions
     for fraction_index in np.arange(0,fraction_size): #arange excludes the last one, linspace includes it
@@ -229,6 +228,7 @@ def ScenarioOfCrOxideMixture(epsSample, epsOxide=1., epsSubstrate=1., fraction_s
     ExperimentalData_HSFL       = np.array([170e-9, 159e-9, 217e-9, 244e-9, 249e-9, 238e-9]) #m
     ExperimentalData_HSFL_error = np.array([64e-9,38e-9,101e-9,110e-9,128e-9,72.5e-9]) #m
     CrFraction_Fitted           = np.array([0.6e0, 0.7e0, 0.8e0, 0.86e0, 0.90e0, 0.95e0]) #hand fitted to match period with existing modes [on request of Nadya]
+    CrO2Fraction_Fitted         = np.add(1, - np.array([0.6e0, 0.7e0, 0.8e0, 0.86e0, 0.90e0, 0.95e0])) #we express it in term of oxidized
     
     print(summary)
 
@@ -259,11 +259,13 @@ def ScenarioOfCrOxideMixture(epsSample, epsOxide=1., epsSubstrate=1., fraction_s
     thickness2, fractionOxide2, epsilonFilm2, branch2, root_number2, period2, lspp2 = SplitSummaryTable(summary_branch2)
     thickness3, fractionOxide3, epsilonFilm3, branch3, root_number3, period3, lspp3 = SplitSummaryTable(summary_branch3)
     
+    summary_export         = np.array([np.real(fractionOxide) , np.real(epsilonFilm) , np.imag(epsilonFilm) , np.real(branch) , np.real(root_number) , np.real(period) ])
     summary_branch0_export = np.array([np.real(fractionOxide0), np.real(epsilonFilm0), np.imag(epsilonFilm0), np.real(branch0), np.real(root_number0), np.real(period0)])
     summary_branch1_export = np.array([np.real(fractionOxide1), np.real(epsilonFilm1), np.imag(epsilonFilm1), np.real(branch1), np.real(root_number1), np.real(period1)])
     summary_branch2_export = np.array([np.real(fractionOxide2), np.real(epsilonFilm2), np.imag(epsilonFilm2), np.real(branch2), np.real(root_number2), np.real(period2)])
     summary_branch3_export = np.array([np.real(fractionOxide3), np.real(epsilonFilm3), np.imag(epsilonFilm3), np.real(branch3), np.real(root_number3), np.real(period3)])
     
+    summary_export_t         = np.transpose(summary_export)
     summary_branch0_export_t = np.transpose(summary_branch0_export)
     summary_branch1_export_t = np.transpose(summary_branch1_export)
     summary_branch2_export_t = np.transpose(summary_branch2_export)
@@ -272,20 +274,21 @@ def ScenarioOfCrOxideMixture(epsSample, epsOxide=1., epsSubstrate=1., fraction_s
     # NOTE: I would like to get clean numbers, not the content of summary_branch0
     # Is there a problem with root_number0 for example? 
     print("SPP branches are ready. Exporting to CSV...")
-    filename = "Dostovalov-SPPmodes-branch"
-    np.savetxt(filename+"0"+".csv", summary_branch0_export_t)
-    np.savetxt(filename+"1"+".csv", summary_branch1_export_t)
-    np.savetxt(filename+"2"+".csv", summary_branch2_export_t)
-    np.savetxt(filename+"3"+".csv", summary_branch3_export_t)
+    filename = "Dostovalov-SPPmodes-Cr-CrO2"
+    np.savetxt(filename+".csv", summary_branch0_export_t)
+    np.savetxt(filename+"-branch0"+".csv", summary_branch0_export_t)
+    np.savetxt(filename+"-branch1"+".csv", summary_branch1_export_t)
+    np.savetxt(filename+"-branch2"+".csv", summary_branch2_export_t)
+    np.savetxt(filename+"-branch3"+".csv", summary_branch3_export_t)
     
     plt.figure()
     ax1 = plt.subplot(plotA)
     #plt.title(r'Film thickness $t=$'+str(round(np.real(thickness[0])*1e9))+' nm')
-    #plt.xlabel(r'Fraction of Cr (perc.)')
+    #plt.xlabel(r'Fraction of Cr oxide  (perc.)')
     plt.ylabel(r'SPP period $\Lambda$ (nm)') 
     #ax1y = ax1.twiny()
-    plot1y1 = ax1.errorbar(np.multiply(CrFraction_Fitted,100), 1e9*ExperimentalData_LSFL, yerr=1e9*ExperimentalData_LSFL_error, fmt='ro', label=r'Period LSFL')
-    plot1y2 = ax1.errorbar(np.multiply(CrFraction_Fitted,100), 1e9*ExperimentalData_HSFL, yerr=1e9*ExperimentalData_HSFL_error, fmt='r^', label=r'Period HSFL')
+    #plot1y1 = ax1.errorbar(np.multiply(CrFraction_Fitted,100), 1e9*ExperimentalData_LSFL, yerr=1e9*ExperimentalData_LSFL_error, fmt='ro', label=r'Period LSFL')
+    #plot1y2 = ax1.errorbar(np.multiply(CrFraction_Fitted,100), 1e9*ExperimentalData_HSFL, yerr=1e9*ExperimentalData_HSFL_error, fmt='r^', label=r'Period HSFL')
     #ax1.set_yscale('log')
     plt.ylim((0.,1.1e9*wavelength))
     #ax12 = ax1.twinx()
@@ -351,29 +354,29 @@ def ScenarioOfCrOxideMixture(epsSample, epsOxide=1., epsSubstrate=1., fraction_s
         #ax2.legend(plot2, labels2, loc='best')
         
     if(PlotLspp and PlotEpsilons):
-        ax3.set_xlabel('Fraction of Cr (%)')
+        ax3.set_xlabel('Fraction of Cr oxide (%)')
         labelsComb2 = [l.get_label() for l in plotComb2]
         labelsComb3 = [l.get_label() for l in plotComb3]
-        ax2.legend(plotComb2, labelsComb2, loc='upper left')
-        ax3.legend(plotComb3, labelsComb3, loc='upper left')
+        ax2.legend(plotComb2, labelsComb2, bbox_to_anchor=(1.04,1), loc="upper left", mode="expand")
+        ax3.legend(plotComb3, labelsComb3, bbox_to_anchor=(1.04,1), loc="upper left", mode="expand")
     elif(PlotLspp and not PlotEpsilons):
-        ax2.set_xlabel('Fraction of Cr (%)')
+        ax2.set_xlabel('Fraction of Cr oxide (%)')
         labelsComb2 = [l.get_label() for l in plotComb2]
-        ax2.legend(plotComb2, labelsComb2, loc='upper left')
+        ax2.legend(plotComb2, labelsComb2, bbox_to_anchor=(1.04,1), loc="upper left", mode="expand")
     elif(not PlotLspp and PlotEpsilons): #ax2 does not exist
-        ax3.set_xlabel('Fraction of Cr (%)')
+        ax3.set_xlabel('Fraction of Cr oxide (%)')
         labelsComb3 = [l.get_label() for l in plotComb3]
-        ax3.legend(plotComb3, labelsComb3, loc='upper left')
+        ax3.legend(plotComb3, labelsComb3, bbox_to_anchor=(1.04,1), loc="upper left", mode="expand")
     else:
-        ax1.set_xlabel('Fraction of Cr (%)')
+        ax1.set_xlabel('Fraction of Cr oxide (%)')
     
     labelsComb1 = [l.get_label() for l in plotComb1]
-    ax1.legend(plotComb1, labelsComb1, loc='best')
+    ax1.legend(plotComb1, labelsComb1, bbox_to_anchor=(1.04,1), loc="upper left", mode="expand")
     
     
-    plt.xlim((0,100))
+    #plt.xlim((0,100))
     plt.tight_layout()
-    filename="Dostovalov_"+OxideName+"-mixedWith-"+SampleName+"-Thickness-"+str(1E9*thickness_max)+"nm"
+    filename="Dostovalov-"+OxideName+"-mixedWith-"+SampleName+"-Thickness-"+str(1E9*thickness_max)+"nm"
     plt.savefig(filename+".eps")
     plt.savefig(filename+".png")
     plt.show()
@@ -775,14 +778,14 @@ def ThinFilmHeating(wavelength, epsCr): #{{{
 
 
 ## Compute the SPP modes for mixed oxide ratio using an external set of optical data
-# @param fraction: is the fraction of oxide
+# @param fraction: array of oxide fraction
 # Size of epsSample and fraction should be of the same dimension
-def ScenarioOfCrOxideMixture_ext(epsSample, epsEnvironment=1., epsSubstrate=1., fraction=1, SampleName='Cr oxide', EnvironmentName='Air', SubstrateName='BK7', PlotLspp=False, FilterNegativeLspp=False, PlotEpsilons=True):
+def ScenarioOfCrOxideMixture_ext(epsSample, epsEnvironment=1., epsSubstrate=1., fraction=1, SampleName='CrCompoundOxide', EnvironmentName='Air', SubstrateName='BK7', PlotLspp=False, FilterNegativeLspp=False, PlotEpsilons=True):
     print(Header, "# Info: Considering a mixed fraction of Cr with Cr2O3 and CrO2 (using external data) with several thicknesses.")
     wavelength = 1026e-9
     
     fraction_size = len(fraction)
-    numberofroots = 10 #BUG: does not work if numberofroots > 1. 
+    numberofroots = 10
     
     #fraction_min = 0.
     #fraction_max = 1.
@@ -916,11 +919,13 @@ def ScenarioOfCrOxideMixture_ext(epsSample, epsEnvironment=1., epsSubstrate=1., 
     thickness2, fractionOxide2, epsilonFilm2, branch2, root_number2, period2, lspp2 = SplitSummaryTable(summary_branch2)
     thickness3, fractionOxide3, epsilonFilm3, branch3, root_number3, period3, lspp3 = SplitSummaryTable(summary_branch3)
     
+    summary_export         = np.array([np.real(fractionOxide) , np.real(epsilonFilm) , np.imag(epsilonFilm) , np.real(branch) , np.real(root_number) , np.real(period) ])
     summary_branch0_export = np.array([np.real(fractionOxide0), np.real(epsilonFilm0), np.imag(epsilonFilm0), np.real(branch0), np.real(root_number0), np.real(period0)])
     summary_branch1_export = np.array([np.real(fractionOxide1), np.real(epsilonFilm1), np.imag(epsilonFilm1), np.real(branch1), np.real(root_number1), np.real(period1)])
     summary_branch2_export = np.array([np.real(fractionOxide2), np.real(epsilonFilm2), np.imag(epsilonFilm2), np.real(branch2), np.real(root_number2), np.real(period2)])
     summary_branch3_export = np.array([np.real(fractionOxide3), np.real(epsilonFilm3), np.imag(epsilonFilm3), np.real(branch3), np.real(root_number3), np.real(period3)])
     
+    summary_export_t         = np.transpose(summary_export)
     summary_branch0_export_t = np.transpose(summary_branch0_export)
     summary_branch1_export_t = np.transpose(summary_branch1_export)
     summary_branch2_export_t = np.transpose(summary_branch2_export)
@@ -929,11 +934,12 @@ def ScenarioOfCrOxideMixture_ext(epsSample, epsEnvironment=1., epsSubstrate=1., 
     # NOTE: I would like to get clean numbers, not the content of summary_branch0
     # Is there a problem with root_number0 for example? 
     print("SPP branches are ready. Exporting to CSV...")
-    filename = "Dostovalov-SPPmodes-branch"
-    np.savetxt(filename+"0"+".csv", summary_branch0_export_t)
-    np.savetxt(filename+"1"+".csv", summary_branch1_export_t)
-    np.savetxt(filename+"2"+".csv", summary_branch2_export_t)
-    np.savetxt(filename+"3"+".csv", summary_branch3_export_t)
+    filename = "Dostovalov-SPPmodes-CrOxideCompound"
+    np.savetxt(filename+".csv", summary_branch0_export_t)
+    np.savetxt(filename+"-Cr-branch0"+".csv", summary_branch0_export_t)
+    np.savetxt(filename+"-Cr-branch1"+".csv", summary_branch1_export_t)
+    np.savetxt(filename+"-Cr-branch2"+".csv", summary_branch2_export_t)
+    np.savetxt(filename+"-Cr-branch3"+".csv", summary_branch3_export_t)
     
     plt.figure()
     ax1 = plt.subplot(plotA)
@@ -1030,21 +1036,11 @@ def ScenarioOfCrOxideMixture_ext(epsSample, epsEnvironment=1., epsSubstrate=1., 
     
     #plt.xlim((0,100))
     plt.tight_layout()
-    filename="Dostovalov_"+EnvironmentName+"-mixedWith-"+SampleName+"-Thickness-"+str(1E9*thickness_max)+"nm"
+    filename="Dostovalov-"+EnvironmentName+"-"+SampleName+"-Thickness-"+str(1E9*thickness_max)+"nm"
     plt.savefig(filename+".eps")
     plt.savefig(filename+".png")
     plt.show()
 #}}}
-
-# =====================
-#ScenarioOfOxidePrecipitation()
-# ** Info: computing 3-layer reflectivity..."
-#R = BiLayerReflectivity(epsAir, epsCrCr2O3_list, epsBK7, t_list) #dimension is good for a HeatMap picture
-
-Fraction_size = 70 #number of samples
-#ScenarioOfCrOxideMixture(epsCr, epsCr2O3, epsBK7, Fraction_size, 'Cr', 'Cr2O3')
-#ScenarioOfCrOxideMixture(epsCr, epsCrO2, epsBK7, Fraction_size,  'Cr', 'CrO2')
-#ScenarioOfCrOxideMixture3(epsCr, epsCr2O3, epsCrO2, epsBK7, Fraction_size, 'Cr', 'Cr2O3', 'CrO2')
 
 ## Trying to repeat optical data provided by Sergei Lisunov. 
 def RepeatLisunovMixtureOfOxides(): #{{{
@@ -1102,18 +1098,22 @@ def RepeatLisunovMixtureOfOxides(): #{{{
     # As Nadya will never admit this mistake, and that my time is limited, let's use Sergey's data directly, and close this problem even if everything is wrong for now...
 #}}}
 
+# =====================
+#ScenarioOfOxidePrecipitation()
+# ** Info: computing 3-layer reflectivity..."
+#R = BiLayerReflectivity(epsAir, epsCrCr2O3_list, epsBK7, t_list) #dimension is good for a HeatMap picture
 
-# Preparing SPP period using an external file
+Fraction_size = 10 #number of samples
+#ScenarioOfCrOxideMixture(epsCr, epsCr2O3, epsBK7, epsAir, Fraction_size, 'Cr', 'Cr2O3')
+ScenarioOfCrOxideMixture(epsCr, epsCrO2, epsBK7, epsAir, Fraction_size,  'Cr', 'CrO2')
+#ScenarioOfCrOxideMixture3(epsCr, epsCr2O3, epsCrO2, epsBK7, Fraction_size, 'Cr', 'Cr2O3', 'CrO2')
 
-
-CrCrXOY_Lisunov  = np.loadtxt("Cr-Cr2O3-CrO2/Sergei_Lisunov/OptProperties_Cr_with_oxides.csv", skiprows=2)
-limiter = 2 #limit the number of cells to get, then we can update the plot without recomputing the whole thing.
-CrCrXOY_fraction   = CrCrXOY_Lisunov[:,0]
-epsR_CrCrXOY_L     = CrCrXOY_Lisunov[:,1]
-epsC_CrCrXOY_L     = CrCrXOY_Lisunov[:,2]
-eps_CrCrXOY_L = np.add(epsR_CrCrXOY_L, np.multiply(1.j, epsC_CrCrXOY_L))
-
-#print(len(CrCrXOY_fraction))
-#print(len(eps_CrCrXOY_L))
-
-ScenarioOfCrOxideMixture_ext(eps_CrCrXOY_L, epsAir, epsBK7, CrCrXOY_fraction, 'Cr_oxide', 'Air', 'BK7')
+### Takes ~ 30 min run
+### Preparing SPP period using an external file
+#CrCrXOY_Lisunov  = np.loadtxt("Cr-Cr2O3-CrO2/Sergei_Lisunov/OptProperties_Cr_with_oxides.csv", skiprows=2)
+#limiter = 2 #limit the number of cells to get, then we can update the plot without recomputing the whole thing.
+#CrCrXOY_fraction   = CrCrXOY_Lisunov[:,0]
+#epsR_CrCrXOY_L     = CrCrXOY_Lisunov[:,1]
+#epsC_CrCrXOY_L     = CrCrXOY_Lisunov[:,2]
+#eps_CrCrXOY_L = np.add(epsR_CrCrXOY_L, np.multiply(1.j, epsC_CrCrXOY_L))
+#ScenarioOfCrOxideMixture_ext(eps_CrCrXOY_L, epsAir, epsBK7, CrCrXOY_fraction, 'Cr_compounds_oxide', 'Air', 'BK7')

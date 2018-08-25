@@ -23,7 +23,7 @@
 # T.J.-Y. Derrien et al, J. Appl. Phys. 116, 074902 (2014) and references 
 # therein. 
 
-from function import *
+from libMultilayerSPP import *
 import matplotlib.pyplot as plt
 
 # === PRODUCTION OF SCIENTIFIC RESULTS ===

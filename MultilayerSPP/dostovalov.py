@@ -65,7 +65,26 @@ y_max = 1E9
 x_steps = 40
 y_steps = 40
 
+## Reorganizes the order of fields and output only necessary information
+def SplitSummaryTable(summary): #{{{
+    if(len(summary[:,0])==0): #if table is empty, avoids the crash
+        thickness_s = 0e0; branch_s=-1; root_number_s=-1; period_s=-1; lspp_s=-1; fractionOxide_s=-1; epsilonFilm_s=1E99
+    else:
+        thickness     = summary[:, 0] 
+        branch        = summary[:, 1]
+        root_number   = summary[:, 2]
+        period        = summary[:, 3]
+        lspp          = summary[:, 4]
+        fractionOxide = summary[:, 5]
+        epsilonFilm   = summary[:, 6]
+        
+        lists = sorted(zip(*[thickness, fractionOxide, epsilonFilm, branch, root_number, period, lspp]))
+        thickness_s, fractionOxide_s, epsilonFilm_s, branch_s, root_number_s, period_s, lspp_s  = list(zip(*lists))
+    return thickness_s, fractionOxide_s, epsilonFilm_s, branch_s, root_number_s, period_s, lspp_s
+#}}}
+
 # Scenario proposed by Thibault: an oxide layer grows at the top of the Cr sample, reducing progressively the periodicity by lambda/n. 
+# This function can also be used to generate simple results for verification
 def ScenarioOfOxidePrecipitation(epsMedium, epsSubstrate, epsEnvironment=1.): 
     # Medium 1: thin film.
     eps1 = epsCr     #thin film
@@ -97,23 +116,144 @@ def ScenarioOfOxidePrecipitation(epsMedium, epsSubstrate, epsEnvironment=1.):
         for branch in np.arange(0,num_branches-1):
             print("1.", thickness, roots[branch][0], roots[branch][1], eps1.real, eps1.imag)
 
-## Reorganizes the order of fields and output only necessary information
-def SplitSummaryTable(summary): #{{{
-    if(len(summary[:,0])==0): #if table is empty, avoids the crash
-        thickness_s = 0e0; branch_s=-1; root_number_s=-1; period_s=-1; lspp_s=-1; fractionOxide_s=-1; epsilonFilm_s=1E99
-    else:
-        thickness     = summary[:, 0] 
-        branch        = summary[:, 1]
-        root_number   = summary[:, 2]
-        period        = summary[:, 3]
-        lspp          = summary[:, 4]
-        fractionOxide = summary[:, 5]
-        epsilonFilm   = summary[:, 6]
+# Scenario proposed by Thibault: an oxide layer grows at the top of the Cr sample, reducing progressively the periodicity by lambda/n. 
+# This function can also be used to generate simple results for verification
+def Burke_SymmetricModes(thickness_size): 
+    wavelength=633e-9
+    # Medium 1: thin film.
+    eps1 = -19.+0.53j     #thin film
+    # Medium 2: substrate. 
+    eps2 = 3.999999+0.004j
+    # Medium 3: environment
+    eps3 = eps2       #environment | substrate
+    # Note: Inverting eps2 and eps3 should have no effect on the possible modes, but only on field amplification. 
+    
+    # Conversion to beta/k0: 
+    def PeriodToBetaNorm(period): 
+        # period = 2.*np.pi / beta.real
+        k0 = 2.*np.pi / wavelength
+        beta_norm_re = np.divide(np.divide(2.*np.pi, period), k0)
+        return beta_norm_re
+    
+    #thickness_size = 20
+    thickness_min  = 10e-9
+    thickness_max  = 100e-9
+    t_list = np.linspace(thickness_min, thickness_max, thickness_size, endpoint=True)
+    
+    summary = np.zeros((0, 7))
+    for thickness in t_list:
+        roots = findroots(eps1, eps2, eps3,
+                wavelength, thickness,
+                x_min, x_max,    
+                y_min, y_max,    
+                x_steps, y_steps)
+
+        ## Shaping the data to plot them with GNUplot
+        #roots_shape = np.shape(roots)
+        ##print(roots_shape)
+        #num_thickness= np.shape(thickness)
+        #num_branches = roots_shape[0]
+        #num_property = roots_shape[1]
+
+        #for branch in np.arange(0,num_branches-1):
+            #print("1.", thickness, roots[branch][0], roots[branch][1], eps1.real, eps1.imag)
         
-        lists = sorted(zip(*[thickness, fractionOxide, epsilonFilm, branch, root_number, period, lspp]))
-        thickness_s, fractionOxide_s, epsilonFilm_s, branch_s, root_number_s, period_s, lspp_s  = list(zip(*lists))
-    return thickness_s, fractionOxide_s, epsilonFilm_s, branch_s, root_number_s, period_s, lspp_s
-#}}}
+        num_branches = len(roots) 
+        
+        num_thickness = np.shape(t_list) #NOTE: number of tested thicknesses
+        for branch in np.arange(0,num_branches):
+            roots_in_branch = roots[branch]
+            #print("\n")
+            print("Roots in branch #"+str(branch))
+            for order in np.arange(0,len(roots_in_branch)):
+                roots_in_branch_order = roots_in_branch[order]
+                #print("\n")
+                fraction = 0e0 #irrelevant in this context
+                print("Thickness:"+str(thickness)+", Order #"+str(order)+": Period="+str(roots_in_branch_order[0])+" Lspp="+str(roots_in_branch_order[1]))
+                print("beta/k0="+str(PeriodToBetaNorm(roots_in_branch_order[0])))
+                ToBeAdded = [thickness, branch, order, roots_in_branch_order[0], roots_in_branch_order[1], fraction, eps1]
+                if(abs(roots_in_branch[order][0]) > 1E-15 and abs(roots_in_branch[order][1]) > 1E-10): 
+                    # We remove modes were |Lspp| < 0.1 nm or |period| < 0. 
+                    summary = np.vstack((summary, ToBeAdded ))
+    
+    print(summary)
+    ## Exporting the results 
+    summary_branch0 = np.array(summary[summary[:,1]==0,:])
+    summary_branch1 = np.array(summary[summary[:,1]==1,:])
+    summary_branch2 = np.array(summary[summary[:,1]==2,:])
+    summary_branch3 = np.array(summary[summary[:,1]==3,:])
+    
+    #ReBeta = np.divide(2.*np.pi,period_s)
+    #ImBeta = np.divide(0.5,lspp_s)
+    
+    
+    
+    # Then we could plot them in the right order
+    #thickness, branch, root_number, period, lspp, fractionOxide, epsilonFilm = SplitSummaryTable(summary)
+    
+    thickness, fractionOxide, epsilonFilm, branch, root_number, period, lspp = SplitSummaryTable(summary)
+    
+    thickness0, fractionOxide0, epsilonFilm0, branch0, root_number0, period0, lspp0 = SplitSummaryTable(summary_branch0)
+    thickness1, fractionOxide1, epsilonFilm1, branch1, root_number1, period1, lspp1 = SplitSummaryTable(summary_branch1)
+    thickness2, fractionOxide2, epsilonFilm2, branch2, root_number2, period2, lspp2 = SplitSummaryTable(summary_branch2)
+    thickness3, fractionOxide3, epsilonFilm3, branch3, root_number3, period3, lspp3 = SplitSummaryTable(summary_branch3)
+    
+    summary_branch0_export = np.array([np.real(fractionOxide0), np.real(epsilonFilm0), np.imag(epsilonFilm0), np.real(branch0), np.real(root_number0), np.real(period0)])
+    summary_branch1_export = np.array([np.real(fractionOxide1), np.real(epsilonFilm1), np.imag(epsilonFilm1), np.real(branch1), np.real(root_number1), np.real(period1)])
+    summary_branch2_export = np.array([np.real(fractionOxide2), np.real(epsilonFilm2), np.imag(epsilonFilm2), np.real(branch2), np.real(root_number2), np.real(period2)])
+    summary_branch3_export = np.array([np.real(fractionOxide3), np.real(epsilonFilm3), np.imag(epsilonFilm3), np.real(branch3), np.real(root_number3), np.real(period3)])
+    
+    summary_branch0_export_t = np.transpose(summary_branch0_export)
+    summary_branch1_export_t = np.transpose(summary_branch1_export)
+    summary_branch2_export_t = np.transpose(summary_branch2_export)
+    summary_branch3_export_t = np.transpose(summary_branch3_export)
+        
+    print("SPP branches are ready. Exporting to CSV...")
+    filename = "Burke-SPPmodes-branch"
+    np.savetxt(filename+"0"+".csv", summary_branch0)
+    np.savetxt(filename+"1"+".csv", summary_branch1)
+    np.savetxt(filename+"2"+".csv", summary_branch2)
+    np.savetxt(filename+"3"+".csv", summary_branch3)
+    
+    
+    plt.figure()
+    ax1 = plt.subplot(111)
+    plt.xlabel(r'Thickness (nm)')
+    plt.ylabel(r'SPP period $\Lambda$ (nm)') 
+    #ax1.set_yscale('log')
+    plt.ylim((0.,1.1e9*wavelength))
+    plot110, = ax1.plot(np.multiply(1e9,thickness0), np.multiply(1e9,period0), 'r+', label=r'SPP period $\Lambda$, branch (-,-)')
+    plot111, = ax1.plot(np.multiply(1e9,thickness1), np.multiply(1e9,period1), 'k+', label=r'SPP period $\Lambda$, branch (-,+)')
+    plot112, = ax1.plot(np.multiply(1e9,thickness2), np.multiply(1e9,period2), 'b+', label=r'SPP period $\Lambda$, branch (+,-)')
+    plot113, = ax1.plot(np.multiply(1e9,thickness3), np.multiply(1e9,period3), 'go', label=r'SPP period $\Lambda$, branch ( +,+)')
+    
+    plot12,  = ax1.plot(np.multiply(1e9, thickness), np.multiply(1e9,wavelength*np.ones(np.shape(fractionOxide))), 'k-', linewidth=0.5, label=r'Laser wavelength $\lambda$')
+    
+    ax12 = ax1.twinx()
+    #plot14, = ax12.plot(fractionOxide_s, np.real(epsilonFilm_s), 'b+', label=r'Re($\varepsilon$)')
+    #plot15, = ax12.plot(fractionOxide_s, np.imag(epsilonFilm_s), 'b^', label=r'Im($\varepsilon$)')
+    plot14,  = ax12.plot(np.multiply(1e9,thickness0), np.multiply(1e0,PeriodToBetaNorm(period0)), 'r-')
+    plot15,  = ax12.plot(np.multiply(1e9,thickness1), np.multiply(1e0,PeriodToBetaNorm(period1)), 'k-')
+    plot16,  = ax12.plot(np.multiply(1e9,thickness2), np.multiply(1e0,PeriodToBetaNorm(period2)), 'b-')
+    plot17,  = ax12.plot(np.multiply(1e9,thickness3), np.multiply(1e0,PeriodToBetaNorm(period3)), 'g-')
+    
+    #plt.ylabel(r'SPP mean free path $L_{SPP}$ (m)')
+    #plt.ylabel(r'Re($\varepsilon$), Im($\varepsilon$)')
+    plt.ylabel(r'$\beta/k_0$')
+    #ax1.yaxis.label.set_color(plot110.get_color()) #colorizes the label
+    #ax1.spines["left"].set_edgecolor(plot110.get_color()) #colorizes the axis
+    #ax1.tick_params(axis='y', colors=plot110.get_color()) #colorizes the tics and numbers
+    plotComb1= [plot110, plot111, plot112, plot113, plot12]; 
+    plotComb1+=[plot14, plot15, plot16, plot17]
+    
+    #ax12.yaxis.label.set_color(plot14.get_color()) #colorizes the label
+    #ax12.spines["right"].set_edgecolor(plot14.get_color()) #colorizes the axis
+    #ax12.tick_params(axis='y', colors=plot14.get_color()) #colorizes the tics and numbers
+    plt.tight_layout()
+    labelsComb1 = [l.get_label() for l in plotComb1]
+    ax1.legend(plotComb1, labelsComb1, loc="upper right")
+    plt.show()
+
 
 ## Compute the spatial period and mean-free path of Surface Plasmon Polaritons 
 # at the interface between three materials. 
@@ -190,7 +330,7 @@ def ScenarioOfCrOxideMixture(epsSample, epsOxide=1., epsSubstrate=1., epsEnviron
         #print("Roots")
         #print(roots) #For each branch, each sample, we have two data Period, and L_spp
         
-        ### This version is not general enough for number_of_roots > 1. 
+        ### This version is general enough for number_of_roots > 1. 
         num_thickness = np.shape(t_list) #NOTE: number of tested thicknesses
         for branch in np.arange(0,num_branches):
             roots_in_branch = roots[branch]
@@ -201,7 +341,7 @@ def ScenarioOfCrOxideMixture(epsSample, epsOxide=1., epsSubstrate=1., epsEnviron
                 #print("\n")
                 print("Order #"+str(order)+": Period="+str(roots_in_branch_order[0])+" Lspp="+str(roots_in_branch_order[1]))
                 ToBeAdded = [thickness, branch, order, roots_in_branch_order[0], roots_in_branch_order[1], fraction[fraction_index], eps1]
-                if(abs(roots_in_branch[order][0]) > 1E-15 and abs(roots_in_branch[order][1]) > 1E-10): 
+                if(roots_in_branch[order][0] > 1E-15 and abs(roots_in_branch[order][1]) > 1E-10): 
                     # We remove modes were Lspp < 0.1 nm or period < 0. 
                     summary = np.vstack((summary, ToBeAdded ))
                     
@@ -275,7 +415,7 @@ def ScenarioOfCrOxideMixture(epsSample, epsOxide=1., epsSubstrate=1., epsEnviron
     # Is there a problem with root_number0 for example? 
     print("SPP branches are ready. Exporting to CSV...")
     filename = "Dostovalov-SPPmodes-Cr-CrO2"
-    np.savetxt(filename+".csv", summary_branch0_export_t)
+    np.savetxt(filename+".csv", summary_export_t)
     np.savetxt(filename+"-branch0"+".csv", summary_branch0_export_t)
     np.savetxt(filename+"-branch1"+".csv", summary_branch1_export_t)
     np.savetxt(filename+"-branch2"+".csv", summary_branch2_export_t)
@@ -1103,9 +1243,14 @@ def RepeatLisunovMixtureOfOxides(): #{{{
 # ** Info: computing 3-layer reflectivity..."
 #R = BiLayerReflectivity(epsAir, epsCrCr2O3_list, epsBK7, t_list) #dimension is good for a HeatMap picture
 
+## Validation cases in Python. 
 Fraction_size = 10 #number of samples
+
+thickness_size = 30 #Fraction_size
+Burke_SymmetricModes(thickness_size)
+
 #ScenarioOfCrOxideMixture(epsCr, epsCr2O3, epsBK7, epsAir, Fraction_size, 'Cr', 'Cr2O3')
-ScenarioOfCrOxideMixture(epsCr, epsCrO2, epsBK7, epsAir, Fraction_size,  'Cr', 'CrO2')
+#ScenarioOfCrOxideMixture(epsCr, epsCrO2, epsBK7, epsAir, Fraction_size,  'Cr', 'CrO2')
 #ScenarioOfCrOxideMixture3(epsCr, epsCr2O3, epsCrO2, epsBK7, Fraction_size, 'Cr', 'Cr2O3', 'CrO2')
 
 ### Takes ~ 30 min run

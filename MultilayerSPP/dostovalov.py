@@ -178,10 +178,10 @@ def Burke_SymmetricModes(thickness_size):
     
     print(summary)
     ## Exporting the results 
-    summary_branch0 = np.array(summary[summary[:,1]==0,:])
-    summary_branch1 = np.array(summary[summary[:,1]==1,:])
-    summary_branch2 = np.array(summary[summary[:,1]==2,:])
-    summary_branch3 = np.array(summary[summary[:,1]==3,:])
+    summary_branch0 = np.array(summary[summary[:,1]==0,:]) #-,-
+    summary_branch1 = np.array(summary[summary[:,1]==1,:]) #-,+
+    summary_branch2 = np.array(summary[summary[:,1]==2,:]) #+,-
+    summary_branch3 = np.array(summary[summary[:,1]==3,:]) #+,+
     
     #ReBeta = np.divide(2.*np.pi,period_s)
     #ImBeta = np.divide(0.5,lspp_s)
@@ -210,10 +210,10 @@ def Burke_SymmetricModes(thickness_size):
         
     print("SPP branches are ready. Exporting to CSV...")
     filename = "Burke-SPPmodes-branch"
-    np.savetxt(filename+"0"+".csv", summary_branch0)
-    np.savetxt(filename+"1"+".csv", summary_branch1)
-    np.savetxt(filename+"2"+".csv", summary_branch2)
-    np.savetxt(filename+"3"+".csv", summary_branch3)
+    np.savetxt(filename+"0"+".csv", summary_branch0_export_t)
+    np.savetxt(filename+"1"+".csv", summary_branch1_export_t)
+    np.savetxt(filename+"2"+".csv", summary_branch2_export_t)
+    np.savetxt(filename+"3"+".csv", summary_branch3_export_t)
     
     
     plt.figure()
@@ -225,17 +225,17 @@ def Burke_SymmetricModes(thickness_size):
     plot110, = ax1.plot(np.multiply(1e9,thickness0), np.multiply(1e9,period0), 'r+', label=r'SPP period $\Lambda$, branch (-,-)')
     plot111, = ax1.plot(np.multiply(1e9,thickness1), np.multiply(1e9,period1), 'k+', label=r'SPP period $\Lambda$, branch (-,+)')
     plot112, = ax1.plot(np.multiply(1e9,thickness2), np.multiply(1e9,period2), 'b+', label=r'SPP period $\Lambda$, branch (+,-)')
-    plot113, = ax1.plot(np.multiply(1e9,thickness3), np.multiply(1e9,period3), 'go', label=r'SPP period $\Lambda$, branch ( +,+)')
+    plot113, = ax1.plot(np.multiply(1e9,thickness3), np.multiply(1e9,period3), 'g+', label=r'SPP period $\Lambda$, branch ( +,+)')
     
     plot12,  = ax1.plot(np.multiply(1e9, thickness), np.multiply(1e9,wavelength*np.ones(np.shape(fractionOxide))), 'k-', linewidth=0.5, label=r'Laser wavelength $\lambda$')
     
     ax12 = ax1.twinx()
     #plot14, = ax12.plot(fractionOxide_s, np.real(epsilonFilm_s), 'b+', label=r'Re($\varepsilon$)')
     #plot15, = ax12.plot(fractionOxide_s, np.imag(epsilonFilm_s), 'b^', label=r'Im($\varepsilon$)')
-    plot14,  = ax12.plot(np.multiply(1e9,thickness0), np.multiply(1e0,PeriodToBetaNorm(period0)), 'r-')
-    plot15,  = ax12.plot(np.multiply(1e9,thickness1), np.multiply(1e0,PeriodToBetaNorm(period1)), 'k-')
-    plot16,  = ax12.plot(np.multiply(1e9,thickness2), np.multiply(1e0,PeriodToBetaNorm(period2)), 'b-')
-    plot17,  = ax12.plot(np.multiply(1e9,thickness3), np.multiply(1e0,PeriodToBetaNorm(period3)), 'g-')
+    plot14,  = ax12.plot(np.multiply(1e9,thickness0), np.multiply(1e0,PeriodToBetaNorm(period0)), 'r^', label=r'$\beta/k_0$, (-,-)')
+    plot15,  = ax12.plot(np.multiply(1e9,thickness1), np.multiply(1e0,PeriodToBetaNorm(period1)), 'k^', label=r'$\beta/k_0$, (-,+)')
+    plot16,  = ax12.plot(np.multiply(1e9,thickness2), np.multiply(1e0,PeriodToBetaNorm(period2)), 'b^', label=r'$\beta/k_0$, (+,-)')
+    plot17,  = ax12.plot(np.multiply(1e9,thickness3), np.multiply(1e0,PeriodToBetaNorm(period3)), 'g^', label=r'$\beta/k_0$, (+,+)')
     
     #plt.ylabel(r'SPP mean free path $L_{SPP}$ (m)')
     #plt.ylabel(r'Re($\varepsilon$), Im($\varepsilon$)')
@@ -991,7 +991,7 @@ def ScenarioOfCrOxideMixture_ext(epsSample, epsEnvironment=1., epsSubstrate=1., 
         
         ### This version is not general enough for number_of_roots > 1. 
         num_thickness = np.shape(t_list) #NOTE: number of tested thicknesses
-        for branch in np.arange(0,num_branches):
+        for branch in np.arange(0, num_branches):
             roots_in_branch = roots[branch]
             #print("\n")
             print("Roots in branch #"+str(branch))
@@ -1098,7 +1098,7 @@ def ScenarioOfCrOxideMixture_ext(epsSample, epsEnvironment=1., epsSubstrate=1., 
     plot110, = ax1.plot(np.multiply(100,fractionOxide0), np.multiply(1e9,period0), 'r+', label=r'SPP period $\Lambda$, branch (-,-)')
     plot111, = ax1.plot(np.multiply(100,fractionOxide1), np.multiply(1e9,period1), 'k+', label=r'SPP period $\Lambda$, branch (-,+)')
     plot112, = ax1.plot(np.multiply(100,fractionOxide2), np.multiply(1e9,period2), 'b+', label=r'SPP period $\Lambda$, branch (+,-)')
-    plot113, = ax1.plot(np.multiply(100,fractionOxide3), np.multiply(1e9,period3), 'go', label=r'SPP period $\Lambda$, branch ( +,+)')
+    plot113, = ax1.plot(np.multiply(100,fractionOxide3), np.multiply(1e9,period3), 'go', label=r'SPP period $\Lambda$, branch (+,+)')
     
     plot12, = ax1.plot(np.multiply(100, fractionOxide), np.multiply(1e9,wavelength*np.ones(np.shape(fractionOxide))), 'k-', linewidth=0.5, label=r'Laser wavelength $\lambda$')
     

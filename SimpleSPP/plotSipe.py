@@ -446,13 +446,13 @@ def plotGenericSipeMaps(kx_value, ky_value, epsilon_precision = 0.05, theta=0., 
   return 0
 #}}}
 
-wavelength = 1026.0 #1064.0
-select = str(int(wavelength))
-request = select+".0"
-unit = 1E-9
-wavelength = wavelength * unit
-print "Wavelength = "+str(wavelength/unit)+" nm."
-kpointnumber = 2000
+#wavelength = 1026.0 #1064.0
+#select = str(int(wavelength))
+#request = select+".0"
+#unit = 1E-9
+#wavelength = wavelength * unit
+#print "Wavelength = "+str(wavelength/unit)+" nm."
+#kpointnumber = 2000
 
 # ======================= VALIDATION CASES ======================
 
@@ -480,20 +480,24 @@ kpointnumber = 2000
 #plotSipeFromDatabase(request, "Cr (Johnson 1974)", 1026e-9, kpointnumber)
 #plotSipe1D_sectionX(800e-9, -0.6721223+24.8657476j)
 
-#maps prepared for Stephane Gräf on generalized Sipe model (2018)
-k_precision    = 0.05
-filling_factor = 0.1
-shape_factor   = 0.4
-PlotMaterials  = False
-PlotDrude      = True
+def plotStephanGraf_Materials2018(): #{{{
+    #maps prepared for Stephane Gräf on generalized Sipe model (2018)
+    k_precision    = 0.05
+    filling_factor = 0.1
+    shape_factor   = 0.4
+    PlotMaterials  = False
+    PlotDrude      = True
 
-plotGenericSipeMaps(0.8, 0.0, k_precision, 0., 0.1, 0.4, PlotMaterials, PlotDrude, True)
-plotGenericSipeMaps(0.9, 0.0, k_precision, 0., 0.1, 0.4, PlotMaterials, PlotDrude, False)
-plotGenericSipeMaps(1.0, 0.0, k_precision, 0., 0.1, 0.4, PlotMaterials, PlotDrude, False)
-plotGenericSipeMaps(1.1, 0.0, k_precision, 0., 0.1, 0.4, PlotMaterials, PlotDrude, False)
-plotGenericSipeMaps(1.2, 0.0, k_precision, 0., 0.1, 0.4, PlotMaterials, PlotDrude, False)
-plotGenericSipeMaps(0.0, 0.8, k_precision, 0., 0.1, 0.4, PlotMaterials, PlotDrude, False)
-plotGenericSipeMaps(0.0, 0.9, k_precision, 0., 0.1, 0.4, PlotMaterials, PlotDrude, False)
-plotGenericSipeMaps(0.0, 1.0, k_precision, 0., 0.1, 0.4, PlotMaterials, PlotDrude, False)
-plotGenericSipeMaps(0.0, 1.1, k_precision, 0., 0.1, 0.4, PlotMaterials, PlotDrude, False)
-plotGenericSipeMaps(0.0, 1.2, k_precision, 0., 0.1, 0.4, PlotMaterials, PlotDrude, False)
+    plotGenericSipeMaps(0.8, 0.0, k_precision, 0., 0.1, 0.4, PlotMaterials, PlotDrude, True)
+    plotGenericSipeMaps(0.9, 0.0, k_precision, 0., 0.1, 0.4, PlotMaterials, PlotDrude, False)
+    plotGenericSipeMaps(1.0, 0.0, k_precision, 0., 0.1, 0.4, PlotMaterials, PlotDrude, False)
+    plotGenericSipeMaps(1.1, 0.0, k_precision, 0., 0.1, 0.4, PlotMaterials, PlotDrude, False)
+    plotGenericSipeMaps(1.2, 0.0, k_precision, 0., 0.1, 0.4, PlotMaterials, PlotDrude, False)
+    plotGenericSipeMaps(0.0, 0.8, k_precision, 0., 0.1, 0.4, PlotMaterials, PlotDrude, False)
+    plotGenericSipeMaps(0.0, 0.9, k_precision, 0., 0.1, 0.4, PlotMaterials, PlotDrude, False)
+    plotGenericSipeMaps(0.0, 1.0, k_precision, 0., 0.1, 0.4, PlotMaterials, PlotDrude, False)
+    plotGenericSipeMaps(0.0, 1.1, k_precision, 0., 0.1, 0.4, PlotMaterials, PlotDrude, False)
+    plotGenericSipeMaps(0.0, 1.2, k_precision, 0., 0.1, 0.4, PlotMaterials, PlotDrude, False)
+#}}}
+
+plotSipe1D_sectionX(1030e-9, -0.6721223+24.8657476j)

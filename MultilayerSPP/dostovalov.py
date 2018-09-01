@@ -1048,8 +1048,6 @@ def ScenarioOfCrOxideMixture_ext(epsSample, epsEnvironment=1., epsSubstrate=1., 
     summary_branch2 = np.array(summary[summary[:,1]==2,:])
     summary_branch3 = np.array(summary[summary[:,1]==3,:])
     
-    
-
     #ReBeta = np.divide(2.*np.pi,period_s)
     #ImBeta = np.divide(0.5,lspp_s)
     

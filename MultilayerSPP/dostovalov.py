@@ -1246,21 +1246,21 @@ def RepeatLisunovMixtureOfOxides(): #{{{
 #R = BiLayerReflectivity(epsAir, epsCrCr2O3_list, epsBK7, t_list) #dimension is good for a HeatMap picture
 
 ## Validation cases in Python. 
-Fraction_size = 10 #number of samples
+Fraction_size = 60 #number of samples
 
 thickness_size = 60 #Fraction_size
-Burke_SymmetricModes(thickness_size)
+#Burke_SymmetricModes(thickness_size)
 
 #ScenarioOfCrOxideMixture(epsCr, epsCr2O3, epsBK7, epsAir, Fraction_size, 'Cr', 'Cr2O3')
 #ScenarioOfCrOxideMixture(epsCr, epsCrO2, epsBK7, epsAir, Fraction_size,  'Cr', 'CrO2')
 #ScenarioOfCrOxideMixture3(epsCr, epsCr2O3, epsCrO2, epsBK7, Fraction_size, 'Cr', 'Cr2O3', 'CrO2')
 
-### Takes ~ 30 min run
-### Preparing SPP period using an external file
-#CrCrXOY_Lisunov  = np.loadtxt("Cr-Cr2O3-CrO2/Sergei_Lisunov/OptProperties_Cr_with_oxides.csv", skiprows=2)
-#limiter = 2 #limit the number of cells to get, then we can update the plot without recomputing the whole thing.
-#CrCrXOY_fraction   = CrCrXOY_Lisunov[:,0]
-#epsR_CrCrXOY_L     = CrCrXOY_Lisunov[:,1]
-#epsC_CrCrXOY_L     = CrCrXOY_Lisunov[:,2]
-#eps_CrCrXOY_L = np.add(epsR_CrCrXOY_L, np.multiply(1.j, epsC_CrCrXOY_L))
-#ScenarioOfCrOxideMixture_ext(eps_CrCrXOY_L, epsAir, epsBK7, CrCrXOY_fraction, 'Cr_compounds_oxide', 'Air', 'BK7')
+## Takes ~ 30 min run
+## Preparing SPP period using an external file
+CrCrXOY_Lisunov  = np.loadtxt("Cr-Cr2O3-CrO2/Sergei_Lisunov/OptProperties_Cr_with_oxides.csv", skiprows=2)
+limiter = 2 #limit the number of cells to get, then we can update the plot without recomputing the whole thing.
+CrCrXOY_fraction   = CrCrXOY_Lisunov[:,0]
+epsR_CrCrXOY_L     = CrCrXOY_Lisunov[:,1]
+epsC_CrCrXOY_L     = CrCrXOY_Lisunov[:,2]
+eps_CrCrXOY_L = np.add(epsR_CrCrXOY_L, np.multiply(1.j, epsC_CrCrXOY_L))
+ScenarioOfCrOxideMixture_ext(eps_CrCrXOY_L, epsAir, epsBK7, CrCrXOY_fraction, 'Cr_compounds_oxide', 'Air', 'BK7')

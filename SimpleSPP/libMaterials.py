@@ -68,7 +68,7 @@ def IndexToEpsilon(n):
 # Returns the effective dielectric permittivity of 2-mixed materials. 
 # @param eps1: dielectric permittivity (epsilon <complex>) of first medium
 # @param eps2: dielectric permittivity (epsilon <complex>) of second medium
-# @param fraction: fraction of epsilon2 mixed with (1.-fraction)*epsilon1 medium
+# @param fraction: fraction refers to epsilon2 which is mixed with (1.-fraction)*epsilon1 medium
 # This function was validated by exact comparison with Sergei Lisunov. 
 # Applicable for dielectric - metal mixtures. Maybe not applicable for 
 # metal-metal mixtures. 

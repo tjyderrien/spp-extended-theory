@@ -57,7 +57,7 @@ epsAir      = 1.+0.j          #air
 epsCu       = -1.9937293241+4.9290716854j     #355  nm
 
 fractionOfCrO2 = 0.5
-t = 80E-9 #thickness of the layer in meters
+t = 28E-9 #thickness of the layer in meters
 
 # Medium 1: thin film. 
 eps1 = MaxwellGarnett2(epsCr, epsCrO2, fractionOfCrO2)

@@ -73,12 +73,12 @@ def findroots(eps1, eps2, eps3, wavelength, t, x_min, x_max, y_min, y_max, x_ste
     ke2 = (k0**2)*eps2
     ke3 = (k0**2)*eps3
 
-    tol_merge = 1E3
-    merge_treshold = 4
+    tol_merge = 1E2 #1E3
+    merge_treshold = 1 #4? 1: helps to not miss some modes
     branches = []
-    #for sgn1, sgn2 in product((-1,1), (-1,1)): 
+    for sgn1, sgn2 in product((-1,1), (-1,1)): 
     #for sgn1, sgn2 in product((1,1), (1,1)): #DEBUG LINE
-    for sgn1, sgn2 in ((1, 1), (-1, 1), (1,-1), (1,1)): #DEBUG LINE
+    #for sgn1, sgn2 in ((-1, 1), (-1, 1), (1,-1), (1,1)): #DEBUG LINE
         roots = []
         unique = []
         for x in np.linspace(x_min, x_max, num=x_steps):
@@ -86,8 +86,11 @@ def findroots(eps1, eps2, eps3, wavelength, t, x_min, x_max, y_min, y_max, x_ste
                 nrt = root(func, (x, y), args=(eps1, eps2, eps3, k0, t, sgn1, sgn2), method='hybr')
                 #checking = func(nrt.x, eps1, eps2, eps3, k0, t, sgn1, sgn2)
                 if (nrt.success):
-                #if (nrt.success and (checking.all() < 1E-10 ) ): #checking if solution verifies the equation
                     roots.append(nrt.x)
+                #if (nrt.success and (checking.all() < 1E-10 ) ): #checking if solution verifies the equation
+                    #nrt2 = root(func, nrt.x, args=(eps1, eps2, eps3, k0, t, sgn1, sgn2), method='lm')
+                    #if nrt2.success:
+                        #roots.append(nrt2.x)
 
         ln = len(roots)
         while ln > 0:

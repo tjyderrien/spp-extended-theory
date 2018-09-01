@@ -53,7 +53,7 @@ SPPperiod = 2.*np.pi/betaR[0]
 SPPlength = .5/betaR[1]
 
 #which field you want to plot
-whichfield = 6
+whichfield = 0
 #0 Hy
 #1 Ex
 #2 Ez

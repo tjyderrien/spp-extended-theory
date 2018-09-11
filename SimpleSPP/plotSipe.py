@@ -122,7 +122,7 @@ def plotSipe1D_sectionX(wavelength, epsilon, f=0.1e0, s=0.4e0, theta=0e0): #{{{
 #query2= 'InP (Bonse 2005)'
 #query2= 'Mo (Ordal 1988)'
 #query2= 'Cu (Palik)'
-#query2='SiO2 (Palik)'
+#query2= 'SiO2 (Palik)'
 print "Caution: the values of queries must be exactly the one of MaterialDatabase.csv."
 
 ## Prepares the classical SipeEfficiencyFactor(kx, ky) for a specific material query2 immersed in Air. 
@@ -446,13 +446,13 @@ def plotGenericSipeMaps(kx_value, ky_value, epsilon_precision = 0.05, theta=0., 
   return 0
 #}}}
 
-#wavelength = 1026.0 #1064.0
-#select = str(int(wavelength))
-#request = select+".0"
-#unit = 1E-9
+wavelength = 1026.0 #1064.0
+select = str(int(wavelength))
+request = select+".0"
+unit = 1E-9
 #wavelength = wavelength * unit
 #print "Wavelength = "+str(wavelength/unit)+" nm."
-#kpointnumber = 2000
+kpointnumber = 500
 
 # ======================= VALIDATION CASES ======================
 
@@ -477,8 +477,14 @@ def plotGenericSipeMaps(kx_value, ky_value, epsilon_precision = 0.05, theta=0., 
 #TODO: Repeat figures from Colombier et al
 
 # ======================= SCIENTIFIC PRODUCTION DATA =====================
-#plotSipeFromDatabase(request, "Cr (Johnson 1974)", 1026e-9, kpointnumber)
-#plotSipe1D_sectionX(800e-9, -0.6721223+24.8657476j)
+filling = 0.1
+shape = 0.4
+angle = 0.
+#plotSipeFromDatabase(request, "Cr (Johnson 1974)", 1026e-9, kpointnumber, 'Air', angle, filling, shape)
+epsCr = -0.6721223+24.8657476j
+nCr = np.sqrt(epsCr)-3.5j
+print nCr
+plotSipe1D_sectionX(1026e-9, nCr**2, filling, shape)
 
 def plotStephanGraf_Materials2018(): #{{{
     #maps prepared for Stephane Gräf on generalized Sipe model (2018)
@@ -500,4 +506,4 @@ def plotStephanGraf_Materials2018(): #{{{
     plotGenericSipeMaps(0.0, 1.2, k_precision, 0., 0.1, 0.4, PlotMaterials, PlotDrude, False)
 #}}}
 
-plotSipe1D_sectionX(1030e-9, -0.6721223+24.8657476j)
+#plotSipe1D_sectionX(1030e-9, -0.6721223+24.8657476j)

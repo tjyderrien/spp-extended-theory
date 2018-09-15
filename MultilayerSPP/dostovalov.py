@@ -922,7 +922,7 @@ def ThinFilmHeating(wavelength, epsCr): #{{{
 ## Compute the SPP modes for mixed oxide ratio using an external set of optical data
 # @param fraction: array of oxide fraction
 # Size of epsSample and fraction should be of the same dimension
-def ScenarioOfCrOxideMixture_ext(epsSample, epsEnvironment=1., epsSubstrate=1., fraction=1, SampleName='CrCompoundOxide', EnvironmentName='Air', SubstrateName='BK7', PlotLspp=False, FilterNegativeLspp=False, PlotEpsilons=True):
+def ScenarioOfCrOxideMixture_ext(epsSample, epsEnvironment=1., epsSubstrate=1., fraction=1, SampleName='CrCompoundOxide', EnvironmentName='Air', SubstrateName='BK7', PlotLspp=False, FilterNegativeLspp=False, PlotEpsilons=False):
     print(Header, "# Info: Considering a mixed fraction of Cr with Cr2O3 and CrO2 (using external data) with several thicknesses.")
     wavelength = 1026e-9
     
@@ -1075,7 +1075,7 @@ def ScenarioOfCrOxideMixture_ext(epsSample, epsEnvironment=1., epsSubstrate=1., 
     # Is there a problem with root_number0 for example? 
     print("SPP branches are ready. Exporting to CSV...")
     filename = "Dostovalov-SPPmodes-CrOxideCompound"
-    np.savetxt(filename+".csv", summary_branch0_export_t)
+    np.savetxt(filename+".csv", summary_export_t)
     np.savetxt(filename+"-Cr-branch0"+".csv", summary_branch0_export_t)
     np.savetxt(filename+"-Cr-branch1"+".csv", summary_branch1_export_t)
     np.savetxt(filename+"-Cr-branch2"+".csv", summary_branch2_export_t)
@@ -1261,4 +1261,5 @@ CrCrXOY_fraction   = CrCrXOY_Lisunov[:,0]
 epsR_CrCrXOY_L     = CrCrXOY_Lisunov[:,1]
 epsC_CrCrXOY_L     = CrCrXOY_Lisunov[:,2]
 eps_CrCrXOY_L = np.add(epsR_CrCrXOY_L, np.multiply(1.j, epsC_CrCrXOY_L))
-ScenarioOfCrOxideMixture_ext(eps_CrCrXOY_L, epsAir, epsBK7, CrCrXOY_fraction, 'Cr_compounds_oxide', 'Air', 'BK7')
+Every = 10
+ScenarioOfCrOxideMixture_ext(eps_CrCrXOY_L[::Every], epsAir, epsBK7, CrCrXOY_fraction[::Every], 'Cr_compounds_oxide', 'Air', 'BK7')

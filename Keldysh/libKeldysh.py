@@ -42,7 +42,7 @@ ShortRefGulley  = "[Gulley (2012)]"
 ## Computes the adiabadicity parameter
 # @param gamma: Adiabadicity parameter (non-dimensional number)
 # @param Egap: band gap energy (in Joules)
-# @param meff: effective mass (in Arb. Units, as it is multiplied by electron mass)
+# @param meff: effective mass (in Arb. Units, as it is multiplied by electron mass INSIDE the function)
 # @param Efield: peak amplitude of the electric field (in V/m)
 # @param wavelength: wavelength of the photon (in meters)
 # 
@@ -66,7 +66,8 @@ def gammaKeldysh(Egap, meff, Efield, wavelength): #{{{
     #print Efield, result
   else:
     ErrorMessage=ErrorMessage+"gamma(): Divergence, as field equals = 0. Singular case of Keldysh functions. Should give w_PI = 0 then...\n"
-    result = 1E9 #THIS VALUE IS ARBITRARY FOR A VERY SMALL FIELD. 
+    result = 1E99 #THIS VALUE IS ARBITRARY FOR A VERY SMALL FIELD. 
+  #print(ErrorMessage)
   #print omegaLaser
   return result
 # Numerically validated with comparison to Maple. 
@@ -362,6 +363,19 @@ def generateWpiTables(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, tau
 
 #generateWpiTables = np.vectorize(generateWpiTables)
 
+## Formula for tunnel ionization in semiconductors [Keldysh 1964, Eq. (60)]
+def KeldyshTunnelingLimit(Egap, meff, wavelength, Efield): #{{{
+    
+    gamma = gammaKeldysh(Egap, meff, Efield, wavelength) #valid for scalar data
+    k1 = Keldysh1(gamma); k2 = Keldysh2(gamma) #valid
+    EgapEff = EffectiveGap(Egap, k1, k2)
+    
+    omegaLaser=2.*pi*c/wavelength
+    
+    w_tunnel = 2./9./np.pi**2 * EgapEff / hbar * (m_e*meff*EgapEff/hbar**2)**1.5 * (e*hbar*Efield/(m_e*meff)**0.5/EgapEff**1.5)**2.5*np.exp(-0.5*np.pi*(m_e*meff)**0.5*EgapEff**1.5/e/hbar/Efield * (1.-1./8.*(m_e*meff)*omegaLaser**2*EgapEff/e**2/Efield**2))
+    return w_tunnel
+#}}}
+    
 ## Compute and plot density evolution with time using the specific parameters.
 # @param Egap (Joules): direct band gap of the modeled material
 # @param meff (adim): effective mass of the conduction band

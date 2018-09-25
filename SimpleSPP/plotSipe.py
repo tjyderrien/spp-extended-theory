@@ -104,14 +104,14 @@ def plotSipe1D_sectionX(wavelength, epsilon, f=0.1e0, s=0.4e0, theta=0e0): #{{{
     #=========== Make a 1D plot
 
     plt.figure(figsize=(SizeX,SizeY))
-    plt.xlabel(r'$\kappa_x$')
+    plt.xlabel(r'$\kappa$')
     plt.ylabel(r'$\eta$')
     print kapparange.shape, etaSresult.shape
-    plt.plot(kapparange, etaPresult, '-', label=r'$\eta_P$')
-    plt.plot(kapparange, etaSresult, '-', label=r'$\eta_S$')
+    plt.plot(kapparange, etaPresult, '-', label=r'$\eta(\kappa_x; \kappa_y=0)$') #$\eta_P$')
+    plt.plot(kapparange, etaSresult, '-', label=r'$\eta(\kappa_y; \kappa_x=0)$')
     print etaSresult
     plt.grid()
-    plt.legend()
+    plt.legend(fancybox=True, framealpha=1)
     plt.savefig('SipeEtaKappaX.eps')
     plt.show()
     #exit()
@@ -446,10 +446,11 @@ def plotGenericSipeMaps(kx_value, ky_value, epsilon_precision = 0.05, theta=0., 
   return 0
 #}}}
 
-wavelength = 1026.0 #1064.0
-select = str(int(wavelength))
-request = select+".0"
 unit = 1E-9
+wavelength = 1026E-9
+wavelength_nm = wavelength * 1E9 # 1026.0 #1064.0
+select = str(int(wavelength_nm))
+request = select+".0"
 #wavelength = wavelength * unit
 #print "Wavelength = "+str(wavelength/unit)+" nm."
 kpointnumber = 500
@@ -477,14 +478,50 @@ kpointnumber = 500
 #TODO: Repeat figures from Colombier et al
 
 # ======================= SCIENTIFIC PRODUCTION DATA =====================
-filling = 0.1
-shape = 0.4
-angle = 0.
-#plotSipeFromDatabase(request, "Cr (Johnson 1974)", 1026e-9, kpointnumber, 'Air', angle, filling, shape)
-epsCr = -0.6721223+24.8657476j
-nCr = np.sqrt(epsCr)-3.5j
-print nCr
-plotSipe1D_sectionX(1026e-9, nCr**2, filling, shape)
+
+
+
+def plotSipeMaps_ChiaraSi(Nexc=3.75E27,CollFreqTime=1.1e-15):
+    unit = 1E-9
+    wavelength = 1030E-9
+    wavelength_nm = wavelength * 1E9 # 1026.0 #1064.0
+    select = str(int(wavelength_nm))
+    request = select+".0"
+    #wavelength = wavelength * unit
+    #print "Wavelength = "+str(wavelength/unit)+" nm."
+    kpointnumber = 500
+    filling = 0.1
+    shape = 0.4
+    angle = 0.
+    #plotSipeFromDatabase(request, "Cr (Johnson 1974)", wavelength, kpointnumber, 'Air', angle, filling, shape)
+    #plotSipeFromDatabase(request, "Si (Palik)", wavelength, kpointnumber, 'Air', angle, filling, shape)
+    epsSi0 = 12.80259+0.0109j
+    nu=CollFreqTime**-1
+    meff=0.18
+    EpsSiExc = Drude(wavelength, Nexc, epsSi0, nu, meff)
+    #print nCr
+    plotSipe1D_sectionX(1030e-9, EpsSiExc, filling, shape)
+    
+plotSipeMaps_ChiaraSi()
+
+def plotSipeMaps_Dostovalov_Cr():
+    unit = 1E-9
+    wavelength = 1026E-9
+    wavelength_nm = wavelength * 1E9 # 1026.0 #1064.0
+    select = str(int(wavelength_nm))
+    request = select+".0"
+    #wavelength = wavelength * unit
+    #print "Wavelength = "+str(wavelength/unit)+" nm."
+    kpointnumber = 500
+    filling = 0.1
+    shape = 0.4
+    angle = 0.
+    #plotSipeFromDatabase(request, "Cr (Johnson 1974)", wavelength, kpointnumber, 'Air', angle, filling, shape)
+    #plotSipeFromDatabase(request, "Si (Palik)", wavelength, kpointnumber, 'Air', angle, filling, shape)
+    epsCr = -0.6721223+24.8657476j
+    nCr = np.sqrt(epsCr) #0.5, 1.5, 3.5
+    print nCr
+    plotSipe1D_sectionX(1026e-9, nCr**2, filling, shape)
 
 def plotStephanGraf_Materials2018(): #{{{
     #maps prepared for Stephane Gräf on generalized Sipe model (2018)

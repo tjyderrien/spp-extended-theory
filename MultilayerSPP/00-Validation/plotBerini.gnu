@@ -31,7 +31,7 @@ set log y2
 set ylabel  'Re({/Symbol b}_{SPP})'
 set y2label 'Im({/Symbol b}_{SPP})'
 
-wavelength = 30e-9
+wavelength = 1550e-9
 
 c=3E8
 omega = 2.*pi*c/wavelength

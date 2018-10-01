@@ -16,8 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>
 
-## @package Multilayer_Hlinomasz
-# Preparation of results for Prof. Bulgakova and Krystof Hlinomasz. 
+# @package Multilayer_Dostovalov
+# Preparation of results for Prof. Bulgakova and Sasha Dostovalov. 
 # Explores the SPP theory at a thin film located 
 # between two semi-infinite media. The formal model is presented in 
 # T.J.-Y. Derrien et al, J. Appl. Phys. 116, 074902 (2014) and references 
@@ -28,25 +28,28 @@ import matplotlib.pyplot as plt
 
 # === PRODUCTION OF SCIENTIFIC RESULTS ===
 
-#data
-wavelength = 1064e-9
-epsAir      = 1.+0.j          #air
+#precision
+NumberOfPoints=50
 
-if(wavelength == 1064e-9): 
-    epsMo=-14.083065233570098+20.789041764340013j; epsSiO2=1.4496**2; epsSLG = 2.2889 + 0.000014899j
-elif(wavelength == 800e-9): 
-    epsMo=2.08+24.52j; epsSiO2=1.4533**2; epsSLG = 2.3018 + 0.0000075160j
+#Charbonneau and Berini, Optics Letters Vol. 25, No. 11 (2000). 
+
+#data
+wavelength = 1550e-9
+#epsAu       = -95.95924741872399+10.972582438155513j #1550 nm, Palik
+epsAu       = -131.9475+12.65j
+epsSiO2     = 2.085 #Berini #(1.4440+0j)**2 #Palik
 
 # Medium 1: thin film. 
-eps1 = epsMo        #thin film
+eps1 = epsAu        #thin film
 # Medium 2: substrate. 
-eps2 = epsSLG # | epsSiO2       #epsBK7 #environment | substrate
+eps2 = epsSiO2       #epsBK7 #environment | substrate
 # Medium 3: environment
-eps3 = epsAir       #environment | substrate
+eps3 = epsSiO2       #environment | substrate
 # Note: Inverting eps2 and eps3 should have no effect on the possible modes, but only on field amplification. 
 
 #t = 100E-9 #thickness of the layer in meters
-t_list = np.arange(10e-9, 100e-9, 10e-9)
+#thickness = 100e-9
+t_list = np.power(10., np.linspace(np.log10(1e-9), np.log10(300e-9), NumberOfPoints))
 #meshes the initial guess area, all numbers are from the space of betas
 x_min = -1E10
 x_max = 1E10
@@ -58,10 +61,23 @@ x_steps = 40
 y_steps = 40
 
 for thickness in t_list:
-    roots = findroots(eps1, eps2, eps3,
-          wavelength, thickness,
-          x_min, x_max,    
-          y_min, y_max,    
-          x_steps, y_steps)
-    print("thickness, [[period, Lspp]]: ", thickness, roots, "\n")
-    #print("")
+  roots = findroots(eps1, eps2, eps3,
+        wavelength, thickness,
+        x_min, x_max,    
+        y_min, y_max,    
+        x_steps, y_steps)
+
+  # Shaping the data to plot them with GNUplot
+  roots_shape = np.shape(roots)
+  #print(roots_shape)
+  num_thickness = np.shape(thickness) #NOTE: is this used? 
+  num_branches  = roots_shape[0]
+  num_roots     = roots_shape[1]
+  num_property  = roots_shape[2]
+
+  for branch in np.arange(0,num_branches):
+      for root_number in np.arange(0,num_roots): 
+        print(thickness, roots[branch][root_number][0], roots[branch][root_number][1])
+      #print("\n")
+
+##TODO: from this, we would like to add a layer which will variate eps1 as function of oxide concentration

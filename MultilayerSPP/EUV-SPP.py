@@ -16,8 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>
 
-# @package Multilayer_MirzaLevy
-# Preparation of results for Prof. Bulgakova, Inam Mirza and Yoann Levy. 
+## @package MultilayerEUV
 # Explores the SPP theory at a thin film located 
 # between two semi-infinite media. The formal model is presented in 
 # T.J.-Y. Derrien et al, J. Appl. Phys. 116, 074902 (2014) and references 

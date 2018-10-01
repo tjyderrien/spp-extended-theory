@@ -259,7 +259,7 @@ for T in [2000]:
         plt.loglog(Period, gamma, '', label=r'$h=$'+str(int(thickness*1e9))+ " nm")
     plt.xlabel(r"$\Lambda$ (m)")
     #plt.xlabel(r"$\Lambda/\lambda$")
-    plt.ylabel(r"$\gamma$ (s$^-1$)")
+    plt.ylabel(r"$\gamma$ (s$^{-1}$)")
     plt.ylim((1e5,1e14))
     plt.axvline(x=laser_wavelength, color='k', linestyle='--', linewidth=0.5)
     title    = r"$T=$"+str(int(T))+r" K"

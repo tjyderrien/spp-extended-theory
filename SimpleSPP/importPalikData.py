@@ -236,11 +236,11 @@ def importFromEpsilonTable(wavelength, folder, filename, plotting=True, unit=1E-
   if(plotting):
     plt.figure()
     plt.xlabel(r'$\mathcal{R}e(\varepsilon)$ (nm)')
-    plt.ylabel('n, k')
-    plt.semilogx(wavelength1*1e9, n, 'bs', label='Re(eps) data')
-    plt.semilogx(wavelength2*1e9, kk, 'rs', label='Im(eps) data')
-    plt.semilogx(wavelengths*1e9, ni, 'b-', label='Re(eps) interp')
-    plt.semilogx(wavelengths*1e9, ki, 'r-', label='Im(eps) interp')
+    plt.ylabel(r'Re$(\varepsilon)$, Im($\varepsilon$)')
+    plt.semilogx(wavelength1*1e9, n, 'bs',  label=r'Re$(\varepsilon)$ data')
+    plt.semilogx(wavelength2*1e9, kk, 'rs', label=r'Im$(\varepsilon)$ data')
+    plt.semilogx(wavelengths*1e9, ni, 'b-', label=r'Re$(\varepsilon)$ interp')
+    plt.semilogx(wavelengths*1e9, ki, 'r-', label=r'Im$(\varepsilon)$ interp')
     plt.grid()
     plt.legend(loc=1)
     plt.savefig('GraphData.eps')
@@ -302,16 +302,16 @@ def importFromEpsilonTable_batch(folder, filename, plotting=True, unit=1E-10): #
   # defining the new epsR and epsC on a common mesh
   ni = fni(wavelengths)
   ki = fki(wavelengths)
-  epsilons = (ni+1.j*ki) ##!! Names are misleading here: we actually work dielectric permittivities! 
+  epsilons = (ni+1.j*ki) ##WARNING: Names are misleading here: we actually work dielectric permittivities! 
 
   if(plotting):
     plt.figure()
     plt.xlabel(r'$\mathcal{R}e(\varepsilon)$ (nm)')
     plt.ylabel(r'$Re(\varepsilon)$, $Im(\varepsilon)$')
-    plt.semilogx(wavelength1*1e9, n, 'bs', label='Re(eps) data')
-    plt.semilogx(wavelength2*1e9, kk, 'rs', label='Im(eps) data')
-    plt.semilogx(wavelengths*1e9, ni, 'b-', label='Re(eps) interp')
-    plt.semilogx(wavelengths*1e9, ki, 'r-', label='Im(eps) interp')
+    plt.semilogx(wavelength1*1e9, n, 'bs',  label=r'Re$(\varepsilon)$ data')
+    plt.semilogx(wavelength2*1e9, kk, 'rs', label=r'Im$(\varepsilon)$ data')
+    plt.semilogx(wavelengths*1e9, ni, 'b-', label=r'Re$(\varepsilon)$ interp')
+    plt.semilogx(wavelengths*1e9, ki, 'r-', label=r'Im$(\varepsilon)$ interp')
     plt.grid()
     plt.legend(loc=1)
     plt.savefig('GraphData.eps')

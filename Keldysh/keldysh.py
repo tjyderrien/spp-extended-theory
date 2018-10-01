@@ -173,55 +173,86 @@ def SilicaGulley2012(): #{{{
   return 0
 #}}}
 
+## Plots the silicon tunneling case
+def SiliconTunneling(): #{{{
+    EfieldLog = np.linspace(9, 11, 100)
+    Efield = np.power(10.,EfieldLog)
+    wavelength=800e-9
+    meff=0.226
+    Egap = 2.56*e                            
+    wTunnel = KeldyshTunnelingLimit(Egap, meff, wavelength, Efield)
+    gamma = gammaKeldysh(Egap, meff, Efield, wavelength)
+    plt.figure()
+    ax1 = plt.subplot(111)
+    ax1.loglog(Efield, wTunnel, 'r-+', label=r"$w_{tunnel}$")
+    ax1.set_xlabel(r"$E_{peak}$ (V/m)")
+    ax1.set_ylabel(r"$w_{tunnel}$ (m$^{-1}$)")
+    ax12 = ax1.twinx()
+    ax12.loglog(Efield, gamma, 'k--', label=r"$\gamma$")
+    ax12.set_ylabel(r"$\gamma$")
+    plt.tight_layout()
+    filename="Si-800nm-SiliconLDAbandGap"
+    plt.savefig(filename+".eps")
+    plt.savefig(filename+".png")
+    plt.show()
+    
+#}}}                                
+    
+
+SiliconTunneling()
+
+
 #SilicaGulley2012()
 #SiliconLDAbandGap()
 #SilicaGraef2017()
 
-## Build the famous mapping of N_exc(intensity) from Keldysh theory. 
 
-StephaneGraf = "SiO2"
-HamedMerdji = "ZnO"
 
-choice = "SiO2"
+### Build the famous mapping of N_exc(intensity) from Keldysh theory. 
 
-if(choice == StephaneGraf):
-  fluencies = 1E4*np.arange(0.1, 10, 0.5) #array([1E10, 1E11, 1E12, 1E13])*1E4 #W/m2
-  tau = 300e-15
-  intensities = fluencies #warning, it's a trick! 
+#StephaneGraf = "SiO2"
+#HamedMerdji = "ZnO"
 
-elif(choice == HamedMerdji): 
-  # Hamed Merdji group case
-  intensities = np.power(10., 4.+np.arange(10., 13., 0.1)) #array([1E10, 1E11, 1E12, 1E13])*1E4 #W/m2
-else: 
-  print Header+"Please define a new set of laser parameters in libKeldysh.py."
+#choice = "SiO2"
 
-print intensities 
+#if(choice == StephaneGraf):
+  #fluencies = 1E4*np.arange(0.1, 10, 0.5) #array([1E10, 1E11, 1E12, 1E13])*1E4 #W/m2
+  #tau = 300e-15
+  #intensities = fluencies #warning, it's a trick! 
 
-count = 0
-Nexc = np.zeros(intensities.size)
-for intensity in intensities:
-  if(choice == HamedMerdji): 
-    Nexc[count] = ZnOMerdji2017(intensity)
-  elif(choice == StephaneGraf):
-    Nexc[count] = SilicaGraef2017(intensity)
-  else: 
-    print Header+"** Error in Keldysh.py when computing N_exc. "
-  count += 1
+#elif(choice == HamedMerdji): 
+  ## Hamed Merdji group case
+  #intensities = np.power(10., 4.+np.arange(10., 13., 0.1)) #array([1E10, 1E11, 1E12, 1E13])*1E4 #W/m2
+#else: 
+  #print Header+"Please define a new set of laser parameters in libKeldysh.py."
+
+#print intensities 
+
+#count = 0
+#Nexc = np.zeros(intensities.size)
+#for intensity in intensities:
+  #if(choice == HamedMerdji): 
+    #Nexc[count] = ZnOMerdji2017(intensity)
+  #elif(choice == StephaneGraf):
+    #Nexc[count] = SilicaGraef2017(intensity)
+  #else: 
+    #print Header+"** Error in Keldysh.py when computing N_exc. "
+  #count += 1
   
-print Nexc
+#print Nexc
 
-plt.figure()
-plt.loglog(1E-4*intensities, 1E-6*Nexc)
-plt.ylabel(r'$N_{exc}^{max}$, $cm^{-3}$')
-#plt.title(r"Wavelength $\lambda = $"+str(wavelength*1E6)+r" $\mu$m.")
+#plt.figure()
+#plt.loglog(1E-4*intensities, 1E-6*Nexc)
+#plt.ylabel(r'$N_{exc}^{max}$, $cm^{-3}$')
+##plt.title(r"Wavelength $\lambda = $"+str(wavelength*1E6)+r" $\mu$m.")
 
-if(choice == HamedMerdji):
-  plt.xlabel(r"$I_{max}$, $W/cm^2$")
-  plt.savefig('Keldysh-NexcOfIntensity-Merdji-ZnO-3200nm-100fs.eps')
+#if(choice == HamedMerdji):
+  #plt.xlabel(r"$I_{max}$, $W/cm^2$")
+  #plt.savefig('Keldysh-NexcOfIntensity-Merdji-ZnO-3200nm-100fs.eps')
 
-elif(choice == StephaneGraf): 
-  plt.xlabel(r"$\phi_0$, $J/cm^2$")
-  plt.savefig('Keldysh-NexcOfIntensity-Graf-SiO2-1025nm-300fs.eps')
+#elif(choice == StephaneGraf): 
+  #plt.xlabel(r"$\phi_0$, $J/cm^2$")
+  #plt.savefig('Keldysh-NexcOfIntensity-Graf-SiO2-1025nm-300fs.eps')
   
-else: 
-  print Header+"Error when plotting the final figure."
+#else: 
+  #print Header+"Error when plotting the final figure."

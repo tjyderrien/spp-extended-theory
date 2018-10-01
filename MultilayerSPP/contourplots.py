@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>
 
-# Package @contourplot helps to visualize electromagnetic fields prepared with solver.py. 
+# Package @MultilayerContourplot helps to visualize electromagnetic fields prepared with solver.py. 
 # The formal model is presented in 
 # T.J.-Y. Derrien et al, J. Appl. Phys. 116, 074902 (2014) and references 
 # therein.
@@ -53,7 +53,7 @@ SPPperiod = 2.*np.pi/betaR[0]
 SPPlength = .5/betaR[1]
 
 #which field you want to plot
-whichfield = 6
+whichfield = 0
 #0 Hy
 #1 Ex
 #2 Ez

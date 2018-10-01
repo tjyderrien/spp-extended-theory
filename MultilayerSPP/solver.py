@@ -22,6 +22,8 @@
 # therein.
 # This routine computes the multiple modes possible in a thin film, from its 
 # dielectric permittivity and thickness. 
+# It was successfully used to explain the experimental results from A. Dostovalov et al., 
+# Proceedings of MetaNano conference, IOP proceedings, 2018. 
 
 import math, cmath, pickle
 import numpy as np
@@ -55,7 +57,7 @@ epsAir      = 1.+0.j          #air
 epsCu       = -1.9937293241+4.9290716854j     #355  nm
 
 fractionOfCrO2 = 0.5
-t = 80E-9 #thickness of the layer in meters
+t = 28E-9 #thickness of the layer in meters
 
 # Medium 1: thin film. 
 eps1 = MaxwellGarnett2(epsCr, epsCrO2, fractionOfCrO2)

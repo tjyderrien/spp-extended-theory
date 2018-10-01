@@ -2,17 +2,17 @@
 
 reset
 
-a0 = 0.031
+a0 = 0.031e0
 a1 = -48.08e-9
-a2 = 29713e-18
+a2 = 29713e-18 #29.713e-18
 
 e=1.6e-19
 
-Ed = 14.5
-Eg = 2.57
-E0 = 5.4
+Ed = 14.5e0
+Eg = 2.57e0
+E0 = 5.4e0
 
-n(E) = (1.+E0*Ed/(E0**2-E**2))**0.5
+n(E) = (1e0+E0*Ed/(E0**2-E**2))**0.5
 k(lambda)=a0+a1/lambda+a2/lambda**2
 
 c = 3E8
@@ -52,6 +52,6 @@ ncomplexRe = n(energy(wavelength0))
 ncomplexIm = k(wavelength0)
 
 ncomplex = {1.,0.}*ncomplexRe + {0.,1.}*ncomplexIm
-
+print "a2=", a2*1E18
 print "n=", ncomplexRe, ", k=", ncomplexIm
 print "epsilon complex:", ncomplex**2

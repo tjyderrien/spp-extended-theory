@@ -40,7 +40,6 @@ ShortRefGruzdev = "[Gruzdev (2014)]"
 ShortRefGulley  = "[Gulley (2012)]"
 
 ## Computes the adiabadicity parameter
-# @param gamma: Adiabadicity parameter (non-dimensional number)
 # @param Egap: band gap energy (in Joules)
 # @param meff: effective mass (in Arb. Units, as it is multiplied by electron mass INSIDE the function)
 # @param Efield: peak amplitude of the electric field (in V/m)
@@ -363,16 +362,27 @@ def generateWpiTables(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, tau
 
 #generateWpiTables = np.vectorize(generateWpiTables)
 
+
 ## Formula for tunnel ionization in semiconductors [Keldysh 1964, Eq. (60)]
+# @param Egap (Joules): direct band gap of the modeled material
+# @param meff (adim): effective mass of the conduction band
+# @param wavelength (meters): photon wavelength of the excitation
+# @param Efield (V/m): electric field envelope of the pulse (scalar|vector)
 def KeldyshTunnelingLimit(Egap, meff, wavelength, Efield): #{{{
     
     gamma = gammaKeldysh(Egap, meff, Efield, wavelength) #valid for scalar data
     k1 = Keldysh1(gamma); k2 = Keldysh2(gamma) #valid
-    EgapEff = EffectiveGap(Egap, k1, k2)
-    
+    EgapEff0 = EffectiveGap(Egap, k1, k2)
     omegaLaser=2.*pi*c/wavelength
     
-    w_tunnel = 2./9./np.pi**2 * EgapEff / hbar * (m_e*meff*EgapEff/hbar**2)**1.5 * (e*hbar*Efield/(m_e*meff)**0.5/EgapEff**1.5)**2.5*np.exp(-0.5*np.pi*(m_e*meff)**0.5*EgapEff**1.5/e/hbar/Efield * (1.-1./8.*(m_e*meff)*omegaLaser**2*EgapEff/e**2/Efield**2))
+    #EgapEff = np.clip(EgapEff0, 2*Egap, 10*Egap)
+    EgapEff = EgapEff0 #no filter
+    # Direct frmo Keldysh paper
+    #w_tunnel = 2./9./np.pi**2 * EgapEff / hbar * (m_e*meff*EgapEff/hbar**2)**1.5 * (e*hbar*Efield/(m_e*meff)**0.5/EgapEff**1.5)**2.5  *np.exp(-0.5*np.pi*(m_e*meff)**0.5*EgapEff**1.5/e/hbar/Efield * (1.-1./8.*(m_e*meff)*omegaLaser**2*EgapEff/e**2/Efield**2))
+    
+    # Taken from Kaiser Phys Rev B, 2000 [not completely validated - gives same result as Keldysh, but still could not obtain Fig. 2 of Kaiser 2000.]
+    w_tunnel = 2./9./np.pi**2 * EgapEff / hbar * (m_e*meff*EgapEff/hbar**2)**1.5 * (hbar*omegaLaser/EgapEff/gamma)**2.5 * np.exp(-0.5*np.pi*EgapEff*gamma/hbar/omegaLaser * (1.-1./8.*gamma**2))
+    
     return w_tunnel
 #}}}
     

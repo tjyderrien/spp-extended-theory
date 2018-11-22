@@ -377,14 +377,21 @@ def KeldyshTunnelingLimit(Egap, meff, wavelength, Efield): #{{{
     
     #EgapEff = np.clip(EgapEff0, 2*Egap, 10*Egap)
     EgapEff = EgapEff0 #no filter
-    # Direct frmo Keldysh paper
-    #w_tunnel = 2./9./np.pi**2 * EgapEff / hbar * (m_e*meff*EgapEff/hbar**2)**1.5 * (e*hbar*Efield/(m_e*meff)**0.5/EgapEff**1.5)**2.5  *np.exp(-0.5*np.pi*(m_e*meff)**0.5*EgapEff**1.5/e/hbar/Efield * (1.-1./8.*(m_e*meff)*omegaLaser**2*EgapEff/e**2/Efield**2))
+    # Direct from Keldysh paper
+    w_tunnel = 2./9./np.pi**2 * EgapEff / hbar * (m_e*meff*EgapEff/hbar**2)**1.5 * (e*hbar*Efield/(m_e*meff)**0.5/EgapEff**1.5)**2.5  *np.exp(-0.5*np.pi*(m_e*meff)**0.5*EgapEff**1.5/e/hbar/Efield * (1.-1./8.*(m_e*meff)*omegaLaser**2*EgapEff/e**2/Efield**2))
     
     # Taken from Kaiser Phys Rev B, 2000 [not completely validated - gives same result as Keldysh, but still could not obtain Fig. 2 of Kaiser 2000.]
-    w_tunnel = 2./9./np.pi**2 * EgapEff / hbar * (m_e*meff*EgapEff/hbar**2)**1.5 * (hbar*omegaLaser/EgapEff/gamma)**2.5 * np.exp(-0.5*np.pi*EgapEff*gamma/hbar/omegaLaser * (1.-1./8.*gamma**2))
+    #w_tunnel = 2./9./np.pi**2 * EgapEff / hbar * (m_e*meff*EgapEff/hbar**2)**1.5 * (hbar*omegaLaser/EgapEff/gamma)**2.5 * np.exp(-0.5*np.pi*EgapEff*gamma/hbar/omegaLaser * (1.-1./8.*gamma**2))
     
     return w_tunnel
 #}}}
+
+## Provides the intensity for which gamma has the given value.
+# Useful to normalize the peak field. 
+def IntensityAtGamma(gamma, Egap_SI, meff, wavelength):
+  omega = 2.*np.pi * c / wavelength
+  Ipeak = meff*m_e*Egap_SI*omega**2*c*epsilon_0 / (2. * e**2 * gamma ** 2)
+  return Ipeak
     
 ## Compute and plot density evolution with time using the specific parameters.
 # @param Egap (Joules): direct band gap of the modeled material

@@ -39,33 +39,58 @@ from libMaterials import *
 showinfo = True
 
 #data
-wavelength = 1026e-9 #355e-9 #1030E-9 #1026
+wavelength = 1026e-9 # 633e-9 #1550e-9 #1026e-9 #355e-9 #1030E-9 #1026
 
+epsAu       = -131.9475+12.65j
+epsSiO2     = 2.085 
 epsTibare   = -6.206969+25.2j #800 nm
 epsTiO2bare = 7.7841+0.j      #800 nm
 
 epsCr       = -0.672122310000001+24.8657476j #-0.67+24.87j    #1026 nm
-epsCrO2     = 1.5093+6.0676j #1 um [Dostovalov Opex 2018]
+#epsCrO2     = 1.5093+6.0676j #1 um [Dostovalov Opex 2018]
 #epsCr2O3    = 4.9713+0.1784j  #1 um [JDT Kruschwitz et al, Appl. Opt. 1997]
-epsCr2O3    = 4.41+0.j       #1 um [Dostovalov Opex 2018]
+#epsCr2O3    = 4.41+0.j       #1 um [Dostovalov Opex 2018]
 
 epsBK7      = 2.10277365777   #1026 nm
 epsSi       = 12.8159503769+0.0114635303918j #1026 nm, Palik
 epsAir      = 1.+0.j          #air
 
 #epsCu       = -46.6046581932 + 4.7188669976j #1030 nm
-epsCu       = -1.9937293241+4.9290716854j     #355  nm
+#epsCu       = -1.9937293241+4.9290716854j     #355  nm
+
+Fraction_size = 60 #number of samples
+
+thickness_size = 60 #Fraction_size
+#Burke_SymmetricModes(thickness_size)
+
+#ScenarioOfCrOxideMixture(epsCr, epsCr2O3, epsBK7, epsAir, Fraction_size, 'Cr', 'Cr2O3')
+#ScenarioOfCrOxideMixture(epsCr, epsCrO2, epsBK7, epsAir, Fraction_size,  'Cr', 'CrO2')
+#ScenarioOfCrOxideMixture3(epsCr, epsCr2O3, epsCrO2, epsBK7, Fraction_size, 'Cr', 'Cr2O3', 'CrO2')
+
+## Takes ~ 30 min run
+## Preparing SPP period using an external file
+CrCrXOY_Lisunov  = np.loadtxt("Cr-Cr2O3-CrO2/Sergei_Lisunov/OptProperties_Cr_with_oxides.csv", skiprows=2)
+limiter = 2 #limit the number of cells to get, then we can update the plot without recomputing the whole thing.
+CrCrXOY_fraction   = CrCrXOY_Lisunov[:,0]
+epsR_CrCrXOY_L     = CrCrXOY_Lisunov[:,1]
+epsC_CrCrXOY_L     = CrCrXOY_Lisunov[:,2]
+eps_CrCrXOY_L      = np.add(epsR_CrCrXOY_L, np.multiply(1.j, epsC_CrCrXOY_L))
+Every = 20
+# ScenarioOfCrOxideMixture_ext(eps_CrCrXOY_L[::Every], epsAir, epsBK7, CrCrXOY_fraction[::Every], 'Cr_compounds_oxide', 'Air', 'BK7')
 
 fractionOfCrO2 = 0.5
 t = 28E-9 #thickness of the layer in meters
 
 # Medium 1: thin film. 
-eps1 = MaxwellGarnett2(epsCr, epsCrO2, fractionOfCrO2)
+fraction_index = 11
+print("Fraction for this index: ", CrCrXOY_fraction[fraction_index])
+eps1  = eps_CrCrXOY_L[fraction_index]
+#eps1 = MaxwellGarnett2(epsCr, epsCrO2, fractionOfCrO2)
 #eps1 = MaxwellGarnett3(epsCr, epsCrO2, epsCr2O3, fraction) #TODO: develop Maxwell-Garnett3 in libMaterials.py. 
 # Medium 2: substrate. 
 eps2 = epsBK7       #epsBK7 #environment | substrate
 # Medium 3: environment
-eps3 = epsAir       #environment | substrate
+eps3 = epsAir      #environment | substrate
 # Note: Inverting eps2 and eps3 should have no effect on the possible modes, but only on field amplification. 
 
 
@@ -86,8 +111,8 @@ x_steps = 40
 y_steps = 40
 
 #tolerances
-tol_merge = 1E3   #absolute
-tol_valid = 1E-1  #relative
+tol_merge = 1E0   #absolute
+tol_valid = 1E0  #relative
 
 #constants precache
 k0 = 2.*np.pi/wavelength

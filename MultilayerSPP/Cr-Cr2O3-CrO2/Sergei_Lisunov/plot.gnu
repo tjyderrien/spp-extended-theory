@@ -23,13 +23,14 @@ set ylabel 'SPP period (nm)'
 set key outside right Left
 
 yscale = 1E9
+size_of_points = 1.3
 
-plot filename0 u ($1*100):(yscale*$6) w p lc 1 ps 1.0 pt 1 t 'Branch -, -', \
-     filename1 u ($1*100):(yscale*$6) w p lc 2 ps 1.0 pt 9 t 'Branch -, +', \
-     filename2 u ($1*100):(yscale*$6) w p lc 3 ps 1.0 pt 5 t 'Branch +, -', \
-     filename3 u ($1*100):(yscale*$6) w p lc 4 ps 1.0 pt 7 t 'Branch +, +', \
-     Bonus     u ($1*100):(yscale*$6) w p lc 6 ps 1.0 pt 11 t 'Branch -, - (Cr+Cr_2O_3)', \
-     wavelength*yscale w l lc 1 lw 2 dt 3 notitle #t 'Laser wavelength {/Symbol l} (nm)'
+plot filename0 u ($1*100):(yscale*$6) w p lc rgb "red"    ps size_of_points+0.5 pt 1 t 'Branch -, -', \
+     filename1 u ($1*100):(yscale*$6) w p lc rgb "blue"   ps size_of_points+0 pt 9 t 'Branch -, +', \
+     filename2 u ($1*100):(yscale*$6) w p lc rgb "web-green"  ps size_of_points-0.2 pt 5 t 'Branch +, -', \
+     filename3 u ($1*100):(yscale*$6) w p lc rgb "orange" ps size_of_points-0.5 pt 7 t 'Branch +, +', \
+     Bonus     u ($1*100):(yscale*$6) w p lc rgb "black"  ps size_of_points-0.5 pt 11 t 'Branch -, - (Cr+Cr_2O_3)', \
+     wavelength*yscale w l lc rgb "black" lw 2 dt 3 notitle #t 'Laser wavelength {/Symbol l} (nm)'
      
 set output 'CrCr2O3CrO2-SPP-subwavelength.eps'
 set yrange [0:1200]
@@ -40,5 +41,5 @@ replot
 set output 'CrCr2O3CrO2-epsilon.eps'
 set ylabel 'Dielectric permittivity'
 unset yrange
-plot filename u ($1*100):($2) w l lc 1 lw 2 t 'Re({/Symbol e})', \
-     filename u ($1*100):($3) w l lc 2 lw 2 t 'Im({/Symbol e})'
+plot filename u ($1*100):($2) w l lc rgb "blue" lw 2 t 'Re({/Symbol e})', \
+     filename u ($1*100):($3) w l lc rgb "red"  lw 2 t 'Im({/Symbol e})'

@@ -79,7 +79,9 @@ def findroots(eps1, eps2, eps3, wavelength, t, x_min, x_max, y_min, y_max, x_ste
             for y in np.linspace(y_min, y_max, num=y_steps):
                 nrt = root(func, (x, y), args=(eps1, eps2, eps3, k0, t, sgn1, sgn2), method='hybr')
                 if nrt.success:
-                    roots.append(nrt.x)
+                    nrt2 = root(func, nrt.x, args=(eps1, eps2, eps3, k0, t, sgn1, sgn2), method='lm')
+                    if nrt2.success:
+                        roots.append(nrt2.x)
 
         ln = len(roots)
         while ln > 0:

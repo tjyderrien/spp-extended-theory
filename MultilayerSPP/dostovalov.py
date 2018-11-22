@@ -1261,5 +1261,5 @@ CrCrXOY_fraction   = CrCrXOY_Lisunov[:,0]
 epsR_CrCrXOY_L     = CrCrXOY_Lisunov[:,1]
 epsC_CrCrXOY_L     = CrCrXOY_Lisunov[:,2]
 eps_CrCrXOY_L = np.add(epsR_CrCrXOY_L, np.multiply(1.j, epsC_CrCrXOY_L))
-Every = 10
+Every = 20
 ScenarioOfCrOxideMixture_ext(eps_CrCrXOY_L[::Every], epsAir, epsBK7, CrCrXOY_fraction[::Every], 'Cr_compounds_oxide', 'Air', 'BK7')

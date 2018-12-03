@@ -33,15 +33,14 @@ from scipy.constants import c, epsilon_0
 #2 (-, +, -) (+, +, -)
 #3 (-, +, +) (+, +, +)
 
-branch_index = 1
-root_index   = 1
+branch_index = 3
+root_index   = 0
 
 #two black lines to show the boundaries
 showlines = True
 
 #contourlevels
 levels = 10
-
 
 #loads the roots and the parameters from a file
 with open('sppdata.pkl', 'rb') as f:
@@ -105,6 +104,11 @@ whichpart = 0
 omegaeps0 = k0*c*epsilon_0
 wavelength = 2.*np.pi/k0
 
+#plotting
+xrange = 10.*min(SPPperiod,SPPlength)
+zrange = wavelength*0.05
+steps = 200
+
 #field amplitude
 A = 1.
 
@@ -113,11 +117,6 @@ sgn1, sgn2 = list(product((-1,1), (-1,1)))[branch_index]
 k1 = cmath.sqrt(beta**2 - k0**2*eps1)
 k2 = sgn1*cmath.sqrt(beta**2 - k0**2*eps2)
 k3 = sgn2*cmath.sqrt(beta**2 - k0**2*eps3)
-
-#plotting
-xrange = SPPperiod*10
-zrange = wavelength*0.1
-steps = 200
 
 x = np.linspace(0., xrange, steps)
 z = np.linspace(-zrange, zrange, steps)

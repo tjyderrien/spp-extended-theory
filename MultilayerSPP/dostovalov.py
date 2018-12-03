@@ -1065,11 +1065,19 @@ def ScenarioOfCrOxideMixture_ext(epsSample, epsEnvironment=1., epsSubstrate=1., 
     summary_branch2_export = np.array([np.real(fractionOxide2), np.real(epsilonFilm2), np.imag(epsilonFilm2), np.real(branch2), np.real(root_number2), np.real(period2)])
     summary_branch3_export = np.array([np.real(fractionOxide3), np.real(epsilonFilm3), np.imag(epsilonFilm3), np.real(branch3), np.real(root_number3), np.real(period3)])
     
+    # Adding manual analysis of the obtained results
+    # Plotting the lambda/n analysis. Branch number 4. 
+    # Plotting the lambda/2n analysis. Branch number 5. 
+    PeriodWaveGuideMode = np.divide(wavelength, np.real(np.power(epsilonFilm, 0.5)))
+              
+    summary_analysis_export = np.array([np.real(fractionOxide) , np.real(epsilonFilm) , np.imag(epsilonFilm), 4*np.ones(np.shape(branch)) , np.zeros(np.shape(root_number)), PeriodWaveGuideMode ])
+    
     summary_export_t         = np.transpose(summary_export)
     summary_branch0_export_t = np.transpose(summary_branch0_export)
     summary_branch1_export_t = np.transpose(summary_branch1_export)
     summary_branch2_export_t = np.transpose(summary_branch2_export)
     summary_branch3_export_t = np.transpose(summary_branch3_export)
+    summary_analysis_export_t = np.transpose(summary_analysis_export)
     
     # NOTE: I would like to get clean numbers, not the content of summary_branch0
     # Is there a problem with root_number0 for example? 
@@ -1080,6 +1088,8 @@ def ScenarioOfCrOxideMixture_ext(epsSample, epsEnvironment=1., epsSubstrate=1., 
     np.savetxt(filename+"-Cr-branch1"+".csv", summary_branch1_export_t)
     np.savetxt(filename+"-Cr-branch2"+".csv", summary_branch2_export_t)
     np.savetxt(filename+"-Cr-branch3"+".csv", summary_branch3_export_t)
+    np.savetxt(filename+"-Cr-branch3"+".csv", summary_branch3_export_t)
+    np.savetxt(filename+"-Cr-WaveGuideAnalysis"+".csv", summary_analysis_export_t)
     
     plt.figure()
     ax1 = plt.subplot(plotA)
@@ -1101,6 +1111,7 @@ def ScenarioOfCrOxideMixture_ext(epsSample, epsEnvironment=1., epsSubstrate=1., 
     plot113, = ax1.plot(np.multiply(100,fractionOxide3), np.multiply(1e9,period3), 'go', label=r'SPP period $\Lambda$, branch (+,+)')
     
     plot12, = ax1.plot(np.multiply(100, fractionOxide), np.multiply(1e9,wavelength*np.ones(np.shape(fractionOxide))), 'k-', linewidth=0.5, label=r'Laser wavelength $\lambda$')
+    plot13, = ax1.plot(np.multiply(100, fractionOxide), np.multiply(1E9,PeriodWaveGuideMode), 'k--', linewidth=0.5, label=r'Waveguide modes $\lambda/n$')
     
     #plot14, = ax12.plot(fractionOxide_s, np.real(epsilonFilm_s), 'b+', label=r'Re($\varepsilon$)')
     #plot15, = ax12.plot(fractionOxide_s, np.imag(epsilonFilm_s), 'b^', label=r'Im($\varepsilon$)')
@@ -1108,7 +1119,7 @@ def ScenarioOfCrOxideMixture_ext(epsSample, epsEnvironment=1., epsSubstrate=1., 
     #ax1.yaxis.label.set_color(plot110.get_color()) #colorizes the label
     #ax1.spines["left"].set_edgecolor(plot110.get_color()) #colorizes the axis
     #ax1.tick_params(axis='y', colors=plot110.get_color()) #colorizes the tics and numbers
-    plotComb1= [plot110, plot111, plot112, plot113, plot12]; 
+    plotComb1= [plot110, plot111, plot112, plot113, plot12, plot13]; 
     
     #ax12.yaxis.label.set_color(plot14.get_color()) #colorizes the label
     #ax12.spines["right"].set_edgecolor(plot14.get_color()) #colorizes the axis
@@ -1261,5 +1272,7 @@ CrCrXOY_fraction   = CrCrXOY_Lisunov[:,0]
 epsR_CrCrXOY_L     = CrCrXOY_Lisunov[:,1]
 epsC_CrCrXOY_L     = CrCrXOY_Lisunov[:,2]
 eps_CrCrXOY_L = np.add(epsR_CrCrXOY_L, np.multiply(1.j, epsC_CrCrXOY_L))
-Every = 20
-ScenarioOfCrOxideMixture_ext(eps_CrCrXOY_L[::Every], epsAir, epsBK7, CrCrXOY_fraction[::Every], 'Cr_compounds_oxide', 'Air', 'BK7')
+NumberOfSuperImposedPlots=1
+Every = 20 #*NumberOfSuperImposedPlots
+Shift = int(0*Every/NumberOfSuperImposedPlots) #enable to plot shifted plots to avoid superimposition
+ScenarioOfCrOxideMixture_ext(eps_CrCrXOY_L[Shift::Every], epsAir, epsBK7, CrCrXOY_fraction[Shift::Every], 'Cr_compounds_oxide', 'Air', 'BK7')

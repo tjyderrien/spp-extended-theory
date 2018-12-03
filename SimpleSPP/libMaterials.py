@@ -56,7 +56,7 @@ def reflectivity(eps1, eps2, angle=0, pola="S"):#{{{
       term2 = eps1**0.5E0*(eps2-eps1*np.sin(angle)**2)**0.5E0
       R=abs(((term1-term2)/(term1+term2))**2)
   else: 
-      print "Error. Choose pola=S or P, nothing else."
+      print("Error. Choose pola=S or P, nothing else.")
       exit()
   return R
 #}}}

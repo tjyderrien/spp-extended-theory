@@ -16,14 +16,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>
 
-## Package @solver explores the SPP theory at a thin film located 
+## Package @MultilayerSolver explores the SPP theory at a thin film located 
 # between two semi-infinite media. The formal model is presented in 
 # T.J.-Y. Derrien et al, J. Appl. Phys. 116, 074902 (2014) and references 
-# therein.
+# therein. 
 # This routine computes the multiple modes possible in a thin film, from its 
 # dielectric permittivity and thickness. 
 # It was successfully used to explain the experimental results from A. Dostovalov et al., 
 # Proceedings of MetaNano conference, IOP proceedings, 2018. 
+# 
+# Can be used with contourplots.py to show the structure of the fields. 
+# TODO: this version must be merged / compared with libMultilayerSPP
 
 import math, cmath, pickle
 import numpy as np
@@ -32,7 +35,7 @@ from matplotlib import interactive
 from scipy.optimize import root
 from itertools import product
 from time import time
-
+from libMultilayerSPP import *
 from libMaterials import *
 
 #to show info
@@ -78,11 +81,11 @@ eps_CrCrXOY_L      = np.add(epsR_CrCrXOY_L, np.multiply(1.j, epsC_CrCrXOY_L))
 Every = 20
 # ScenarioOfCrOxideMixture_ext(eps_CrCrXOY_L[::Every], epsAir, epsBK7, CrCrXOY_fraction[::Every], 'Cr_compounds_oxide', 'Air', 'BK7')
 
-fractionOfCrO2 = 0.5
+#fractionOfCrO2 = 0.8
 t = 28E-9 #thickness of the layer in meters
 
 # Medium 1: thin film. 
-fraction_index = 11
+fraction_index = 801 #NOTE: line number in the source file [ROUGH METHOD]
 print("Fraction for this index: ", CrCrXOY_fraction[fraction_index])
 eps1  = eps_CrCrXOY_L[fraction_index]
 #eps1 = MaxwellGarnett2(epsCr, epsCrO2, fractionOfCrO2)
@@ -120,28 +123,28 @@ ke1 = (k0**2)*eps1
 ke2 = (k0**2)*eps2
 ke3 = (k0**2)*eps3
 
-def func(betaR):
-    beta = betaR[0] + betaR[1]*1.j
-    kappa1 = cmath.sqrt(beta**2 - ke1)/eps1
-    kappa2 = sgn1*cmath.sqrt(beta**2 - ke2)/eps2
-    kappa3 = sgn2*cmath.sqrt(beta**2 - ke3)/eps3
-    try:
-        value = (kappa1-kappa2)*(kappa1-kappa3)*cmath.exp(-2*kappa1*eps1*t)-(kappa1+kappa2)*(kappa1+kappa3)
-    except:
-        value = 1E99
-    return (value.real, value.imag)
+#def func(betaR):
+    #beta = betaR[0] + betaR[1]*1.j
+    #kappa1 = cmath.sqrt(beta**2 - ke1)/eps1
+    #kappa2 = sgn1*cmath.sqrt(beta**2 - ke2)/eps2
+    #kappa3 = sgn2*cmath.sqrt(beta**2 - ke3)/eps3
+    #try:
+        #value = (kappa1-kappa2)*(kappa1-kappa3)*cmath.exp(-2*kappa1*eps1*t)-(kappa1+kappa2)*(kappa1+kappa3)
+    #except:
+        #value = 1E99
+    #return (value.real, value.imag)
 
-def norm(vec):
-    return math.sqrt(vec[0]*vec[0] + vec[1]*vec[1])
+#def norm(vec):
+    #return math.sqrt(vec[0]*vec[0] + vec[1]*vec[1])
 
-def cntr(inpt):
-    px = 0
-    py = 0
-    ln = len(inpt)
-    for pt in inpt:
-        px += pt[0]
-        py += pt[1]
-    return (px/ln, py/ln)
+#def cntr(inpt):
+    #px = 0
+    #py = 0
+    #ln = len(inpt)
+    #for pt in inpt:
+        #px += pt[0]
+        #py += pt[1]
+    #return (px/ln, py/ln)
 
 ## Plot the hyperbola
 def plothyp(eps, col):

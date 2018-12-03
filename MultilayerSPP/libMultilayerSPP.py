@@ -25,6 +25,7 @@ import math, cmath
 import numpy as np
 from scipy.optimize import root
 from itertools import product
+from time import time
 
 def func(betaR, eps1, eps2, eps3, k0, t, sgn1, sgn2):
     beta = betaR[0] + betaR[1]*1.j
@@ -48,6 +49,18 @@ def cntr(inpt):
         px += pt[0]
         py += pt[1]
     return (px/ln, py/ln)
+
+## Plot the hyperbola
+def plothyp(eps, col):
+    radius = k0*k0*eps.imag/2.
+    domain = np.linspace(xmi, min(xma, cmath.sqrt(eps*k0*k0).real), num=1000)
+    plt.plot(domain, radius/domain, col, linewidth=.75)
+
+def plotinvhyp(eps, col):
+    radius = k0*k0*eps.imag/2.
+    if radius != 0:
+        domain = np.linspace(xmi, min(xma, cmath.sqrt(eps*k0*k0).real), num=1000)
+        plt.plot(cx/domain, domain*cy/radius, col, linewidth=.75)
 
 # @param eps1: Dielectric permittivity of the thin film
 # @param eps2: Dielectric permittivity of the half-plane below the thin film.
@@ -81,6 +94,7 @@ def findroots(eps1, eps2, eps3, wavelength, t, x_min, x_max, y_min, y_max, x_ste
     #for sgn1, sgn2 in ((-1, 1), (-1, 1), (1,-1), (1,1)): #DEBUG LINE
         roots = []
         unique = []
+        start = time()
         for x in np.linspace(x_min, x_max, num=x_steps):
             for y in np.linspace(y_min, y_max, num=y_steps):
                 nrt = root(func, (x, y), args=(eps1, eps2, eps3, k0, t, sgn1, sgn2), method='hybr')

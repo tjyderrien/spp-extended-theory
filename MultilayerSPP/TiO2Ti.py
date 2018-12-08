@@ -28,7 +28,7 @@ import matplotlib.pyplot as plt
 from libMaterials import *
 
 #precision
-NumberOfPoints           = 25
+NumberOfPoints           = 200
 numberofroots_per_branch = 10
 #data
 wavelength = 800e-9 #355e-9 #1030E-9 #1026

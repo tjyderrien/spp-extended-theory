@@ -22,8 +22,9 @@ from libSPP import *
 #folder = "Database/"
 
 Material1 = 'Air' #'ZnO (Bond 1965, o)'
+#Material2 = 'l-Si (Gellison)'#
 Material2 = 'Si (Palik)' #'Au (Palik)'
-wavelength = 800e-9
+wavelength = 1030e-9
 unit = 1E9
 
 # Select database
@@ -41,7 +42,6 @@ DataMaterial2 = FilterDatabase(dbarray, Material2, 0)
 DataMaterial1_filtered = FilterDatabase(DataMaterial1, str(int(wavelength*unit)), 2)
 DataMaterial2_filtered = FilterDatabase(DataMaterial2, str(int(wavelength*unit)), 2)
 #print DataMaterial1_filtered, DataMaterial2_filtered
-
 
 ##print DataMaterial2[:,0:4]
 Material1loc, BandGap, wavelengthLoc, RealEps, ImagEps = ExtractMaterialData(DataMaterial1_filtered)
@@ -87,21 +87,25 @@ Lspp = DecayLengthSPP(beta)
 
 print np.shape(Lspp)
 
+filenames=Material2.split()[0]+str(round(wavelength*1E9,0))+"-Nexc-"
+
 plt.figure()
+plt.xlabel(r'Excited electron density $n_{\mathrm{exc}}$ (m$^{-3}$)')
 plt.ylabel(r'$\beta$ (m$^{-1}$)')
 plt.semilogx(Ne,  beta.real, label = r'$\beta^{+}$')
 #plt.plot(Ne, -beta.real, label = r'$\beta^{-}$')
 plt.legend(loc='best')
 plt.tight_layout()
-plt.savefig('Beta-ExcitationSi.eps')
+plt.savefig(filenames+'BetaSPP.eps')
 #plt.show()
 
 plt.figure()
+plt.xlabel(r'Excited electron density $n_{\mathrm{exc}}$ (m$^{-3}$)')
 plt.ylabel(r'$L_{SPP}$ (m)')
 plt.loglog(Ne, Lspp,  label = r'$L_{SPP}^{+}$')
 #plt.plot(Ne, -Lspp, label = r'$L_{SPP}^{-}$')
 plt.legend(loc='best')
 plt.tight_layout()
 plt.grid()
-plt.savefig('Lspp-ExcitationSi.eps')
+plt.savefig(filenames+'Lspp.eps')
 plt.show()

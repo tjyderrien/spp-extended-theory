@@ -931,7 +931,7 @@ def ScenarioOfCrOxideMixture_ext(epsSample, epsEnvironment=1., epsSubstrate=1., 
     #fraction_max = 1.
 
     thickness_size = 1
-    thickness_min  = 100e-9 #70e-9 # 28e-9
+    thickness_min  = 28e-9 #70e-9 # 28e-9
     thickness_max  = thickness_min
     
     #PlotLspp = False
@@ -1210,7 +1210,8 @@ def RepeatLisunovMixtureOfOxides(): #{{{
     fractionOxide    = np.linspace(0, 1, Fraction_size) #0: 100% Cr, 1: 100% oxide
     CrMixedWithCrXOY = MaxwellGarnett2(epsCr, epsCrXOY, fractionOxide)
 
-    CrCrXOY_Lisunov  = np.loadtxt("Dostovalov-Cr/Cr-Cr2O3-CrO2/Sergei_Lisunov/OptProperties_Cr_with_oxides.csv", skiprows=2)
+    #CrCrXOY_Lisunov  = np.loadtxt("Dostovalov-Cr/Cr-Cr2O3-CrO2/Sergei_Lisunov/OptProperties_Cr_with_oxides.csv", skiprows=2)
+    CrCrXOY_Lisunov  = np.loadtxt("Dostovalov-Cr/Cr-Cr2O3-CrO2/Sergei_Lisunov/OptProperties_Cr_with_oxides_corrected.csv", skiprows=2)
     limiter = 2 #limit the number of cells to get, then we can update the plot without recomputing the whole thing.
     CrCrXOY_fraction   = CrCrXOY_Lisunov[:,0]
     epsR_CrCrXOY_L     = CrCrXOY_Lisunov[:,1]
@@ -1269,20 +1270,21 @@ thickness_size = 60 #Fraction_size
 #ScenarioOfCrOxideMixture(epsCr, epsCrO2, epsBK7, epsAir, Fraction_size,  'Cr', 'CrO2')
 #ScenarioOfCrOxideMixture3(epsCr, epsCr2O3, epsCrO2, epsBK7, Fraction_size, 'Cr', 'Cr2O3', 'CrO2')
 
-RepeatLisunovMixtureOfOxides()
+#RepeatLisunovMixtureOfOxides()
 
-def PreparePublicationFigure():
-    ## Takes ~ 30 min run
-    ## Preparing SPP period using an external file
-    CrCrXOY_Lisunov  = np.loadtxt("Dostovalov-Cr/Cr-Cr2O3-CrO2/Sergei_Lisunov/OptProperties_Cr_with_oxides.csv", skiprows=2)
-    limiter = 2 #limit the number of cells to get, then we can update the plot without recomputing the whole thing.
-    CrCrXOY_fraction   = CrCrXOY_Lisunov[:,0]
-    epsR_CrCrXOY_L     = CrCrXOY_Lisunov[:,1]
-    epsC_CrCrXOY_L     = CrCrXOY_Lisunov[:,2]
-    eps_CrCrXOY_L = np.add(epsR_CrCrXOY_L, np.multiply(1.j, epsC_CrCrXOY_L))
-    NumberOfSuperImposedPlots=1
-    Every = 10 #*NumberOfSuperImposedPlots
-    Shift = int(0*Every/NumberOfSuperImposedPlots) #enable to plot shifted plots to avoid superimposition
-    ScenarioOfCrOxideMixture_ext(eps_CrCrXOY_L[Shift::Every], epsAir, epsBK7, CrCrXOY_fraction[Shift::Every], 'Cr_compounds_oxide', 'Air', 'BK7')
+#def PreparePublicationFigure():
+## Takes ~ 30 min run
+## Preparing SPP period using an external file
+#CrCrXOY_Lisunov  = np.loadtxt("Dostovalov-Cr/Cr-Cr2O3-CrO2/Sergei_Lisunov/OptProperties_Cr_with_oxides.csv", skiprows=2)
+CrCrXOY_Lisunov  = np.loadtxt("Dostovalov-Cr/Cr-Cr2O3-CrO2/Sergei_Lisunov/OptProperties_Cr_with_oxides_corrected.csv", skiprows=0)
+limiter = 2 #limit the number of cells to get, then we can update the plot without recomputing the whole thing.
+CrCrXOY_fraction   = CrCrXOY_Lisunov[:,0]
+epsR_CrCrXOY_L     = CrCrXOY_Lisunov[:,1]
+epsC_CrCrXOY_L     = CrCrXOY_Lisunov[:,2]
+eps_CrCrXOY_L = np.add(epsR_CrCrXOY_L, np.multiply(1.j, epsC_CrCrXOY_L))
+NumberOfSuperImposedPlots=1
+Every = 20*NumberOfSuperImposedPlots
+Shift = int(0*Every/NumberOfSuperImposedPlots) #enable to plot shifted plots to avoid superimposition
+ScenarioOfCrOxideMixture_ext(eps_CrCrXOY_L[Shift::Every], epsAir, epsBK7, CrCrXOY_fraction[Shift::Every], 'Cr_compounds_oxide', 'Air', 'BK7')
 
-PreparePublicationFigure()
+#PreparePublicationFigure()

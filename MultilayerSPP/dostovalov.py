@@ -45,9 +45,9 @@ wavelength = 1026e-9 #355e-9 #1030E-9 #1026
 epsCr2O3   = 3.82738158014083 + 0.0483802637311967j  #Al-Kuhaili, M. & Durrani, S. Optical properties of chromium oxide thin films deposited by electron-beam evaporation Optical Materials, 2007, 29, 709-713
 #epsCr2O3    = 4.9713+0.1784j  #1 um [JDT Kruschwitz et al, Appl. Opt. 1997]
 epsCr      = -0.6721223+24.8657476j
-epsCrO2    = 1.3587463082734004+9.00595525243578j #Chase, L. L. Optical properties of Cr O 2 and Mo O 2 from 0.1 to 6 eV Physical Review B, 1974, 10, 2226-2231
-epsCrO2_o = epsCrO2
-epsCrO2_e  = 0.5784455474251002+6.477144040000001j #Chase, L. L. Optical properties of Cr O 2 and Mo O 2 from 0.1 to 6 eV Physical Review B, 1974, 10, 2226-2231
+epsCrO2    = 1.3587463082734004+9.00595525243578j #Chase, L. L. Optical properties of Cr O 2 and Mo O 2 from 0.1 to 6 eV Physical Review B, 1974, 10, 2226-2231 (E || C mode. C: axis for extraordinary mode). 
+epsCrO2_e = epsCrO2 #(E || c)
+epsCrO2_o  = 0.5784455474251002+6.477144040000001j #Chase, L. L. Optical properties of Cr O 2 and Mo O 2 from 0.1 to 6 eV Physical Review B, 1974, 10, 2226-2231 (E perpendicular to C).
 
 epsBK7      = 2.10277365777   #1026 nm
 epsSi       = 12.8159503769+0.0114635303918j #1026 nm, Palik
@@ -274,8 +274,8 @@ def ScenarioOfCrOxideMixture(epsSample, epsOxide=1., epsSubstrate=1., epsEnviron
     fraction_max = 1.
 
     thickness_size = 1
-    thickness_min  = 28e-9
-    thickness_max  = 28e-9
+    thickness_min  = 70e-9 #28e-9
+    thickness_max  = thickness_min
     
     if(PlotLspp and PlotEpsilons):
         plotA = 311; plotB=312; plotC=313
@@ -917,8 +917,6 @@ def ThinFilmHeating(wavelength, epsCr): #{{{
     print("Increase of lattice temperature:", dT_t, "K")
 #}}}
 
-
-
 ## Compute the SPP modes for mixed oxide ratio using an external set of optical data
 # @param fraction: array of oxide fraction
 # Size of epsSample and fraction should be of the same dimension
@@ -933,8 +931,8 @@ def ScenarioOfCrOxideMixture_ext(epsSample, epsEnvironment=1., epsSubstrate=1., 
     #fraction_max = 1.
 
     thickness_size = 1
-    thickness_min  = 28e-9
-    thickness_max  = 28e-9
+    thickness_min  = 100e-9 #70e-9 # 28e-9
+    thickness_max  = thickness_min
     
     #PlotLspp = False
     
@@ -1199,54 +1197,61 @@ def RepeatLisunovMixtureOfOxides(): #{{{
 
     # (CrO2_o = 2, CrO2_e = 1)
     # Means that Fraction(CrO2_o) = 2/3, Fraction(CrO2_e) = 1/3. 
-    epsCrO2_2o1e = MaxwellGarnett2(epsCrO2_o, epsCrO2_e, 1./3.)
-    # We use this optical properties for epsCrO2, then. 
+    epsCrO2_2o1e = MaxwellGarnett2(epsCrO2_o, epsCrO2_e, 1./3.) #This does not strongly affect the optical index of CrO2. 
 
     # Now constructing the mixed Maxwell Garnett2 data for Cr2O3+CrO2. 
     # Careful! epsCr2O3 ratio is not 0.35. 
     # ratio(Cr2O3)/ratio(CrO2) = 0.35, and ratio(Cr2O3)+ratio(CrO2) = 1. 
     # Therefore, ratio(Cr2O3) = 0.25925 and ratio(CrO2) = 0.74074. 
-
-    epsCrXOY = MaxwellGarnett2(epsCrO2_2o1e, epsCr2O3, 0.25925) #fraction here refers to medium2
+    #/!\ Optics Express from Dostovalov 2018 shows we have MORE CrO2 than Cr2O3. Someone inverted compared to Opex paper from Dostovalov. 
+    epsCrXOY = MaxwellGarnett2(epsCrO2_2o1e, epsCr2O3, 1.-0.25925) #fraction here refers to medium2
+    #epsCrXOY = MaxwellGarnett2(epsCrO2_2o1e, epsCr2O3, 1.-0.35) #fraction here refers to medium2
 
     fractionOxide    = np.linspace(0, 1, Fraction_size) #0: 100% Cr, 1: 100% oxide
     CrMixedWithCrXOY = MaxwellGarnett2(epsCr, epsCrXOY, fractionOxide)
 
+    CrCrXOY_Lisunov  = np.loadtxt("Dostovalov-Cr/Cr-Cr2O3-CrO2/Sergei_Lisunov/OptProperties_Cr_with_oxides.csv", skiprows=2)
+    limiter = 2 #limit the number of cells to get, then we can update the plot without recomputing the whole thing.
+    CrCrXOY_fraction   = CrCrXOY_Lisunov[:,0]
+    epsR_CrCrXOY_L     = CrCrXOY_Lisunov[:,1]
+    epsC_CrCrXOY_L     = CrCrXOY_Lisunov[:,2]
+    eps_CrCrXOY_L = np.add(epsR_CrCrXOY_L, np.multiply(1.j, epsC_CrCrXOY_L))
+
     plt.figure()
-    plt.plot(100*fractionOxide, CrMixedWithCrXOY.real, label='Method 1, Re(eps)')
-    plt.plot(100*fractionOxide, CrMixedWithCrXOY.imag, label='Method 1, Im(eps)')
+    plt.plot(100*fractionOxide, CrMixedWithCrXOY.real, 'r-', label='Method 1, Re(eps)')
+    plt.plot(100*fractionOxide, CrMixedWithCrXOY.imag, 'r--', label='Method 1, Im(eps)')
+    plt.plot(100*CrCrXOY_fraction, epsR_CrCrXOY_L, 'b+', label='Re(eps), Sergei data using inverted o/e modes')
+    plt.plot(100*CrCrXOY_fraction, epsC_CrCrXOY_L, 'b.', label='Im(eps), Sergei data using inverted o/e modes')
     plt.xlabel('Fraction of oxide (%)')
     plt.ylabel(r'Re$(\varepsilon)$, Im$(\varepsilon)$')
     plt.legend(loc='best')
     plt.show()
 
-    # This does not exactly lead to repeat data from Sergei. 
+    # This does not lead to repeat data from Sergei. 
     # Email mentioned they have used a mixture of (o) mode and (e) mode. 
     # Impossible to find his results as well. I conclude that it originates from lack of precision in sampling CrO2(o) and CrO2(e) in the paper of Chase. Error should come from Sergey as I did carefully dit it with Digitizer. He might have done it with a ruler. 
 
-    ## Method 2: using MaxwellGarnett3
-    ratio_Cr2O3_CrO2 = 0.35
-    FractionCrO2  = np.linspace(0.,1.,Fraction_size)
-    FractionCr2O3 = ratio_Cr2O3_CrO2 * FractionCrO2
-    FractionCr    = 1-ratio_Cr2O3_CrO2 * FractionCrO2 - FractionCrO2
+    ### Method 2: using MaxwellGarnett3
+    #ratio_Cr2O3_CrO2 = 0.35
+    #FractionCrO2  = np.linspace(0.,1.,Fraction_size)
+    #FractionCr2O3 = ratio_Cr2O3_CrO2 * FractionCrO2
+    #FractionCr    = 1-ratio_Cr2O3_CrO2 * FractionCrO2 - FractionCrO2
 
-    CrMixedWithCrXOY_3 = MaxwellGarnett3(epsCr, epsCr2O3, epsCrO2, FractionCr, FractionCr2O3, FractionCr)
+    #CrMixedWithCrXOY_3 = MaxwellGarnett3(epsCr, epsCr2O3, epsCrO2, FractionCr, FractionCr2O3, FractionCr)
 
-    print(CrMixedWithCrXOY_3)
+    #print(CrMixedWithCrXOY_3)
 
-    plt.figure()
-    plt.plot(100*FractionCrO2, CrMixedWithCrXOY_3.real, label='Method 2, Re(eps)')
-    plt.plot(100*FractionCrO2, CrMixedWithCrXOY_3.imag, label='Method 2, Im(eps)')
-    plt.xlabel('Fraction of oxide (%)')
-    plt.ylabel(r'Re$(\varepsilon)$, Im$(\varepsilon)$')
-    plt.legend(loc='best')
-    plt.show()
-    #ThinFilmHeating(wavelength, epsCr)
+    #plt.figure()
+    #plt.plot(100*FractionCrO2, CrMixedWithCrXOY_3.real, label='Method 2, Re(eps)')
+    #plt.plot(100*FractionCrO2, CrMixedWithCrXOY_3.imag, label='Method 2, Im(eps)')
+    #plt.xlabel('Fraction of oxide (%)')
+    #plt.ylabel(r'Re$(\varepsilon)$, Im$(\varepsilon)$')
+    #plt.legend(loc='best')
+    #plt.show()
+    ##ThinFilmHeating(wavelength, epsCr)
 
-    # Result is extremely different using this approach than using MaxwellGarnett2(Cr, MaxwellGarnett2(Cr2O3, MaxwellGarnett2(CrO2_o, CrO2_e))). 
-    # I believe the right approach would be to use MaxwellGarnett4(Cr, Cr2O3, CrO2_o, CrO2_e). 
-
-    # As Nadya will never admit this mistake, and that my time is limited, let's use Sergey's data directly, and close this problem even if everything is wrong for now...
+    ## Result is extremely different using this approach than using MaxwellGarnett2(Cr, MaxwellGarnett2(Cr2O3, MaxwellGarnett2(CrO2_o, CrO2_e))). 
+    ## I believe the right approach would be to use MaxwellGarnett4(Cr, Cr2O3, CrO2_o, CrO2_e). 
 #}}}
 
 # =====================
@@ -1264,15 +1269,20 @@ thickness_size = 60 #Fraction_size
 #ScenarioOfCrOxideMixture(epsCr, epsCrO2, epsBK7, epsAir, Fraction_size,  'Cr', 'CrO2')
 #ScenarioOfCrOxideMixture3(epsCr, epsCr2O3, epsCrO2, epsBK7, Fraction_size, 'Cr', 'Cr2O3', 'CrO2')
 
-## Takes ~ 30 min run
-## Preparing SPP period using an external file
-CrCrXOY_Lisunov  = np.loadtxt("Cr-Cr2O3-CrO2/Sergei_Lisunov/OptProperties_Cr_with_oxides.csv", skiprows=2)
-limiter = 2 #limit the number of cells to get, then we can update the plot without recomputing the whole thing.
-CrCrXOY_fraction   = CrCrXOY_Lisunov[:,0]
-epsR_CrCrXOY_L     = CrCrXOY_Lisunov[:,1]
-epsC_CrCrXOY_L     = CrCrXOY_Lisunov[:,2]
-eps_CrCrXOY_L = np.add(epsR_CrCrXOY_L, np.multiply(1.j, epsC_CrCrXOY_L))
-NumberOfSuperImposedPlots=1
-Every = 20 #*NumberOfSuperImposedPlots
-Shift = int(0*Every/NumberOfSuperImposedPlots) #enable to plot shifted plots to avoid superimposition
-ScenarioOfCrOxideMixture_ext(eps_CrCrXOY_L[Shift::Every], epsAir, epsBK7, CrCrXOY_fraction[Shift::Every], 'Cr_compounds_oxide', 'Air', 'BK7')
+RepeatLisunovMixtureOfOxides()
+
+def PreparePublicationFigure():
+    ## Takes ~ 30 min run
+    ## Preparing SPP period using an external file
+    CrCrXOY_Lisunov  = np.loadtxt("Dostovalov-Cr/Cr-Cr2O3-CrO2/Sergei_Lisunov/OptProperties_Cr_with_oxides.csv", skiprows=2)
+    limiter = 2 #limit the number of cells to get, then we can update the plot without recomputing the whole thing.
+    CrCrXOY_fraction   = CrCrXOY_Lisunov[:,0]
+    epsR_CrCrXOY_L     = CrCrXOY_Lisunov[:,1]
+    epsC_CrCrXOY_L     = CrCrXOY_Lisunov[:,2]
+    eps_CrCrXOY_L = np.add(epsR_CrCrXOY_L, np.multiply(1.j, epsC_CrCrXOY_L))
+    NumberOfSuperImposedPlots=1
+    Every = 10 #*NumberOfSuperImposedPlots
+    Shift = int(0*Every/NumberOfSuperImposedPlots) #enable to plot shifted plots to avoid superimposition
+    ScenarioOfCrOxideMixture_ext(eps_CrCrXOY_L[Shift::Every], epsAir, epsBK7, CrCrXOY_fraction[Shift::Every], 'Cr_compounds_oxide', 'Air', 'BK7')
+
+PreparePublicationFigure()

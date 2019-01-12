@@ -209,23 +209,6 @@ def IonizationRate_Gruzdev(Keldysh1, Keldysh2, KeldyshFunctionResult, Ueff, wave
   
   return result
 
-## Conversion between field and intensity (SI units)
-# TODO: As it is absorbed field, it should multiplied by real(optical index)
-# not exactly given by Keldysh theory, but rather by :
-# 1. Value at rest (can be taken in "MaterialOpticalDatabase.dat" 
-# 2. Value with excitation using a Drude model, associated with some effective mass and collision frequency. 
-def FieldToIntensity(Field, permittivity=1e0):
-  intensity = 0.5e0 * c * epsilon_0 * np.sqrt(permittivity) * Field * np.conjugate(Field)
-  return intensity.real
-
-## Converts intensity to electric field amplitude
-def IntensityToField(intensity, permittivity=1.):
-  Field = np.sqrt(2e0 * intensity / c / epsilon_0 / np.sqrt(permittivity))
-  if (Field.imag > 1E-5): 
-    print "** Error: unexpected imaginary part in the conversion from Intensity to Field!"
-    exit(-1)
-  return Field.real
-
 ## Builds Gaussian thickness from FWHM (in time or space)
 def sigmaFWHM(FWHM):
   sigma = FWHM/(2.*np.sqrt(2.*np.log(2.)))
@@ -290,8 +273,8 @@ def generateWpiTables(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, tau
 
   print Header+"Defining the laser pulse..."
   # t0 = 0e0
-  tmin = -4.*tau+t0
-  tmax =  4.*tau+t0
+  tmin = -2.*tau+t0
+  tmax =  2.*tau+t0
   #dt = 1E-17
   print Header+"** Info: Number of time steps = "+str(int((tmax-tmin)/dt))+"."
   #instants=np.arange(tmin,tmax,dt)
@@ -343,9 +326,14 @@ def generateWpiTables(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, tau
   dN_excited_Gruzdev = np.multiply(wPIg, dt)
   
   # Just multiply array of w_PI by dt, with limited to Ntotal
-  N_excited_Keldysh = dN_excited_Keldysh.cumsum()
-  N_excited_Gruzdev = dN_excited_Gruzdev.cumsum()
+  N_excited_Keldysh = np.zeros(np.shape(dN_excited_Keldysh))
+  N_excited_Gruzdev = np.zeros(np.shape(dN_excited_Gruzdev))
   
+  ## Temporal integration using trapeze method to plot Ne(t) 
+  for i in range(1,len(dN_excited_Keldysh)):
+      N_excited_Keldysh[i] = N_excited_Keldysh[i-1] + 0.5*(dN_excited_Keldysh[i-1] + dN_excited_Keldysh[i])
+      N_excited_Gruzdev[i] = N_excited_Gruzdev[i-1] + 0.5*(dN_excited_Gruzdev[i-1] + dN_excited_Gruzdev[i])
+      
   # Trapeze integration method
   N_excited_Keldysh_trapz = np.trapz(wPI, instants)
   N_excited_Gruzdev_trapz = np.trapz(wPIg, instants)
@@ -426,8 +414,8 @@ def plotPulseToDensity(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, ta
   print ""
   
   # Direct sum
-  #print Header+"Maximum density N_ex "+ShortRefKeldysh+" = "+str(N_excited_Keldysh.max())+"."
-  #print Header+"Maximum density N_ex "+ShortRefGruzdev+" = "+str(N_excited_Gruzdev.max())+"."
+  print Header+"Maximum density N_ex "+ShortRefKeldysh+" = "+str(N_excited_Keldysh.max())+"."
+  print Header+"Maximum density N_ex "+ShortRefGruzdev+" = "+str(N_excited_Gruzdev.max())+"."
   
   # Trapeze integration rule
   print Header+"Maximum density N_ex "+ShortRefKeldysh+" = "+str(N_excited_Keldysh_trapz.max())+"."

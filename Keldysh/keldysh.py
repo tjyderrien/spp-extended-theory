@@ -33,14 +33,14 @@ def SiliconLDAbandGap(): #{{{
   Ntotal=1.*5E28
 
   wavelength = 3200e-9;
-  tau=100e-15; dt = 1E-16; CEP=0e0
+  tau=2E-12; dt = 1E-15; CEP=0e0
   PeakFluence = 1.0*1E4 #J/cm2 * 1E4 = J/m2
   PeakField   = np.sqrt(2e0 * PeakFluence / (tau * c * epsilon_0))
   print Header+"Peak field ="+str(PeakField/1E9)+" V/nm"
 
   t0=0. #defines the instant 0.
   Delay = 0e-15 #delay between maxima of the pulses
-  tmin=-4.*tau + t0; tmax=4.*tau + Delay + t0
+  tmin=-2.*tau + t0; tmax=2.*tau + Delay + t0
 
   instants = np.arange(tmin, tmax, dt)
   #print "Time range: "+str(instants.min())+", "+str(instants.max())+"."
@@ -87,12 +87,9 @@ def SiliconLDAbandGap(): #{{{
   #plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelopeTot.real, dt, 150, ShowPlot)
   #plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelopeTot.real, dt, 200, ShowPlot)
   print "======= Checking dt convergence... ======"
-  plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelopeTot.real, 1E-16, order, ShowPlot)
-  plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelopeTot.real, 5E-17, order, ShowPlot)
-  plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelopeTot.real, 1E-17, order, ShowPlot)
-  plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelopeTot.real, 0.5E-17, order, ShowPlot)
-  #plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelopeTot.real, 1E-18, order, ShowPlot)
-  #plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelopeTot.real, 1E-20, order, ShowPlot)
+  plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelopeTot.real, dt/2., order, ShowPlot)
+  plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelopeTot.real, dt/5., order, ShowPlot)
+  plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelopeTot.real, dt/10., order, ShowPlot)
   print ""
 
   print Header+"** Test 2: computing the W_PI values from self-coded and Gruzdev theory..."
@@ -149,7 +146,7 @@ def SilicaGulley2012(): #{{{
 
   print Header+"** Info: PulseEnvelope.EPS and PNG were written in the current folder. "
 
-  order = 50
+  order = 100
   ShowPlot = True
 
   print Header+"** Test 1: computing the W_PI values from self-coded and validated Gruzdev theory..."

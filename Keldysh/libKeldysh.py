@@ -65,17 +65,17 @@ def gammaKeldysh(Egap, meff, Efield, wavelength): #{{{
     #print Efield, result
   else:
     ErrorMessage=ErrorMessage+"gamma(): Divergence, as field equals = 0. Singular case of Keldysh functions. Should give w_PI = 0 then...\n"
-    result = 1E99 #THIS VALUE IS ARBITRARY FOR A VERY SMALL FIELD. 
+    result = 1E9 #THIS VALUE IS ARBITRARY FOR A VERY SMALL FIELD. 
   #print(ErrorMessage)
   #print omegaLaser
-  return result
+  return np.float64(result)
 # Numerically validated with comparison to Maple. 
 #}}}
 
 ## Computes some intermediate quantity, careful: long double precision.
 def Keldysh1(gamma):
   value = np.float128(gamma) #K1(gamma) function has limit 1 when gamma > 5. Hence, we must compute k1(gamma) with a huge precision to stay out of unity. 
-  return np.divide(value, np.sqrt( np.float128(1E0) + value * value) )
+  return np.divide(value, np.sqrt( np.float128(1E0) + np.power(value, 2)) )
 
 ## Computes some intermediate quantity
 def Keldysh2(gamma):
@@ -83,16 +83,16 @@ def Keldysh2(gamma):
   try:
     result = np.divide( Keldysh1(value), value )
   except:
-    result = 0e0
+    result = np.float128(0e0)
   return result
 
 ## Computes the effective gap for one material
-# @param Egap: band gap of the transition (multi-photonic / tunnel transitions are DIRECT)
+# @param Egap: band gap of the transition (multi-photonic transitions are DIRECT. Tunnel transitions can be INDIRECT)
 def EffectiveGap(Egap, k1, k2): #{{{
-  # k1 = np.float64(k1); 
+  k11 = np.float64(k1); 
   k22 = np.float64(k2*k2) #reducing precision to call ellipe
-  if (k1 != 0):
-    result = 2.0*Egap * ellipe(k22)/(pi*k1) #Warning: ellipe(x²) actually computes E(x). 
+  if (k11 != 0):
+    result = 2.0*Egap * ellipe(k22)/(pi*k11) #Warning: ellipe(x²) actually computes E(x). 
   else: 
     print "EffectiveGap(): Singular error, Keldysh1 = 0."
     result = 0e0
@@ -121,13 +121,13 @@ def KeldyshFunction(Keldysh1, Keldysh2, Ueff, nmax, wavelength): #{{{
   n_tab = np.arange(0,nmax+1)
  
   # print "Keldysh1 = "+str(Keldysh1)
-  Keldysh11_128 = Keldysh1**2
+  Keldysh11_128 = np.power(Keldysh1,2)
   Keldysh11 = np.float64(Keldysh11_128)
   # print "--"
   # print "Keldysh11 = "+str(Keldysh11)
   Keldysh22 = np.float64(Keldysh2**2)
   # print "Keldysh11 = "+str(Keldysh11)
-  distant_to_unity = 1E0 - Keldysh11_128
+  distant_to_unity = np.float128(1E0) - Keldysh11_128
   if (distant_to_unity < 1E-320): #then it gonna crash for sure. 
     print "** Error on ellipk: argument 1 is singular. Distance to unit = "+str(distant_to_unity)+"Please increase precision on Keldysh1 or use ellipkm1 function (careful, argument IS not the same)."
   elif(distant_to_unity < 1E-10): 
@@ -286,15 +286,16 @@ GenerateKeldyshDatabase                 = np.vectorize(GenerateKeldyshDatabase)
 # @param dt: precision (scalar, seconds)
 # @param order: integration order for Keldysh model (integer, no unit)
 # @N_total: limiter for the ionizable number of electrons (float, m^{-3})
-def generateWpiTables(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, tau = 10e-15, FieldEnvelope = 1e9, dt = 1E-17, order = 50, N_total=5E28, t0=0.0): #{{{
+def generateWpiTables(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, tau = 10e-15, FieldEnvelope = 1e9, dt = 1E-17, order = 50, N_total=4*5E28, t0=0.0): #{{{
 
   print Header+"Defining the laser pulse..."
   # t0 = 0e0
-  tmin = -1.*tau+t0
-  tmax =  1.*tau+t0
+  tmin = -4.*tau+t0
+  tmax =  4.*tau+t0
   #dt = 1E-17
   print Header+"** Info: Number of time steps = "+str(int((tmax-tmin)/dt))+"."
-  instants=np.arange(tmin,tmax,dt)
+  #instants=np.arange(tmin,tmax,dt)
+  instants=np.linspace(tmin,tmax,len(FieldEnvelope))
 
   #Gaussian envelope
   #PulseEnvelope=PulseGaussianTemporalShape(instants, tau, Intensity, t0)
@@ -311,7 +312,7 @@ def generateWpiTables(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, tau
   
   gamma = gammaKeldysh(Egap, meff, FieldEnvelope, wavelength) #valid for scalar|vector data
   #gamma = gammaKeldysh(EgapEff, meff, IntensityToField(PulseEnvelope), wavelength) #self-consistent, divergent
-  print Header+"** Info: Adiabadicity parameter = "+str(gamma.min())+"."
+  print Header+"** Info: Adiabadicity parameter: (min,max) = ("+str(gamma.min())+", "+str(gamma.max())+")."
 
   #print "Computing Keldysh1, Keldysh2..."
   k1 = Keldysh1(gamma); k2 = Keldysh2(gamma) #valid
@@ -321,7 +322,7 @@ def generateWpiTables(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, tau
 
   print ""
   print Header+"** Info: Egap = "+str(Egap/e)+" eV, max[Ueff] = "+str(EgapEff.max()/e)+" eV."
-  print "** Debug info: Keldysh1 = "+str(k1)+", Keldysh2 = "+str(k2)
+  #print Header+"** Debug info: Keldysh1: min,max = ( "+str(np.min(k1))+", "+str(np.max(k1))+"), Keldysh2 = "+str(k2)
   
   KeldyshFunctionResult  = KeldyshFunction( k1, k2, EgapEff, order, wavelength )
   KeldyshFunctionResultG = KeldyshFunction_Gruzdev( k1, k2, EgapEff, order, wavelength )
@@ -333,31 +334,35 @@ def generateWpiTables(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, tau
   print Header+"w_PI until order "+str(order)+" = ", wPI.max()
 
   #print "Developing: exporting the table..."
-
+  #exit()
   print ""
   print Header+"Temporal integration..."
   
   # Temporal integration without limiter
-  
-  # Just multiply array of w_PI by dt, with limited to Ntotal
-  #N_excited_Keldysh = dN_excited_Keldysh.cumsum()
-  #N_excited_Gruzdev = dN_excited_Gruzdev.cumsum()
-  
-  # Temporal integration with limiter
   dN_excited_Keldysh = np.multiply(wPI, dt)
   dN_excited_Gruzdev = np.multiply(wPIg, dt)
-  #dN_excited_Bristow = np.multiply(BristowLaw(wavelength, Egap)*intensity**2/(2*hbar*omega)), dt)
   
-  # Initial number of electrons in conduction band
-  N_initial = np.zeros(wPI.shape)
+  # Just multiply array of w_PI by dt, with limited to Ntotal
+  N_excited_Keldysh = dN_excited_Keldysh.cumsum()
+  N_excited_Gruzdev = dN_excited_Gruzdev.cumsum()
   
-  ExpArg_Keldysh = np.divide(dN_excited_Keldysh.cumsum(), N_total)
-  ExpArg_Gruzdev = np.divide(dN_excited_Gruzdev.cumsum(), N_total)
+  # Trapeze integration method
+  N_excited_Keldysh_trapz = np.trapz(wPI, instants)
+  N_excited_Gruzdev_trapz = np.trapz(wPIg, instants)
   
-  N_excited_Keldysh = np.multiply( np.exp(-ExpArg_Keldysh), N_total * np.exp(ExpArg_Keldysh) - N_total + N_initial)
+  # Temporal integration with limiter
+  ##dN_excited_Bristow = np.multiply(BristowLaw(wavelength, Egap)*intensity**2/(2*hbar*omega)), dt)
   
-  N_excited_Gruzdev = np.multiply( np.exp(-ExpArg_Gruzdev), N_total * np.exp(ExpArg_Gruzdev) - N_total + N_initial)
-  return instants, N_excited_Keldysh, N_excited_Gruzdev, gamma, wPI, wPIg
+  ## Initial number of electrons in conduction band
+  #N_initial = np.zeros(wPI.shape)
+  
+  #ExpArg_Keldysh = np.divide(dN_excited_Keldysh.cumsum(), N_total)
+  #ExpArg_Gruzdev = np.divide(dN_excited_Gruzdev.cumsum(), N_total)
+  
+  #N_excited_Keldysh = np.multiply( np.exp(-ExpArg_Keldysh), N_total * np.exp(ExpArg_Keldysh) - N_total + N_initial)
+  
+  #N_excited_Gruzdev = np.multiply( np.exp(-ExpArg_Gruzdev), N_total * np.exp(ExpArg_Gruzdev) - N_total + N_initial)
+  return instants, N_excited_Keldysh, N_excited_Gruzdev, gamma, wPI, wPIg, N_excited_Keldysh_trapz, N_excited_Gruzdev_trapz  
 #}}}
 
 #generateWpiTables = np.vectorize(generateWpiTables)
@@ -401,12 +406,14 @@ def IntensityAtGamma(gamma, Egap_SI, meff, wavelength):
 # @param FieldEnvelope (V/m): electric field envelope of the pulse (scalar|vector)
 # @param dt (seconds): precision of the temporal envelope
 # @param order (adim): order of the integration (default: 50).
-def plotPulseToDensity(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, tau = 10e-15, FieldEnvelope = 1e9, dt = 1E-17, order = 50, ShowPlot=False, t0=0., N_total=5E28): #{{{
+def plotPulseToDensity(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, tau = 10e-15, FieldEnvelope = 1e9, dt = 1E-17, order = 50, ShowPlot=False, t0=0., N_total=4.*5E28): #{{{
   #Header="[libKeldysh] "
   #gamma = gammaKeldysh(Egap, meff, FieldEnvelope, wavelength)
   
+  print Header+"======== WARNING: convergence of Ne(t) can be very hard to reach. ==========\n"
+  
   ### We shall generate the interesting pulse in the file from which we call the Keldysh generator
-  instants, N_excited_Keldysh, N_excited_Gruzdev, gamma, wPI, wPIg = generateWpiTables(Egap, meff, wavelength, tau, FieldEnvelope, dt, order, N_total, t0)
+  instants, N_excited_Keldysh, N_excited_Gruzdev, gamma, wPI, wPIg, N_excited_Keldysh_trapz, N_excited_Gruzdev_trapz = generateWpiTables(Egap, meff, wavelength, tau, FieldEnvelope, dt, order, N_total, t0)
   
   try: 
     sizeGamma = len(gamma)
@@ -417,8 +424,14 @@ def plotPulseToDensity(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, ta
   print Header+"** Warning: results may be not converged."
   print Header+"            Reduce dt, and increase order until convergence."
   print ""
-  print Header+"Maximum density N_ex "+ShortRefKeldysh+" = "+str(N_excited_Keldysh.max())+"."
-  print Header+"Maximum density N_ex "+ShortRefGruzdev+" = "+str(N_excited_Gruzdev.max())+"."
+  
+  # Direct sum
+  #print Header+"Maximum density N_ex "+ShortRefKeldysh+" = "+str(N_excited_Keldysh.max())+"."
+  #print Header+"Maximum density N_ex "+ShortRefGruzdev+" = "+str(N_excited_Gruzdev.max())+"."
+  
+  # Trapeze integration rule
+  print Header+"Maximum density N_ex "+ShortRefKeldysh+" = "+str(N_excited_Keldysh_trapz.max())+"."
+  print Header+"Maximum density N_ex "+ShortRefGruzdev+" = "+str(N_excited_Gruzdev_trapz.max())+"."
   print ""
 #  return N_excited_Gruzdev 
   if(ShowPlot): 
@@ -431,7 +444,7 @@ def plotPulseToDensity(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, ta
     plt.figure(figsize=(15,15))
     
     plt.subplot(411)
-    plt.title(r"Gap = "+str(Egap/e)+" eV, $\lambda=$ "+str(wavelength*1E9)+r" nm, $\tau=$"+str(tau*xunit)+" "+timeunit+", "+r"$E_{max}=$"+str(FieldEnvelope.max()/1E9)+" V/nm")
+    plt.title(r"Gap = "+str(Egap/e)+" eV, $\lambda=$ "+str(wavelength*1E9)+r" nm, $\tau=$"+str(tau*xunit)+" "+timeunit+", "+r"$E_{max}=$"+str(np.max(FieldEnvelope)/1E9)+" V/nm")
     #plt.xlabel("Field (V/m)")
     #plt.xlabel("Time (ps)")
     plt.ylabel("Field envelope (V/m)")
@@ -508,7 +521,7 @@ def SilicaGraef2017(PeakFluence): #{{{
 
   t0=0. #defines the instant 0.
   Delay = 0. #delay between maxima of the pulses
-  tmin=-1.*tau + t0; tmax=1.*tau + Delay + t0
+  tmin=-4.*tau + t0; tmax=4.*tau + Delay + t0
 
   instants = np.arange(tmin, tmax, dt)
   #print "Time range: "+str(instants.min())+", "+str(instants.max())+"."

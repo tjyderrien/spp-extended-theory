@@ -28,24 +28,25 @@ print "         It also contains validation cases of the present theory on Si an
 def SiliconLDAbandGap(): #{{{
   print "Defining Si material parameters..."
 
-  Egap = 2.56e0*e; #LDA band gap of Si: 2.58 eV. #1.12e0*e for indirect band gap; 
+  Egap = 3.4e0*e #2.56e0*e; #LDA band gap of Si: 2.58 eV. #1.12e0*e for indirect band gap; 
   meff=0.2226e0; #Effective mass of Si
   Ntotal=1.*5E28
 
-  wavelength = 800e-9;
-  tau=10e-15; dt = 1E-17; CEP=0e0
-  PeakFluence = 0.01*1E4 #J/cm2 * 1E4 = J/m2
+  wavelength = 3200e-9;
+  tau=100e-15; dt = 1E-16; CEP=0e0
+  PeakFluence = 1.0*1E4 #J/cm2 * 1E4 = J/m2
   PeakField   = np.sqrt(2e0 * PeakFluence / (tau * c * epsilon_0))
+  print Header+"Peak field ="+str(PeakField/1E9)+" V/nm"
 
   t0=0. #defines the instant 0.
-  Delay = 20e-15 #delay between maxima of the pulses
-  tmin=-1.*tau + t0; tmax=1.*tau + Delay + t0
+  Delay = 0e-15 #delay between maxima of the pulses
+  tmin=-4.*tau + t0; tmax=4.*tau + Delay + t0
 
   instants = np.arange(tmin, tmax, dt)
   #print "Time range: "+str(instants.min())+", "+str(instants.max())+"."
 
-  PeakField2  = PeakField
-  CEP2        = pi/3.
+  PeakField2  = 0. #PeakField
+  CEP2        = 0.*pi
   wavelength2 = wavelength / 2.
 
   print Header+"** Test: building single pulse centered on 0..."
@@ -72,24 +73,30 @@ def SiliconLDAbandGap(): #{{{
 
   print Header+"** Info: PulseEnvelope.EPS and PNG were written in the current folder. "
 
-  order = 50
+  order = 100
   ShowPlot = True
 
   print Header+"** Test 0: Convergence test using the Keldysh-Gruzdev formulas..."
-  plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, 1E-17, order, ShowPlot)
-  plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, 5E-17, order, ShowPlot)
-  plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, 1E-16, order, ShowPlot)
-  print "Checking dt convergence..."
+  print Header+"===== Checking order convergence... ======"
+  #plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelopeTot.real, dt, 10, ShowPlot)
+  #plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelopeTot.real, dt, 20, ShowPlot)
+  #plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelopeTot.real, dt, 30, ShowPlot)
+  #plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelopeTot.real, dt, 40, ShowPlot)
+  #plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelopeTot.real, dt, 50, ShowPlot)
+  #plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelopeTot.real, dt, 100, ShowPlot)
+  #plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelopeTot.real, dt, 150, ShowPlot)
+  #plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelopeTot.real, dt, 200, ShowPlot)
+  print "======= Checking dt convergence... ======"
+  plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelopeTot.real, 1E-16, order, ShowPlot)
+  plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelopeTot.real, 5E-17, order, ShowPlot)
+  plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelopeTot.real, 1E-17, order, ShowPlot)
+  plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelopeTot.real, 0.5E-17, order, ShowPlot)
+  #plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelopeTot.real, 1E-18, order, ShowPlot)
+  #plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelopeTot.real, 1E-20, order, ShowPlot)
   print ""
-  print "Checking order convergence..."
-  plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, dt, 10, ShowPlot)
-  plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, dt, 20, ShowPlot)
-  plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, dt, 30, ShowPlot)
-  plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, dt, 40, ShowPlot)
-  plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, dt, 50, ShowPlot)
 
   print Header+"** Test 2: computing the W_PI values from self-coded and Gruzdev theory..."
-  timeKeldysh, N_Keldysh_SI, N_Gruzdev_SI = plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelope.real, dt, order, ShowPlot, 0e0, Ntotal)
+  timeKeldysh, N_Keldysh_SI, N_Gruzdev_SI = plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelopeTot.real, dt, order, ShowPlot, 0e0, Ntotal)
 
   print Header+"** Test 3: computing the W_PI values from Vladimir Zhukov tables..."
   wPI_Zhukov = VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength, wavelength2, CEP, CEP2, Egap, meff, tau, tau, Delay, dt, Ntotal, t0)
@@ -199,11 +206,11 @@ def SiliconTunneling(): #{{{
 #}}}                                
     
 
-SiliconTunneling()
+#SiliconTunneling()
 
 
 #SilicaGulley2012()
-#SiliconLDAbandGap()
+SiliconLDAbandGap()
 #SilicaGraef2017()
 
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2013-2017 T. J.-Y. Derrien
+# Copyright (C) 2013-2018 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -43,7 +43,25 @@ from scipy.constants import c, epsilon_0, mu_0, pi, e, m_e, h, hbar, Avogadro
 from libUnits import *
 from libDatabase import *
 
-## Generates the normalization coefficients for electric field
+## Conversion between field and intensity (SI units)
+# TODO: As it is absorbed field, it should multiplied by real(optical index)
+# not exactly given by Keldysh theory, but rather by :
+# 1. Value at rest (can be taken in "MaterialOpticalDatabase.dat" 
+# 2. Value with excitation using a Drude model, associated with some effective mass and collision frequency. 
+def FieldToIntensity(Field, permittivity=1e0):
+  intensity = 0.5e0 * c * epsilon_0 * np.sqrt(permittivity) * Field * np.conjugate(Field)
+  return intensity.real
+
+## Converts intensity to electric field amplitude
+def IntensityToField(intensity, permittivity=1.):
+  Field = np.sqrt(2e0 * intensity / c / epsilon_0 / np.sqrt(permittivity))
+  if (Field.imag > 1E-5): 
+    print "** Error: unexpected imaginary part in the conversion from Intensity to Field!"
+    exit(-1)
+  return Field.real
+
+
+## Generates the normalization coefficient for electric field E*. 
 # /!\ Vladimir uses adiabadicity coefficient for gas, which differs from a 1/sqrt(2) factor. 
 # /!\ Vladimir also uses CGS units. 
 # /!\ Vladimir neglects the effective mass to compute normalization of the field! #TODO Check with him!
@@ -131,6 +149,7 @@ def VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength1 = 800e-9, w
 
   #Choosing the right column index in the data files
   print Header+"** Selecting the right headers..."
+  VZ_basename = ''
   if( FieldEnvelopeNormalized2_CGS.max() == 0. ): # was wavelength1 == wavelength2.  
     Dictionnary = {'FieldSquaredLog10': 0, 'log10wpi': 1, 'photons': 2, 'energy': 3, 'wpi': 4, 'FieldSquared1': 5} #Monochromatic case
     DataFolder  = 'Zhukov/Monochrome/'
@@ -192,7 +211,11 @@ def VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength1 = 800e-9, w
     NumberOfColors = 1
   
   # Fetching content of the files
-  databasecontents   = loadtxt(VZ_basename, skiprows=2)
+  if(VZ_basename != ''):
+    databasecontents   = loadtxt(VZ_basename, skiprows=2)
+  else: 
+    print Header+"Path was empty."
+    exit()
   
   deltaField_CGS = 0.0025 #TODO: automatic step from the database file? Isnt it a bit small ?!
   deltaField_SI = Field_CGS_to_SI(deltaField_CGS)

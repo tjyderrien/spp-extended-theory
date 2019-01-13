@@ -42,10 +42,22 @@ def Drude(wavelength, ne, epsilon, nu, meff=1.0):#{{{
 # Input:
 #   eps1: complex-valued permittivity 1+j0
 #   eps2: idem, for medium2
+#   angle: angle of incidence (deg or rad?)
 # Output: 
 #   interface reflectivity (float) R
-def reflectivity(eps1, eps2):#{{{
-  R=abs(((eps1**0.5e0-eps2**0.5e0)/(eps1**0.5e0+eps2**0.5e0))**2)
+def reflectivity(eps1, eps2, angle=0, pola="S"):#{{{
+  #R=abs(((eps1**0.5e0-eps2**0.5e0)/(eps1**0.5e0+eps2**0.5e0))**2)
+  if(pola=="S"): 
+      term1 = eps1**0.5E0*np.cos(angle)
+      term2 = (eps2-eps1*np.sin(angle)**2)**0.5E0
+      R=abs(((term1-term2)/(term1+term2))**2)
+  elif(pola=="P"):
+      term1 = eps2*np.cos(angle)
+      term2 = eps1**0.5E0*(eps2-eps1*np.sin(angle)**2)**0.5E0
+      R=abs(((term1-term2)/(term1+term2))**2)
+  else: 
+      print("Error. Choose pola=S or P, nothing else.")
+      exit()
   return R
 #}}}
 

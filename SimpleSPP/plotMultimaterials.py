@@ -19,7 +19,8 @@
 ## @package plotMultimaterials
 ## Generate plots for many materials contained into a given database.
 # 
-# This allows to perform comparisons of interesting quantities between many materials, for specific wavelengths. 
+# This allows to perform comparisons of interesting quantities between many 
+# materials, for specific wavelengths. 
 
 # IMPORT LIBRARIES
 from libSPP import *

@@ -76,7 +76,7 @@ def plotSipe1D_sectionX(wavelength, epsilon, f=0.1e0, s=0.4e0, theta=0e0): #{{{
     #kappax = 4e0 ; kappay = 0e0*kappax; #test values
     kappa_max = 4E0
     kappa_min = 0.1E0
-    numberofkpoints = 1000 #NOTE: be generous here, otherwise peaks will not be well resolved. 
+    numberofkpoints = 2000 #NOTE: be generous here, otherwise peaks will not be well resolved. 
     #for kappax in meshkappa:
     #ftab = np.arange(0, 1, 0.1)
     print "Info: Generating the mesh..."
@@ -106,6 +106,7 @@ def plotSipe1D_sectionX(wavelength, epsilon, f=0.1e0, s=0.4e0, theta=0e0): #{{{
     plt.figure(figsize=(SizeX,SizeY))
     plt.xlabel(r'$\kappa$')
     plt.ylabel(r'$\eta$')
+    plt.title(r'$\theta=$'+str(int(theta*180./np.pi))+' deg')
     print kapparange.shape, etaSresult.shape
     plt.plot(kapparange, etaPresult, '-', label=r'$\eta(\kappa_x; \kappa_y=0)$') #$\eta_P$')
     plt.plot(kapparange, etaSresult, '-', label=r'$\eta(\kappa_y; \kappa_x=0)$')
@@ -502,7 +503,7 @@ def plotSipeMaps_ChiaraSi(Nexc=3.75E27,CollFreqTime=1.1e-15):
     #print nCr
     plotSipe1D_sectionX(1030e-9, EpsSiExc, filling, shape)
     
-plotSipeMaps_ChiaraSi()
+#plotSipeMaps_ChiaraSi()
 
 def plotSipeMaps_Dostovalov_Cr():
     unit = 1E-9
@@ -542,5 +543,5 @@ def plotStephanGraf_Materials2018(): #{{{
     plotGenericSipeMaps(0.0, 1.1, k_precision, 0., 0.1, 0.4, PlotMaterials, PlotDrude, False)
     plotGenericSipeMaps(0.0, 1.2, k_precision, 0., 0.1, 0.4, PlotMaterials, PlotDrude, False)
 #}}}
-
-#plotSipe1D_sectionX(1030e-9, -0.6721223+24.8657476j)
+for angle in [0.,1.,2.,5.,10.,20.,30.,40.,50.,60.,70.,80.,85.]:
+    plotSipe1D_sectionX(1026e-9, -0.6721223+24.8657476j, 0.1, 0.4, angle*pi/180.)

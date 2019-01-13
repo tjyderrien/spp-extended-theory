@@ -27,5 +27,6 @@ rp(x,y) = real(f(x,y))
 ip(x,y) = imag(f(x,y))
 color(x,y) = hsv2rgb( Hue( rp(x,y), ip(x,y) ), abs(f(x,y)), 1. )
 
-f(x,y) = acos(x + y*{0,1})
+# f(x,y) = acos(x + y*{0,1})
+f(x,y)   = asin(x + y*{0,1})
 splot '++' using 1:2:(color($1,$2)) with pm3d lc rgb variable

@@ -6,7 +6,7 @@ set terminal postscript eps enhanced color font "Helvetica, 24"
 
 set grid
 
-datafile="PeriodWithThickness.csv"
+datafile="Berini2000.csv" #PeriodWithThickness.csv"
 
 #=================== PLOTTING WAVE NUMBERS AS FUNCTION OF THICKNESS (Berini style)
 

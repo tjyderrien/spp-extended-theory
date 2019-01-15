@@ -384,6 +384,8 @@ def importFromTable(wavelength, folder, filename, plotting): #{{{
   # Look for Palik into the name
   if(filename.find("Palik") > 0):
     unit1 = 1E-10 #Palik data
+  if(filename.find("Gori") > 0): 
+    unit1 = 1E-9
   else:
     unit1 = 1E-6 #Other data
  
@@ -542,11 +544,11 @@ try: #TODO: should we select by author? Or by units?
     filename = "ZnO-GoriAndBond"
     print "Material: "+filename+"."
     print "Wavelength = "+str(wavelength)+" nm"
-    nk = importFromTable(wavelength*1e-9, folder, filename, plotting)
-    epsilon = nk**2
-    print epsilon
+    epsilon = importFromTable(wavelength*1e-9, folder, filename, plotting) #Careful: misleading neames. These data have been stored as dielectric permittivities, but this function inteprets it as nk. 
+    nk = np.sqrt(epsilon)
+    print nk
     print "You can add the following directly inside 'MaterialOpticalDatabaseForPlasmonics.csv'"
-    print filename+"\t"+"?"+"\t"+str(int(wavelength))+"\t"+str(epsilon.real)+"\t"+str(epsilon.imag)+"\t?\t?\t?\t?\t?"
+    print filename+"\t"+"?"+"\t"+str(int(wavelength))+"\t"+str(nk.real)+"\t"+str(nk.imag)+"\t?\t?\t?\t?\t?"
   elif(source == "Gori"):
     # We plot Gori data along with Bond data. 
     # Gori is meshed on (energy (eV), epsilon)
@@ -568,7 +570,8 @@ try: #TODO: should we select by author? Or by units?
     #print energiesGori_J, epsilonGori #output format: J, epsilon
     wavelengthsGori  = h*c/(energiesGori_J) #output format: meters
     #print wavelengthsGori, epsilonGori
-    GoriFile = np.array([wavelengthsGori*1E9, epsilonGori.real, epsilonGori.imag])
+    nGori=np.sqrt(epsilonGori)
+    GoriFile = np.array([wavelengthsGori*1E9, nGori.real, nGori.imag])
     ExportToTxt(np.flipud(np.transpose(GoriFile)), "ZnO-Gori.csv")
     print Header+"** Exported Gori file. "
     
@@ -578,7 +581,10 @@ try: #TODO: should we select by author? Or by units?
     energiesGori2, epsilonGori2  = importFromEpsilonTable_batch(folderGori, filenameGori2, plotting, 1E0) #unit in nm
     energiesGori_J2   = e*energiesGori2
     wavelengthsGori2  = h*c/(energiesGori_J2) #output format: meters
-    Gori2File = np.array([wavelengthsGori2*1E9, epsilonGori2.real, epsilonGori2.imag])
+    
+    nGori2 = np.sqrt(epsilonGori2)
+    
+    Gori2File = np.array([wavelengthsGori2*1E9, nGori2.real, nGori2.imag])
     ExportToTxt(np.flipud(np.transpose(Gori2File)), "ZnO-Gori2.csv")
     print Header+"** Exported Gori2 file. "
     #print "Combining the two Gori sets of data..."
@@ -596,7 +602,7 @@ try: #TODO: should we select by author? Or by units?
     print Header+"Info: Imported ZnO-Bond data."
     epsilonBond  =  np.multiply(nkBond, nkBond) #converting (n,k) to (epsR, epsC)
     print Header+"Info: Converted ZnO-Bond to dielectric permittivity."
-    BondFile = np.array([wavelengthsBond*1E9, epsilonBond.real, epsilonBond.imag])
+    BondFile = np.array([wavelengthsBond*1E9, nkBond.real, nkBond.imag])
     ExportToTxt(np.transpose(BondFile), "ZnO-Bond.csv")
     print Header+"** Exported Bond file. "
     
@@ -613,6 +619,8 @@ try: #TODO: should we select by author? Or by units?
     plt.grid()
     plt.savefig("ZnO-reconstructed.eps")
     plt.show()
+    
+    print "DONT FORGET TO ACCOLATE THE OPTICAL DATA TO A FILE ZnO-GariAndBond."
   elif(source == "Chase"):
     print "** Info: branching with CrO2 Chase optical data..."
     folder = "Database/"

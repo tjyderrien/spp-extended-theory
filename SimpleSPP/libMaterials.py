@@ -45,7 +45,7 @@ def Drude(wavelength, ne, epsilon, nu, meff=1.0):#{{{
 # Model was taken from Sci. Rep. 7, 8485 (2017)
 def CollisionFrequencyModelLevy(Te, Ti = 300):
     AtomicDensity = 5.7E28
-    A = 2.2E6; B = 2.6E6 #NOTE: parameters for Ti
+    A = 2.2E6; B = 3.2E13 #NOTE: parameters for Ti
     nu_e    = A*Te**2 + B*Ti
     E_Fermi = 8.84*e #NOTE: parameter for Ti
     v_Fermi = np.sqrt(2. * E_Fermi / m_e) #just converted Fermi energy to velocity

@@ -49,6 +49,8 @@ epsCrO2    = 1.3587463082734004+9.00595525243578j #Chase, L. L. Optical properti
 epsCrO2_e = epsCrO2 #(E || c)
 epsCrO2_o  = 0.5784455474251002+6.477144040000001j #Chase, L. L. Optical properties of Cr O 2 and Mo O 2 from 0.1 to 6 eV Physical Review B, 1974, 10, 2226-2231 (E perpendicular to C).
 
+epsTi = -4.289599704142011+27.217715606508875j
+
 epsBK7      = 2.10277365777   #1026 nm
 epsSi       = 12.8159503769+0.0114635303918j #1026 nm, Palik
 epsAir      = 1.+0.j          #air
@@ -116,6 +118,274 @@ def ScenarioOfOxidePrecipitation(epsMedium, epsSubstrate, epsEnvironment=1.):
         for branch in np.arange(0,num_branches-1):
             print("1.", thickness, roots[branch][0], roots[branch][1], eps1.real, eps1.imag)
 
+## Preparation of the excited SPP as function of the electron temperature (estimation)
+def PeriodsAsFunctionOfTemperature(epsSample, epsSubstrate=1., epsEnvironment=1., Te_size=10, SampleName='Cr', SubstrateName='BK7', PlotLspp=False, FilterNegativeLspp=False, PlotEpsilons=True, Te_max=1E6):
+    
+    ## In this function, Te should be interpreted as state of matter (in term of electron temperature)
+    
+    print(Header, "# Info: Considering temperature Te of electron in Cr with Cr2O3 with several thicknesses.")
+    wavelength = 1026e-9
+    #Te_size = 60
+    numberofroots = 10 #per branch. 10 exceeds the final number of roots per branch
+    
+    Te_min = 300e0
+    Te_max = 1E6
+
+    thickness_size = 1
+    thickness_min  = 28e-9 #28e-9
+    thickness_max  = thickness_min
+    
+    if(PlotLspp and PlotEpsilons):
+        plotA = 311; plotB=312; plotC=313
+    elif((PlotLspp and not PlotEpsilons) or (not PlotLspp and PlotEpsilons)): 
+        plotA=211; plotB=212
+    else: 
+        plotA=111; 
+        
+    ## Running 
+    logTe = np.linspace(np.log10(Te_min), np.log10(Te_max), Te_size)
+    Te = np.power(10, logTe)
+    epsCr_list = Drude_metal(wavelength, epsSample, Te)
+    # MaxwellGarnett2(epsSample, epsOxide, Te) #Te refers to the electron temperature Te here! 
+    #NOTE: epsOxide here is Cr oxide, not environment. 
+    print(Header, "# Info: size of the Te matrix: ", Te_size)
+    print(Header, "# Info: preparation of the root finder.")
+    
+    #results = Parallel(n_jobs=num_cores)(delayed(processInput)(i) for i in inputs)
+
+    #t = 100E-9 #thickness of the layer in meters
+    #thickness = 10e-9
+    print("\n")
+    print("# Te of electrons in Cr: ", Te)
+    summary = np.zeros((0, 7))
+    ## Preparation of the thin film modeling for various compositions
+    for Te_index in np.arange(0,Te_size): #arange excludes the last one, linspace includes it
+        # Medium 1: thin film. 
+        eps1 = epsCr_list[Te_index]        #thin film
+        # Medium 2: substrate. 
+        eps2 = epsBK7       #epsBK7 #environment | substrate
+        # Medium 3: environment
+        eps3 = epsAir       #environment | substrate
+        # Note: Inverting eps2 and eps3 should have no effect on the possible modes, but only on field amplification. 
+        t_list = np.linspace(thickness_min, thickness_max, thickness_size, endpoint=True)
+        
+        #for thickness in t_list: #BUG: works only if using 1 thickness
+        thickness = t_list[0] 
+        roots = findroots(eps1, eps2, eps3,
+                    wavelength, thickness,
+                    x_min, x_max,    
+                    y_min, y_max,    
+                    x_steps, y_steps, numberofroots)
+
+        # Preparation of the data for plotting
+        print("\nTe #"+str(Te_index)+"="+str(Te[Te_index]))
+        num_branches = len(roots) 
+        print("Number of branches: "+str(num_branches)) #number of SPP branches for this sample. 
+        #print("ndimn: "+str(np.ndim(roots)))
+        
+        # This means we have tested <roots_oxidationDegree> samples with different oxidations. 
+        
+        #roots_t = np.ndarray(roots)
+        
+        #print(Header+"** Summary of the roots. Number of oxidation degrees: "+str(roots_oxidationDegree))
+        #print("Roots")
+        #print(roots) #For each branch, each sample, we have two data Period, and L_spp
+        
+        ### This version is general enough for number_of_roots > 1. 
+        num_thickness = np.shape(t_list) #NOTE: number of tested thicknesses
+        for branch in np.arange(0,num_branches):
+            roots_in_branch = roots[branch]
+            #print("\n")
+            print("Roots in branch #"+str(branch))
+            for order in np.arange(0,len(roots_in_branch)):
+                roots_in_branch_order = roots_in_branch[order]
+                #print("\n")
+                print("Order #"+str(order)+": Period="+str(roots_in_branch_order[0])+" Lspp="+str(roots_in_branch_order[1]))
+                ToBeAdded = [thickness, branch, order, roots_in_branch_order[0], roots_in_branch_order[1], Te[Te_index], eps1]
+                if(roots_in_branch[order][0] > 1E-15 and abs(roots_in_branch[order][1]) > 1E-10): 
+                    # We remove modes were Lspp < 0.1 nm or period < 0. 
+                    summary = np.vstack((summary, ToBeAdded ))
+                    
+        #num_branches  = roots_oxidationDegree[0]
+        #return(roots, num_thickness, num_branches)
+        #num_roots     = roots_oxidationDegree[1] #BUG: this crashes since MultilayerSPP repository was merged in develop... 
+        #num_property  = roots_oxidationDegree[2]
+
+        #for branch in np.arange(0,num_branches-1):
+                #for root_number in np.arange(0,num_roots): 
+                    #ToBeAdded = [thickness, branch, root_number, roots[branch][root_number][0], roots[branch][root_number][1], Te[Te_index], eps1]
+                    #print(ToBeAdded)
+                    #if(roots[branch][root_number][0] != 0e0): 
+                        #
+    #print(summary)
+    #exit()
+    #return(summary)
+    
+    print(Header+"** Preparation of the plots as function of oxide ratio")
+
+    ExperimentalData_velocity   = np.array([1e-6, 10e-16, 50e-6, 100e-6, 200e-6, 300e-6]) #m/s
+    ExperimentalData_LSFL       = np.array([696e-9, 704e-9, 816e-9, 858e-9, -100e0, -100e-9]) #m #better observed for low velocities, i.e., high number of pulses, i.e., largest amounts of oxide
+    ExperimentalData_LSFL_error = np.array([78e-9,71e-9,139e-9,140e-9,0e-9,0e-9]) #m
+    ExperimentalData_HSFL       = np.array([170e-9, 159e-9, 217e-9, 244e-9, 249e-9, 238e-9]) #m
+    ExperimentalData_HSFL_error = np.array([64e-9,38e-9,101e-9,110e-9,128e-9,72.5e-9]) #m
+    CrFraction_Fitted           = np.array([0.6e0, 0.7e0, 0.8e0, 0.86e0, 0.90e0, 0.95e0]) #hand fitted to match period with existing modes [on request of Nadya]
+    CrO2Fraction_Fitted         = np.add(1, - np.array([0.6e0, 0.7e0, 0.8e0, 0.86e0, 0.90e0, 0.95e0])) #we express it in term of oxidized
+    
+    print(summary)
+
+#== Extract the constructed table
+    
+    if(FilterNegativeLspp): 
+        print("Filtering the negative Lspp / Imag(beta) < 0 ...")
+        summary_filtered = np.array(summary[summary[:,4]>0,:])
+        del summary
+        summary = summary_filtered
+        del summary_filtered
+    
+    ## We shall split the results by branch number. 
+    # 1. Conditional filtering of the table for branch_s == 0, 1, 2 or 3. Similar filtering is available in libDatabase.py. 
+    summary_branch0 = np.array(summary[summary[:,1]==0,:])
+    summary_branch1 = np.array(summary[summary[:,1]==1,:])
+    summary_branch2 = np.array(summary[summary[:,1]==2,:])
+    summary_branch3 = np.array(summary[summary[:,1]==3,:])
+    
+    #ReBeta = np.divide(2.*np.pi,period_s)
+    #ImBeta = np.divide(0.5,lspp_s)
+    
+    # Then we could plot them in the right order
+    thickness, Te, epsilonFilm, branch, root_number, period, lspp = SplitSummaryTable(summary)
+    
+    thickness0, Te0, epsilonFilm0, branch0, root_number0, period0, lspp0 = SplitSummaryTable(summary_branch0)
+    thickness1, Te1, epsilonFilm1, branch1, root_number1, period1, lspp1 = SplitSummaryTable(summary_branch1)
+    thickness2, Te2, epsilonFilm2, branch2, root_number2, period2, lspp2 = SplitSummaryTable(summary_branch2)
+    thickness3, Te3, epsilonFilm3, branch3, root_number3, period3, lspp3 = SplitSummaryTable(summary_branch3)
+    
+    summary_export         = np.array([np.real(Te) , np.real(epsilonFilm) , np.imag(epsilonFilm) , np.real(branch) , np.real(root_number) , np.real(period) ])
+    summary_branch0_export = np.array([np.real(Te0), np.real(epsilonFilm0), np.imag(epsilonFilm0), np.real(branch0), np.real(root_number0), np.real(period0)])
+    summary_branch1_export = np.array([np.real(Te1), np.real(epsilonFilm1), np.imag(epsilonFilm1), np.real(branch1), np.real(root_number1), np.real(period1)])
+    summary_branch2_export = np.array([np.real(Te2), np.real(epsilonFilm2), np.imag(epsilonFilm2), np.real(branch2), np.real(root_number2), np.real(period2)])
+    summary_branch3_export = np.array([np.real(Te3), np.real(epsilonFilm3), np.imag(epsilonFilm3), np.real(branch3), np.real(root_number3), np.real(period3)])
+    
+    summary_export_t         = np.transpose(summary_export)
+    summary_branch0_export_t = np.transpose(summary_branch0_export)
+    summary_branch1_export_t = np.transpose(summary_branch1_export)
+    summary_branch2_export_t = np.transpose(summary_branch2_export)
+    summary_branch3_export_t = np.transpose(summary_branch3_export)
+
+    # NOTE: I would like to get clean numbers, not the content of summary_branch0
+    # Is there a problem with root_number0 for example? 
+    print("SPP branches are ready. Exporting to CSV...")
+    filename = "Dostovalov-SPPmodes-Cr-CrO2"
+    np.savetxt(filename+".csv", summary_export_t)
+    np.savetxt(filename+"-branch0"+".csv", summary_branch0_export_t)
+    np.savetxt(filename+"-branch1"+".csv", summary_branch1_export_t)
+    np.savetxt(filename+"-branch2"+".csv", summary_branch2_export_t)
+    np.savetxt(filename+"-branch3"+".csv", summary_branch3_export_t)
+    
+    plt.figure()
+    ax1 = plt.subplot(plotA)
+    #plt.title(r'Film thickness $t=$'+str(round(np.real(thickness[0])*1e9))+' nm')
+    #plt.xlabel(r'Fraction of Cr oxide  (perc.)')
+    plt.ylabel(r'SPP period $\Lambda$ (nm)') 
+    #ax1y = ax1.twiny()
+    #plot1y1 = ax1.errorbar(np.multiply(CrFraction_Fitted,100), 1e9*ExperimentalData_LSFL, yerr=1e9*ExperimentalData_LSFL_error, fmt='ro', label=r'Period LSFL')
+    #plot1y2 = ax1.errorbar(np.multiply(CrFraction_Fitted,100), 1e9*ExperimentalData_HSFL, yerr=1e9*ExperimentalData_HSFL_error, fmt='r^', label=r'Period HSFL')
+    #ax1.set_yscale('log')
+    plt.ylim((0.,1.1e9*wavelength))
+    #ax12 = ax1.twinx()
+    #plt.ylabel(r'SPP mean free path $L_{SPP}$ (m)')
+    #plt.ylabel(r'Re($\varepsilon$), Im($\varepsilon$)')
+    
+    plot110, = ax1.semilogx(Te0, np.multiply(1e9,period0), 'r+', label=r'SPP period $\Lambda$, branch (-,-)')
+    plot111, = ax1.semilogx(Te1, np.multiply(1e9,period1), 'k+', label=r'SPP period $\Lambda$, branch (-,+)')
+    plot112, = ax1.semilogx(Te2, np.multiply(1e9,period2), 'b+', label=r'SPP period $\Lambda$, branch (+,-)')
+    plot113, = ax1.semilogx(Te3, np.multiply(1e9,period3), 'go', label=r'SPP period $\Lambda$, branch ( +,+)')
+    
+    plot12, = ax1.semilogx(Te, np.multiply(1e9,wavelength*np.ones(np.shape(Te))), 'k-', linewidth=0.5, label=r'Laser wavelength $\lambda$')
+    
+    #plot14, = ax12.plot(Te_s, np.real(epsilonFilm_s), 'b+', label=r'Re($\varepsilon$)')
+    #plot15, = ax12.plot(Te_s, np.imag(epsilonFilm_s), 'b^', label=r'Im($\varepsilon$)')
+    
+    #ax1.yaxis.label.set_color(plot110.get_color()) #colorizes the label
+    #ax1.spines["left"].set_edgecolor(plot110.get_color()) #colorizes the axis
+    #ax1.tick_params(axis='y', colors=plot110.get_color()) #colorizes the tics and numbers
+    plotComb1= [plot110, plot111, plot112, plot113, plot12]; 
+    
+    #ax12.yaxis.label.set_color(plot14.get_color()) #colorizes the label
+    #ax12.spines["right"].set_edgecolor(plot14.get_color()) #colorizes the axis
+    #ax12.tick_params(axis='y', colors=plot14.get_color()) #colorizes the tics and numbers
+    plt.tight_layout()
+    
+    #plot1   = [plot11, plot12, plot14, plot15]
+    #labels1 = [l.get_label() for l in plot1]
+    #ax1.legend(plot1, labels1, loc='best')
+    if(PlotLspp):
+        ax2 = plt.subplot(plotB)
+        plt.ylabel(r'$L_{SPP}$ decay length (m)')
+        ax2.set_xlabel(r'Te (K)')
+        #plot21, = ax2.semilogy(Te_s, lspp_s,   'r^', label=r'SPP decay length $L_{SPP}$')
+        plot21, = ax2.loglog(Te0, np.abs(lspp0),   'r^', label=r'SPP decay length $L_{SPP}$, --')
+        plot22, = ax2.loglog(Te1, np.abs(lspp1),   'k^', label=r'SPP decay length $L_{SPP}$, -+')
+        plot23, = ax2.loglog(Te2, np.abs(lspp2),   'b^', label=r'SPP decay length $L_{SPP}$, +-')
+        plot24, = ax2.loglog(Te3, np.abs(lspp3),   'g^', label=r'SPP decay length $L_{SPP}$, ++')
+        plot2   = [plot21, plot22, plot23, plot24] #, plot24]
+        plotComb2 = plot2
+        plt.tight_layout()
+        
+        #ax22 = ax2.twinx()
+    if(PlotEpsilons and not PlotLspp): #plot in plotB window, keep ax3 name. 
+        ax3 = plt.subplot(plotB)
+    elif(PlotEpsilons and PlotLspp):
+        ax3 = plt.subplot(plotC)
+    if(PlotEpsilons):
+        plt.ylabel(r'Re($\varepsilon$), Im($\varepsilon$)')
+        plot31, = ax3.semilogx(Te, np.real(epsilonFilm), 'b+', label=r'Re$(\varepsilon(T_e))$')
+        plot32, = ax3.semilogx(Te, np.imag(epsilonFilm), 'b^', label=r'Im$(\varepsilon(T_e))$')
+        plot33, = ax3.semilogx(Te, np.multiply(epsBK7, np.ones(np.shape(Te))), 'k-', label=r'$Re[\varepsilon$(BK7)] ')
+        plot3   = [plot31, plot32, plot33]
+        plotComb3 = plot3
+        plt.tight_layout()
+        
+        #ax2.yaxis.label.set_color(plot21.get_color()) #colorizes the label
+        #ax2.spines["left"].set_edgecolor(plot21.get_color()) #colorizes the axis
+        #ax2.tick_params(axis='y', colors=plot21.get_color()) #colorizes the tics and numbers
+        
+        #ax22.yaxis.label.set_color(plot22.get_color()) #colorizes the label
+        #ax22.spines["right"].set_edgecolor(plot22.get_color()) #colorizes the axis
+        #ax22.tick_params(axis='y', colors=plot22.get_color()) #colorizes the tics and numbers
+        #labels2 = [l.get_label() for l in plot2]
+        #ax2.legend(plot2, labels2, loc='best')
+        
+    if(PlotLspp and PlotEpsilons):
+        ax3.set_xlabel('Te (K)')
+        labelsComb2 = [l.get_label() for l in plotComb2]
+        labelsComb3 = [l.get_label() for l in plotComb3]
+        ax2.legend(plotComb2, labelsComb2, bbox_to_anchor=(1.04,1), loc="upper left", mode="expand")
+        ax3.legend(plotComb3, labelsComb3, bbox_to_anchor=(1.04,1), loc="upper left", mode="expand")
+    elif(PlotLspp and not PlotEpsilons):
+        ax2.set_xlabel('Te (K)')
+        labelsComb2 = [l.get_label() for l in plotComb2]
+        ax2.legend(plotComb2, labelsComb2, bbox_to_anchor=(1.04,1), loc="upper left", mode="expand")
+    elif(not PlotLspp and PlotEpsilons): #ax2 does not exist
+        ax3.set_xlabel('Te (K)')
+        labelsComb3 = [l.get_label() for l in plotComb3]
+        ax3.legend(plotComb3, labelsComb3, bbox_to_anchor=(1.04,1), loc="upper left", mode="expand")
+    else:
+        ax1.set_xlabel('Te (K)')
+    
+    labelsComb1 = [l.get_label() for l in plotComb1]
+    ax1.legend(plotComb1, labelsComb1, bbox_to_anchor=(1.04,1), loc="upper left", mode="expand")
+    
+    
+    #plt.xlim((0,100))
+    plt.tight_layout()
+    filename="Dostovalov-Cr-Thickness-"+str(1E9*thickness_max)+"nm-TemperaturePeriod"
+    plt.savefig(filename+".eps")
+    plt.savefig(filename+".png")
+    plt.show()
+#}}}
+
+    
 # Scenario proposed by Thibault: an oxide layer grows at the top of the Cr sample, reducing progressively the periodicity by lambda/n. 
 # This function can also be used to generate simple results for verification
 def Burke_SymmetricModes(thickness_size): 
@@ -1261,7 +1531,7 @@ def RepeatLisunovMixtureOfOxides(): #{{{
 #R = BiLayerReflectivity(epsAir, epsCrCr2O3_list, epsBK7, t_list) #dimension is good for a HeatMap picture
 
 ## Validation cases in Python. 
-Fraction_size = 60 #number of samples
+Fraction_size = 100 #number of samples
 
 thickness_size = 60 #Fraction_size
 #Burke_SymmetricModes(thickness_size)
@@ -1272,19 +1542,22 @@ thickness_size = 60 #Fraction_size
 
 #RepeatLisunovMixtureOfOxides()
 
-#def PreparePublicationFigure():
-## Takes ~ 30 min run
-## Preparing SPP period using an external file
-#CrCrXOY_Lisunov  = np.loadtxt("Dostovalov-Cr/Cr-Cr2O3-CrO2/Sergei_Lisunov/OptProperties_Cr_with_oxides.csv", skiprows=2)
-CrCrXOY_Lisunov  = np.loadtxt("Dostovalov-Cr/Cr-Cr2O3-CrO2/Sergei_Lisunov/OptProperties_Cr_with_oxides_corrected.csv", skiprows=0)
-limiter = 2 #limit the number of cells to get, then we can update the plot without recomputing the whole thing.
-CrCrXOY_fraction   = CrCrXOY_Lisunov[:,0]
-epsR_CrCrXOY_L     = CrCrXOY_Lisunov[:,1]
-epsC_CrCrXOY_L     = CrCrXOY_Lisunov[:,2]
-eps_CrCrXOY_L = np.add(epsR_CrCrXOY_L, np.multiply(1.j, epsC_CrCrXOY_L))
-NumberOfSuperImposedPlots=1
-Every = 20*NumberOfSuperImposedPlots
-Shift = int(0*Every/NumberOfSuperImposedPlots) #enable to plot shifted plots to avoid superimposition
-ScenarioOfCrOxideMixture_ext(eps_CrCrXOY_L[Shift::Every], epsAir, epsBK7, CrCrXOY_fraction[Shift::Every], 'Cr_compounds_oxide', 'Air', 'BK7')
+def PreparePublicationFigure_OxideFraction():
+    ## Takes ~ 30 min run
+    ## Preparing SPP period using an external file
+    #CrCrXOY_Lisunov  = np.loadtxt("Dostovalov-Cr/Cr-Cr2O3-CrO2/Sergei_Lisunov/OptProperties_Cr_with_oxides.csv", skiprows=2)
+    CrCrXOY_Lisunov  = np.loadtxt("Dostovalov-Cr/Cr-Cr2O3-CrO2/Sergei_Lisunov/OptProperties_Cr_with_oxides_corrected.csv", skiprows=0)
+    limiter = 2 #limit the number of cells to get, then we can update the plot without recomputing the whole thing.
+    CrCrXOY_fraction   = CrCrXOY_Lisunov[:,0]
+    epsR_CrCrXOY_L     = CrCrXOY_Lisunov[:,1]
+    epsC_CrCrXOY_L     = CrCrXOY_Lisunov[:,2]
+    eps_CrCrXOY_L = np.add(epsR_CrCrXOY_L, np.multiply(1.j, epsC_CrCrXOY_L))
+    NumberOfSuperImposedPlots=1
+    Every = 20*NumberOfSuperImposedPlots
+    Shift = int(0*Every/NumberOfSuperImposedPlots) #enable to plot shifted plots to avoid superimposition
+    ScenarioOfCrOxideMixture_ext(eps_CrCrXOY_L[Shift::Every], epsAir, epsBK7, CrCrXOY_fraction[Shift::Every], 'Cr_compounds_oxide', 'Air', 'BK7')
 
-#PreparePublicationFigure()
+#PreparePublicationFigure_OxideFraction()
+#ScenarioOfCrOxideMixture_ext(eps_CrCrXOY_L[Shift::Every], epsAir, epsBK7, CrCrXOY_fraction[Shift::Every], 'Cr_compounds_oxide', 'Air', 'BK7')
+Te_max = 1E8
+PeriodsAsFunctionOfTemperature(epsTi, epsBK7, epsAir, Fraction_size, 'Cr', 'BK7', True, False, True, Te_max)

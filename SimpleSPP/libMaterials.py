@@ -20,6 +20,9 @@
 
 import numpy as np
 import cmath
+from scipy.constants import Boltzmann
+k_b     = Boltzmann
+
 from libLaser import *
 
 # OPTICAL FUNCTIONS
@@ -36,6 +39,36 @@ def Drude(wavelength, ne, epsilon, nu, meff=1.0):#{{{
   omegap2=ne * e**2 / (m_e * meff * epsilon_0)
   omega=2.0*pi*c/wavelength
   return epsilon - omegap2/(omega*omega) * 1e0/(1e0+1e0j*nu/omega)
+#}}}
+
+## Provides a collision frequency estimatead from electron (Te) and lattice (Ti) temperature for Cr.
+# Model was taken from Sci. Rep. 7, 8485 (2017)
+def CollisionFrequencyModelLevy(Te, Ti = 300):
+    AtomicDensity = 5.7E28
+    A = 2.2E6; B = 3.2E13 #NOTE: parameters for Ti
+    nu_e    = A*Te**2 + B*Ti
+    E_Fermi = 8.84*e #NOTE: parameter for Ti
+    v_Fermi = np.sqrt(2. * E_Fermi / m_e) #just converted Fermi energy to velocity
+    nu_c    = (4.*np.pi*AtomicDensity / 3.)**(1./3.)*np.sqrt(v_Fermi ** 2 + k_b * Te / m_e)
+    nu_eff  = np.min([nu_e, nu_c])
+    return nu_eff
+
+## Return the value of dielectric function based on metallic Drude model
+# Input:
+# @param wavelength (m) (float)
+# @param Te (K) (float)
+# @param epsilon (complex): dielectric permittivity under wavelength, without 
+# excitation
+# Output: complex-valued dielectric permittivity
+def Drude_metal(wavelength, epsilon, Te):#{{{
+  Header="[libMaterials] Drude_metal: "
+  nu = CollisionFrequencyModelLevy(Te)
+  omega=2.0*pi*c/wavelength
+  #omegap2 = omega**2 * (1.-epsilon.real+epsilon.imag**2/(1.-epsilon.real)) #expression from Sci. Rep. #Valid
+  omegap2 = omega**2 * (1.-2.*epsilon.real+epsilon.real**2+epsilon.imag**2)/(1.-epsilon.real)
+  #print(Header+str(np.sqrt(omegap2)))
+  #print(Header+str(nu))
+  return 1. - omegap2/(omega*omega) * 1e0/(1e0+1e0j*nu/omega)
 #}}}
 
 ## Fresnel reflectivity formula at single interface
@@ -1003,6 +1036,7 @@ def LorentzLorenz2(eps1, eps2, fraction):
 def LorentzLorenz3(eps1, eps2, eps3, fraction1, fraction2):
   return MaxwellGarnett3(eps1, esp2, eps3, fraction1, fraction2)
 
+Drude_metal = np.vectorize(Drude_metal)
 EpsilonToIndex = np.vectorize(EpsilonToIndex)
 MaxwellGarnett2 = np.vectorize(MaxwellGarnett2)
 MaxwellGarnett3 = np.vectorize(MaxwellGarnett3)

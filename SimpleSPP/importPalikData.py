@@ -545,10 +545,10 @@ try: #TODO: should we select by author? Or by units?
     print "Material: "+filename+"."
     print "Wavelength = "+str(wavelength)+" nm"
     epsilon = importFromTable(wavelength*1e-9, folder, filename, plotting) #Careful: misleading neames. These data have been stored as dielectric permittivities, but this function inteprets it as nk. 
-    nk = np.sqrt(epsilon)
-    print nk
+    #epsilon = nk**2
+    #print nk
     print "You can add the following directly inside 'MaterialOpticalDatabaseForPlasmonics.csv'"
-    print filename+"\t"+"?"+"\t"+str(int(wavelength))+"\t"+str(nk.real)+"\t"+str(nk.imag)+"\t?\t?\t?\t?\t?"
+    print filename+"\t"+"?"+"\t"+str(int(wavelength))+"\t"+str(epsilon.real)+"\t"+str(epsilon.imag)+"\t?\t?\t?\t?\t?"
   elif(source == "Gori"):
     # We plot Gori data along with Bond data. 
     # Gori is meshed on (energy (eV), epsilon)

@@ -45,8 +45,8 @@ wavelength = 1026e-9 #355e-9 #1030E-9 #1026
 epsCr2O3   = 3.82738158014083 + 0.0483802637311967j  #Al-Kuhaili, M. & Durrani, S. Optical properties of chromium oxide thin films deposited by electron-beam evaporation Optical Materials, 2007, 29, 709-713
 #epsCr2O3    = 4.9713+0.1784j  #1 um [JDT Kruschwitz et al, Appl. Opt. 1997]
 epsCr      = -0.6721223+24.8657476j
-epsCrO2    = 1.3587463082734004+9.00595525243578j #Chase, L. L. Optical properties of Cr O 2 and Mo O 2 from 0.1 to 6 eV Physical Review B, 1974, 10, 2226-2231 (E || C mode. C: axis for extraordinary mode). 
-epsCrO2_e = epsCrO2 #(E || c)
+epsCrO2_e    = 1.3587463082734004+9.00595525243578j #Chase, L. L. Optical properties of Cr O 2 and Mo O 2 from 0.1 to 6 eV Physical Review B, 1974, 10, 2226-2231 (E || C mode. C: axis for extraordinary mode). 
+#epsCrO2_e = epsCrO2 #(E || c)
 epsCrO2_o  = 0.5784455474251002+6.477144040000001j #Chase, L. L. Optical properties of Cr O 2 and Mo O 2 from 0.1 to 6 eV Physical Review B, 1974, 10, 2226-2231 (E perpendicular to C).
 
 epsTi = -4.289599704142011+27.217715606508875j
@@ -129,10 +129,10 @@ def PeriodsAsFunctionOfTemperature(epsSample, epsSubstrate=1., epsEnvironment=1.
     numberofroots = 10 #per branch. 10 exceeds the final number of roots per branch
     
     Te_min = 300e0
-    Te_max = 1E6
+    #Te_max = 1E6
 
     thickness_size = 1
-    thickness_min  = 28e-9 #28e-9
+    thickness_min  = 50e-9 #28e-9 #28e-9
     thickness_max  = thickness_min
     
     if(PlotLspp and PlotEpsilons):
@@ -145,7 +145,8 @@ def PeriodsAsFunctionOfTemperature(epsSample, epsSubstrate=1., epsEnvironment=1.
     ## Running 
     logTe = np.linspace(np.log10(Te_min), np.log10(Te_max), Te_size)
     Te = np.power(10, logTe)
-    epsCr_list = Drude_metal(wavelength, epsSample, Te)
+    epsCr_list = Drude_Ti(wavelength, epsSample, Te) #Ti opt data
+    #epsCr_list = Drude_Cr(wavelength, epsSample, Te)
     # MaxwellGarnett2(epsSample, epsOxide, Te) #Te refers to the electron temperature Te here! 
     #NOTE: epsOxide here is Cr oxide, not environment. 
     print(Header, "# Info: size of the Te matrix: ", Te_size)
@@ -1201,7 +1202,7 @@ def ScenarioOfCrOxideMixture_ext(epsSample, epsEnvironment=1., epsSubstrate=1., 
     #fraction_max = 1.
 
     thickness_size = 1
-    thickness_min  = 28e-9 #70e-9 # 28e-9
+    thickness_min  = 100e-9 #35e-9 #50e-9 #50e-9 #70e-9 # 28e-9
     thickness_max  = thickness_min
     
     #PlotLspp = False
@@ -1468,15 +1469,15 @@ def RepeatLisunovMixtureOfOxides(): #{{{
     # (CrO2_o = 2, CrO2_e = 1)
     # Means that Fraction(CrO2_o) = 2/3, Fraction(CrO2_e) = 1/3. 
     epsCrO2_2o1e = MaxwellGarnett2(epsCrO2_o, epsCrO2_e, 1./3.) #This does not strongly affect the optical index of CrO2. 
-
+    print("Mixing CrO2 (2o+e): ", epsCrO2_2o1e)
     # Now constructing the mixed Maxwell Garnett2 data for Cr2O3+CrO2. 
     # Careful! epsCr2O3 ratio is not 0.35. 
     # ratio(Cr2O3)/ratio(CrO2) = 0.35, and ratio(Cr2O3)+ratio(CrO2) = 1. 
     # Therefore, ratio(Cr2O3) = 0.25925 and ratio(CrO2) = 0.74074. 
-    #/!\ Optics Express from Dostovalov 2018 shows we have MORE CrO2 than Cr2O3. Someone inverted compared to Opex paper from Dostovalov. 
+    #/!\ Optics Express from Dostovalov 2018 shows we have MORE CrO2 than Cr2O3. 
     epsCrXOY = MaxwellGarnett2(epsCrO2_2o1e, epsCr2O3, 1.-0.25925) #fraction here refers to medium2
     #epsCrXOY = MaxwellGarnett2(epsCrO2_2o1e, epsCr2O3, 1.-0.35) #fraction here refers to medium2
-
+    print("Mixing CrO2 (mixed) + Cr2O3 gives", epsCrXOY)
     fractionOxide    = np.linspace(0, 1, Fraction_size) #0: 100% Cr, 1: 100% oxide
     CrMixedWithCrXOY = MaxwellGarnett2(epsCr, epsCrXOY, fractionOxide)
 
@@ -1489,8 +1490,12 @@ def RepeatLisunovMixtureOfOxides(): #{{{
     eps_CrCrXOY_L = np.add(epsR_CrCrXOY_L, np.multiply(1.j, epsC_CrCrXOY_L))
 
     plt.figure()
-    plt.plot(100*fractionOxide, CrMixedWithCrXOY.real, 'r-', label='Method 1, Re(eps)')
-    plt.plot(100*fractionOxide, CrMixedWithCrXOY.imag, 'r--', label='Method 1, Im(eps)')
+    plt.plot(100*fractionOxide, np.ones(np.shape(fractionOxide))*epsCrO2_2o1e.real, 'k-', label=r'Cr$_2$O$_3$ (2o+e), Re$(\varepsilon)$')
+    plt.plot(100*fractionOxide, np.ones(np.shape(fractionOxide))*epsCrO2_2o1e.imag, 'k--', label=r'Cr$_2$O$_3$ (2o+e), Im$(\varepsilon)$')
+    plt.plot(100*fractionOxide, np.ones(np.shape(fractionOxide))*epsCrXOY.real, 'g-', label=r'Cr$_2$O$_3$+CrO$_2$, Re$(\varepsilon)$')
+    plt.plot(100*fractionOxide, np.ones(np.shape(fractionOxide))*epsCrXOY.imag, 'g--', label=r'Cr$_2$O$_3$+CrO$_2$, Im$(\varepsilon)$')
+    plt.plot(100*fractionOxide, CrMixedWithCrXOY.real, 'r-', label=r'Cr+Cr$_x$O$_y$, Re$(\varepsilon)$')
+    plt.plot(100*fractionOxide, CrMixedWithCrXOY.imag, 'r--', label=r'Cr+Cr$_x$O$_y$, Im$(\varepsilon)$')
     plt.plot(100*CrCrXOY_fraction, epsR_CrCrXOY_L, 'b+', label='Re(eps), Sergei data using inverted o/e modes')
     plt.plot(100*CrCrXOY_fraction, epsC_CrCrXOY_L, 'b.', label='Im(eps), Sergei data using inverted o/e modes')
     plt.xlabel('Fraction of oxide (%)')
@@ -1500,7 +1505,7 @@ def RepeatLisunovMixtureOfOxides(): #{{{
 
     # This does not lead to repeat data from Sergei. 
     # Email mentioned they have used a mixture of (o) mode and (e) mode. 
-    # Impossible to find his results as well. I conclude that it originates from lack of precision in sampling CrO2(o) and CrO2(e) in the paper of Chase. Error should come from Sergey as I did carefully dit it with Digitizer. He might have done it with a ruler. 
+    # Impossible to find his results as well. I conclude that it originates from lack of precision in sampling CrO2(o) and CrO2(e) in the paper of Chase. Error should come from Sergey as I did carefully dit it with Digitizer. He might have done it with a ruler, maybe?  
 
     ### Method 2: using MaxwellGarnett3
     #ratio_Cr2O3_CrO2 = 0.35
@@ -1531,7 +1536,7 @@ def RepeatLisunovMixtureOfOxides(): #{{{
 #R = BiLayerReflectivity(epsAir, epsCrCr2O3_list, epsBK7, t_list) #dimension is good for a HeatMap picture
 
 ## Validation cases in Python. 
-Fraction_size = 100 #number of samples
+Fraction_size = 30 #number of samples
 
 thickness_size = 60 #Fraction_size
 #Burke_SymmetricModes(thickness_size)
@@ -1559,5 +1564,5 @@ def PreparePublicationFigure_OxideFraction():
 
 #PreparePublicationFigure_OxideFraction()
 #ScenarioOfCrOxideMixture_ext(eps_CrCrXOY_L[Shift::Every], epsAir, epsBK7, CrCrXOY_fraction[Shift::Every], 'Cr_compounds_oxide', 'Air', 'BK7')
-Te_max = 1E8
+Te_max = 1E10
 PeriodsAsFunctionOfTemperature(epsTi, epsBK7, epsAir, Fraction_size, 'Cr', 'BK7', True, False, True, Te_max)

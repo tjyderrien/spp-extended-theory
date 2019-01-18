@@ -30,25 +30,43 @@ Header="[plotLorentzLorenz] "
 wavelength = 1026e-9
 epsCr2O3   = 3.8273816+ 0.0483803j
 epsCr      = -0.6721223+24.8657476j
+epsAg = -48.121511807025215 + 3.1028275101335927
+epsAu = -49.150229501143876 + 3.7710634965016174j
 
-eps1 = epsCr
-eps2 = epsCr2O3
+eps1 = epsAg
+eps2 = epsAu #epsCr
 
-MaterialFile1 = "Cr"
-MaterialFile2 = r"Cr$_2$O$_3$"
+MaterialFile1 = "Ag"
+#MaterialFile2 = r"Cr$_2$O$_3$"
+MaterialFile2 = "Au"
 
 fraction = np.arange(0., 1., 1e-2)
 EffectivePermittivity = MaxwellGarnett2(eps1, eps2, 1.-fraction)
+Reflectivity = reflectivity(1., EffectivePermittivity, 0E0, 'S')
+
 print "Plotting Maxwell-Garnett 2-material mixing."
 plt.figure()
 plt.title('Mixture: '+MaterialFile1+'/'+MaterialFile2+r" ($\lambda=$"+str(int(1E9*wavelength))+" nm)")
-plt.xlabel(r'Fraction')
-plt.plot(fraction*100., EffectivePermittivity.real, 'b-', label=r'$Re(\varepsilon_{eff})$')
-plt.plot(fraction*100., EffectivePermittivity.imag, 'r-', label=r'$Im(\varepsilon_{eff})$')
-plt.legend(loc=1)
+
+ax1 = plt.subplot(111)
+          
+ax1.set_xlabel(r'Fraction of '+MaterialFile1+' ($\%$)')
+plot11, = ax1.plot(fraction*100., EffectivePermittivity.real, 'b-', label=r'Re$(\varepsilon_{eff})$')
+plot12, = ax1.plot(fraction*100., EffectivePermittivity.imag, 'b--', label=r'Im$(\varepsilon_{eff})$')
+
+ax12 = ax1.twinx()
+plot2, = ax12.plot(fraction*100., Reflectivity, 'k-', label=r'Re$(\varepsilon_{eff})$')
+
+plotComb1 = [plot11, plot12, plot2]
+
+labelsComb1 = [l.get_label() for l in plotComb1]
+ax1.legend(plotComb1, labelsComb1, loc='best')
+
+#plt.legend(loc='best')
 #plt.xlim((200.,2000.))
 filename=MaterialFile1+"-"+MaterialFile2+'-wavelength'+str(int(wavelength))
 plt.grid()
+plt.tight_layout()
 plt.savefig(filename+'.eps')
 plt.savefig(filename+'.png')
 plt.show()

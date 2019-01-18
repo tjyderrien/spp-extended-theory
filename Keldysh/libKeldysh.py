@@ -232,7 +232,7 @@ def BristowLaw(wavelength, Egap):#{{{
 ## Generate Keldysh tables for interfacing with codes
 # Input: 
 # @param Egap: scalar (J)
-# @param meff: scalar (no unit)
+# @param meff: scalar (no unit, electron mass is accounted directly in the routine)
 # @param wavelength: laser wavelength (scalar, meters)
 # @param PeakField: laser field amplitude (scalar, V/m)
 # @param order: integration order for Keldysh model (integer, no unit)
@@ -361,19 +361,24 @@ def generateWpiTables(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, tau
 # @param meff (adim): effective mass of the conduction band
 # @param wavelength (meters): photon wavelength of the excitation
 # @param Efield (V/m): electric field envelope of the pulse (scalar|vector)
-def KeldyshTunnelingLimit(Egap, meff, wavelength, Efield): #{{{
+def KeldyshTunnelingLimit(Egap, meff, wavelength, Efield, EnableStarkEffect=False): #{{{
     
     gamma = gammaKeldysh(Egap, meff, Efield, wavelength) #valid for scalar data
+    
     k1 = Keldysh1(gamma); k2 = Keldysh2(gamma) #valid
-    EgapEff0 = EffectiveGap(Egap, k1, k2)
+    
+    EgapEff = EffectiveGap(Egap, k1, k2)
     omegaLaser=2.*pi*c/wavelength
     
     #EgapEff = np.clip(EgapEff0, 2*Egap, 10*Egap)
-    EgapEff = EgapEff0 #no filter
-    # Direct from Keldysh paper
+    if(not EnableStarkEffect):
+        EgapEff = Egap #For Keldysh1965 and Kaiser2000, this line MUST NOT be commented. 
+    
+    # Direct from Keldysh paper #BUG: overflow in the exp() !!!
     w_tunnel = 2./9./np.pi**2 * EgapEff / hbar * (m_e*meff*EgapEff/hbar**2)**1.5 * (e*hbar*Efield/(m_e*meff)**0.5/EgapEff**1.5)**2.5  *np.exp(-0.5*np.pi*(m_e*meff)**0.5*EgapEff**1.5/e/hbar/Efield * (1.-1./8.*(m_e*meff)*omegaLaser**2*EgapEff/e**2/Efield**2))
     
     # Taken from Kaiser Phys Rev B, 2000 [not completely validated - gives same result as Keldysh, but still could not obtain Fig. 2 of Kaiser 2000.]
+    
     #w_tunnel = 2./9./np.pi**2 * EgapEff / hbar * (m_e*meff*EgapEff/hbar**2)**1.5 * (hbar*omegaLaser/EgapEff/gamma)**2.5 * np.exp(-0.5*np.pi*EgapEff*gamma/hbar/omegaLaser * (1.-1./8.*gamma**2))
     
     return w_tunnel

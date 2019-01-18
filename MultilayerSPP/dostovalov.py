@@ -1530,23 +1530,6 @@ def RepeatLisunovMixtureOfOxides(): #{{{
     ## I believe the right approach would be to use MaxwellGarnett4(Cr, Cr2O3, CrO2_o, CrO2_e). 
 #}}}
 
-# =====================
-#ScenarioOfOxidePrecipitation()
-# ** Info: computing 3-layer reflectivity..."
-#R = BiLayerReflectivity(epsAir, epsCrCr2O3_list, epsBK7, t_list) #dimension is good for a HeatMap picture
-
-## Validation cases in Python. 
-Fraction_size = 30 #number of samples
-
-thickness_size = 60 #Fraction_size
-#Burke_SymmetricModes(thickness_size)
-
-#ScenarioOfCrOxideMixture(epsCr, epsCr2O3, epsBK7, epsAir, Fraction_size, 'Cr', 'Cr2O3')
-#ScenarioOfCrOxideMixture(epsCr, epsCrO2, epsBK7, epsAir, Fraction_size,  'Cr', 'CrO2')
-#ScenarioOfCrOxideMixture3(epsCr, epsCr2O3, epsCrO2, epsBK7, Fraction_size, 'Cr', 'Cr2O3', 'CrO2')
-
-#RepeatLisunovMixtureOfOxides()
-
 def PreparePublicationFigure_OxideFraction():
     ## Takes ~ 30 min run
     ## Preparing SPP period using an external file
@@ -1562,7 +1545,23 @@ def PreparePublicationFigure_OxideFraction():
     Shift = int(0*Every/NumberOfSuperImposedPlots) #enable to plot shifted plots to avoid superimposition
     ScenarioOfCrOxideMixture_ext(eps_CrCrXOY_L[Shift::Every], epsAir, epsBK7, CrCrXOY_fraction[Shift::Every], 'Cr_compounds_oxide', 'Air', 'BK7')
 
+# =====================
+#ScenarioOfOxidePrecipitation()
+# ** Info: computing 3-layer reflectivity..."
+#R = BiLayerReflectivity(epsAir, epsCrCr2O3_list, epsBK7, t_list) #dimension is good for a HeatMap picture
+
+## Validation cases in Python. 
+Fraction_size = 30 #number of samples
+thickness_size = 60 #Fraction_size
+#Burke_SymmetricModes(thickness_size)
+
+#ScenarioOfCrOxideMixture(epsCr, epsCr2O3, epsBK7, epsAir, Fraction_size, 'Cr', 'Cr2O3')
+#ScenarioOfCrOxideMixture(epsCr, epsCrO2, epsBK7, epsAir, Fraction_size,  'Cr', 'CrO2')
+#ScenarioOfCrOxideMixture3(epsCr, epsCr2O3, epsCrO2, epsBK7, Fraction_size, 'Cr', 'Cr2O3', 'CrO2')
+
+RepeatLisunovMixtureOfOxides()
+
 #PreparePublicationFigure_OxideFraction()
 #ScenarioOfCrOxideMixture_ext(eps_CrCrXOY_L[Shift::Every], epsAir, epsBK7, CrCrXOY_fraction[Shift::Every], 'Cr_compounds_oxide', 'Air', 'BK7')
 Te_max = 1E10
-PeriodsAsFunctionOfTemperature(epsTi, epsBK7, epsAir, Fraction_size, 'Cr', 'BK7', True, False, True, Te_max)
+#PeriodsAsFunctionOfTemperature(epsTi, epsBK7, epsAir, Fraction_size, 'Cr', 'BK7', True, False, True, Te_max)

@@ -43,7 +43,19 @@ def Drude(wavelength, ne, epsilon, nu, meff=1.0):#{{{
 
 ## Provides a collision frequency estimatead from electron (Te) and lattice (Ti) temperature for Cr.
 # Model was taken from Sci. Rep. 7, 8485 (2017)
-def CollisionFrequencyModelLevy(Te, Ti = 300):
+def CollisionFrequencyModelLevy_Cr(Te, Ti = 300):
+    #AtomicDensity = 5.7E28
+    A = 4.36E6; B = 9.10E13
+    nu_e    = A*Te**2 + B*Ti
+    E_Fermi = 8.*e
+    v_Fermi = np.sqrt(2. * E_Fermi / m_e) #just converted Fermi energy to velocity
+    #nu_c    = (4.*np.pi*AtomicDensity / 3.)**(1./3.)*np.sqrt(v_Fermi ** 2 + k_b * Te / m_e)
+    nu_eff  = nu_e #np.min([nu_e, nu_c])
+    return nu_eff
+
+## Provides a collision frequency estimatead from electron (Te) and lattice (Ti) temperature for Cr.
+# Model was taken from Sci. Rep. 7, 8485 (2017)
+def CollisionFrequencyModelLevy_Ti(Te, Ti = 300):
     AtomicDensity = 5.7E28
     A = 2.2E6; B = 3.2E13 #NOTE: parameters for Ti
     nu_e    = A*Te**2 + B*Ti
@@ -60,9 +72,27 @@ def CollisionFrequencyModelLevy(Te, Ti = 300):
 # @param epsilon (complex): dielectric permittivity under wavelength, without 
 # excitation
 # Output: complex-valued dielectric permittivity
-def Drude_metal(wavelength, epsilon, Te):#{{{
+def Drude_Cr(wavelength, epsilon, Te):#{{{
   Header="[libMaterials] Drude_metal: "
-  nu = CollisionFrequencyModelLevy(Te)
+  nu = CollisionFrequencyModelLevy_Cr(Te)
+  omega=2.0*pi*c/wavelength
+  #omegap2 = omega**2 * (1.-epsilon.real+epsilon.imag**2/(1.-epsilon.real)) #expression from Sci. Rep. #Valid
+  omegap2 = omega**2 * (1.-2.*epsilon.real+epsilon.real**2+epsilon.imag**2)/(1.-epsilon.real)
+  #print(Header+str(np.sqrt(omegap2)))
+  #print(Header+str(nu))
+  return 1. - omegap2/(omega*omega) * 1e0/(1e0+1e0j*nu/omega)
+#}}}
+
+## Return the value of dielectric function based on metallic Drude model
+# Input:
+# @param wavelength (m) (float)
+# @param Te (K) (float)
+# @param epsilon (complex): dielectric permittivity under wavelength, without 
+# excitation
+# Output: complex-valued dielectric permittivity
+def Drude_Ti(wavelength, epsilon, Te):#{{{
+  Header="[libMaterials] Drude_metal: "
+  nu = CollisionFrequencyModelLevy_Ti(Te)
   omega=2.0*pi*c/wavelength
   #omegap2 = omega**2 * (1.-epsilon.real+epsilon.imag**2/(1.-epsilon.real)) #expression from Sci. Rep. #Valid
   omegap2 = omega**2 * (1.-2.*epsilon.real+epsilon.real**2+epsilon.imag**2)/(1.-epsilon.real)
@@ -1036,7 +1066,8 @@ def LorentzLorenz2(eps1, eps2, fraction):
 def LorentzLorenz3(eps1, eps2, eps3, fraction1, fraction2):
   return MaxwellGarnett3(eps1, esp2, eps3, fraction1, fraction2)
 
-Drude_metal = np.vectorize(Drude_metal)
+Drude_Cr = np.vectorize(Drude_Cr)
+Drude_Ti = np.vectorize(Drude_Ti)
 EpsilonToIndex = np.vectorize(EpsilonToIndex)
 MaxwellGarnett2 = np.vectorize(MaxwellGarnett2)
 MaxwellGarnett3 = np.vectorize(MaxwellGarnett3)

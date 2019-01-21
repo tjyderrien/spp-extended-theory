@@ -1470,14 +1470,33 @@ def RepeatLisunovMixtureOfOxides(): #{{{
     # Means that Fraction(CrO2_o) = 2/3, Fraction(CrO2_e) = 1/3. 
     epsCrO2_2o1e = MaxwellGarnett2(epsCrO2_o, epsCrO2_e, 1./3.) #This does not strongly affect the optical index of CrO2. 
     print("Mixing CrO2 (2o+e): ", epsCrO2_2o1e)
+    
+    # NOTE: VALIDATED UNTIL HERE WITH COMPARISON TO SERGEI LISUNOV. 
+    
     # Now constructing the mixed Maxwell Garnett2 data for Cr2O3+CrO2. 
     # Careful! epsCr2O3 ratio is not 0.35. 
     # ratio(Cr2O3)/ratio(CrO2) = 0.35, and ratio(Cr2O3)+ratio(CrO2) = 1. 
     # Therefore, ratio(Cr2O3) = 0.25925 and ratio(CrO2) = 0.74074. 
     #/!\ Optics Express from Dostovalov 2018 shows we have MORE CrO2 than Cr2O3. 
-    epsCrXOY = MaxwellGarnett2(epsCrO2_2o1e, epsCr2O3, 1.-0.25925) #fraction here refers to medium2
-    #epsCrXOY = MaxwellGarnett2(epsCrO2_2o1e, epsCr2O3, 1.-0.35) #fraction here refers to medium2
+    
+    RatioCr2O3overCrO2 = 0.35 #0.35: slow scanning velocity. 0.65: high scanning velocity. 
+    # NOTE: if interpreting that Nadya took the ratio for slow velocity instead of fast velocity, it would be 0.65 instead. 
+    CrO2_fraction = 1./(1.+RatioCr2O3overCrO2) #analytical solution from ratio to fraction
+    #CrO2_fraction = 1.-RatioCr2O3overCrO2 #Could Sergei have done an error for beginners?
+    print("Ratio Cr2O3 / CrO2: ", RatioCr2O3overCrO2)
+    print("Equivalent fraction of CrO2: ", CrO2_fraction)
+    
+    #epsCrXOY = MaxwellGarnett2(epsCrO2_2o1e, epsCr2O3, 1.-CrO2_fraction) #NOTE: the good one
+    epsCrXOY = MaxwellGarnett2(epsCr2O3, epsCrO2_2o1e, CrO2_fraction) #formula is nicely reversible. One more proof of validity. 
+    
+    # WARNING: here Sergei and me have disagreement. He finds: e_CrO = 2.671 + i*2.54. 
+    # TODO: compare with Maple. 
+    
+    # 
+    #epsCrXOY = MaxwellGarnett2(epsCrO2_2o1e, epsCr2O3, 1.-0.25925) #fraction here refers to medium2
     print("Mixing CrO2 (mixed) + Cr2O3 gives", epsCrXOY)
+    print("sqrt(ans): ", np.sqrt(epsCrXOY))
+    print("ans**2: ", np.power(epsCrXOY,2))
     fractionOxide    = np.linspace(0, 1, Fraction_size) #0: 100% Cr, 1: 100% oxide
     CrMixedWithCrXOY = MaxwellGarnett2(epsCr, epsCrXOY, fractionOxide)
 

@@ -28,16 +28,49 @@ print "         It also contains validation cases of the present theory on Si an
 def SiliconLDAbandGap(): #{{{
   print "Defining Si material parameters..."
 
-  Egap = 3.4e0*e #2.56e0*e; #LDA band gap of Si: 2.58 eV. #1.12e0*e for indirect band gap; 
+  Egap = 2.56e0*e; #3.4e0*e #LDA band gap of Si: 2.58 eV. #1.12e0*e for indirect band gap; 
   meff=0.2226e0; #Effective mass of Si
   Ntotal=1.*5E28
-
-  wavelength = 3200e-9;
-  tau=2E-12; dt = 1E-15; CEP=0e0
-  PeakFluence = 1.0*1E4 #J/cm2 * 1E4 = J/m2
-  PeakField   = np.sqrt(2e0 * PeakFluence / (tau * c * epsilon_0))
+  order=200
+  
+  wavelength = 800e-9;
+  tau=7e-15; dt = 1E-17; CEP=0e0
+  #PeakFluence = 1.0*1E4 #J/cm2 * 1E4 = J/m2
+  #PeakField   = np.sqrt(2e0 * PeakFluence / (tau * c * epsilon_0))
+  PeakField = 5E9
   print Header+"Peak field ="+str(PeakField/1E9)+" V/nm"
+  
+  print "=== VALIDATION ON SIMPLE QUANTITIES ==="
+  
+  gamma = gammaKeldysh(Egap, meff, PeakField, wavelength)
+  print "Adiabadicity parameter:"+str(gamma)
+  
+  k1 = Keldysh1phi(gamma); k2 = Keldysh2theta(gamma)
+  print "Keldysh1 phi(gamma)   = "+str(k1)
+  print "Keldysh2 theta(gamma) = "+str(k2)
+  
+  EgapEff = EffectiveGap(Egap, k1, k2)
+  print "Effective gap: "+str(EgapEff/e)+" eV."
 
+  KeldyshFunctionResult = KeldyshFunction( k1, k2, EgapEff, order, wavelength )
+  print "KeldyshFunction_Keldysh: "+str(KeldyshFunctionResult)
+  
+  KeldyshFunctionResultG = KeldyshFunction_Gruzdev( k1, k2, EgapEff, order, wavelength )
+  print "KeldyshFunction_Gruzdev: "+str(KeldyshFunctionResult)
+  
+  KeldyshFunctionResultGulley = KeldyshFunction_Gulley(k1, k2, EgapEff, order, wavelength)
+  print "KeldyshFunction_Gulley: "+str(KeldyshFunctionResultGulley)
+  
+  wPI = IonizationRate(k1, k2, KeldyshFunctionResult, EgapEff, wavelength, meff)
+  
+  wPIgulley = IonizationRate(k1, k2, KeldyshFunctionResultGulley, EgapEff, wavelength, meff)
+  
+  wPIg = IonizationRate_Gruzdev(k1, k2, KeldyshFunctionResultG, EgapEff, wavelength, meff)
+  print "wPI(Keldysh)="+str(wPI)
+  print "wPI(Gruzdev)="+str(wPIg)
+  print "wPI(Gulley) ="+str(wPIgulley)
+
+  print "==== EXTRAPOLATION TO TEMPORAL ASPECTS ====="
   t0=0. #defines the instant 0.
   Delay = 0e-15 #delay between maxima of the pulses
   tmin=-2.*tau + t0; tmax=2.*tau + Delay + t0
@@ -102,19 +135,23 @@ def SiliconLDAbandGap(): #{{{
 ## Repeats the results obtained in Gulley, Opt. Eng. 51, 121805 (2012). 
 def SilicaGulley2012(): #{{{
   print "Defining SiO2 material parameters from [Gulley 2012]..."
-
+  numpoints=1000
+  
   Egap = 9e0*e; #band gap of SiO2
   meff = 1e0; #Effective mass of SiO2
-  Ntotal=10.*5E28; #valence band electron density #to avoid limitation
+  N_total=10.*5E28; #valence band electron density #to avoid limitation
 
   wavelength = 800e-9; wavelength2 = 800e-9
-  tau=10e-15; dt = 1E-17; CEP=0e0
-  PeakFluence = 1E19*10e-15 #setting by the peak intensity #0.01*1E4 #J/cm2 * 1E4 = J/m2
-  PeakField   = np.sqrt(2e0 * PeakFluence / (tau * c * epsilon_0))
-
+  tau=140e-15; dt = 1E-17; CEP=0e0
+  PeakIntensity_log = np.linspace(np.log10(1e11*1e4), np.log10(1e15*1e4), numpoints)
+  PeakIntensity = np.power(10., PeakIntensity_log)
+  PeakField = np.sqrt(2. * PeakIntensity / c / epsilon_0) #I = 0.5 c n0 eps0 E²
+  print Header+"Peak field (min, max): "+str(np.min(PeakField)/1E9)+" V/nm, "+str(np.max(PeakField/1E9))+" V/nm."
+  
+  
   t0=0. #defines the instant 0.
   Delay = 0. #delay between maxima of the pulses
-  tmin=-1.*tau + t0; tmax=1.*tau + Delay + t0
+  tmin=-4.*tau + t0; tmax=4.*tau + Delay + t0
 
   instants = np.arange(tmin, tmax, dt)
   #print "Time range: "+str(instants.min())+", "+str(instants.max())+"."
@@ -123,56 +160,58 @@ def SilicaGulley2012(): #{{{
   CEP2        = 0. #pi/3.
   #wavelength2 = wavelength
   
-  print Header+"** Test: building single pulse centered on 0..."
-  FieldEnvelope1, RealField1 = PulseSquaredSinTemporalShape(instants, tau, PeakField, wavelength, CEP, t0, 0.)
+  #print Header+"** Test: building single pulse centered on 0..."
+  #FieldEnvelope1, RealField1 = PulseSquaredSinTemporalShape(instants, tau, PeakField, wavelength, CEP, t0, 0.)
 
-  print Header+"** Test: We build a second pulse with a delay..."
-  FieldEnvelope2, RealField2 = PulseSquaredSinTemporalShape(instants, tau, PeakField2, wavelength2, CEP, t0, Delay)
+  #print Header+"** Test: We build a second pulse with a delay..."
+  #FieldEnvelope2, RealField2 = PulseSquaredSinTemporalShape(instants, tau, PeakField2, wavelength2, CEP, t0, Delay)
 
-  print Header+"** Test: building a bicolor double pulse"
+  #print Header+"** Test: building a bicolor double pulse"
 
-  FieldEnvelopeTot, RealFieldTot = PulseSquaredSinTemporalShapeDoublePulse(instants, tau, tau, PeakField, PeakField, wavelength, wavelength2, CEP, CEP2, t0, Delay)
+  #FieldEnvelopeTot, RealFieldTot = PulseSquaredSinTemporalShapeDoublePulse(instants, tau, tau, PeakField, PeakField, wavelength, wavelength2, CEP, CEP2, t0, Delay)
 
-  plt.plot(instants, RealField1.real, '-')
-  plt.plot(instants, FieldEnvelope1.real, '--')
-  plt.plot(instants, RealField2.real, '-')
-  plt.plot(instants, FieldEnvelope2.real, '--')
-  plt.plot(instants, RealFieldTot.real, '-')
-  plt.plot(instants, FieldEnvelopeTot.real, '--')
-  plt.xlabel('')
-  plt.savefig('PulseEnvelopes.eps')
-  plt.savefig('PulseEnvelopes.png')
-  #plt.show()
+  #plt.plot(instants, RealField1.real, '-')
+  #plt.plot(instants, FieldEnvelope1.real, '--')
+  #plt.plot(instants, RealField2.real, '-')
+  #plt.plot(instants, FieldEnvelope2.real, '--')
+  #plt.plot(instants, RealFieldTot.real, '-')
+  #plt.plot(instants, FieldEnvelopeTot.real, '--')
+  #plt.xlabel('')
+  #plt.savefig('PulseEnvelopes.eps')
+  #plt.savefig('PulseEnvelopes.png')
+  ##plt.show()
 
-  print Header+"** Info: PulseEnvelope.EPS and PNG were written in the current folder. "
+  #print Header+"** Info: PulseEnvelope.EPS and PNG were written in the current folder. "
 
   order = 100
   ShowPlot = True
 
-  print Header+"** Test 1: computing the W_PI values from self-coded and validated Gruzdev theory..."
-  timeKeldysh, N_Keldysh_SI, N_Gruzdev_SI = plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelope1.real, dt, order, ShowPlot, 0e0, Ntotal)
+  timeKeldysh, N_Keldysh_SI, N_Gruzdev_SI, gamma, wPI, wPIg, N_excited_Keldysh_trapz, N_excited_Gruzdev_trapz = generateWpiTables(Egap, meff, wavelength, tau, PeakField, dt, order, N_total, t0, False)
   
-  #print Header+"** Test 0: Convergence test using the Keldysh-Gruzdev formulas..."
-  #plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, 1E-17, order, ShowPlot)
-  #plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, 5E-17, order, ShowPlot)
-  #plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, 1E-16, order, ShowPlot)
-  
-  #print "Checking dt convergence..."
-  #print ""
-  #print "Checking order convergence..."
-  
-  #plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, dt, 10, ShowPlot)
-  #plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, dt, 20, ShowPlot)
-  #plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, dt, 30, ShowPlot)
-  #plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, dt, 40, ShowPlot)
-  #plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, dt, 50, ShowPlot)
-
-  #print Header+"** Test 1: computing the W_PI values from self-coded and validated Gruzdev theory..."
-  #timeKeldysh, N_Keldysh_SI, N_Gruzdev_SI = plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelope1.real, dt, order, ShowPlot, 0e0, Ntotal)
-
-  #print Header+"** Test 2: computing the W_PI values from Vladimir Zhukov tables..."
-  #print Header+"           WE DONT HAVE THEM FOR THIS BAND GAP. Contact zukov@ict.nsc.ru."
-  #wPI_Zhukov = VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength, wavelength2, CEP, CEP2, Egap, meff, tau, tau, Delay, dt, Ntotal, t0)
+  ### plot w_PI(intensity)
+  print Header+"Importing Gruzdev [2014] data..."
+  #try:
+  Gulley2012=np.loadtxt("Results/Gulley/Gulley-Fig2.csv", dtype='float', delimiter='\t')
+      #Gruzdev2014=np.loadtxt("Gruzdev2014-Fig1.csv", dtype='float', delimiter=',')
+      #print Gruzdev2014[:,0]
+  #except: 
+      #print Header+"** Warning: failed to import Gruzdev2014 data table..."
+    
+    
+  print Header+"Plotting as function of laser field intensity ..."
+  plt.figure()
+  plt.xlabel("Intensity (W/cm$^{2}$)")
+  plt.ylabel("$w_{PI}$ (cm$^{-3}$ fs$^{-1}$)")
+  #plt.loglog(1e-4*FieldToIntensity(PeakField.real), 1e-6*1e-15*wPI,  linestyle="-", color="r", label=r"$w_{PI}$ "+ShortRefKeldysh)
+  plt.loglog(1e-4*FieldToIntensity(PeakField.real), 1e-6*wPI, linestyle="-", color="b", label=r"$w_{PI}$ "+ShortRefGulley)
+  plt.loglog(1e-4*Gulley2012[:,0], 1e-6*Gulley2012[:,1], linestyle="-", color="k", label="Data from "+ShortRefGulley) #JUST FOR VALIDATION. 
+  plt.grid()
+  plt.legend(loc='best')
+  #plt.xlim((1E10, 1E14))
+  #plt.ylim((1E20*1E6,1E40*1E6))
+  plt.tight_layout()
+  plt.savefig("Keldysh-Intensity-Wpi-Gulley2012.eps")
+  plt.show()
   
   return 0
 #}}}
@@ -203,13 +242,73 @@ def SiliconTunneling(): #{{{
 #}}}                                
     
 
+def SilicaGruzdev2014(): #{{{
+  print "Defining SiO2 material parameters..."
+
+  Egap = 8.97*e; 
+  meff=0.6e0; #Effective mass of Si
+  N_total=1.*5E28
+  numpoints = 1000
+  optical_index = 1.5356
+  
+  wavelength = 800e-9;
+  tau=35e-15; dt = 1E-17; CEP=0e0
+  #PeakFluence = 1.0*1E4 #J/cm2 * 1E4 = J/m2
+  #PeakField   = np.sqrt(2e0 * PeakFluence / (tau * c * epsilon_0))
+  PeakIntensity_log = np.linspace(np.log10(1e14), np.log10(1e18), numpoints)
+  PeakIntensity = np.power(10., PeakIntensity_log)
+  PeakField = np.sqrt(2. * PeakIntensity / c / epsilon_0) #I = 0.5 c n0 eps0 E²
+  print Header+"Peak field (min, max): "+str(np.min(PeakField)/1E9)+" V/nm, "+str(np.max(PeakField/1E9))+" V/nm."
+
+  t0=0. #defines the instant 0.
+  
+  #print Header+"** Info: PulseEnvelope.EPS and PNG were written in the current folder. "
+
+  order = 100
+  ShowPlot = True
+
+  print Header+"** Computing the W_PI values from Keldysh and Gruzdev theories..."
+  
+  timeKeldysh, N_Keldysh_SI, N_Gruzdev_SI, gamma, wPI, wPIg, N_excited_Keldysh_trapz, N_excited_Gruzdev_trapz = generateWpiTables(Egap, meff, wavelength, tau, PeakField, dt, order, N_total, t0, False)
+  
+  ### plot w_PI(intensity)
+  print Header+"Importing Gruzdev [2014] data..."
+  try:
+      #Gruzdev2014=np.loadtxt("Gulley-Fig2.csv", dtype='float', delimiter='\t')
+      Gruzdev2014=np.loadtxt("Gruzdev2014-Fig1.csv", dtype='float', delimiter=',')
+      #print Gruzdev2014[:,0]
+  except: 
+      print Header+"** Warning: failed to import Gruzdev2014 data table..."
+    
+    
+  print Header+"Plotting as function of laser field intensity ..."
+  plt.figure()
+  plt.xlabel("Intensity (W/cm$^{2}$)")
+  plt.ylabel("$w_{PI}$ (cm$^{-3}$ fs$^{-1}$)")
+  #plt.loglog(1e-4*FieldToIntensity(PeakField.real), 1e-6*1e-15*wPI,  linestyle="-", color="r", label=r"$w_{PI}$ "+ShortRefKeldysh)
+  plt.loglog(1e-4*FieldToIntensity(PeakField.real), 1e-6*1e-15*wPIg, linestyle="-", color="b", label=r"$w_{PI}$ "+ShortRefGruzdev)
+  plt.loglog(Gruzdev2014[:,0], Gruzdev2014[:,1], linestyle="-", color="k", label="Data from "+ShortRefGruzdev) #JUST FOR VALIDATION. 
+  plt.grid()
+  plt.legend(loc='best')
+  plt.xlim((1E10, 1E14))
+  #plt.ylim((1E20*1E6,1E40*1E6))
+  plt.tight_layout()
+  plt.savefig("Keldysh-Intensity-Wpi-Gruzdev2014.eps")
+  plt.show()
+  
+  #timeKeldysh, N_Keldysh_SI, N_Gruzdev_SI = plotPulseToDensity(Egap, meff, wavelength, tau, PeakField, dt, order, ShowPlot, 0e0, N_total)
+  
+  print("")
+
+#}}}
+
 #SiliconTunneling()
 
 
-#SilicaGulley2012()
 SiliconLDAbandGap()
+#SilicaGulley2012()
+#SilicaGruzdev2014()
 #SilicaGraef2017()
-
 
 
 ### Build the famous mapping of N_exc(intensity) from Keldysh theory. 

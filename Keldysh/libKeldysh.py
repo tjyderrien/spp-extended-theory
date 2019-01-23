@@ -89,10 +89,10 @@ def Keldysh2theta(gamma): #theta() in Gruzdev2014
 ## Computes the effective gap for one material
 # @param Egap: band gap of the transition (multi-photonic transitions are DIRECT. Tunnel transitions can be INDIRECT)
 def EffectiveGap(Egap, k1, k2): #{{{
-  k11 = np.float64(k1); 
-  k22 = np.float64(k2*k2) #reducing precision to call ellipe
+  k11 = np.float64(k1); #Keldysh1phi()
+  k22 = np.float64(k2*k2) #Keldysh2theta() #reducing precision to call ellipe
   if (k11 != 0):
-    result = 2.0*Egap * ellipe(k22)/(pi*k11) #Warning: ellipe(x²) actually computes E(x). 
+    result = 2.0 / pi * Egap * ellipe(np.float64(k2))/(k11) #Warning: ellipe(x²) actually computes E(x). 
   else: 
     print "EffectiveGap(): Singular error, Keldysh1phi = 0."
     result = 0e0
@@ -111,7 +111,7 @@ def DawsonIntegral(z): #{{{
   z2 = np.float64(z)
   integral = dawsn(z2)
   # Validation, compared with Maple. 
-  # OK DawsonIntegral(0.)=0
+  # OK DawsnoIntegral(0.)=0
   # OK DawsonIntegral(0.5) = 0.42443638350202229
   return integral
 #}}}

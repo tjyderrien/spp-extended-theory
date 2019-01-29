@@ -117,10 +117,8 @@ def Stark6bandsEnergyShift_notcorrected(Efield_AU, omega_AU, E_gap_AU, DME_AU=1,
         #outs.append(sorted(brinv, key=lambda x:abs(x[1]), reverse=True)[:num_of_maxs])
         ##outs.append(sorted(brinv, key=lambda x:x[0], reverse=True)[:num_of_maxs])
     #return branches
-    single_roots = set(roots)
-    return single_roots
-    
-    
+    #single_roots = set(roots)
+    return np.unique(roots)
     
 def Stark4bandsEnergyShift_notcorrected(Efield_AU, omega_AU, E_gap_AU, DME_AU=1): #{{{
     M         = DME_AU
@@ -150,12 +148,15 @@ omega_AU  = E_gap_AU #Energy_eV_to_Hartree(omega_SI*hbar/e)
 
 print("Attempting numerical solution ...")
 roots=[]
+#Eexact=np.zeros((samples,20))
 #index=0
 for index in np.arange(0,len(Efield_AU)):
-    Eexact = Stark6bandsEnergyShift_notcorrected(Efield_AU[index], omega_AU, E_gap_AU, DME, 20)
-    roots.append(Eexact)
+    Eexact= Stark6bandsEnergyShift_notcorrected(Efield_AU[index], omega_AU, E_gap_AU, DME, 20)
+    roots.append(np.unique(Eexact)) #removes numerical degeneracies
 
-print roots
+print np.shape(Efield_AU)
+print np.shape(roots)
+print roots[0][:]
 
 #exit()
 
@@ -163,7 +164,7 @@ E1, E2, E3, E4, E5, E6 = Stark6bandsEnergyShift_modified(Efield_AU, omega_AU, E_
 ENC1, ENC2, ENC3, ENC4 = Stark4bandsEnergyShift_notcorrected(Efield_AU, omega_AU, E_gap_AU, DME)
 
 plt.figure()
-plt.plot(Efield_AU, np.transpose(roots), 'g+', label="6x6 (original)")
+#plt.scatter(Efield_AU, roots, 'g+', label="6x6 (original)")
 plt.plot(Efield_AU, E1, 'k-', label="6x6 (deduced)")
 plt.plot(Efield_AU, E2, 'k-')
 plt.plot(Efield_AU, E3, 'k-')

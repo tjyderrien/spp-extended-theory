@@ -10,6 +10,7 @@
 from libKeldysh       import * 
 from libKeldyshPulses import *
 from libKeldyshZhukov import *
+from libStark         import *
 #from libKeldyshUlrich import *
 
 Header="[keldysh] "
@@ -20,6 +21,7 @@ print "** Author(s): T.J.-Y. Derrien"
 print ""
 print "** Loaded Keldysh module [Keldysh, Sov. J. Exp. Th. Phys. 47, 5 (1964)]..."
 print "** Loaded Gruzdev formula [Gruzdev, Optical Engineering 53, 122515 (2014)]"
+print "** Loading Stark module [De Giovannini, U.; Hubener, H. & Rubio, A., Nano Letters, 16, 7993-7998 (2016)]"
 
 print "** Info: this file contains examples how to use the Keldysh library. "
 print "         It also contains validation cases of the present theory on Si and known references. "
@@ -40,7 +42,7 @@ def SiliconLDAbandGap(): #{{{
   PeakField = 5E9
   print Header+"Peak field ="+str(PeakField/1E9)+" V/nm"
   
-  print "=== VALIDATION ON SIMPLE QUANTITIES ==="
+  print "=== SIMPLE QUANTITIES ==="
   
   gamma = gammaKeldysh(Egap, meff, PeakField, wavelength)
   print "Adiabadicity parameter:"+str(gamma)
@@ -69,6 +71,41 @@ def SiliconLDAbandGap(): #{{{
   print "wPI(Keldysh)="+str(wPI)
   print "wPI(Gruzdev)="+str(wPIg)
   print "wPI(Gulley) ="+str(wPIgulley)
+
+  print "===== COMPARING THE EFFECTIVE GAPS using Stark effect ===="
+  
+  print "== Preparing Giovannini et al model... =="
+  DME = 1. #from the paper #-1+2j #arbitrary!
+  Efield_SI_log = np.linspace(8,11, 50)
+  Efield_SI     = np.power(10.,Efield_SI_log)
+
+  E_gap_SI      = Egap
+  omega_SI      = 2.*np.pi * c / wavelength
+
+  Efield_AU = Field_SI_to_AU(Efield_SI)
+  E_gap_AU  = Energy_eV_to_Hartree(E_gap_SI/e)
+  omega_AU  = Energy_eV_to_Hartree(omega_SI*hbar/e)
+
+  #E1, E2, E3, E4, E5, E6 = Stark6bandsEnergyShift_modified(Efield_AU, omega_AU, E_gap_AU, DME)
+  ENC1, ENC2, ENC3, ENC4, EgapShift_AU = Stark4bandsEnergyShift_notcorrected(Efield_AU, omega_AU, E_gap_AU, DME)
+
+  print "== Preparing Keldysh model of Stark effect... =="
+  gamma_t   = gammaKeldysh(E_gap_SI, 1.0, Efield_SI, wavelength)
+  k1_t      = Keldysh1phi(gamma_t); k2_t = Keldysh2theta(gamma_t)
+  EgapEff_t = EffectiveGap(E_gap_SI, k1_t, k2_t)
+  
+  plt.figure()
+  plt.semilogx(Efield_SI, EgapEff_t/e, 'r-', label='Keldysh-Stark (1964)')
+  plt.semilogx(Efield_SI, Energy_Hartree_to_eV(EgapShift_AU), 'b-', label='Floquet model (2016)')
+  plt.semilogx(Efield_SI, Energy_Hartree_to_eV(ENC1), 'k--', label="Floquet bands")
+  plt.semilogx(Efield_SI, Energy_Hartree_to_eV(ENC2), 'k--')
+  plt.semilogx(Efield_SI, Energy_Hartree_to_eV(ENC3), 'k--')
+  plt.semilogx(Efield_SI, Energy_Hartree_to_eV(ENC4), 'k--')
+  plt.xlabel("Field amplitude (V/m)")
+  plt.ylabel("Band energy level (eV)")
+  plt.legend(loc='best')
+  plt.tight_layout()
+  plt.show()
 
   print "==== EXTRAPOLATION TO TEMPORAL ASPECTS ====="
   t0=0. #defines the instant 0.
@@ -258,6 +295,9 @@ def SilicaGruzdev2014(): #{{{
   PeakIntensity_log = np.linspace(np.log10(1e14), np.log10(1e18), numpoints)
   PeakIntensity = np.power(10., PeakIntensity_log)
   PeakField = np.sqrt(2. * PeakIntensity / c / epsilon_0) #I = 0.5 c n0 eps0 E²
+  LocalPeakField = np.sqrt(2. * PeakIntensity / optical_index/ c / epsilon_0) #I = 0.5 c n0 eps0 E²
+  # NOTE: it looks the field is not affected by the refractive index, but the intensity is. This may originate from the change of cycle durations inside matter. Although the field may not change (without accounting for the induced fields). 
+  
   print Header+"Peak field (min, max): "+str(np.min(PeakField)/1E9)+" V/nm, "+str(np.max(PeakField/1E9))+" V/nm."
 
   t0=0. #defines the instant 0.
@@ -269,7 +309,9 @@ def SilicaGruzdev2014(): #{{{
 
   print Header+"** Computing the W_PI values from Keldysh and Gruzdev theories..."
   
-  timeKeldysh, N_Keldysh_SI, N_Gruzdev_SI, gamma, wPI, wPIg, N_excited_Keldysh_trapz, N_excited_Gruzdev_trapz = generateWpiTables(Egap, meff, wavelength, tau, PeakField, dt, order, N_total, t0, False)
+  timeKeldysh, N_Keldysh_SI, N_Gruzdev_SI, gamma, wPI, wPIg, N_excited_Keldysh_trapz, N_excited_Gruzdev_trapz = generateWpiTables(Egap, meff, wavelength, tau, LocalPeakField, dt, order, N_total, t0, False, optical_index)
+  
+  #timeKeldysh, N_Keldysh_SI, N_Gruzdev_SI, gamma, wPI, LocalwPIg, N_excited_Keldysh_trapz, N_excited_Gruzdev_trapz = generateWpiTables(Egap, meff, wavelength, tau, LocalPeakField, dt, order, N_total, t0, False)
   
   ### plot w_PI(intensity)
   print Header+"Importing Gruzdev [2014] data..."
@@ -287,7 +329,8 @@ def SilicaGruzdev2014(): #{{{
   plt.ylabel("$w_{PI}$ (cm$^{-3}$ fs$^{-1}$)")
   #plt.loglog(1e-4*FieldToIntensity(PeakField.real), 1e-6*1e-15*wPI,  linestyle="-", color="r", label=r"$w_{PI}$ "+ShortRefKeldysh)
   plt.loglog(1e-4*FieldToIntensity(PeakField.real), 1e-6*1e-15*wPIg, linestyle="-", color="b", label=r"$w_{PI}$ "+ShortRefGruzdev)
-  plt.loglog(Gruzdev2014[:,0], Gruzdev2014[:,1], linestyle="-", color="k", label="Data from "+ShortRefGruzdev) #JUST FOR VALIDATION. 
+  #plt.loglog(1e-4*FieldToIntensity(PeakField.real), 1e-6*1e-15*wPIg, linestyle="-", color="g", label=r"$w_{PI}$ "+ShortRefGruzdev)
+  plt.loglog(Gruzdev2014[:,0], Gruzdev2014[:,1], linestyle="--", color="k", label="Data from "+ShortRefGruzdev) #JUST FOR VALIDATION. 
   plt.grid()
   plt.legend(loc='best')
   plt.xlim((1E10, 1E14))

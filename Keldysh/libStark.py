@@ -128,10 +128,11 @@ def Stark4bandsEnergyShift_notcorrected(Efield_AU, omega_AU, E_gap_AU, DME_AU=1)
     E1  = 0.5*omega_AU + 0.5*np.sqrt(Tmp+2*E_gap_AU*omega_AU)
     E2  = 0.5*omega_AU - 0.5*np.sqrt(Tmp+2*E_gap_AU*omega_AU)
     E3  = 0.5*omega_AU + 0.5*np.sqrt(Tmp-2*E_gap_AU*omega_AU)
-        
     E4  = 0.5*omega_AU - 0.5*np.sqrt(Tmp-2*E_gap_AU*omega_AU)
     
-    return E1, E2, E3, E4
+    EgapShift_AU = E4 - E2
+    
+    return E1, E2, E3, E4, EgapShift_AU
 #}}}   
 
 
@@ -160,23 +161,24 @@ print roots[0][:]
 
 #exit()
 
-E1, E2, E3, E4, E5, E6 = Stark6bandsEnergyShift_modified(Efield_AU, omega_AU, E_gap_AU, DME)
-ENC1, ENC2, ENC3, ENC4 = Stark4bandsEnergyShift_notcorrected(Efield_AU, omega_AU, E_gap_AU, DME)
+#E1, E2, E3, E4, E5, E6 = Stark6bandsEnergyShift_modified(Efield_AU, omega_AU, E_gap_AU, DME)
+#ENC1, ENC2, ENC3, ENC4, EgapShift_AU = Stark4bandsEnergyShift_notcorrected(Efield_AU, omega_AU, E_gap_AU, DME)
 
-plt.figure()
-#plt.scatter(Efield_AU, roots, 'g+', label="6x6 (original)")
-plt.plot(Efield_AU, E1, 'k-', label="6x6 (deduced)")
-plt.plot(Efield_AU, E2, 'k-')
-plt.plot(Efield_AU, E3, 'k-')
-plt.plot(Efield_AU, E4, 'k-')
-plt.plot(Efield_AU, E5, 'k-')
-plt.plot(Efield_AU, E6, 'k-')
-plt.plot(Efield_AU, ENC1, 'b--', label="4x4 (original)")
-plt.plot(Efield_AU, ENC2, 'b--')
-plt.plot(Efield_AU, ENC3, 'b--')
-plt.plot(Efield_AU, ENC4, 'b--')
+#plt.figure()
+##plt.scatter(Efield_AU, roots, 'g+', label="6x6 (original)")
+#plt.plot(Efield_AU, E1, 'k-', label="6x6 (deduced)")
+#plt.plot(Efield_AU, E2, 'k-')
+#plt.plot(Efield_AU, E3, 'k-')
+#plt.plot(Efield_AU, E4, 'k-')
+#plt.plot(Efield_AU, E5, 'k-')
+#plt.plot(Efield_AU, E6, 'k-')
+#plt.plot(Efield_AU, ENC1, 'b--', label="4x4 (original)")
+#plt.plot(Efield_AU, ENC2, 'r--')
+#plt.plot(Efield_AU, ENC3, 'b--')
+#plt.plot(Efield_AU, ENC4, 'r--')
+##plt.plot(Efield_AU, EgapShift_AU, 'g--', label=r"$E_g$ (Stark)")
 
-plt.xlabel("Field amplitude (at.u.)")
-plt.ylabel("Energy shifts (Hartree)")
-plt.legend(loc="best")
-plt.show()
+#plt.xlabel("Field amplitude (at.u.)")
+#plt.ylabel("Energy shifts (Hartree)")
+#plt.legend(loc="best")
+#plt.show()

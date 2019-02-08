@@ -128,6 +128,22 @@ def SiliconLDAbandGap(): #{{{
   # Now we have corrected the 6x6 and found exact solution
   E1, E2, E3, E4, E5, E6 = Stark6bandsEnergyShift_modified_exact(0., omega_AU, E_gap_AU, DME)
   
+  ## Let's go for 12x12 matrix, only numerical. 
+  
+  print "12x12 - numerical approach"
+  FourBands_E = Stark12bandsEnergyShift_notcorrected_numerical(0., omega_AU, E_gap_AU, DME, 50)
+  
+  FourBands_E_round = np.round(FourBands_E, 5)
+  FourBands_E_round_set = set(FourBands_E_round.flatten())
+  #Enumerical_max = np.round(Enumerical_max, 8)
+  #Enumerical_max_set = set(Enumerical_max.flatten())
+  
+  FourBands_E_round_eV = np.round(Energy_Hartree_to_eV(FourBands_E_round), 5)
+  FourBands_E_round_set_eV = set(FourBands_E_round_eV.flatten())
+  print "eV:"
+  print FourBands_E_round_set_eV
+  
+  exit()
 ## Generalizing to many fields
 
   print "== Preparing Keldysh model of Stark effect... =="

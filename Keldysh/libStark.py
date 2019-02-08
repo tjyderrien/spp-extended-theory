@@ -82,41 +82,6 @@ def Stark6bandsEnergyShift_notcorrected_numerical(Efield_AU, omega_AU, E_gap_AU,
         if (nrt.success):
             roots.append(nrt.x)
         
-        ## Filtering the degeneracies
-        #ln = len(roots)
-        #while ln > 0:
-            #center = roots[0]
-            #aux = [center]
-            #aux2 = []
-            #for rt in roots[1:]:
-                #if norm(rt-center) < tol_merge:
-                    #aux.append(rt)
-                    #center = cntr(aux)
-                #elif norm(rt+center) < tol_merge:
-                    #aux.append(-rt)
-                    #center = cntr(aux)
-                #else:
-                    #aux2.append(rt)
-                    
-            #if len(aux) > merge_treshold: #merging criterion
-                #if center[0] > 0:
-                    #unique.append(center)
-                #else:
-                    #unique.append([-center[0], -center[1]])
-            #roots = list(aux2)
-            #ln = len(roots)
-            
-        #branches.append(unique)
-
-    #outs = branches
-    
-    #selection of maximal Lspps
-    #for branch in branches:
-        #brinv = [[rt[0]] for rt in branch]
-        #outs.append(sorted(brinv, key=lambda x:abs(x[1]), reverse=True)[:num_of_maxs])
-        ##outs.append(sorted(brinv, key=lambda x:x[0], reverse=True)[:num_of_maxs])
-    #return branches
-    #single_roots = set(roots)
     return np.unique(roots)
     
 def Stark4bandsEnergyShift_notcorrected_exact(Efield_AU, omega_AU, E_gap_AU, DME_AU=1): #{{{
@@ -158,8 +123,6 @@ def Stark4bandsEnergyShift_notcorrected_numerical(Efield_AU, omega_AU, E_gap_AU,
     x_max = 1       #1E10
     #x_steps = 30   #70
     
-    # Invoking a multiple root solver similar to the one developed by F. Preucil
-    # findroots(eps1, eps2, eps3, wavelength, t, x_min, x_max, y_min, y_max, x_steps, y_steps, num_of_maxs=1):
     tol_merge = 1E-10 #1E3
     merge_treshold = 1 #4? 1: helps to not miss some modes
     roots = []
@@ -173,44 +136,64 @@ def Stark4bandsEnergyShift_notcorrected_numerical(Efield_AU, omega_AU, E_gap_AU,
         if (nrt.success):
             roots.append(nrt.x)
         
-        ## Filtering the degeneracies
-        #ln = len(roots)
-        #while ln > 0:
-            #center = roots[0]
-            #aux = [center]
-            #aux2 = []
-            #for rt in roots[1:]:
-                #if norm(rt-center) < tol_merge:
-                    #aux.append(rt)
-                    #center = cntr(aux)
-                #elif norm(rt+center) < tol_merge:
-                    #aux.append(-rt)
-                    #center = cntr(aux)
-                #else:
-                    #aux2.append(rt)
-                    
-            #if len(aux) > merge_treshold: #merging criterion
-                #if center[0] > 0:
-                    #unique.append(center)
-                #else:
-                    #unique.append([-center[0], -center[1]])
-            #roots = list(aux2)
-            #ln = len(roots)
-            
-        #branches.append(unique)
+    return np.unique(roots)
 
-    #outs = branches
+### Solves the characteristic polynom for the eigen values of band gap modification    
+def Stark12bandsEnergyShift_polynom_numerical(eigen, Efield_AU, omega_AU, E_gap_AU, DME_AU=1):
+    M         = DME_AU
+    Mbar      = np.conj(DME_AU)
     
-    #selection of maximal Lspps
-    #for branch in branches:
-        #brinv = [[rt[0]] for rt in branch]
-        #outs.append(sorted(brinv, key=lambda x:abs(x[1]), reverse=True)[:num_of_maxs])
-        ##outs.append(sorted(brinv, key=lambda x:x[0], reverse=True)[:num_of_maxs])
-    #return branches
-    #single_roots = set(roots)
+    
+    A12 = 1.
+    
+    A11 = -1./2.*E_gap_AU
+    
+    A10 = -6.*Efield_AU**2*M*Mbar-16.*omega_AU**2-5./4.*E_gap_AU**2
+    
+    A9 = 23./8.*Efield_AU**2*Mbar*M*E_gap_AU+8.*E_gap_AU*omega_AU**2+5./8.*E_gap_AU**3
+    
+    A8 = 12.*omega_AU**2*E_gap_AU**2 - 1./4.*Efield_AU**2*Mbar*M*omega_AU*E_gap_AU + 5./8.*E_gap_AU**4 - 8.*Efield_AU**2*M**2*omega_AU**2 - 0.5*Efield_AU**4 * Mbar**3*M + 17./2.*Efield_AU**4*Mbar**2*M**2 - 0.5*Efield_AU**4*Mbar*M**3 - 8.*Efield_AU**2*Mbar**2*omega_AU**2 + 83./16.*Efield_AU**2*Mbar*M*E_gap_AU**2 + 0.25*Efield_AU**2*Mbar**2*E_gap_AU*omega_AU+40.*Efield_AU**2*M*Mbar*omega_AU**2
+    
+    A7 = -6.*E_gap_AU**3*omega_AU**2-17.*E_gap_AU*omega_AU**2*Efield_AU**2*M*Mbar + 0.25*Efield_AU**2*M*Mbar*E_gap_AU**2*omega_AU - 5./16.*E_gap_AU**5 + 3.*E_gap_AU*Efield_AU**2*Mbar**2*omega_AU**2 - 5./2.*Efield_AU**2*M*Mbar*E_gap_AU**3-0.25*Efield_AU**2*Mbar**2*E_gap_AU**2*omega_AU+3./16.*Efield_AU**4*M*Mbar**3*E_gap_AU-59./16.*Efield_AU**4*M**2*Mbar**2.*E_gap_AU+7./16.*Efield_AU**4*M**3*Mbar*E_gap_AU+4.*E_gap_AU*Efield_AU**2*M**2*omega_AU**2
+    
+    A6 = -16.*Efield_AU**2*M*Mbar*omega_AU**2*E_gap_AU**2-3*omega_AU**2*E_gap_AU**4+5./32.*Efield_AU**4*M**3*Mbar*E_gap_AU**2-133./32.*Efield_AU**4*M**2*Mbar**2*E_gap_AU**2-5./32.*E_gap_AU**6+3./4.*Efield_AU**4*M**2*Mbar**2*E_gap_AU*omega_AU+1./8.*Efield_AU**2*M*Mbar*E_gap_AU**3*omega_AU-1./2.*Efield_AU**4*Mbar**3*M*E_gap_AU*omega_AU+5*E_gap_AU**2*Efield_AU**2*Mbar**2*omega_AU**2-1./8.*Efield_AU**2*Mbar**2*E_gap_AU**3*omega_AU-5./2.*Efield_AU**6*Mbar**3*M**3-1./2.*Efield_AU**6*Mbar**4*M**2-1./2.*Efield_AU**6*Mbar**2*M**4+13./32.*Efield_AU**4*Mbar**3*M*E_gap_AU**2-13./8.*Efield_AU**2*M*Mbar*E_gap_AU**4-20.*Efield_AU**4*M**2*Mbar**2*omega_AU**2+4*omega_AU**2*Efield_AU**4*M**3*Mbar+4.*omega_AU**2*Efield_AU**4*Mbar**3*M-1./4.*E_gap_AU*Efield_AU**4*M**3*Mbar*omega_AU+4.*E_gap_AU**2*Efield_AU**2*M**2*omega_AU**2
+    
+    A5 = 3./2.*E_gap_AU**5*omega_AU**2+3./32.*Efield_AU**6*M**4*Mbar**2*E_gap_AU + 51./64.*Efield_AU**2*M*Mbar*E_gap_AU**5-13./64.*Efield_AU**4*M**3*Mbar*E_gap_AU**3-9./64.*Efield_AU**4*Mbar**3*M*E_gap_AU**3+5./64.*E_gap_AU**7-3./2.*E_gap_AU*omega_AU**2*Efield_AU**4*M**3*Mbar+3./8.*Efield_AU**4*M**3*Mbar*omega_AU*E_gap_AU**2-3./16.*Efield_AU**2*M*Mbar*E_gap_AU**4*omega_AU+3./8.*Efield_AU**4*M*Mbar**3*E_gap_AU**2*omega_AU+27./4.*E_gap_AU**3*Efield_AU**2*M*Mbar*omega_AU**2+13./2*E_gap_AU*omega_AU**2*Efield_AU**4*M**2*Mbar**2-E_gap_AU*omega_AU**2*Efield_AU**4*Mbar**3*M-3./4.*Efield_AU**4*M**2*Mbar**2*E_gap_AU**2*omega_AU+3./16.*Efield_AU**2*Mbar**2*E_gap_AU**4*omega_AU-7./4.*E_gap_AU**3*Efield_AU**2*Mbar**2*omega_AU**2+7./32.*Efield_AU**6*Mbar**4*M**2*E_gap_AU+117./64.*Efield_AU**4*M**2*Mbar**2*E_gap_AU**3+27./32.*Efield_AU**6*M**3*Mbar**3*E_gap_AU-2*E_gap_AU**3*Efield_AU**2*M**2*omega_AU**2
+    
+    A4 = 1./4.*omega_AU**2*E_gap_AU**6-3./2.*E_gap_AU**2*Efield_AU**4*M**3*Mbar*omega_AU**2-3./2.*E_gap_AU**2*Efield_AU**4*M*Mbar**3*omega_AU**2+3/2*Efield_AU**2*M*Mbar*omega_AU**2*E_gap_AU**4+4*Efield_AU**4*M**2*Mbar**2*omega_AU**2*E_gap_AU**2+5./256.*E_gap_AU**8+1./16.*Efield_AU**6*Mbar**2*M**4*E_gap_AU*omega_AU+2*Efield_AU**6*M**3*Mbar**3*omega_AU**2+1./8.*Efield_AU**8*Mbar**5*M**3+3./16.*Efield_AU**8*Mbar**4*M**4+1./16.*Efield_AU**8*Mbar**6*M**2+1./8.*Efield_AU**8*Mbar**3*M**5+1./16.*Efield_AU**8*Mbar**2*M**6+27./128.*Efield_AU**2*M*Mbar*E_gap_AU**6+55./64*Efield_AU**6*M**3*Mbar**3*E_gap_AU**2+7./64.*Efield_AU**6*Mbar**4*M**2*E_gap_AU**2-1./8.*E_gap_AU*Efield_AU**6*M**3*Mbar**3*omega_AU+1./16.*Efield_AU**6*Mbar**5*M*E_gap_AU*omega_AU+75./128.*Efield_AU**4*M**2*Mbar**2*E_gap_AU**4+1./128.*Efield_AU**4*M**3*Mbar*E_gap_AU**4-15./128.*Efield_AU**4*Mbar**3*M*E_gap_AU**4-1./16.*Efield_AU**4*M**2*Mbar**2*E_gap_AU**3*omega_AU-1./8.*Efield_AU**4*M**3*Mbar*omega_AU*E_gap_AU**3+3./16.*Efield_AU**4*M*Mbar**3*E_gap_AU**3*omega_AU+7./64.*Efield_AU**6*M**4*Mbar**2*E_gap_AU**2-Efield_AU**2*Mbar**2*E_gap_AU**4*omega_AU**2-1./2.*Efield_AU**2*M**2*E_gap_AU**4*omega_AU**2
+    
+    A3 = -3./64.*omega_AU*Efield_AU**2*Mbar**2*E_gap_AU**6+5./16.*Efield_AU**2*Mbar**2*E_gap_AU**5*omega_AU**2+1./4.*Efield_AU**2*M**2*omega_AU**2*E_gap_AU**5-11./16.*Efield_AU**2*M*Mbar*E_gap_AU**5*omega_AU**2-1./64.*Efield_AU**8*M**2*Mbar**6*E_gap_AU-7./64.*Efield_AU**2*M*Mbar*E_gap_AU**7+9./256.*Efield_AU**4*M*Mbar**3*E_gap_AU**5-73./256.*Efield_AU**4*M**2*Mbar**2*E_gap_AU**5-15./64.*Efield_AU**6*M**3*Mbar**3*E_gap_AU**3-3./64.*Efield_AU**8*M**4*Mbar**4*E_gap_AU+1./64.*Efield_AU**6*M**4*Mbar**2*E_gap_AU**3-1./32.*Efield_AU**8*M**3*Mbar**5*E_gap_AU-3./64.*Efield_AU**6*M**2*Mbar**4*E_gap_AU**3-1./32.*Efield_AU**8*M**5*Mbar**3*E_gap_AU-1./64.*Efield_AU**8*M**6*Mbar**2*E_gap_AU+5./256.*Efield_AU**4*M**3*Mbar*E_gap_AU**5+1./4.*omega_AU*Efield_AU**4*M**2*Mbar**2*E_gap_AU**4-1./16.*omega_AU*Efield_AU**4*M**3*Mbar*E_gap_AU**4-3./16.*omega_AU*Efield_AU**4*Mbar**3*M*E_gap_AU**4-3./4.*Efield_AU**4*M**2*Mbar**2*E_gap_AU**3*omega_AU**2+1./2.*Efield_AU**4*M**3*Mbar*omega_AU**2*E_gap_AU**3+1./4.*Efield_AU**4*M*Mbar**3*E_gap_AU**3*omega_AU**2+1./16.*Efield_AU**6*M**3*Mbar**3*E_gap_AU**2*omega_AU+3./64.*Efield_AU**2*M*Mbar*E_gap_AU**6*omega_AU-1./16.*Efield_AU**6*M**4*Mbar**2*omega_AU*E_gap_AU**2-1./2.*E_gap_AU*omega_AU**2*Efield_AU**6*M**3*Mbar**3-1./8.*E_gap_AU**7*omega_AU**2-5./512.*E_gap_AU**9
+    
+    A2 = -1./1024.*E_gap_AU**10+1./128.*Efield_AU**6*M**2*Mbar**4*E_gap_AU**4-1./128.*Efield_AU**2*M*Mbar*E_gap_AU**8-7./128.*Efield_AU**6*M**3*Mbar**3*E_gap_AU**4+1./128.*Efield_AU**6*M**4*Mbar**2*E_gap_AU**4-7./512.*Efield_AU**4*M**2*Mbar**2*E_gap_AU**6-3./64.*E_gap_AU**2*Efield_AU**8*Mbar**3*M**5-9./128.*Efield_AU**8*M**4*Mbar**4*E_gap_AU**2-3./64.*E_gap_AU**2*Efield_AU**8*Mbar**5*M**3-3./128.*E_gap_AU**2*Efield_AU**8*Mbar**2*M**6-1./512.*Efield_AU**4*M**3*Mbar*E_gap_AU**6+1./16.*Efield_AU**2*Mbar**2*E_gap_AU**6*omega_AU**2+1./128.*omega_AU*Efield_AU**2*Mbar**2*E_gap_AU**7+7./512.*Efield_AU**4*M*Mbar**3*E_gap_AU**6-3./128.*E_gap_AU**2*Efield_AU**8*Mbar**6*M**2+3./64.*omega_AU*Efield_AU**4*M**3*Mbar*E_gap_AU**5-3./64.*omega_AU*Efield_AU**4*M**2*Mbar**2*E_gap_AU**5-1./128.*Efield_AU**2*M*Mbar*E_gap_AU**7*omega_AU+1./8.*Efield_AU**4*M*Mbar**3*E_gap_AU**4*omega_AU**2-1./4.*Efield_AU**4*M**2*Mbar**2*E_gap_AU**4*omega_AU**2-1./4.*Efield_AU**6*M**3*Mbar**3*omega_AU**2*E_gap_AU**2+1./32.*Efield_AU**6*M**3*Mbar**3*E_gap_AU**3*omega_AU+1./8.*Efield_AU**4*M**3*Mbar*omega_AU**2*E_gap_AU**4-1./32.*Efield_AU**6*M*Mbar**5*E_gap_AU**3*omega_AU
+    
+    A1 = 1./64.*Efield_AU**6*M**4*Mbar**2*omega_AU*E_gap_AU**4+1./256.*E_gap_AU**3*Efield_AU**8*Mbar**2*M**6-5./512.*Efield_AU**6*M**4*Mbar**2*E_gap_AU**5+1./128.*E_gap_AU**3*Efield_AU**8*Mbar**5*M**3+1./128.*E_gap_AU**3*Efield_AU**8*Mbar**3*M**5+3./512.*Efield_AU**6*M**3*Mbar**3*E_gap_AU**5+3./256.*Efield_AU**8*M**4*Mbar**4*E_gap_AU**3+15./1024.*Efield_AU**4*M**2*Mbar**2*E_gap_AU**7-1./512.*Efield_AU**6*M**2*Mbar**4*E_gap_AU**5+11./2048.*Efield_AU**2*M*Mbar*E_gap_AU**9-1./64.*Efield_AU**2*Mbar**2*omega_AU**2*E_gap_AU**7+1./256.*Efield_AU**2*Mbar**2*omega_AU*E_gap_AU**8-3./1024.*Efield_AU**4*M*Mbar**3*E_gap_AU**7+1./256.*E_gap_AU**3*Efield_AU**8*Mbar**6*M**2+1./1024.*Efield_AU**4*M**3*Mbar*E_gap_AU**7-1./256.*Efield_AU**2*M*Mbar*E_gap_AU**8*omega_AU-1./128.*omega_AU*Efield_AU**4*M**3*Mbar*E_gap_AU**6-1./64.*Efield_AU**6*M**3*Mbar**3*E_gap_AU**4*omega_AU-1./64.*omega_AU*Efield_AU**4*M**2*Mbar**2*E_gap_AU**6+3./128.*omega_AU*Efield_AU**4*Mbar**3*M*E_gap_AU**6-1./32.*Efield_AU**4*M**3*Mbar*omega_AU**2*E_gap_AU**5+1./64.*Efield_AU**2*M*Mbar*E_gap_AU**7*omega_AU**2+1./32.*Efield_AU**4*M**2*Mbar**2*E_gap_AU**5*omega_AU**2+1./2048.*E_gap_AU**11
+    
+    A0 = -3./2048.*Efield_AU**4*Mbar**2*M**2*E_gap_AU**8+3./512.*Efield_AU**8*M**4*Mbar**4*E_gap_AU**4+1./512.*Efield_AU**8*M**6*Mbar**2*E_gap_AU**4+1./256.*Efield_AU**8*M**5*Mbar**3*E_gap_AU**4+1./256.*Efield_AU**8*M**3*Mbar**5*E_gap_AU**4+1./512.*E_gap_AU**4*Efield_AU**8*Mbar**6*M**2-1./4096.*Efield_AU**2*M*Mbar*E_gap_AU**10-1./2048.*Efield_AU**4*M*Mbar**3*E_gap_AU**8-1./1024.*Efield_AU**6*M**3*Mbar**3*E_gap_AU**6-1./1024.*Efield_AU**6*M**4*Mbar**2*E_gap_AU**6-1./1024.*Efield_AU**6*M**2*Mbar**4*E_gap_AU**6-1./2048.*Efield_AU**4*M**3*Mbar*E_gap_AU**8-1./1024.*Efield_AU**2*Mbar**2*omega_AU*E_gap_AU**9+1./256.*Efield_AU**6*M*Mbar**5*E_gap_AU**5*omega_AU+1./1024.*Efield_AU**2*M*Mbar*E_gap_AU**9*omega_AU-1./256.*Efield_AU**6*M**4*Mbar**2*omega_AU*E_gap_AU**5+1./256.*omega_AU*Efield_AU**4*M**2*Mbar**2*E_gap_AU**7-1./256.*omega_AU*Efield_AU**4*Mbar**3*M*E_gap_AU**7
+    
+    return A12 * eigen**12 + A11*eigen**11 + A10*eigen**10 + A9*eigen**9 + A8*eigen**8 + A7*eigen**7 + A6*eigen**6 + A5*eigen**5 + A4 * eigen**4 + A3 * eigen**3 + A2*eigen**2 + A1 * eigen + A0
+
+def Stark12bandsEnergyShift_notcorrected_numerical(Efield_AU, omega_AU, E_gap_AU, DME_AU=1, x_steps=100):
+    # Solver parameters
+    x_min = -1       #-1E10
+    x_max = 1       #1E10
+    #x_steps = 30   #70
+    
+    tol_merge = 1E-10 #1E3
+    merge_treshold = 1 #4? 1: helps to not miss some modes
+    roots = []
+    branches = []
+    unique = []
+    start = time()
+    for x in np.linspace(x_min, x_max, num=x_steps):
+        nrt = root(Stark12bandsEnergyShift_polynom_numerical, (x), args=(Efield_AU, omega_AU, E_gap_AU, DME_AU), method='hybr')
+        #print nrt
+        #checking = func(nrt.x, eps1, eps2, eps3, k0, t, sgn1, sgn2)
+        if (nrt.success):
+            roots.append(nrt.x)
+        
     return np.unique(roots)
     
-def TestingNumericalSolver():
+def TestingNumericalSolver4():
     samples = 10
     DME = 1. #-1+2j #arbitrary!
     Efield_AU = np.linspace(0,1, samples)
@@ -234,6 +217,10 @@ def TestingNumericalSolver():
     print np.shape(roots)
     print roots[0][:]
     return roots
+
+
+
+
 #exit()
 
 #E1, E2, E3, E4, E5, E6 = Stark6bandsEnergyShift_modified_exact(Efield_AU, omega_AU, E_gap_AU, DME)

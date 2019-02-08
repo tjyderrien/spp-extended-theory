@@ -82,12 +82,53 @@ def SiliconLDAbandGap(): #{{{
   E_gap_SI      = Egap
   omega_SI      = 2.*np.pi * c / wavelength
 
+  print "Intuitive Floquet energy shift (eV): "+str(omega_SI*hbar/e)
+
   Efield_AU = Field_SI_to_AU(Efield_SI)
   E_gap_AU  = Energy_eV_to_Hartree(E_gap_SI/e)
   omega_AU  = Energy_eV_to_Hartree(omega_SI*hbar/e)
 
-  #E1, E2, E3, E4, E5, E6 = Stark6bandsEnergyShift_modified(Efield_AU, omega_AU, E_gap_AU, DME)
-  ENC1, ENC2, ENC3, ENC4, EgapShift_AU = Stark4bandsEnergyShift_notcorrected(Efield_AU, omega_AU, E_gap_AU, DME)
+  
+  print "== 4x4 original numerical attempt"
+  Enumerical_min = Stark4bandsEnergyShift_notcorrected_numerical(0., omega_AU, E_gap_AU, DME, 50)
+  
+  #Enumerical_max = Stark6bandsEnergyShift_notcorrected_numerical(np.max(Efield_AU), omega_AU, E_gap_AU, DME, 50)
+  
+  # Removing numerical degeneracies
+  Enumerical_min = np.round(Enumerical_min, 8)
+  Enumerical_min_set = set(Enumerical_min.flatten())
+  #Enumerical_max = np.round(Enumerical_max, 8)
+  #Enumerical_max_set = set(Enumerical_max.flatten())
+  
+  Enumerical_min_eV = np.round(Energy_Hartree_to_eV(Enumerical_min), 8)
+  Enumerical_min_set_eV = set(Enumerical_min_eV.flatten())
+  #Enumerical_max_eV = np.round(Energy_Hartree_to_eV(Enumerical_max), 8)
+  #Enumerical_max_set_eV = set(Enumerical_max_eV.flatten())
+  
+  #Enumerical_min_set = [set(v) for v in Enumerical_min]
+  #Enumerical_max_set = map(np.unique, Enumerical_max)
+  
+  # For comparison, we compute the 4x4 original. 
+  ENC1, ENC2, ENC3, ENC4, EgapShift_AU = Stark4bandsEnergyShift_notcorrected_exact(0., omega_AU, E_gap_AU, DME)
+  
+  print "4x4 original - exact values"
+  print "eV: "
+  print Energy_Hartree_to_eV(ENC1)
+  print Energy_Hartree_to_eV(ENC2)
+  print Energy_Hartree_to_eV(ENC3)
+  print Energy_Hartree_to_eV(ENC4)
+  print ""
+  print "4x4 original - numerical attempt"
+  print "eV:"
+  #print Enumerical_min_set
+  print np.array(Enumerical_min_set_eV)
+
+  ## NOTE: Numerical solver works well for 4x4 original case. 
+  
+  # Now we have corrected the 6x6 and found exact solution
+  E1, E2, E3, E4, E5, E6 = Stark6bandsEnergyShift_modified_exact(0., omega_AU, E_gap_AU, DME)
+  
+## Generalizing to many fields
 
   print "== Preparing Keldysh model of Stark effect... =="
   gamma_t   = gammaKeldysh(E_gap_SI, 1.0, Efield_SI, wavelength)
@@ -95,12 +136,19 @@ def SiliconLDAbandGap(): #{{{
   EgapEff_t = EffectiveGap(E_gap_SI, k1_t, k2_t)
   
   plt.figure()
-  plt.semilogx(Efield_SI, EgapEff_t/e, 'r-', label='Keldysh-Stark (1964)')
-  plt.semilogx(Efield_SI, Energy_Hartree_to_eV(EgapShift_AU), 'b-', label='Floquet model (2016)')
-  plt.semilogx(Efield_SI, Energy_Hartree_to_eV(ENC1), 'k--', label="Floquet bands")
-  plt.semilogx(Efield_SI, Energy_Hartree_to_eV(ENC2), 'k--')
-  plt.semilogx(Efield_SI, Energy_Hartree_to_eV(ENC3), 'k--')
-  plt.semilogx(Efield_SI, Energy_Hartree_to_eV(ENC4), 'k--')
+  plt.semilogx(Efield_SI, EgapEff_t/e, 'r-', label=r'$E_g^{eff}$, Keldysh-Stark (1964)')
+  #plt.semilogx(Efield_SI, Energy_Hartree_to_eV(EgapShift_AU), 'b-', label=r'Floquet $E_g$ (2016)')
+  plt.semilogx(Efield_SI, Energy_Hartree_to_eV(E1-E2), 'b-', label=r"$E_g + \Delta E_{Stark}=E_1-E_2$")
+  plt.semilogx(Efield_SI, Energy_Hartree_to_eV(E1), 'k--', label="Floquet bands")
+  plt.semilogx(Efield_SI, Energy_Hartree_to_eV(E2), 'k--')
+  plt.semilogx(Efield_SI, Energy_Hartree_to_eV(E3), 'k--')
+  plt.semilogx(Efield_SI, Energy_Hartree_to_eV(E4), 'k--')
+  plt.semilogx(Efield_SI, Energy_Hartree_to_eV(E5), 'k--')
+  plt.semilogx(Efield_SI, Energy_Hartree_to_eV(E6), 'k--')
+  #plt.semilogx(Efield_SI, Energy_Hartree_to_eV(ENC1), 'b--', label="Floquet bands")
+  #plt.semilogx(Efield_SI, Energy_Hartree_to_eV(ENC2), 'b--')
+  #plt.semilogx(Efield_SI, Energy_Hartree_to_eV(ENC3), 'b--')
+  #plt.semilogx(Efield_SI, Energy_Hartree_to_eV(ENC4), 'b--')
   plt.xlabel("Field amplitude (V/m)")
   plt.ylabel("Band energy level (eV)")
   plt.legend(loc='best')
@@ -294,7 +342,8 @@ def SilicaGruzdev2014(): #{{{
   #PeakField   = np.sqrt(2e0 * PeakFluence / (tau * c * epsilon_0))
   PeakIntensity_log = np.linspace(np.log10(1e14), np.log10(1e18), numpoints)
   PeakIntensity = np.power(10., PeakIntensity_log)
-  PeakField = np.sqrt(2. * PeakIntensity / c / epsilon_0) #I = 0.5 c n0 eps0 E²
+  PeakField = np.sqrt(2. * PeakIntensity / c / epsilon_0) #I = 0.5 c eps0 E²
+  # I_inside_matter = 0.5 c eps0 n0 E**2: in matter, pulse is compressed in space. Therefore, intensity is stronger. As photon energy do not change, the time frequency does not change either.  
   LocalPeakField = np.sqrt(2. * PeakIntensity / optical_index/ c / epsilon_0) #I = 0.5 c n0 eps0 E²
   # NOTE: it looks the field is not affected by the refractive index, but the intensity is. This may originate from the change of cycle durations inside matter. Although the field may not change (without accounting for the induced fields). 
   

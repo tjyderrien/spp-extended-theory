@@ -77,20 +77,21 @@ def SiliconLDAbandGap(): #{{{
   print "== Preparing Giovannini et al model... =="
   DME = 1. #from the paper #-1+2j #arbitrary!
   Efield_SI_log = np.linspace(8,11, 50)
-  Efield_SI     = np.power(10.,Efield_SI_log)
+  #Efield_SI     = np.power(10.,Efield_SI_log)
+  
+  Efield_SI     = 1e11  
 
   E_gap_SI      = Egap
   omega_SI      = 2.*np.pi * c / wavelength
 
-  print "Intuitive Floquet energy shift (eV): "+str(omega_SI*hbar/e)
+  print "Replicas energy shifts (eV): "+str(omega_SI*hbar/e)
 
   Efield_AU = Field_SI_to_AU(Efield_SI)
   E_gap_AU  = Energy_eV_to_Hartree(E_gap_SI/e)
   omega_AU  = Energy_eV_to_Hartree(omega_SI*hbar/e)
 
-  
-  print "== 4x4 original numerical attempt"
-  Enumerical_min = Stark4bandsEnergyShift_notcorrected_numerical(0., omega_AU, E_gap_AU, DME, 50)
+  print "== USELESS: 4x4 original numerical attempt"
+  Enumerical_min = Stark4bandsEnergyShift_notcorrected_numerical(Efield_AU, omega_AU, E_gap_AU, DME, 50)
   
   #Enumerical_max = Stark6bandsEnergyShift_notcorrected_numerical(np.max(Efield_AU), omega_AU, E_gap_AU, DME, 50)
   
@@ -109,16 +110,16 @@ def SiliconLDAbandGap(): #{{{
   #Enumerical_max_set = map(np.unique, Enumerical_max)
   
   # For comparison, we compute the 4x4 original. 
-  ENC1, ENC2, ENC3, ENC4, EgapShift_AU = Stark4bandsEnergyShift_notcorrected_exact(0., omega_AU, E_gap_AU, DME)
+  ENC1, ENC2, ENC3, ENC4, EgapShift_AU = Stark4bandsEnergyShift_notcorrected_exact(Efield_AU, omega_AU, E_gap_AU, DME)
   
-  print "4x4 original - exact values"
+  print "USELESS: 4x4 original - exact values"
   print "eV: "
   print Energy_Hartree_to_eV(ENC1)
   print Energy_Hartree_to_eV(ENC2)
   print Energy_Hartree_to_eV(ENC3)
   print Energy_Hartree_to_eV(ENC4)
   print ""
-  print "4x4 original - numerical attempt"
+  print "USELESS: 4x4 original - numerical attempt"
   print "eV:"
   #print Enumerical_min_set
   print np.array(Enumerical_min_set_eV)
@@ -126,14 +127,23 @@ def SiliconLDAbandGap(): #{{{
   ## NOTE: Numerical solver works well for 4x4 original case. 
   
   # Now we have corrected the 6x6 and found exact solution
-  E1, E2, E3, E4, E5, E6 = Stark6bandsEnergyShift_modified_exact(0., omega_AU, E_gap_AU, DME)
+  E1, E2, E3, E4, E5, E6 = Stark6bandsEnergyShift_modified_exact(Efield_AU, omega_AU, E_gap_AU, DME)
+  print ""
+  print "VALID: 6x6 modified exact"
+  print "eV: "
+  print Energy_Hartree_to_eV(E1)
+  print Energy_Hartree_to_eV(E2)
+  print Energy_Hartree_to_eV(E3)
+  print Energy_Hartree_to_eV(E4)
+  print Energy_Hartree_to_eV(E5)
+  print Energy_Hartree_to_eV(E6)
   
   ## Let's go for 12x12 matrix, only numerical. 
-  
+  print ""
   print "12x12 - numerical approach"
-  FourBands_E = Stark12bandsEnergyShift_notcorrected_numerical(0., omega_AU, E_gap_AU, DME, 50)
+  FourBands_E = Stark12bandsEnergyShift_notcorrected_numerical(Efield_AU, omega_AU, E_gap_AU, DME, 50)
   
-  FourBands_E_round = np.round(FourBands_E, 5)
+  FourBands_E_round = np.round(FourBands_E, 8)
   FourBands_E_round_set = set(FourBands_E_round.flatten())
   #Enumerical_max = np.round(Enumerical_max, 8)
   #Enumerical_max_set = set(Enumerical_max.flatten())

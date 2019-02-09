@@ -50,7 +50,8 @@ ShortRefGulley  = "[Gulley (2012)]"
 # 
 # Warning: Don't use this function if Efield is too small (< 1 V/m), as it leads to divergence. 
 #          Although problem should now be solved using higher precision numbers. 
-def gammaKeldysh(Egap, meff, Efield, wavelength): #{{{
+def gammaKeldysh(Egap, meff, Efield, wavelength, RefractiveIndex=1.): #{{{
+  RefractiveIndex_real = RefractiveIndex.real
   #print Egap, meff, Efield
   omegaLaser=2.*pi*c/wavelength
   ErrorMessage=""
@@ -61,7 +62,7 @@ def gammaKeldysh(Egap, meff, Efield, wavelength): #{{{
     ErrorMessage=ErrorMessage+"** Error details: "+str(int(wavelength*1E9))+" nm wavelength is too small for the gap "+str(float(Egap)/e)+".\n"
     #exit() #Avoid to quit, so that octopus still compare its results. 
   if (Efield > 1e-1): #if vectorial, then abs changed its meaning
-    result = omegaLaser*np.sqrt(m_e*meff*Egap)/e/Efield
+    result = omegaLaser*np.sqrt(m_e*meff*Egap)/e/(Efield)
     #print Efield, result
   else:
     ErrorMessage=ErrorMessage+"gamma(): Divergence, as field equals = 0. Singular case of Keldysh functions. Should give w_PI = 0 then...\n"
@@ -73,28 +74,28 @@ def gammaKeldysh(Egap, meff, Efield, wavelength): #{{{
 #}}}
 
 ## Computes some intermediate quantity, careful: long double precision.
-def Keldysh1(gamma):
+def Keldysh1phi(gamma): #phi() in Gruzdev2014
   value = np.float128(gamma) #K1(gamma) function has limit 1 when gamma > 5. Hence, we must compute k1(gamma) with a huge precision to stay out of unity. 
   return np.divide(value, np.sqrt( np.float128(1E0) + np.power(value, 2)) )
 
 ## Computes some intermediate quantity
-def Keldysh2(gamma):
+def Keldysh2theta(gamma): #theta() in Gruzdev2014
   value = np.float128(gamma) #idem about precision.
-  try:
-    result = np.divide( Keldysh1(value), value )
-  except:
-    result = np.float128(0e0)
-  return result
+  #try:
+  #except:
+    #result = np.float128(0e0)
+  #return result
+  return np.divide(1E0, np.sqrt( np.float128(1E0) + np.power(value, 2)) )
 
 ## Computes the effective gap for one material
 # @param Egap: band gap of the transition (multi-photonic transitions are DIRECT. Tunnel transitions can be INDIRECT)
 def EffectiveGap(Egap, k1, k2): #{{{
-  k11 = np.float64(k1); 
-  k22 = np.float64(k2*k2) #reducing precision to call ellipe
+  k11 = np.float64(k1); #Keldysh1phi()
+  k22 = np.float64(k2*k2) #Keldysh2theta() #reducing precision to call ellipe
   if (k11 != 0):
-    result = 2.0*Egap * ellipe(k22)/(pi*k11) #Warning: ellipe(x²) actually computes E(x). 
+    result = 2.0 / pi * Egap * ellipe(k22)/(k11) #Warning: ellipe(x²) actually computes E(x). 
   else: 
-    print "EffectiveGap(): Singular error, Keldysh1 = 0."
+    print "EffectiveGap(): Singular error, Keldysh1phi = 0."
     result = 0e0
   return result
   # Validation: 
@@ -111,46 +112,84 @@ def DawsonIntegral(z): #{{{
   z2 = np.float64(z)
   integral = dawsn(z2)
   # Validation, compared with Maple. 
-  # OK DawsonIntegral(0.)=0
+  # OK DawsnoIntegral(0.)=0
   # OK DawsonIntegral(0.5) = 0.42443638350202229
   return integral
 #}}}
 
-def KeldyshFunction(Keldysh1, Keldysh2, Ueff, nmax, wavelength): #{{{
+def KeldyshFunction(Keldysh1phi, Keldysh2theta, Ueff, nmax, wavelength): #{{{
   omegaLaser = 2.*pi*c/wavelength #SI
   n_tab = np.arange(0,nmax+1)
  
-  # print "Keldysh1 = "+str(Keldysh1)
-  Keldysh11_128 = np.power(Keldysh1,2)
-  Keldysh11 = np.float64(Keldysh11_128)
+  # print "Keldysh1phi = "+str(Keldysh1phi)
+  Keldysh1phi2_128 = np.power(Keldysh1phi,2)
+  Keldysh1phi2 = np.float64(Keldysh1phi2_128)
   # print "--"
-  # print "Keldysh11 = "+str(Keldysh11)
-  Keldysh22 = np.float64(Keldysh2**2)
-  # print "Keldysh11 = "+str(Keldysh11)
-  distant_to_unity = np.float128(1E0) - Keldysh11_128
+  # print "Keldysh1phi2 = "+str(Keldysh1phi2)
+  Keldysh2theta2 = np.float64(Keldysh2theta**2)
+  # print "Keldysh1phi2 = "+str(Keldysh1phi2)
+  distant_to_unity = np.float128(1E0) - Keldysh1phi2_128
   if (distant_to_unity < 1E-320): #then it gonna crash for sure. 
-    print "** Error on ellipk: argument 1 is singular. Distance to unit = "+str(distant_to_unity)+"Please increase precision on Keldysh1 or use ellipkm1 function (careful, argument IS not the same)."
+    print "** Error on ellipk: argument 1 is singular. Distance to unit = "+str(distant_to_unity)+"Please increase precision on Keldysh1phi or use ellipkm1 function (careful, argument IS not the same)."
   elif(distant_to_unity < 1E-10): 
     #threshold where functions ellipk and ellipkm1 give different values
-    EllipticK1 = ellipkm1( np.float64(distant_to_unity) )
+    EllipticK1_phi = ellipkm1( np.float64(distant_to_unity) )
   else: #other cases, good for efficiency
-    EllipticK1 = ellipk( Keldysh11 ) #inf if Keldysh11 = 1.  
-  EllipticE1 = ellipe( Keldysh11 )
-  EllipticE2 = ellipe( Keldysh22 )
-  # print "EllipticK1 = "+str(EllipticK1)
-  division = np.divide( EllipticK1 - EllipticE1 , EllipticE2 )
+    EllipticK1_phi = ellipk( Keldysh1phi2 ) #inf if Keldysh1phi1 = 1.  
+  EllipticE1_phi = ellipe( Keldysh1phi2 )
+  EllipticE2_theta = ellipe( Keldysh2theta2 )
+  # print "EllipticK1_phi = "+str(EllipticK1_phi)
+  division = np.divide( EllipticK1_phi - EllipticE1_phi , EllipticE2_theta )
   # print "division= "+str(division)
   exponant = np.multiply( n_tab, division )
   sumtable = np.exp( - pi * exponant )
-  sumtable = np.multiply(sumtable,DawsonIntegral(pi*np.sqrt( ((2.0*np.trunc(Ueff/hbar/omegaLaser+1.))-2.0*Ueff/hbar/omegaLaser + n_tab) / (2.0 * ellipk(Keldysh22)*ellipe(Keldysh22)) ) ) )
+  sumtable = np.multiply(sumtable,DawsonIntegral(pi*np.sqrt( ((2.0*np.trunc(Ueff/hbar/omegaLaser+1.))-2.0*Ueff/hbar/omegaLaser + n_tab) / (2.0 * ellipk(Keldysh2theta2)*ellipe(Keldysh2theta2)) ) ) ) #/4 K E correction, according to Zhukov
   #print "Effective gap: "+str(Ueff/e)+" eV."
   #print sumtable
-  result = np.multiply(np.sqrt(pi/(2.*ellipk(Keldysh22))),np.sum(sumtable))
+  result = np.multiply(np.sqrt(pi/(2.*ellipk(Keldysh2theta2))),np.sum(sumtable))
   return result
 """ Validation
-  KeldyshFunction(Keldysh1=0, Keldysh2=0, Ueff=0, nmax=0, wavelength=0): error. 
-  KeldyshFunction(Keldysh1=0, Keldysh2=0, Ueff=0, nmax=0, wavelength=800e-9): 0.
-  KeldyshFunction(Keldysh1=0, Keldysh2=0, Ueff=1.12*e, nmax=0, wavelength=800e-9): 0 
+  KeldyshFunction(Keldysh1phi=0, Keldysh2theta=0, Ueff=0, nmax=0, wavelength=0): error. 
+  KeldyshFunction(Keldysh1phi=0, Keldysh2theta=0, Ueff=0, nmax=0, wavelength=800e-9): 0.
+  KeldyshFunction(Keldysh1phi=0, Keldysh2theta=0, Ueff=1.12*e, nmax=0, wavelength=800e-9): 0 
+"""
+#}}}
+
+def KeldyshFunction_Gulley(Keldysh1phi, Keldysh2theta, Ueff, nmax, wavelength): #{{{
+  omegaLaser = 2.*pi*c/wavelength #SI
+  n_tab = np.arange(0,nmax+1)
+ 
+  # print "Keldysh1phi = "+str(Keldysh1phi)
+  Keldysh1phi2_128 = np.power(Keldysh1phi,2)
+  Keldysh1phi2 = np.float64(Keldysh1phi2_128)
+  # print "--"
+  # print "Keldysh1phi2 = "+str(Keldysh1phi2)
+  Keldysh2theta2 = np.float64(Keldysh2theta**2)
+  # print "Keldysh1phi2 = "+str(Keldysh1phi2)
+  distant_to_unity = np.float128(1E0) - Keldysh1phi2_128
+  if (distant_to_unity < 1E-320): #then it gonna crash for sure. 
+    print "** Error on ellipk: argument 1 is singular. Distance to unit = "+str(distant_to_unity)+"Please increase precision on Keldysh1phi or use ellipkm1 function (careful, argument IS not the same)."
+  elif(distant_to_unity < 1E-10): 
+    #threshold where functions ellipk and ellipkm1 give different values
+    EllipticK1_phi = ellipkm1( np.float64(distant_to_unity) )
+  else: #other cases, good for efficiency
+    EllipticK1_phi = ellipk( Keldysh1phi2 ) #inf if Keldysh1phi1 = 1.  
+  EllipticE1_phi = ellipe( Keldysh1phi2 )
+  EllipticE2_theta = ellipe( Keldysh2theta2 )
+  # print "EllipticK1_phi = "+str(EllipticK1_phi)
+  division = np.divide( EllipticK1_phi - EllipticE1_phi , EllipticE2_theta )
+  # print "division= "+str(division)
+  exponant = np.multiply( n_tab, division )
+  sumtable = np.exp( - pi * exponant )
+  sumtable = np.multiply(sumtable,DawsonIntegral(pi*np.sqrt( ((2.0*np.trunc(Ueff/hbar/omegaLaser+1.))-2.0*Ueff/hbar/omegaLaser + n_tab) / (4.0 * ellipk(Keldysh2theta2)*ellipe(Keldysh2theta2)) ) ) ) #/4 K E correction, according to Zhukov
+  #print "Effective gap: "+str(Ueff/e)+" eV."
+  #print sumtable
+  result = np.multiply(np.sqrt(pi/(2.*ellipk(Keldysh2theta2))),np.sum(sumtable))
+  return result
+""" Validation
+  KeldyshFunction(Keldysh1phi=0, Keldysh2theta=0, Ueff=0, nmax=0, wavelength=0): error. 
+  KeldyshFunction(Keldysh1phi=0, Keldysh2theta=0, Ueff=0, nmax=0, wavelength=800e-9): 0.
+  KeldyshFunction(Keldysh1phi=0, Keldysh2theta=0, Ueff=1.12*e, nmax=0, wavelength=800e-9): 0 
 """
 #}}}
 
@@ -159,42 +198,46 @@ def KeldyshFunction(Keldysh1, Keldysh2, Ueff, nmax, wavelength): #{{{
 # This function is corrected according to Gruzdev, Opt. Eng. 53, 122515 (2014)
 # Only factors of 2 are removed from inside the Keldysh integral, but inserted 
 # as a proportion in IonizationRate_Gruzdev function. 
-def KeldyshFunction_Gruzdev(Keldysh1, Keldysh2, Ueff, nmax, wavelength): #{{{
+def KeldyshFunction_Gruzdev(Keldysh1phi, Keldysh2theta, Ueff, nmax, wavelength): #{{{
   omegaLaser = 2.*pi*c/wavelength #SI
-  n=np.arange(0,nmax+1)
-  Keldysh11_128 = Keldysh1**2
-  Keldysh11 = np.float64(Keldysh11_128)
+  n=np.arange(0,nmax)
+  Keldysh1phi2_128 = Keldysh1phi**2
+  Keldysh1phi2 = np.float64(Keldysh1phi2_128)
   # print "--"
-  # print "Keldysh11 = "+str(Keldysh11)
-  Keldysh22 = np.float64(Keldysh2**2)
-  # print "Keldysh11 = "+str(Keldysh11)
-  distant_to_unity = 1E0 - Keldysh11_128
+  # print "Keldysh1phi2 = "+str(Keldysh1phi2)
+  Keldysh2theta2 = np.float64(Keldysh2theta**2)
+  # print "Keldysh1phi2 = "+str(Keldysh1phi2)
+  distant_to_unity = 1E0 - Keldysh1phi2_128
   if (distant_to_unity < 1E-320): #then it gonna crash for sure. 
-    print "** Error on ellipk: argument 1 is singular. Distance to unit = "+str(distant_to_unity)+"Please increase precision on Keldysh1 or use ellipkm1 function (careful, argument IS not the same)."
+    print "** Error on ellipk: argument 1 is singular. Distance to unit = "+str(distant_to_unity)+"Please increase precision on Keldysh1phi or use ellipkm1 function (careful, argument IS not the same)."
   elif(distant_to_unity < 1E-10):
     #threshold where functions ellipk and ellipkm1 give different values
-    EllipticK1 = ellipkm1( np.float64(distant_to_unity) )
+    EllipticK1_phi = ellipkm1( np.float64(distant_to_unity) )
   else: #other cases, good for efficiency
-    EllipticK1 = ellipk( Keldysh11 ) #inf if Keldysh11 = 1.i
-  EllipticE1 = ellipe( Keldysh11 )
-  EllipticE2 = ellipe( Keldysh22 )
+    EllipticK1_phi = ellipk( Keldysh1phi2 ) #inf if Keldysh1phi2 = 1.i
+  EllipticE1_phi   = ellipe( Keldysh1phi2 )  
+  EllipticE2_theta = ellipe( Keldysh2theta2 ) 
   #print n
-  sumtable=np.exp(-pi*n*(EllipticK1-EllipticE1)/EllipticE2)*DawsonIntegral(pi*np.sqrt( ((np.trunc(Ueff/hbar/omegaLaser+1.))-Ueff/hbar/omegaLaser + n) / (2.0 * ellipk(Keldysh22)*EllipticE2) ) )
+  sumtable=np.exp(-pi*n*(EllipticK1_phi-EllipticE1_phi)/EllipticE2_theta)*DawsonIntegral(pi*np.sqrt( ((np.trunc(Ueff/hbar/omegaLaser+1.))-Ueff/hbar/omegaLaser + n) / (2.0 * ellipk(Keldysh2theta2)*EllipticE2_theta) ) )
+  
+  # If including Gulley correction...
+  #sumtable=np.exp(-pi*n*(EllipticK1_phi-EllipticE1_phi)/EllipticE2_theta)*DawsonIntegral(pi*np.sqrt( ((np.trunc(Ueff/hbar/omegaLaser+1.))-Ueff/hbar/omegaLaser + n) / (4.0 * ellipk(Keldysh2theta2)*EllipticE2_theta) ) )
   #print "Effective gap: "+str(Ueff/e)+" eV."
   #print sumtable
-  result = np.multiply(np.sqrt(pi/(2.*ellipk(Keldysh22))), np.sum(sumtable))
+  result = np.multiply(np.sqrt(pi/(2.*ellipk(Keldysh2theta2))), np.sum(sumtable))
   return result
 
 ## The original Keldysh function for Kane direct band gap
 # This function is known to contain mistakes. 
-def IonizationRate(Keldysh1, Keldysh2, KeldyshFunctionResult, Ueff, wavelength):
-  omegaLaser = 2.*pi*c/wavelength
-  Keldysh11 = np.float64(Keldysh1 * Keldysh1)
-  Keldysh22 = np.float64(Keldysh2 * Keldysh2)
-  try:
-    result = 2.*omegaLaser/(9.*pi)*((omegaLaser*m_e)/(hbar*Keldysh1))**(1.5)*KeldyshFunctionResult*np.exp(-pi*np.trunc(Ueff/hbar/omegaLaser+1e0)*((ellipk(Keldysh11)-ellipe(Keldysh11))/(ellipe(Keldysh22))))
-  except:
-    result = 0e0
+def IonizationRate(Keldysh1phi, Keldysh2theta, KeldyshFunctionResult, Ueff, wavelength, meff=1.0):
+  omegaLaser = 2.*np.pi*c/wavelength
+  Keldysh1phi2 = np.float64(Keldysh1phi * Keldysh1phi)
+  Keldysh2theta2 = np.float64(Keldysh2theta * Keldysh2theta)
+  #try:
+  result = 2.*omegaLaser/(9.*pi)*((omegaLaser*m_e*meff)/(hbar*Keldysh1phi))**(1.5)*KeldyshFunctionResult*np.exp(-pi*np.trunc(Ueff/hbar/omegaLaser+1e0)*((ellipk(Keldysh1phi2)-ellipe(Keldysh1phi2))/(ellipe(Keldysh2theta2)))) #NOTE: the effective mass in the first term changes everything. It may force us to consider the correction of Gulley for the KeldyshFunction
+  #except:
+    #print Header+"IonizationRate: ** Error in computation of IonizationRate."
+    #result = 0e0
   return result
 
 ## Corrected Keldysh photoionization probability according to Vitaly Gruzdev (see Ref in details). 
@@ -202,10 +245,10 @@ def IonizationRate(Keldysh1, Keldysh2, KeldyshFunctionResult, Ueff, wavelength):
 # This function is corrected according to Gruzdev, Opt. Eng. 53, 122515 (2014)
 # Only factor of 2 was added outside the Keldysh integral, but removed
 # inside. 
-def IonizationRate_Gruzdev(Keldysh1, Keldysh2, KeldyshFunctionResult, Ueff, wavelength):
-  omegaLaser = 2.*pi*c/wavelength
-  result =2. * IonizationRate(Keldysh1, Keldysh2, KeldyshFunctionResult, Ueff, wavelength)
-  #2.*omegaLaser/(9.*pi)*((omegaLaser*m_e)/(hbar*Keldysh1))**(1.5)*KeldyshFunctionResult*np.exp(-pi*np.trunc(Ueff/hbar/omegaLaser+1)*((ellipk(Keldysh1**2)-ellipe(Keldysh1**2))/(ellipe(Keldysh2**2))))
+def IonizationRate_Gruzdev(Keldysh1phi, Keldysh2theta, KeldyshFunctionResult, Ueff, wavelength, meff=1.0):
+  omegaLaser = 2.*np.pi*c/wavelength
+  result =2. * IonizationRate(Keldysh1phi, Keldysh2theta, KeldyshFunctionResult, Ueff, wavelength, meff)
+  #2.*omegaLaser/(9.*pi)*((omegaLaser*m_e)/(hbar*Keldysh1phi))**(1.5)*KeldyshFunctionResult*np.exp(-pi*np.trunc(Ueff/hbar/omegaLaser+1)*((ellipk(Keldysh1phi**2)-ellipe(Keldysh1phi**2))/(ellipe(Keldysh2theta**2))))
   
   return result
 
@@ -229,20 +272,23 @@ def BristowLaw(wavelength, Egap):#{{{
   return beta
 #}}}
 
-## Generate Keldysh tables for interfacing with codes
+## Generate Keldysh-Gruzdev tables for interfacing with codes
 # Input: 
 # @param Egap: scalar (J)
-# @param meff: scalar (no unit)
+# @param meff: scalar (no unit, electron mass is accounted directly in the routine)
 # @param wavelength: laser wavelength (scalar, meters)
 # @param PeakField: laser field amplitude (scalar, V/m)
 # @param order: integration order for Keldysh model (integer, no unit)
-def GenerateKeldyshDatabase(Egap, meff, wavelength, PeakField, order): #{{{
+# @param RefractiveIndex: in Gruzdev2014, Epeak must be multiplied by sqrt(RefractiveIndex) to EXACTLY repeat his results. This originates that pulse duration is shortened in matter. 
+def GenerateKeldyshDatabase(Egap, meff, wavelength, PeakField, order, RefractiveIndex=1): #{{{
   ErrorMessage = ""
-  gamma = gammaKeldysh(Egap, meff, PeakField, wavelength) #valid for scalar data
-  k1 = Keldysh1(gamma); k2 = Keldysh2(gamma) #valid
+  # I = 0.5 c epsilon_0 n0 E**2
+  # E = np.sqrt(2 I / c / epsilon_0 / n0)
+  gamma = gammaKeldysh(Egap, meff, PeakField, wavelength, RefractiveIndex.real) #valid for scalar data
+  k1 = Keldysh1phi(gamma); k2 = Keldysh2theta(gamma) #valid
   EgapEff = EffectiveGap(Egap, k1, k2) # Original formula from Keldysh. Warning: scipy.special.ellipe (https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.ellipe.html#scipy.special.ellipe) uses a different convention than Maple, Wikipedia or mpmath.
   KeldyshFunctionResultG = KeldyshFunction_Gruzdev( k1, k2, EgapEff, order, wavelength )
-  wPIg = IonizationRate_Gruzdev(k1, k2, KeldyshFunctionResultG, EgapEff, wavelength)
+  wPIg = IonizationRate_Gruzdev(k1, k2, KeldyshFunctionResultG, EgapEff, wavelength, meff)
   return wPIg
 #}}}
 
@@ -250,8 +296,8 @@ def GenerateKeldyshDatabase(Egap, meff, wavelength, PeakField, order): #{{{
 FieldToIntensity                        = np.vectorize(FieldToIntensity)
 IntensityToField                        = np.vectorize(IntensityToField)
 gammaKeldysh                            = np.vectorize(gammaKeldysh)
-Keldysh1                                = np.vectorize(Keldysh1)
-Keldysh2                                = np.vectorize(Keldysh2)
+Keldysh1phi                                = np.vectorize(Keldysh1phi)
+Keldysh2theta                                = np.vectorize(Keldysh2theta)
 EffectiveGap                            = np.vectorize(EffectiveGap)
 KeldyshFunction                         = np.vectorize(KeldyshFunction)
 KeldyshFunction_Gruzdev                 = np.vectorize(KeldyshFunction_Gruzdev)
@@ -269,8 +315,8 @@ GenerateKeldyshDatabase                 = np.vectorize(GenerateKeldyshDatabase)
 # @param dt: precision (scalar, seconds)
 # @param order: integration order for Keldysh model (integer, no unit)
 # @N_total: limiter for the ionizable number of electrons (float, m^{-3})
-def generateWpiTables(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, tau = 10e-15, FieldEnvelope = 1e9, dt = 1E-17, order = 50, N_total=4*5E28, t0=0.0): #{{{
-
+def generateWpiTables(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, tau = 10e-15, FieldEnvelope = 1e9, dt = 1E-17, order = 50, N_total=4*5E28, t0=0.0, TemporalIntegration=False, OpticalIndex=1.): #{{{
+  Header="[libKeldysh] generateWpiTables: "
   print Header+"Defining the laser pulse..."
   # t0 = 0e0
   tmin = -2.*tau+t0
@@ -284,8 +330,8 @@ def generateWpiTables(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, tau
   #PulseEnvelope=PulseGaussianTemporalShape(instants, tau, Intensity, t0)
   #FieldEnvelope, PulseEnvelope = PulseSquaredSinTemporalShape(instants, tau, Intensity, wavelength, t0) #TODO: this should be generated outside this function
   IntensityEnvelope=FieldToIntensity(FieldEnvelope)
-  print Header+"** Info: Peak intensity = "+str(np.max(IntensityEnvelope)/1E4)+" W/cm^2."
-  print Header+"** Info: Peak field amplitude = "+str(np.max(FieldEnvelope)/1E9)+" V/nm."
+  print Header+"** Info: Peak intensity = ["+str(np.min(IntensityEnvelope)/1E4)+", "+str(np.max(IntensityEnvelope)/1E4)+"] W/cm^2."
+  print Header+"** Info: Peak field amplitude = ["+str(np.min(FieldEnvelope)/1E9)+", "+str(np.max(FieldEnvelope)/1E9)+"] V/nm."
 
   #print "** Starting the self-consistent loop..."
 
@@ -293,51 +339,60 @@ def generateWpiTables(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, tau
   #print "** ITERATION "+str(i)
   print Header+"Computing Adiabadicity coefficients for the pulse envelope..."
   
-  gamma = gammaKeldysh(Egap, meff, FieldEnvelope, wavelength) #valid for scalar|vector data
+  gamma = gammaKeldysh(Egap, meff, FieldEnvelope, wavelength, OpticalIndex.real) #valid for scalar|vector data
   #gamma = gammaKeldysh(EgapEff, meff, IntensityToField(PulseEnvelope), wavelength) #self-consistent, divergent
   print Header+"** Info: Adiabadicity parameter: (min,max) = ("+str(gamma.min())+", "+str(gamma.max())+")."
 
-  #print "Computing Keldysh1, Keldysh2..."
-  k1 = Keldysh1(gamma); k2 = Keldysh2(gamma) #valid
+  #print "Computing Keldysh1phi, Keldysh2theta..."
+  k1 = Keldysh1phi(gamma); k2 = Keldysh2theta(gamma) #valid
   EgapEff = EffectiveGap(Egap, k1, k2) # Original formula from Keldysh. Warning: scipy.special.ellipe (https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.ellipe.html#scipy.special.ellipe) uses a different convention than Maple, Wikipedia or mpmath.
   #EgapEff = EffectiveGap(EgapEff, k1, k2) #This formula was made self-consistent, but divergent. 
   #order = 50
 
   print ""
-  print Header+"** Info: Egap = "+str(Egap/e)+" eV, max[Ueff] = "+str(EgapEff.max()/e)+" eV."
-  #print Header+"** Debug info: Keldysh1: min,max = ( "+str(np.min(k1))+", "+str(np.max(k1))+"), Keldysh2 = "+str(k2)
+  print Header+"** Info: Egap = "+str(Egap/e)+" eV." 
+  print Header+"** Info: effective Egap: ["+str(np.min(EgapEff/e))+", "+str(np.max(EgapEff)/e)+"] eV."
+  #print Header+"** Debug info: Keldysh1phi: min,max = ( "+str(np.min(k1))+", "+str(np.max(k1))+"), Keldysh2theta = "+str(k2)
   
   KeldyshFunctionResult  = KeldyshFunction( k1, k2, EgapEff, order, wavelength )
   KeldyshFunctionResultG = KeldyshFunction_Gruzdev( k1, k2, EgapEff, order, wavelength )
+  
+  print Header+"** Debug info: KeldyshFunctionResult: "+str(np.min(KeldyshFunctionResult))+", "+str(np.max(KeldyshFunctionResult))
+  
+  print Header+"** Debug info: KeldyshFunctionResultG: "+str(np.min(KeldyshFunctionResultG))+", "+str(np.max(KeldyshFunctionResultG))
 
   #print "** End of self-consistent loop..."
   print Header+"Computes w_PI (Keldysh), and w_PIg (Gruzdev) for the pulse envelope..."
-  wPI = IonizationRate(k1, k2, KeldyshFunctionResult, EgapEff, wavelength)
-  wPIg = IonizationRate_Gruzdev(k1, k2, KeldyshFunctionResultG, EgapEff, wavelength)
-  print Header+"w_PI until order "+str(order)+" = ", wPI.max()
+  wPI = IonizationRate(k1, k2, KeldyshFunctionResult, EgapEff, wavelength, meff)
+  wPIg = IonizationRate_Gruzdev(k1, k2, KeldyshFunctionResultG, EgapEff, wavelength, meff)
+  print Header+"w_PI (Keldysh) until order "+str(order)+" (min,max) = ", np.min(wPI), np.max(wPI)
+  print Header+"w_PI (Gruzdev) until order "+str(order)+" (min,max) = ", np.min(wPIg), np.max(wPIg)
 
   #print "Developing: exporting the table..."
   #exit()
   print ""
-  print Header+"Temporal integration..."
   
-  # Temporal integration without limiter
-  dN_excited_Keldysh = np.multiply(wPI, dt)
-  dN_excited_Gruzdev = np.multiply(wPIg, dt)
-  
-  # Just multiply array of w_PI by dt, with limited to Ntotal
-  N_excited_Keldysh = np.zeros(np.shape(dN_excited_Keldysh))
-  N_excited_Gruzdev = np.zeros(np.shape(dN_excited_Gruzdev))
-  
-  ## Temporal integration using trapeze method to plot Ne(t) 
-  for i in range(1,len(dN_excited_Keldysh)):
-      N_excited_Keldysh[i] = N_excited_Keldysh[i-1] + 0.5*(dN_excited_Keldysh[i-1] + dN_excited_Keldysh[i])
-      N_excited_Gruzdev[i] = N_excited_Gruzdev[i-1] + 0.5*(dN_excited_Gruzdev[i-1] + dN_excited_Gruzdev[i])
-      
-  # Trapeze integration method
-  N_excited_Keldysh_trapz = np.trapz(wPI, instants)
-  N_excited_Gruzdev_trapz = np.trapz(wPIg, instants)
-  
+  if(TemporalIntegration): 
+    print Header+"Temporal integration..."
+    
+    # Temporal integration without limiter
+    dN_excited_Keldysh = np.multiply(wPI, dt)
+    dN_excited_Gruzdev = np.multiply(wPIg, dt)
+    
+    # Just multiply array of w_PI by dt, with limited to Ntotal
+    N_excited_Keldysh = np.zeros(np.shape(dN_excited_Keldysh))
+    N_excited_Gruzdev = np.zeros(np.shape(dN_excited_Gruzdev))
+    
+    ## Temporal integration using trapeze method to plot Ne(t) 
+    for i in np.arange(1,len(dN_excited_Keldysh),1):
+        N_excited_Keldysh[i] = N_excited_Keldysh[i-1] + 0.5*(dN_excited_Keldysh[i-1] + dN_excited_Keldysh[i])
+        N_excited_Gruzdev[i] = N_excited_Gruzdev[i-1] + 0.5*(dN_excited_Gruzdev[i-1] + dN_excited_Gruzdev[i])
+        
+    # Trapeze integration method
+    N_excited_Keldysh_trapz = np.trapz(wPI, instants)
+    N_excited_Gruzdev_trapz = np.trapz(wPIg, instants)
+  else: 
+    N_excited_Keldysh = 0e0; N_excited_Gruzdev=0e0; N_excited_Keldysh_trapz=0e0; N_excited_Gruzdev_trapz=0e0
   # Temporal integration with limiter
   ##dN_excited_Bristow = np.multiply(BristowLaw(wavelength, Egap)*intensity**2/(2*hbar*omega)), dt)
   
@@ -361,29 +416,36 @@ def generateWpiTables(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, tau
 # @param meff (adim): effective mass of the conduction band
 # @param wavelength (meters): photon wavelength of the excitation
 # @param Efield (V/m): electric field envelope of the pulse (scalar|vector)
-def KeldyshTunnelingLimit(Egap, meff, wavelength, Efield): #{{{
+def KeldyshTunnelingLimit(Egap, meff, wavelength, Efield, EnableStarkEffect=False, OpticalIndex=1.): #{{{
     
-    gamma = gammaKeldysh(Egap, meff, Efield, wavelength) #valid for scalar data
-    k1 = Keldysh1(gamma); k2 = Keldysh2(gamma) #valid
-    EgapEff0 = EffectiveGap(Egap, k1, k2)
+    gamma = gammaKeldysh(Egap, meff, Efield, wavelength, OpticalIndex.real) #valid for scalar data
+    
+    k1 = Keldysh1phi(gamma); k2 = Keldysh2theta(gamma) #valid
+    
+    EgapEff = EffectiveGap(Egap, k1, k2)
     omegaLaser=2.*pi*c/wavelength
     
     #EgapEff = np.clip(EgapEff0, 2*Egap, 10*Egap)
-    EgapEff = EgapEff0 #no filter
-    # Direct from Keldysh paper
-    w_tunnel = 2./9./np.pi**2 * EgapEff / hbar * (m_e*meff*EgapEff/hbar**2)**1.5 * (e*hbar*Efield/(m_e*meff)**0.5/EgapEff**1.5)**2.5  *np.exp(-0.5*np.pi*(m_e*meff)**0.5*EgapEff**1.5/e/hbar/Efield * (1.-1./8.*(m_e*meff)*omegaLaser**2*EgapEff/e**2/Efield**2))
+    if(not EnableStarkEffect):
+        EgapEff = Egap #For Keldysh1phi965 and Kaiser2000, this line MUST NOT be commented. 
+    
+    # Direct from Keldysh paper #BUG: overflow in the exp() !!!
+    #w_tunnel = 2./9./np.pi**2 * EgapEff / hbar * (m_e*meff*EgapEff/hbar**2)**1.5 * (e*hbar*Efield/(m_e*meff)**0.5/EgapEff**1.5)**2.5  *np.exp(-0.5*np.pi*(m_e*meff)**0.5*EgapEff**1.5/e/hbar/Efield * (1.-1./8.*(m_e*meff)*omegaLaser**2*EgapEff/e**2/Efield**2))
     
     # Taken from Kaiser Phys Rev B, 2000 [not completely validated - gives same result as Keldysh, but still could not obtain Fig. 2 of Kaiser 2000.]
-    #w_tunnel = 2./9./np.pi**2 * EgapEff / hbar * (m_e*meff*EgapEff/hbar**2)**1.5 * (hbar*omegaLaser/EgapEff/gamma)**2.5 * np.exp(-0.5*np.pi*EgapEff*gamma/hbar/omegaLaser * (1.-1./8.*gamma**2))
+    
+    w_tunnel = 2./9./np.pi**2 * EgapEff / hbar * (m_e*meff*EgapEff/hbar**2)**1.5 * (hbar*omegaLaser/EgapEff/gamma)**2.5 * np.exp(-0.5*np.pi*EgapEff*gamma/hbar/omegaLaser * (1.-1./8.*gamma**2))
     
     return w_tunnel
 #}}}
 
 ## Provides the intensity for which gamma has the given value.
 # Useful to normalize the peak field. 
-def IntensityAtGamma(gamma, Egap_SI, meff, wavelength):
+def IntensityAtGamma(gamma, Egap_SI, meff, wavelength, RefractiveIndex=1):
   omega = 2.*np.pi * c / wavelength
-  Ipeak = meff*m_e*Egap_SI*omega**2*c*epsilon_0 / (2. * e**2 * gamma ** 2)
+  RefractiveIndex_real = RefractiveIndex.real
+  #gamma = 1 <=> omega * sqrt(m_e*meff*Egap)/e/Efield/sqrt(RefractiveIndex_real) = 1 <=> m_e*meff*Egap/e**2 = 0.5 * Efield**2*(RefractiveIndex_real)
+  Ipeak = meff*m_e*Egap_SI*omega**2*c*epsilon_0 / (2. * e**2 * gamma ** 2) / RefractiveIndex_real
   return Ipeak
     
 ## Compute and plot density evolution with time using the specific parameters.
@@ -414,12 +476,12 @@ def plotPulseToDensity(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, ta
   print ""
   
   # Direct sum
-  print Header+"Maximum density N_ex "+ShortRefKeldysh+" = "+str(N_excited_Keldysh.max())+"."
-  print Header+"Maximum density N_ex "+ShortRefGruzdev+" = "+str(N_excited_Gruzdev.max())+"."
+  print Header+"Maximum density N_ex "+ShortRefKeldysh+" = "+str(np.max(N_excited_Keldysh))+"."
+  print Header+"Maximum density N_ex "+ShortRefGruzdev+" = "+str(np.max(N_excited_Gruzdev))+"."
   
   # Trapeze integration rule
-  print Header+"Maximum density N_ex "+ShortRefKeldysh+" = "+str(N_excited_Keldysh_trapz.max())+"."
-  print Header+"Maximum density N_ex "+ShortRefGruzdev+" = "+str(N_excited_Gruzdev_trapz.max())+"."
+  print Header+"Maximum density N_ex "+ShortRefKeldysh+" = "+str(np.max(N_excited_Keldysh_trapz))+"."
+  print Header+"Maximum density N_ex "+ShortRefGruzdev+" = "+str(np.max(N_excited_Gruzdev_trapz))+"."
   print ""
 #  return N_excited_Gruzdev 
   if(ShowPlot): 
@@ -431,7 +493,7 @@ def plotPulseToDensity(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, ta
     #plt.figure()
     plt.figure(figsize=(15,15))
     
-    plt.subplot(411)
+    plt.subplot(311)
     plt.title(r"Gap = "+str(Egap/e)+" eV, $\lambda=$ "+str(wavelength*1E9)+r" nm, $\tau=$"+str(tau*xunit)+" "+timeunit+", "+r"$E_{max}=$"+str(np.max(FieldEnvelope)/1E9)+" V/nm")
     #plt.xlabel("Field (V/m)")
     #plt.xlabel("Time (ps)")
@@ -440,7 +502,7 @@ def plotPulseToDensity(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, ta
     plt.grid()
     plt.legend(loc=3)
     
-    plt.subplot(412)
+    plt.subplot(312)
     #plt.xlabel("Field (V/m)")
     #plt.xlabel("Time (ps)")
     plt.ylabel("Adiabadicity $\gamma$")
@@ -448,7 +510,7 @@ def plotPulseToDensity(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, ta
     plt.grid()
     plt.legend(loc=3)
 
-    plt.subplot(413)
+    plt.subplot(313)
     #plt.xlabel("Field (V/m)")
     #plt.xlabel("Time (ps)")
     plt.ylabel("$w_{PI}$ (m$^{-3}$ s$^{-1}$)")
@@ -457,38 +519,43 @@ def plotPulseToDensity(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, ta
     plt.grid()
     plt.legend(loc=2)
 
-    plt.subplot(414)
+    #plt.subplot(414)
     
-    plt.xlabel("Time ("+timeunit+")")
-    # plt.xlabel("Field (V/m)")
-    plt.ylabel("Density (m$^{-3}$)")
-    plt.plot(instants[0:sizeGamma]*xunit, N_excited_Keldysh, color="r", label="$n_e$ "+ShortRefKeldysh)
-    plt.plot(instants[0:sizeGamma]*xunit, N_excited_Gruzdev, color="b", label="$n_e$ "+ShortRefGruzdev)
-    plt.grid()
+    #plt.xlabel("Time ("+timeunit+")")
+    ## plt.xlabel("Field (V/m)")
+    #plt.ylabel("Density (m$^{-3}$)")
+    #plt.plot(instants[0:sizeGamma]*xunit, N_excited_Keldysh, color="r", label="$n_e$ "+ShortRefKeldysh)
+    #plt.plot(instants[0:sizeGamma]*xunit, N_excited_Gruzdev, color="b", label="$n_e$ "+ShortRefGruzdev)
+    #plt.grid()
+    
     plt.legend(loc=2)
+    plt.tight_layout()
     plt.savefig("KeldyshSimple.eps") 
     
     ### Second plot
-    print Header+"Importing Gulley [2012] data..."
-    try:
-      Gulley2012=np.loadtxt("Gulley-Fig2.csv", dtype='float', delimiter='\t')
-      #print Gulley2012[:,0]
-    except: 
-      print Header+"** Warning: failed to import Gulley2012 data table..."
+    #print Header+"Importing Gulley [2012] data..."
+    #try:
+      ##Gulley2012=np.loadtxt("Gulley-Fig2.csv", dtype='float', delimiter='\t')
+      ##Gulley2012=np.loadtxt("Gruzdev2014-Fig1.csv", dtype='float', delimiter=',')
+      ##print Gulley2012[:,0]
+    #except: 
+      #print Header+"** Warning: failed to import Gulley2012 data table..."
       
     
-    print Header+"Plotting as function of laser field envelope..."
-    plt.figure()
-    plt.xlabel("Intensity (W/m$^{2}$)")
-    plt.ylabel("$w_{PI}$ (m$^{-3}$ s$^{-1}$)")
-    #plt.loglog(FieldToIntensity(FieldEnvelope.real), wPI,  linestyle="-", color="r", label=r"$w_{PI}$ "+ShortRefKeldysh)
-    plt.loglog(FieldToIntensity(FieldEnvelope.real), wPIg, linestyle="-", color="b", label=r"$w_{PI}$ "+ShortRefGruzdev)
+    #print Header+"Plotting as function of laser field intensity ..."
+    #plt.figure()
+    #plt.xlabel("Intensity (W/cm$^{2}$)")
+    #plt.ylabel("$w_{PI}$ (cm$^{-3}$ fs$^{-1}$)")
+    #plt.loglog(1e-4*FieldToIntensity(FieldEnvelope.real), 1e-6*1e-15*wPI,  linestyle="-", color="r", label=r"$w_{PI}$ "+ShortRefKeldysh)
+    #plt.loglog(1e-4*FieldToIntensity(FieldEnvelope.real), 1e-6*1e-15*wPIg, linestyle="-", color="b", label=r"$w_{PI}$ "+ShortRefGruzdev)
     #plt.loglog(Gulley2012[:,0], Gulley2012[:,1], linestyle="-", color="k", label="Data from "+ShortRefGulley) #JUST FOR VALIDATION. 
-    plt.grid()
-    plt.legend(loc=2)
-    plt.xlim((1E11*1E4, 1E13*1E4))
-    plt.ylim((1E20*1E6,1E40*1E6))
-    plt.savefig("Keldysh-Field-Wpi.eps") 
+    #plt.grid()
+    #plt.legend(loc=2)
+    #plt.xlim((1E10, 1E14))
+    ##plt.ylim((1E20*1E6,1E40*1E6))
+    #plt.tight_layout()
+    #plt.savefig("Keldysh-Field-Wpi.eps")
+    #plt.show()
     
   return instants, N_excited_Keldysh, N_excited_Gruzdev
 #}}}

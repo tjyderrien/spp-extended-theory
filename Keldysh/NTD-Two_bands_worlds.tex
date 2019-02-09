@@ -1,0 +1,486 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage[latin1]{inputenc}
+%\usepackage[francais]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{dsfont}
+\usepackage{calc}
+\usepackage{array}
+\usepackage[a4paper]{geometry}
+\usepackage{graphicx}
+%\usepackage{bbold}
+\usepackage{tensor}
+\geometry{tmargin=1.5cm}
+\geometry{lmargin=1.5cm}
+\geometry{scale=0.8, nohead}
+
+%\geometry{tmargin=1.5cm}
+%\geometry{bmargin=2cm}
+\geometry{scale=0.8, nohead}
+
+
+\usepackage{titlesec}
+% \titleformat{\chapter}[display]% OLD
+%     {\normalfont\huge\bfseries}{\chaptertitlename\ \thechapter}{20pt}{\Huge}% OLD
+% \titlespacing*{\chapter}{0pt}{50pt}{40pt}% OLD
+\titleformat{\chapter}[display]% NEW
+    {\fontfamily{ptm}\Large\bfseries\centering}{\chaptertitlename\ \thechapter}{5pt}{\Large}% NEW
+\titlespacing*{\chapter}{0pt}{30pt}{20pt}% NEW
+\renewcommand*\thesection{\arabic{section}}
+
+\renewcommand{\vec}[1]{\mathbf{#1}}
+\newcommand{\tens}[1]{\stackrel{\leftrightarrow}{#1}}
+\usepackage{color}
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+
+\newcommand{\vecp}[1]{\mathbf{#1}_{||}}
+\newcommand{\macrofield}[5]{\big[\vec{#1}(\vec{#2_{||}},#3,#5 )\big]_{#4_{||}}}
+\newcommand{\macrofieldlong}[5]{\big[{#1}^L(\vec{#2_{||}},#3,#5 )\big]_{#4_{||}}}
+
+\newcommand{\bra}{\langle}
+\newcommand{\ket}{\rangle}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\chapter*{Viewing the world with two bands}
+
+\section{Semiconductor Bloch Equations (SBE)}
+
+In order to compare and understand the results presented by other group, we work in the framework of the semiconductor Bloch equations.
+
+\subsection{TDDFT version of SBE}
+
+In Ref.~\cite{PhysRevB.77.075204}, authors have showm that it is possible to formulate the TDDFT equations in the form of semiconductor Bloch equations.
+Here we report the main equations, using the same notations than in the paper. 
+We start with the time-dependent wave function, expressed in the basis of the ground-state wave functions
+\begin{equation}
+ \Psi^{v_i}_{\vec{k}}(\vec{r},t) = \sum_{j, \vec{q}}\Big[ c^{v_iv_j}_{\vec{kq}}(t)\phi^{v_j}_{\vec{q}}(\vec{r}) + c^{v_ic_j}_{\vec{kq}}(t)\phi^{c_j}_{\vec{q}}(\vec{r})\Big].\nonumber
+\end{equation}
+The one-body density matrix is then given by~\cite{PhysRevB.77.075204}
+\begin{equation}
+ \rho_{\vec{k};\vec{qp}}^{v_i;l_m\overline{l}_n}(t) = c^{v_il_m}_{\vec{kq}}(t)[c^{v_i\overline{l}_n}_{\vec{kp}}(t)]^*.
+\end{equation}
+This definition is usefull for defining occupation of the states, and is, in principle, exact as it is a reformulation of the time-dependent Kohn-Sham equations~\cite{PhysRevB.77.075204}.
+The density matrix equation satifies the following equation of motion~\cite{PhysRevB.77.075204}
+\begin{eqnarray}
+ i\frac{\partial}{\partial t}\rho_{\vec{k};\vec{qp}}^{v_i;l_ml_n'}(t) &=& \left[ H(t),\rho\right]_{\vec{k};\vec{qp}}^{v_i;l_ml_n'} \nonumber\\
+  &=& \sum{l_j'',\vec{q'}} \left[ H_{\vec{k};\vec{qq'}}^{l_ml_j''}(t) \rho_{\vec{k};\vec{q'p}}^{v_i;l_j''l_n'}(t) - \rho_{\vec{k};\vec{qq'}}^{v_i;l_ml_j''}(t)H_{\vec{k};\vec{q'p}}^{l_j''l_n'}(t)   \right],
+\end{eqnarray}
+where the Hamiltonian matrix elements $ H_{\vec{k};\vec{qq'}}^{l_ml_j''}(t)$ are
+\begin{eqnarray}
+  H_{\vec{k};\vec{qq'}}^{l_ml_j''}(t) &=& \int_{cell} d^3\vec{r} \Psi^{l_m*}_{\vec{q}}(\vec{r}) H(t)\Psi^{l_j''}_{\vec{q'}}(\vec{r}) \nonumber\\
+   &=& E_{\vec{k}}^{l_m}\delta_{l_ml_n'}\delta_{\vec{kq}} + \vec{E}(t)d^{l_ml_n'}_{\vec{kq}} + V_{H,\vec{kq}}^{l_ml_n'}(t) +  + V_{xc,\vec{kq}}^{l_ml_n'}(t).
+\end{eqnarray}
+The dipole matrix elements are given by
+\begin{equation}
+ d^{l_ml_n'}_{\vec{kq}} = \int d^3\vec{r} \Psi^{l_m*}_{\vec{q}}(\vec{r})\vec{r}\Psi^{l_j''}_{\vec{q'}}(\vec{r}),
+\end{equation}
+and $V_{H,\vec{kq}}^{l_ml_n'}(t)$ and $V_{xc,\vec{kq}}^{l_ml_n'}(t)$ are defined as
+\begin{equation}
+  V_{H,\vec{kq}}^{l_ml_n'}(t) = \int d^3\vec{r} \Psi^{l_m*}_{\vec{q}}(\vec{r})\Big[V_{H}[n](\vec{r},t) - V_{H}[n](\vec{r},t_0) \Big] \Psi^{l_j''}_{\vec{q'}}(\vec{r}).
+\end{equation}
+
+
+\subsection{Two-band version of TDDFT SBE}
+
+From the previous equations, it is possible to derive a two-band model.~\cite{PhysRevB.77.075204} We now assume that the physical properties are well describe using the  highest valence band and the lowest conduction band.
+We also assume the dipole approximation for the external field, therefore we obtain that
+\begin{equation}
+ c^{vv}_\vec{kq}(t) = \delta_{\vec{kq}} c^{vv}_\vec{k}(t), \qquad c^{vc}_\vec{kq}(t) = \delta_{\vec{kq}} c^{vc}_\vec{k}(t),\nonumber
+\end{equation}
+which means that the optical transition have no momentum transfered.
+Obviously, we have $\rho^{vv}_\vec{k}(t) + \rho^{cc}_\vec{k}(t) = 1$, and $\rho^{vc*}_\vec{k}(t)=\rho^{cv}_\vec{k}(t)$.
+
+In Ref.~\cite{PhysRevB.77.075204}, authors obtained the TDDFT version of the SBE for a two-level system
+\begin{subequations}
+ \begin{align}
+  \frac{\partial }{\partial t} \rho^{vv}_\vec{k}(t) =& -2\mathrm{Im}\{[E(t)d^{cv}_{\vec{k}} +  V_{H,\vec{k}}^{cv}(t) +  V_{xc,\vec{k}}^{cv}(t)]\rho^{vc}_\vec{k}(t) \},\\
+  \frac{\partial }{\partial t} \rho^{vc}_\vec{k}(t) =& -i[E_\vec{k}^v-E_\vec{k}^c]\rho^{vc}_\vec{k}(t) - i[\rho^{cc}_\vec{k}(t)-\rho^{vv}_\vec{k}(t)][E(t)d^{vc}_{\vec{k}}+V_{H,\vec{k}}^{vc}(t) +  V_{xc,\vec{k}}^{vc}(t)] \nonumber \\
+   &-i[V_{H,\vec{k}}^{vv}(t) +  V_{xc,\vec{k}}^{vv}(t) - V_{H,\vec{k}}^{cc}(t) -  V_{xc,\vec{k}}^{cc}(t)]\rho^{vc}_\vec{k}(t)
+ \end{align}
+ \label{eq:twolevel_TDDFT}
+\end{subequations}
+
+
+\subsection{Corkum's equations}
+
+In Ref.~\cite{PhysRevLett.113.073901}, the two-level density matrix equations used are
+\begin{subequations}
+ \begin{align}
+ \dot{\pi}(\vec{K},t) = -\frac{\pi(\vec{K},t)}{T_2} - i\Omega(\vec{K},t)w(\vec{K},t)e^{-iS(\vec{K},t)}, \\
+ \dot{n}_m(\vec{K},t) = is_m\Omega^*(\vec{K},t)\pi(\vec{K},t)e^{iS(\vec{K},t)} + c.c.,
+ \end{align}
+  \label{eq:twolevel_Corkum}
+\end{subequations}
+where $n_m$ is the valence ($m=v$) and the conduction ($m=c$) band population, and $w=n_v-n_c$ is the population difference. Also, we have
+$s_m=-1,1$, for $m=v,c$ respectively, and $\vec{K}=\vec{k}-\vec{A}(t)$. Further, $T_2$ accounts for the dephasing.
+$S(\vec{K},t) = \int_{-\infty}^t E_{g}[\vec{K}+\vec{A}(t')]dt'$ is the classical action and $\Omega(\vec{K},t) = \vec{F}(t)\ldotp\vec{d}(\vec{k})$, is the Rabi frequency, with $\vec{F}(t) = \frac{d\vec{A}(t)}{dt}$ and $d(\vec{k})$ is the transition dipole moment 
+\begin{equation}
+ \vec{d}(\vec{k}) = i\int d^3\vec{x} u^*_{v,\vec{k}}(\vec{x})\nabla_{\vec{k}}u_{c,\vec{k}}(\vec{x}),
+ \label{eq:dipole_Corkum}
+\end{equation}
+with the periodic part of the Bloch function $u_{c,\vec{k}}(\vec{x})$.
+
+\subsection{Comparison between the two formalism}
+
+In order to link the two formalism, we follow Ref.~\cite{PhysRevLett.113.073901} and we introduce the transformation
+\begin{equation}
+ c^{mm}_\vec{k}(t) = b^{m}_\vec{k}(t)\mathrm{exp}(-i\int_{-\infty}^t E_{\vec{k}}^m dt'),
+\end{equation}
+where $m$ can be $v$ or $c$.
+
+We now define $n_m = |b^{m}|^2$ and $\pi = b^{c*} b^{v}$.
+These two quantity are related to the previous one as 
+\begin{eqnarray}
+  n_m(\vec{k},t) = \rho^{mm}_\vec{k}(t), \nonumber\\
+  \pi(\vec{k},t)e^{iS(\vec{k},t)} = \rho^{vc}_\vec{k}(t),  \nonumber
+\end{eqnarray}
+
+We directly obtain that $\left[\rho^{cc}_\vec{k}(t) - \rho^{vv}_\vec{k}(t)\right] = w(\vec{k},t)$.
+
+Using this notations, we Eq.~\ref{eq:twolevel_TDDFT} reads as
+\begin{subequations}
+ \begin{align}
+  \dot{n}_v(\vec{k},t) =& i[E(t)d^{cv}_{\vec{k}} +  V_{H,\vec{k}}^{cv}(t) +  V_{xc,\vec{k}}^{cv}(t)]\pi(\vec{k},t)e^{iS(\vec{k},t)} + c.c,\\
+  \frac{\partial }{\partial t} [\pi(\vec{k},t)e^{iS(\vec{k},t)}] =& -i[E_\vec{k}^v-E_\vec{k}^c]\pi(\vec{k},t)e^{iS(\vec{k},t)} - i w(\vec{k},t)[E(t)d^{vc}_{\vec{k}}+V_{H,\vec{k}}^{vc}(t) +  V_{xc,\vec{k}}^{vc}(t)] \nonumber \\
+   &-i[V_{H,\vec{k}}^{vv}(t) +  V_{xc,\vec{k}}^{vv}(t) - V_{H,\vec{k}}^{cc}(t) -  V_{xc,\vec{k}}^{cc}(t)]\pi(\vec{k},t)e^{iS(\vec{k},t)}
+ \end{align}
+ \label{eq:twolevel_TDDFT_2}
+\end{subequations}
+
+The second equation can be rewritten after simple algebra as
+\begin{eqnarray}
+   \dot{\pi}(\vec{k},t) &=& 2i[E_\vec{k}^c(t)-E_\vec{k}^v(t)]\pi(\vec{k},t)  - i w(\vec{k},t)[E(t)d^{vc}_{\vec{k}}+V_{H,\vec{k}}^{vc}(t) +  V_{xc,\vec{k}}^{vc}(t)]e^{-iS(\vec{k},t)} \nonumber \\
+   &&-i[V_{H,\vec{k}}^{vv}(t) +  V_{xc,\vec{k}}^{vv}(t) - V_{H,\vec{k}}^{cc}(t) -  V_{xc,\vec{k}}^{cc}(t)]\pi(\vec{k},t)\nonumber
+\end{eqnarray}
+
+In order to link with the equation of  Ref.~\cite{PhysRevLett.113.073901}, we now introduce use the relation between the dipole matrix element and the dipole moment matrix element,
+\begin{equation}
+ d^{mn}_{\vec{k}} = i\partial_\vec{k} u_{m,\vec{k}}(t)\delta_{mn} + i\int d^3\vec{r} u^*_{m,\vec{k}}(\vec{x})\nabla_{\vec{k}}u_{n,\vec{k}}(\vec{x})\nonumber
+\end{equation}
+Therefore, we get that $d^{vc}_{\vec{k}}$ is directly replaced by $\vec{d}(\vec{k})$ in Corkum's notation.
+Thus, we obtain that $E(t)d^{vc}_{\vec{k}}$ corresponds to $\Omega(\vec{k},t)$.
+
+Putting everything together, we obtain that
+\begin{subequations}
+ \begin{align}
+  \dot{\pi}(\vec{k},t) =& 2i[E_\vec{k}^c(t)-E_\vec{k}^v(t)]\pi(\vec{k},t)  - i w(\vec{k},t)[\Omega(\vec{k},t) +V_{H,\vec{k}}^{vc}(t) +  V_{xc,\vec{k}}^{vc}(t)]e^{-iS(\vec{k},t)} \nonumber \\
+   &-i[V_{H,\vec{k}}^{vv}(t) +  V_{xc,\vec{k}}^{vv}(t) - V_{H,\vec{k}}^{cc}(t) -  V_{xc,\vec{k}}^{cc}(t)]\pi(\vec{k},t)\\
+   \dot{n}_v(\vec{k},t) =& -i[\Omega(\vec{k},t) +  V_{H,\vec{k}}^{vc}(t) +  V_{xc,\vec{k}}^{vc}(t)]\pi(\vec{k},t)e^{iS(\vec{k},t)} + c.c,
+ \end{align}
+ \label{eq:twolevel_TDDFT_3}
+\end{subequations}
+These two equations correspond to the exact (in the TDDFT sense) version of the two-band model. \\
+
+These two expressions can now be compared to Corkum's equations.
+If we assume the independent-particle approximation, as done in Ref.~\cite{PhysRevLett.113.073901}, i.e. we put $V_{H}=V_{xc}=0$, we obtain from Eq.~\ref{eq:twolevel_TDDFT_3} 
+\begin{subequations}
+ \begin{align}
+  \dot{\pi}(\vec{k},t) =& 2i[E_\vec{k}^c(t)-E_\vec{k}^v(t)]\pi(\vec{k},t)  - i \Omega(\vec{k},t)w(\vec{k},t)e^{-iS(\vec{k},t)} \\
+   \dot{n}_v(\vec{k},t) =& -i\Omega(\vec{k},t)\pi(\vec{k},t)e^{iS(\vec{k},t)} + c.c,
+ \end{align}
+ \label{eq:twolevel_TDDFT_4}
+\end{subequations}
+
+\subsection{Remarks and comparison with other work}
+
+\subsubsection{IPA versus frozen Hamiltonian}
+It is not necessary to assume the IPA to recover the result of Ref.~\cite{PhysRevLett.113.073901}. If we assume a frozen Hamiltonian, i.e., $V_{Hxc}(t)=V_{Hxc}(t_0)$, we have $V_{H,\vec{k}}^{mn}(t) = V_{xc,\vec{k}}^{mn}(t)=0$ due to their definition.
+\emph{Therefore, the TDDFT two-level equations with a frozen Hamiltonian approximation also lead the two-band equations of Ref.~\cite{PhysRevLett.113.073901}.} This gives more validity to this approach than previously thought. \\
+
+\subsubsection{Dephasing and missing term}
+
+By comparing with Eq.~\ref{eq:twolevel_Corkum}, we note that authors are missing a 
+There is one term missing, even assuming the IPA, which is the term $ 2i[E_\vec{k}^c(t)-E_\vec{k}^v(t)]\pi(\vec{k},t)$ in their equations.
+They added on the other time a dephasing term to account for effects wich are not present in the model, such as the phonons, defects, \textit{etc}.
+
+
+% Interestingly, we obtain an exact expression for $T_2$, within the IPA, by comparing with with Eq.~\ref{eq:twolevel_Corkum}
+% \begin{equation}
+%  \frac{1}{T_2} = -2i[E_\vec{k}^c(t)-E_\vec{k}^v(t)].
+% \end{equation}
+
+\subsubsection{Comparison with the SBE of Ref.~\cite{hohenleutner2015real}}
+
+In  Ref.~\cite{hohenleutner2015real}, the authors give the following SBEs (in their notations)
+
+\begin{equation}
+ \hbar\frac{\partial}{\partial t} f^{e_1}_k = -2\mathrm{Im}\left[ \sum_{e_2\neq e_1}d_{e_1e_2}(k)E(t)p_{k}^{e_2e_1} + \sum_{h_\lambda}  d_{e_1h_\lambda}(k)E(t)(p_k^{h_\lambda e_1})^*\right] + |e|E(t)\nabla_k f_k^{e_1} + \hbar \frac{\partial}{\partial t} f_{k}^{e_1}|_{\mathrm{relax}},
+\end{equation}
+
+\begin{eqnarray}
+ \hbar\frac{\partial}{\partial t} p^{h_ie_j}_k = \left( \epsilon_k^{e_j} + \epsilon_k^{h_i} - i\frac{\hbar}{T_2} \right) p_{k}^{h_ie_j} - d_{e_jh_i}(k)E(t)\left(1-f_{k}^{e_j}-f_k^{h_i}\right)
+ + i|e|E(t)\nabla_kp_k^{h_ie_j} \nonumber\\
+  + E(t)\sum_{e_\lambda\neq e_j} [d_{e_\lambda h_i}(k)p_{k}^{e_\lambda e_j} - d_{e_je_\lambda}(k)p_{k}^{h_ie_\lambda}]
+  + E(t)\sum_{h_\lambda\neq h_i} [d_{h_\lambda h_i}(k)p_{k}^{h_\lambda e_j} - d_{e_jh_\lambda}(k)p_{k}^{h_ih_\lambda}],
+\end{eqnarray}
+ with $f_k^\lambda$ the electron and hole occupations, and $p_k^{\lambda\lambda'}$ for $\lambda\neq\lambda'$ the microscopic polarization.~\cite{hohenleutner2015real} Here $d_{\lambda\lambda'}$ are the dipole-matrix elements.
+ A phenomenological dephasing time $T_2$ is added to capture dominant effects of the high-order correlations. To account for the damping of currents in a realistic system, a phenomenological carrier relaxation $ \hbar \frac{\partial}{\partial t} f_{k}^{e_1}|_{\mathrm{relax}} = -\frac{1}{\tau}f_{k,A}^\lambda$ is included, which damps the anti-symmetric part $f_{k,A}^\lambda = \frac{1}{2}[f_k^{\lambda}-f_{-k}^{\lambda}]$ of the carrier distributions.~\cite{hohenleutner2015real}
+
+ In order to compare with Corkum's model, we now restrict this model to two bands. As we have a valence and a conduction band, we note $f_k^{e_i}$ as  $f_c(\vec{k},t)$ and $f_k^{h_j}$ as $1-f_v(\vec{k},t)$. Similarly $\epsilon_k^{e_j}$ is denoted now $E_\vec{k}^c(t)$ and $\epsilon_k^{h_i}$ is denoted $-E_\vec{k}^v(t)$.
+ The previous equations now reads (in atomic units)
+ 
+ \begin{equation}
+ \dot{f}_v(\vec{k},t) = -2\mathrm{Im}\left[ d_{vc}(k)E(t)p_k^{vc}(t)\right] + E(t)\nabla_k f_v(\vec{k},t) + \frac{\partial}{\partial t} f_{k}^{v}|_{\mathrm{relax}},
+\end{equation}
+
+\begin{eqnarray}
+ \dot{p}^{vc}_k(t) = \left( E_\vec{k}^c(t) - E_\vec{k}^v(t) - i\frac{1}{T_2} \right) p_{k}^{vc}(t) - d_{cv}(k)E(t)\left(f_v(\vec{k},t)-f_c(\vec{k},t)\right)
+ + iE(t)\nabla_k p_k^{vc}(t),
+\end{eqnarray}
+
+% In order to compare directly to Corkum's model, we use the following transformation
+% \begin{eqnarray}
+%  n_m(\vec{k},t) &=& f_c(\vec{k},t)\nonumber\\
+%  \pi(\vec{k},t)e^{iS(\vec{k},t)} &=&  ip^{vc}_k(t)\nonumber
+% \end{eqnarray}
+% 
+% We finally obtain that
+% 
+%  \begin{equation}
+%  \dot{n}_v(\vec{k},t) = -2\mathrm{Im}\left[ \Omega(\vec{k},t) \pi(\vec{k},t)e^{-iS(\vec{k},t)} \right] + E(t)\nabla_k n_c(\vec{k},t) + \dot{n}_{k}^{v}|_{\mathrm{relax}},
+% \end{equation}
+% 
+% \begin{eqnarray}
+%  \dot{\pi}(\vec{k},t)e^{iS(\vec{k},t)} + \pi(\vec{k},t)e^{iS(\vec{k},t)} = i\left( 2E_\vec{k}^c(t) - 2E_\vec{k}^v(t) - i\frac{1}{T_2} \right) p_{k}^{vc}(t) + i \Omega(\vec{k},t)w(\vec{k},t)
+%  - E(t)\nabla_k  (\pi(\vec{k},t)e^{iS(\vec{k},t)}),
+% \end{eqnarray}
+%  
+%  where $w$ and $\Omega$ have been defined previously
+
+\section{Two-band model in practice}
+
+\subsection{Further approximation in Corkum's model}
+
+\subsubsection{Dipole momentum matrix elements}
+
+In Ref.~\cite{PhysRevLett.113.073901}, further approximation are involved in the model.\\
+The dipole moment define by Eq.~\ref{eq:dipole_Corkum} is in fact choosen to be $k$-independent and to be given by
+$\vec{d}(\vec{k}) = \vec{d_0}= (3.46,3.46,3.94)$.
+Therefore, the Rabi frequency becomes $\vec{k}$-independent $\Omega(\vec{K},t) = \Omega(t) = \vec{F}(t)\ldotp\vec{d_0}$.
+
+\subsubsection{Band structure}
+
+The first approximation related to the band-structure is given by the approximation on the dispersion
+\begin{equation}
+ E_m(\vec{k}) = E_{m,x}(k_x) + E_{m,y}(k_y) + E_{m,z}(k_z).
+ \label{eq:approx_disp}
+\end{equation}
+
+The bands are further approximated as cosine bands with parameters
+\begin{subequations}
+ \begin{align}
+  E_{v,i}(k_i) = \sum_{j=0}^{\infty} \alpha^{j}_{v,i} \cos(j k_ia_i)\\
+  E_{c,i}(k_i) = E_g + \sum_{j=0}^{\infty} \alpha^{j}_{c,i} \cos(j k_ia_i)
+ \end{align}
+ \label{eq:approx_bands}
+\end{subequations}
+
+For the $x$ direction, the maximum value for $j$ is 5, whereas for the other directions, $j$ is limited to 1.\cite{PhysRevB.91.064302} The values for $a_i$ are $(a_x,a_y,a_z) = (5.32,6.14,9.83)$.
+We see directly that their is something wrong because Eq.~\ref{eq:approx_disp} together with Eqs.~\ref{eq:approx_bands} yield a band-gap of $3E_g$. There is a $\frac{1}{3}$ factor missing in Eq.~\ref{eq:approx_disp}.
+In the following, we use instead
+\begin{equation}
+ E_m(\vec{k}) = \frac{E_{m,x}(k_x) + E_{m,y}(k_y) + E_{m,z}(k_z)}{3}.
+ \label{eq:approx_disp2}
+\end{equation}
+
+The parameters for Eqs.~\ref{eq:approx_bands} are given in the Tab.~\ref{tab:bands_param}. The value of the band-gap is chose to be the experimental bandgap of $E_g=3.3eV$.\cite{PhysRevB.91.064302} This meens that the LDA band structure get a scissors correction in this approach.
+
+\begin{table}
+\centering
+\begin{tabular}{lcc}
+  \hline\hline
+   & Valence band & Conduction band \\
+  \hline
+  $a_{0,x}$ &  -0.0928 &  0.0898 \\
+  $a_{1,x}$ &   0.0705 & -0.0814 \\
+  $a_{2,x}$ &   0.0200 & -0.0024 \\
+  $a_{3,x}$ &  -0.0012 & -0.0048 \\
+  $a_{4,x}$ &   0.0029 & -0.0003 \\
+  $a_{5,x}$ &   0.0006 & -0.0009 \\
+  $a_{0,y}$ &  -0.0307 &  0.1147 \\
+  $a_{1,y}$ &   0.0307 & -0.1147 \\
+  $a_{0,z}$ &  -0.0059 &  0.0435 \\
+  $a_{1,z}$ &   0.0059 & -0.0435 \\
+  \hline
+\end{tabular}
+\caption{Coefficients of the expansion in Eq.~\ref{eq:approx_bands}, taken from Ref.~\cite{PhysRevB.91.064302}}
+\label{tab:bands_param}
+\end{table}
+
+
+
+\subsection{Putting everything together}
+The laser field is defined  by 
+\begin{equation}
+ \vec{F}(t) = \vec{\hat{x}}F_0f(t),\nonumber
+\end{equation}
+where $f(t)$ is a gaussian enveloppe with a FWHM equal to 10 cycles and cosine carrier with frequency $\omega_0$. The $\vec{\hat{x}}$-axis is choosen to be parallel to the $\Gamma-M$ direction, whereas the $\vec{\hat{y}}$- and $\vec{\hat{z}}$ are respectively parallel to the $\Gamma-K$ and $\Gamma-A$ (optical axis) directions.
+Therefore, we have that
+\begin{equation}
+ \Omega(\vec{K},t) = F_0f(t)d_{0,x} = F_0d_{0,x}\cos(\omega_0t)\exp(-\frac{(t-t_0)^2}{2\tau^2}),
+\end{equation}
+where $2\sqrt{2\ln{2}}\tau = 10\omega_0$ or $\tau = \frac{5\omega_0}{\sqrt{2\ln{2}}}$.
+
+
+Therefore, from Eqs.~\ref{eq:twolevel_Corkum} we obtain the set of equations to be computed.
+\begin{subequations}
+ \begin{align}
+ \dot{\pi}(\vec{K},t) = -\frac{\pi(\vec{K},t)}{T_2} - i F_0f(t)d_{0,x}[n_v(\vec{K},t)-n_c(\vec{K},t)]e^{-iS(\vec{K},t)}, \\
+ \dot{n}_v(\vec{K},t) = 2 F_0f(t)d_{0,x}\mathrm{Im}\{\pi(\vec{K},t)e^{iS(\vec{K},t)}\}, \\
+ \dot{n}_c(\vec{K},t) = -2 F_0f(t)d_{0,x}\mathrm{Im}\{\pi(\vec{K},t)e^{iS(\vec{K},t)}\},\\
+ S(\vec{K},t) = \int_{-\infty}^t E_{g}[\vec{K}+\vec{A}(t')]dt'
+ \end{align}
+  \label{eq:twolevel_Corkum_real}
+\end{subequations}
+
+The polarisation if given by~\cite{PhysRevLett.113.073901}
+\begin{equation}
+\vec{p}(\vec{K},t) = \vec{d}(\vec{K}+A(t))\pi(\vec{K},t)e^{iS(\vec{K},t)}+c.c. \nonumber
+\end{equation}
+which turns out to be, accounting for previous approximations 
+\begin{equation}
+\vec{p}(\vec{K},t) = 2\vec{d_0}\mathrm{Re}\{\pi(\vec{K},t)e^{iS(\vec{K},t)}\}. \nonumber
+\end{equation}
+
+Finally, the interband and intraband contributions to the current are given by
+\begin{subequations}
+ \begin{align}
+  \vec{j}_{ra}(t) =& \sum_{m=c,v} \int_{\overline{BZ}}\vec{v}_m[\vec{K}+\vec{A}(t)] n_m(\vec{K},t)d^3\vec{K},\\
+  %
+  \vec{j}_{er}(t) =& \frac{d}{dt}\int_{\overline{BZ}} \vec{p}(\vec{K},t)d^3\vec{K},
+ \end{align}
+\end{subequations}
+with $\vec{\vec{v}_m}(\vec{k}) = \nabla_{\vec{k}}E_m(\vec{k})$ and $\overline{BZ}=BZ-\vec{A}(t)$.
+
+From the previous definitions, we obtain that the interband term reads
+
+\begin{eqnarray}
+  j_{er,i}(t) &=& 2d_{0,i}\mathrm{Re}\int_{\overline{BZ}}\Bigg(\dot{\pi}(\vec{K},t)+i\pi(\vec{K},t)\dot{S}(\vec{K},t)\Bigg) e^{iS(\vec{K},t)}d^3\vec{K}\} \nonumber\\
+   &=& 2d_{0,i}\mathrm{Re}\{\int_{\overline{BZ}}\Bigg(\dot{\pi}(\vec{K},t)+i\pi(\vec{K},t)E_g[\vec{K}+\vec{A}(t)]\Bigg) e^{iS(\vec{K},t)}d^3\vec{K}\} \nonumber\\
+%
+%
+   &=& -2iF_0f(t)d_{0,i} d_{0,x}\mathrm{Re}\{\int_{\overline{BZ}}[n_v(\vec{K},t)-n_c(\vec{K},t)]d^3\vec{K}\} \nonumber\\
+   &&+2d_{0,i}\mathrm{Re}\{\int_{\overline{BZ}} \Big(iE_g[\vec{K}+\vec{A}(t)]-\frac{1}{T_2}\Big)\pi(\vec{K},t) e^{iS(\vec{K},t)}d^3\vec{K}\} \nonumber\\
+\end{eqnarray}
+
+whereas the intraband part reads, from Eq.~\ref{eq:approx_disp2} and Eq.~\ref{eq:approx_bands},
+\begin{eqnarray}
+ j_{ra,i}(t) &=& \sum_{m=v,c}\sum_{l=1}^{\infty} l \alpha^{l}_{m,i} \int_{BZ}
+   n_m(\vec{k}-\vec{A}(t),t)k_i \sin(lk_ia_i)  d^3\vec{k}.
+\end{eqnarray}
+
+\subsection{Keldysh approximation}
+
+In Ref.~\cite{PhysRevLett.113.073901} authors used the Keldysh approximation, \textit{i.e}, $w\approx 1$ to decouples the equations.
+Doing that, we obtain that
+\begin{subequations}
+ \begin{align}
+ \dot{\pi}(\vec{K},t) = -\frac{\pi(\vec{K},t)}{T_2} - i F_0f(t)d_{0,x}e^{-iS(\vec{K},t)}, \\
+ \dot{n}_m(\vec{K},t) = 2s_m F_0f(t)d_{0,x}\mathrm{Im}\{\pi(\vec{K},t)e^{iS(\vec{K},t)}\},
+ \end{align}
+\end{subequations}
+
+Let us first write the first equation as
+\begin{equation}
+ \dot{y}(t) = by(t) + c(t),
+\end{equation}
+with
+\begin{eqnarray}
+ y(t) &=& \pi(\vec{K},t)\nonumber\\
+ b &=& -\frac{1}{T_2} \nonumber\\
+ c(t) &=& - i F_0f(t)d_{0,x}e^{-iS(\vec{K},t)}\nonumber
+\end{eqnarray}
+We have
+\begin{eqnarray}
+ y(t) = \lambda(t)e^{G(t)},\\
+ \dot{\lambda}(t) = c(t)e^{-G(t)}\\
+ \dot{G}(t) = -b = \frac{1}{T_2} \rightarrow G(t) = \frac{t}{T_2}+C^{ste}\\
+\end{eqnarray}
+so
+\begin{equation}
+  \dot{\lambda}(t)  =  i\vec{d_{0}}\vec{F}(t)e^{-(iS(\vec{K},t)+\frac{t}{T_2})}
+\end{equation}
+
+\begin{eqnarray}
+  \lambda(t_b)-\lambda(t_a) = i\vec{d_{0}}\int_{t_a}^{t_b}\vec{F}(t)e^{-(iS(\vec{K},t)+\frac{t}{T_2})}dt% \\
+ % =  i\vec{d_{0}} \Bigg[ \vec{A}(t)e^{-(iS(\vec{K},t)+\frac{t}{T_2})}\Bigg]_{t_a}^{t_b} - i\vec{d_{0}} \int_{t_a}^{t_b}\vec{A}(t)[-iE_g(\vec{K},t)+\frac{1}{T_2}]e^{-(iS(\vec{K},t)+\frac{t}{T_2})}dt
+\end{eqnarray}
+
+Using the condition $y(t=-\infty)=0$ and $\vec{A}(t=-\infty)=0$, we obtain that
+% \begin{eqnarray}
+%   \lambda(t) = i\int_{-\infty}^{t}\vec{d_{0}}\ldotp\vec{F}(t')e^{-(iS(\vec{K},t')+\frac{t'}{T_2})}dt'
+% \end{eqnarray}
+% % \begin{eqnarray}
+% %   \lambda(t) =  i\vec{d_{0}} \vec{A}(t)e^{-(iS(\vec{K},t)+\frac{t}{T_2})} - i\vec{d_{0}} \int_{-\infty}^{t}\vec{A}(t')\left[-iE_g(\vec{K},t')+\frac{1}{T_2}\right]e^{-(iS(\vec{K},t')+\frac{t'}{T_2})}dt'
+% % \end{eqnarray}
+% 
+% which leads to the solution
+\begin{subequations}
+ \begin{align}
+ \pi(\vec{K},t) =& \int_{-\infty}^{t}\vec{d_{0}}\ldotp\vec{F}(t')e^{-iS(\vec{K},t')+\frac{t-t'}{T_2})}dt', \\
+ n_m(\vec{K},t) =& 2s_m F_0f(t)d_{0,x}\mathrm{Im}\{\int_{-\infty}^{t}\vec{d_{0}}\ldotp\vec{F}(t')e^{iS(\vec{K},t)-iS(\vec{K},t')+\frac{t-t'}{T_2})}dt'\} . 
+ \end{align}
+\end{subequations}
+% \begin{subequations}
+%  \begin{align}
+%  \pi(\vec{K},t) =& i\vec{d_{0}} \vec{A}(t)e^{-iS(\vec{K},t)} - \vec{d_{0}} \int_{-\infty}^{t}\vec{A}(t')\left[E_g(\vec{K},t')+\frac{i}{T_2}\right]e^{-(iS(\vec{K},t')+\frac{(t'-t)}{T_2})}dt', \\
+%  n_m(\vec{K},t) =& 2s_m F_0f(t)d_{0,x}\mathrm{Im}\Big\{i\vec{d_{0}} \vec{A}(t) - \vec{d_{0}} \int_{-\infty}^{t}\vec{A}(t')\left[E_g(\vec{K},t')+\frac{i}{T_2}\right]e^{iS(\vec{K},t)-iS(\vec{K},t')+\frac{(t-t')}{T_2})}dt'\Big\}. \nonumber\\
+%  =&  2s_m F_0f(t)d_{0,x}\Bigg(\vec{d_{0}} \vec{A}(t)  
+%  - \mathrm{Im}\Big\{\vec{d_{0}} \int_{-\infty}^{t}\vec{A}(t')\left[E_g(\vec{K},t')+\frac{i}{T_2}\right]e^{iS(\vec{K},t)-iS(\vec{K},t')+\frac{(t-t')}{T_2})}dt'\Big\}\Bigg). 
+%  \end{align}
+% \end{subequations}
+% 
+% Using the fact that for $t'<t$, we have
+% \begin{eqnarray}
+%  S(\vec{K},t)-S(\vec{K},t') = \int_{-\infty}^t E_{g}[\vec{K}+\vec{A}(t'')]dt'' - \int_{-\infty}^{t'} E_{g}[\vec{K}+\vec{A}(t'')]dt'' \nonumber\\
+%   = \int_{t'}^{t} E_{g}[\vec{K}+\vec{A}(t'')]dt''
+% \end{eqnarray}
+% This quantity is now called $S(\vec{K},t',t)$, following Ref.~\cite{PhysRevLett.113.073901}.
+% 
+% Therefore, 
+% \begin{equation}
+%  n_m(\vec{K},t)  =  2s_m F_0f(t)d_{0,x}\Bigg(\vec{d_{0}} \vec{A}(t)  
+%  - \mathrm{Im}\Big\{\vec{d_{0}} \int_{-\infty}^{t}\vec{A}(t')\left[E_g(\vec{K},t')+\frac{i}{T_2}\right]e^{iS(\vec{k},t',t)+\frac{(t-t')}{T_2})}dt'\Big\}\Bigg). 
+% \end{equation}
+
+Inserting these equations into the expressions of the interband and intraband current yields
+\begin{subequations}
+ \begin{align}
+  \vec{j}_{ra}(t) =& \sum_{m=c,v} 2s_m \int_{BZ}d^3\vec{k}\vec{v}_m(\vec{k}) \nonumber\\
+   &\times \vec{d_{0}}\ldotp\vec{F}(t)\mathrm{Im}\{\int_{-\infty}^{t}\vec{d_{0}}\ldotp\vec{F}(t')e^{iS(\vec{k},t',t)+\frac{t-t'}{T_2})}dt'\},\\
+  %
+  \vec{j}_{er}(t) =& \frac{d}{dt}\int_{BZ}d^3\vec{k}  \vec{d_0}\int_{-\infty}^{t}dt'\vec{d_{0}}\ldotp\vec{F}(t')2\mathrm{Re}\{e^{iS(\vec{K},t',t)+\frac{t-t'}{T_2})}\},
+ \end{align}
+\end{subequations}
+where $S(\vec{K},t',t)$ is defined following Ref.~\cite{PhysRevLett.113.073901}.
+Fourier tranform of these equations gives the equations of Ref.~\cite{PhysRevLett.113.073901}.
+
+% 
+% \begin{eqnarray}
+%  j_{ra,i}(t) &=& -\sum_{m=c,v} 2s_m F_0f(t)d_{0,x}\int_{BZ}\vec{v}_m(\vec{k}) 
+%  \mathrm{Im}\Big\{\int_{-\infty}^{t}\vec{d_{0}} \vec{A}(t')\left[E_g(\vec{K},t')+\frac{i}{T_2}\right]e^{iS(\vec{k}-\vec{A}(t),t',t)+\frac{(t-t')}{T_2})}dt'\Big\}\Bigg)d^3\vec{k}.
+% \end{eqnarray}
+% 
+% 
+% \begin{eqnarray}
+%   j_{er,i}(t) &=&-2d_{0,i}\vec{d_{0}} \vec{A}(t)\mathrm{Re}\{\int_{\overline{BZ}} \Big(E_g[\vec{K}+\vec{A}(t)]+\frac{i}{T_2}\Big)  d^3\vec{K}\} \nonumber\\
+%   &&
+%   - 2d_{0,i}\mathrm{Re}\{\int_{\overline{BZ}} \Big(iE_g[\vec{K}+\vec{A}(t)]-\frac{1}{T_2}\Big)\Bigg[\vec{d_{0}} \int_{t_0}^{t}\vec{A}(t')\left[E_g(\vec{K},t')+\frac{i}{T_2}\right]e^{-(iS(\vec{K},t')+\frac{(t'-t)}{T_2})}dt' e^{iS(\vec{K},t)}d^3\vec{K}\} 
+% \end{eqnarray}
+% 
+% \begin{eqnarray}
+%   j_{er,i}(t) &=&-2d_{0,i}\vec{d_{0}} \vec{A}(t)\int_{BZ}E_g[\vec{k}]d^3\vec{k} \nonumber\\
+%   &&
+%   - 2d_{0,i}\mathrm{Re}\{\int_{\overline{BZ}} \Big(iE_g[\vec{K}+\vec{A}(t)]-\frac{1}{T_2}\Big)\Bigg[\vec{d_{0}} \int_{t_0}^{t}\vec{A}(t')\left[E_g(\vec{K},t')+\frac{i}{T_2}\right] e^{iS(\vec{K},t)-iS(\vec{K},t')+\frac{(t-t')}{T_2})}dt'd^3\vec{K}\} 
+% \end{eqnarray}
+
+
+\bibliographystyle{unsrt}
+\bibliography{./biblio}
+\end{document}

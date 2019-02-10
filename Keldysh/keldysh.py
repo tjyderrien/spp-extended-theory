@@ -79,7 +79,7 @@ def SiliconLDAbandGap(): #{{{
   Efield_SI_log = np.linspace(8,11, 50)
   #Efield_SI     = np.power(10.,Efield_SI_log)
   
-  Efield_SI     = 1e11  
+  Efield_SI     = 1e5  
 
   E_gap_SI      = Egap
   omega_SI      = 2.*np.pi * c / wavelength
@@ -142,16 +142,24 @@ def SiliconLDAbandGap(): #{{{
   print ""
   print "12x12 - numerical approach"
   FourBands_E = Stark12bandsEnergyShift_notcorrected_numerical(Efield_AU, omega_AU, E_gap_AU, DME, 50)
+  FourBands_Eigen = Stark12bandsEnergyShift_eigen(Efield_AU, omega_AU, E_gap_AU, DME)
   
   FourBands_E_round = np.round(FourBands_E, 8)
   FourBands_E_round_set = set(FourBands_E_round.flatten())
+  FourBands_Eigen_round = np.round(FourBands_Eigen, 8)
+  FourBands_Eigen_round_set = set(FourBands_Eigen_round.flatten())
   #Enumerical_max = np.round(Enumerical_max, 8)
   #Enumerical_max_set = set(Enumerical_max.flatten())
   
   FourBands_E_round_eV = np.round(Energy_Hartree_to_eV(FourBands_E_round), 5)
   FourBands_E_round_set_eV = set(FourBands_E_round_eV.flatten())
+  FourBands_Eigen_round_eV = np.round(Energy_Hartree_to_eV(FourBands_Eigen_round), 5)
+  FourBands_Eigen_round_set_eV = set(FourBands_Eigen_round_eV.flatten())
+  
   print "eV:"
   print FourBands_E_round_set_eV
+  print "eV: eigensolver: "
+  print FourBands_Eigen_round_eV
   
   exit()
 ## Generalizing to many fields
@@ -240,7 +248,7 @@ def SiliconLDAbandGap(): #{{{
   timeKeldysh, N_Keldysh_SI, N_Gruzdev_SI = plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelopeTot.real, dt, order, ShowPlot, 0e0, Ntotal)
 
   print Header+"** Test 3: computing the W_PI values from Vladimir Zhukov tables..."
-  wPI_Zhukov = VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength, wavelength2, CEP, CEP2, Egap, meff, tau, tau, Delay, dt, Ntotal, t0)
+  wPI_Zhukov = VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength, wavelength2, CEP, CEP2, Egap, meff)
 #}}}
 
 ## Repeats the results obtained in Gulley, Opt. Eng. 51, 121805 (2012). 

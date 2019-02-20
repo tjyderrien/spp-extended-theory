@@ -48,24 +48,36 @@ def SiliconLDAbandGap(): #{{{
   print "Adiabadicity parameter:"+str(gamma)
   
   k1 = Keldysh1phi(gamma); k2 = Keldysh2theta(gamma)
-  print "Keldysh1 phi(gamma)   = "+str(k1)
-  print "Keldysh2 theta(gamma) = "+str(k2)
+  print "Keldysh1 (Keldysh|Gruzdev) phi(gamma)   = "+str(k1)
+  print "Keldysh2 (Keldysh|Gruzdev) theta(gamma) = "+str(k2)
   
-  EgapEff = EffectiveGap(Egap, k1, k2)
-  print "Effective gap: "+str(EgapEff/e)+" eV."
-
+  k1Gulley = Keldysh1phiGulley(gamma); k2Gulley = Keldysh2thetaGulley(k1Gulley)
+  print "Keldysh1 (Gulley) phi(gamma)   = "+str(k1Gulley)
+  print "Keldysh2 (Gulley) theta(gamma) = "+str(k2Gulley)
+  
+  EgapEff       = EffectiveGap(Egap, k1, k2)
+  print "Effective gap (Keldysh|Gruzdev): "+str(EgapEff/e)+" eV."
+  EgapEffGulley = EffectiveGapGulley(Egap, PeakField, meff, wavelength)
+  print "Effective gap (Gulley): "+str(EgapEffGulley/e)+" eV."
+  
+  xGulley = GulleyX(Egap, gamma, k2Gulley, wavelength)
+  print "Gulley X parameter: "+str(xGulley)
+  
+  print "Checking Gulley elliptics: "
+  print Gulley_Compute_Elliptics(k1Gulley, k2Gulley)
+  
   KeldyshFunctionResult = KeldyshFunction( k1, k2, EgapEff, order, wavelength )
   print "KeldyshFunction_Keldysh: "+str(KeldyshFunctionResult)
   
   KeldyshFunctionResultG = KeldyshFunction_Gruzdev( k1, k2, EgapEff, order, wavelength )
-  print "KeldyshFunction_Gruzdev: "+str(KeldyshFunctionResult)
+  print "KeldyshFunction_Gruzdev: "+str(KeldyshFunctionResultG)
   
-  KeldyshFunctionResultGulley = KeldyshFunction_Gulley(k1, k2, EgapEff, order, wavelength)
+  KeldyshFunctionResultGulley = KeldyshFunctionGulley(k1Gulley, k2Gulley, xGulley, gamma, order, wavelength)
   print "KeldyshFunction_Gulley: "+str(KeldyshFunctionResultGulley)
   
   wPI = IonizationRate(k1, k2, KeldyshFunctionResult, EgapEff, wavelength, meff)
   
-  wPIgulley = IonizationRate(k1, k2, KeldyshFunctionResultGulley, EgapEff, wavelength, meff)
+  wPIgulley = IonizationRate_Gulley(k1Gulley, k2Gulley, KeldyshFunctionResultGulley, xGulley, wavelength, meff)
   
   wPIg = IonizationRate_Gruzdev(k1, k2, KeldyshFunctionResultG, EgapEff, wavelength, meff)
   print "wPI(Keldysh)="+str(wPI)

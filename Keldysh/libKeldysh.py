@@ -78,7 +78,12 @@ def Keldysh1phi(gamma): #phi() in Gruzdev2014
   value = np.float128(gamma) #K1(gamma) function has limit 1 when gamma > 5. Hence, we must compute k1(gamma) with a huge precision to stay out of unity. 
   return np.divide(value, np.sqrt( np.float128(1E0) + np.power(value, 2)) )
 
-## Computes some intermediate quantity
+## Computes some intermediate quantity for Gulley2012, careful: long double precision.
+def Keldysh1phiGulley(gamma): #phi() in Gruzdev2014
+  value = np.float128(gamma) #K1(gamma) function has limit 1 when gamma > 5. Hence, we must compute k1(gamma) with a huge precision to stay out of unity. 
+  return np.divide(np.power(value, 2), np.float128(1E0) + np.power(value, 2))
+
+## Computes some intermediate quantity for Keldysh and Gruzdev models
 def Keldysh2theta(gamma): #theta() in Gruzdev2014
   value = np.float128(gamma) #idem about precision.
   #try:
@@ -86,6 +91,15 @@ def Keldysh2theta(gamma): #theta() in Gruzdev2014
     #result = np.float128(0e0)
   #return result
   return np.divide(1E0, np.sqrt( np.float128(1E0) + np.power(value, 2)) )
+
+## Computes intermediate quantity for Gulley model
+def Keldysh2thetaGulley(k1): #theta() in Gulley2012
+  value = np.float128(k1) #idem about precision.
+  #try:
+  #except:
+    #result = np.float128(0e0)
+  return 1. - value
+  #return np.add(1E0, -np.sqrt( np.float128(1E0) + np.power(value, 2)) )
 
 ## Computes the effective gap for one material
 # @param Egap: band gap of the transition (multi-photonic transitions are DIRECT. Tunnel transitions can be INDIRECT)
@@ -104,6 +118,11 @@ def EffectiveGap(Egap, k1, k2): #{{{
   # EffectiveGap(1.12*e, 1., 1.) = 0.71*e
   # EffectiveGap(Egap,k1,k2)/e = 1.12044049367 #Passed
 #}}}
+
+## Taylor development of the effective band gap in Gulley2012 theory. 
+def EffectiveGapGulley(Egap, Efield, meff, wavelength):
+    omegaLaser = 2.*np.pi*c/wavelength
+    return Egap + 0.25 * (e*Efield)**2/(m_e*meff*omegaLaser**2)
 
 ## Calculates the Dawson integral int(exp(y**2 - z**2), y=0..z)
 # This is based on the Python library SciPy.special functions. 
@@ -155,42 +174,64 @@ def KeldyshFunction(Keldysh1phi, Keldysh2theta, Ueff, nmax, wavelength): #{{{
 """
 #}}}
 
-def KeldyshFunction_Gulley(Keldysh1phi, Keldysh2theta, Ueff, nmax, wavelength): #{{{
-  omegaLaser = 2.*pi*c/wavelength #SI
-  n_tab = np.arange(0,nmax+1)
- 
+## Strange function used by Gulley, not by others. 
+def GulleyX(Egap, gamma, Keldysh2theta, wavelength):
+    Keldysh2theta2 = np.float64(Keldysh2theta**2)
+    EllipticE2_theta = ellipe( Keldysh2theta2 )
+    omegaLaser = 2.*pi*c/wavelength #SI
+    xGulley     = 2.*Egap/(np.pi * omegaLaser) * np.sqrt(1.-gamma**2)/(gamma) * EllipticE2_theta
+    return xGulley
+
+
+def Gulley_Compute_Elliptics(Keldysh1phi, Keldysh2theta):
+## This section computes K(...) in a safe manner. 
   # print "Keldysh1phi = "+str(Keldysh1phi)
   Keldysh1phi2_128 = np.power(Keldysh1phi,2)
   Keldysh1phi2 = np.float64(Keldysh1phi2_128)
   # print "--"
   # print "Keldysh1phi2 = "+str(Keldysh1phi2)
+  Keldysh2theta2_128 = np.power(Keldysh2theta,2)
   Keldysh2theta2 = np.float64(Keldysh2theta**2)
   # print "Keldysh1phi2 = "+str(Keldysh1phi2)
   distant_to_unity = np.float128(1E0) - Keldysh1phi2_128
-  if (distant_to_unity < 1E-320): #then it gonna crash for sure. 
+  distant_to_unity2= np.float128(1E0) - Keldysh2theta2_128
+  if (distant_to_unity < 1E-320 or distant_to_unity2 < 1E-320): #then it gonna crash for sure. 
     print "** Error on ellipk: argument 1 is singular. Distance to unit = "+str(distant_to_unity)+"Please increase precision on Keldysh1phi or use ellipkm1 function (careful, argument IS not the same)."
-  elif(distant_to_unity < 1E-10): 
+  elif(distant_to_unity < 1E-10 or distant_to_unity2 < 1E-10): 
     #threshold where functions ellipk and ellipkm1 give different values
-    EllipticK1_phi = ellipkm1( np.float64(distant_to_unity) )
+    EllipticK1_phi   = ellipkm1( np.float64(distant_to_unity ) )
+    EllipticK2_theta = ellipkm1( np.float64(distant_to_unity2) )
   else: #other cases, good for efficiency
-    EllipticK1_phi = ellipk( Keldysh1phi2 ) #inf if Keldysh1phi1 = 1.  
-  EllipticE1_phi = ellipe( Keldysh1phi2 )
+    EllipticK1_phi   = ellipk ( Keldysh1phi2   ) #inf if Keldysh1phi1 = 1.  
+    EllipticK2_theta = ellipk ( Keldysh2theta2 )
+ 
+  ## This section computes E(...) that are less problematic. 
+  EllipticE1_phi   = ellipe( Keldysh1phi2   ) #not used
   EllipticE2_theta = ellipe( Keldysh2theta2 )
-  # print "EllipticK1_phi = "+str(EllipticK1_phi)
-  division = np.divide( EllipticK1_phi - EllipticE1_phi , EllipticE2_theta )
-  # print "division= "+str(division)
-  exponant = np.multiply( n_tab, division )
-  sumtable = np.exp( - pi * exponant )
-  sumtable = np.multiply(sumtable,DawsonIntegral(pi*np.sqrt( ((2.0*np.trunc(Ueff/hbar/omegaLaser+1.))-2.0*Ueff/hbar/omegaLaser + n_tab) / (4.0 * ellipk(Keldysh2theta2)*ellipe(Keldysh2theta2)) ) ) ) #/4 K E correction, according to Zhukov
+  
+  return EllipticK1_phi, EllipticK2_theta, EllipticE1_phi, EllipticE2_theta
+
+## Keldysh function from Gulley
+# NOTE: what is a Keldysh function? Change the name. 
+def KeldyshFunctionGulley(Keldysh1phi, Keldysh2theta, xGulley, gamma, nmax, wavelength): #{{{
+  omegaLaser = 2.*pi*c/wavelength #SI
+  n_tab = np.arange(0,nmax+1)
+  
+  EllipticK1_phi, EllipticK2_theta, EllipticE1_phi, EllipticE2_theta = Gulley_Compute_Elliptics(Keldysh1phi, Keldysh2theta) #validated by comparison with Maple
+  
+  division = np.divide( EllipticK1_phi - EllipticE2_theta , EllipticE2_theta ) #should be fine
+  
+  omegaGulley = np.pi * division
+  sumtable1   = np.exp( - n_tab * omegaGulley )
+  thetaGulley = np.pi**2/(4. * EllipticK2_theta * EllipticE2_theta) #may be sensitive here
+  #xGulley     = 2.*Egap/(np.pi * omegaLaser) * np.sqrt(1.-gamma**2)/(gamma) * EllipticE2_theta
+  nu          = np.trunc(xGulley+1)-xGulley
+  sumtable = np.multiply(sumtable1, DawsonIntegral(np.sqrt(thetaGulley * (n_tab + 2. * nu))))
+  #pi*np.sqrt( ((2.0*np.trunc(Ueff/hbar/omegaLaser+1.))-2.0*Ueff/hbar/omegaLaser + n_tab) / (4.0 * ellipk(Keldysh2theta2)*ellipe(Keldysh2theta2)) ) ) ) #/4 K E correction, according to Zhukov
   #print "Effective gap: "+str(Ueff/e)+" eV."
   #print sumtable
-  result = np.multiply(np.sqrt(pi/(2.*ellipk(Keldysh2theta2))),np.sum(sumtable))
-  return result
-""" Validation
-  KeldyshFunction(Keldysh1phi=0, Keldysh2theta=0, Ueff=0, nmax=0, wavelength=0): error. 
-  KeldyshFunction(Keldysh1phi=0, Keldysh2theta=0, Ueff=0, nmax=0, wavelength=800e-9): 0.
-  KeldyshFunction(Keldysh1phi=0, Keldysh2theta=0, Ueff=1.12*e, nmax=0, wavelength=800e-9): 0 
-"""
+  result = np.multiply(np.sqrt(pi/(2.*EllipticK2_theta)),np.sum(sumtable))
+  return result #validated by exact numerical comparison with Maple
 #}}}
 
 ## Corrected Keldysh function according to Vitaly Gruzdev (see Ref in details). 
@@ -252,6 +293,25 @@ def IonizationRate_Gruzdev(Keldysh1phi, Keldysh2theta, KeldyshFunctionResult, Ue
   
   return result
 
+## The Gulley function for Kane direct band gap structure
+# Compared to Keldysh 1965 and Gruzdev 2014, the effective band gap is not exactly apparent. 
+def IonizationRate_Gulley(Keldysh1phi, Keldysh2theta, GulleyFunctionResult, xGulley, wavelength, meff=1.0):
+  omegaLaser = 2.*np.pi*c/wavelength
+  #Keldysh1phi2 = np.float64(Keldysh1phi * Keldysh1phi)
+  #Keldysh2theta2 = np.float64(Keldysh2theta * Keldysh2theta)
+  #try:
+  
+  EllipticK1_phi, EllipticK2_theta, EllipticE1_phi, EllipticE2_theta = Gulley_Compute_Elliptics(Keldysh1phi, Keldysh2theta) #OK
+  
+  division = np.divide( EllipticK1_phi - EllipticE2_theta , EllipticE2_theta ) #OK
+  omegaGulley = np.pi * division
+  result = 2.*omegaLaser/(9.*pi) * ((omegaLaser*m_e*meff)/(hbar*np.sqrt(Keldysh1phi)))**(1.5)*GulleyFunctionResult*np.exp(-omegaGulley*np.trunc(xGulley+1e0))                                                                                                               
+                                                                                                               #*((ellipk(Keldysh1phi2)-ellipe(Keldysh1phi2))/(ellipe(Keldysh2theta2)))) #NOTE: the effective mass in the first term changes everything. It may force us to consider the correction of Gulley for the KeldyshFunction
+  #except:
+    #print Header+"IonizationRate: ** Error in computation of IonizationRate."
+    #result = 0e0
+  return result
+
 ## Builds Gaussian thickness from FWHM (in time or space)
 def sigmaFWHM(FWHM):
   sigma = FWHM/(2.*np.sqrt(2.*np.log(2.)))
@@ -292,16 +352,45 @@ def GenerateKeldyshDatabase(Egap, meff, wavelength, PeakField, order, Refractive
   return wPIg
 #}}}
 
+## Generate Keldysh-Gulley tables for interfacing with codes
+# Input: 
+# @param Egap: scalar (J)
+# @param meff: scalar (no unit, electron mass is accounted directly in the routine)
+# @param wavelength: laser wavelength (scalar, meters)
+# @param PeakField: laser field amplitude (scalar, V/m)
+# @param order: integration order for Keldysh model (integer, no unit)
+# @param RefractiveIndex: in Gruzdev2014, Epeak must be multiplied by sqrt(RefractiveIndex) to EXACTLY repeat his results. This originates that pulse duration is shortened in matter. 
+def GenerateKeldyshGulleyDatabase(Egap, meff, wavelength, PeakField, order, RefractiveIndex=1): #{{{
+  ErrorMessage = ""
+  # I = 0.5 c epsilon_0 n0 E**2
+  # E = np.sqrt(2 I / c / epsilon_0 / n0)
+  gamma = gammaKeldysh(Egap, meff, PeakField, wavelength, 1.) #same formula for each, although Gulley does NOT use optical refractive index. 
+  k1 = Keldysh1phiGulley(gamma); 
+  k2 = Keldysh2thetaGulley(k1)
+  EgapEff = EffectiveGapGulley(Egap, PeakField, meff, wavelength) #NOTE: the effective gap of Gulley seems to be only representative. 
+  
+  xGulley = GulleyX(Egap, gamma, k2, wavelength) #generating the X parameter of Gulley
+  
+  KeldyshFunctionResultGulley = KeldyshFunctionGulley( k1, k2, xGulley, gamma, order, wavelength ) #Egap is not directly used in Gulleys version.
+  wPI = IonizationRate_Gulley(k1, KeldyshFunctionResultGulley, xGulley, wavelength, meff)
+  return wPI
+#}}}
+
 #print "** Vectorizing functions..."
 FieldToIntensity                        = np.vectorize(FieldToIntensity)
 IntensityToField                        = np.vectorize(IntensityToField)
 gammaKeldysh                            = np.vectorize(gammaKeldysh)
-Keldysh1phi                                = np.vectorize(Keldysh1phi)
-Keldysh2theta                                = np.vectorize(Keldysh2theta)
+Keldysh1phi                             = np.vectorize(Keldysh1phi)
+Keldysh2theta                           = np.vectorize(Keldysh2theta)
 EffectiveGap                            = np.vectorize(EffectiveGap)
 KeldyshFunction                         = np.vectorize(KeldyshFunction)
 KeldyshFunction_Gruzdev                 = np.vectorize(KeldyshFunction_Gruzdev)
 IonizationRate_Gruzdev                  = np.vectorize(IonizationRate_Gruzdev)
+Keldysh1phiGulley                       = np.vectorize(Keldysh1phiGulley)
+Keldysh2thetaGulley                     = np.vectorize(Keldysh2thetaGulley)
+EffectiveGapGulley                      = np.vectorize(EffectiveGapGulley)
+KeldyshFunctionGulley                   = np.vectorize(KeldyshFunctionGulley)
+
 BristowLaw                              = np.vectorize(BristowLaw)
 GenerateKeldyshDatabase                 = np.vectorize(GenerateKeldyshDatabase)
 

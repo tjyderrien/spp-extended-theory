@@ -177,9 +177,10 @@ def KeldyshFunction(Keldysh1phi, Keldysh2theta, Ueff, nmax, wavelength): #{{{
 ## Strange function used by Gulley, not by others. 
 def GulleyX(Egap, gamma, Keldysh2theta, wavelength):
     Keldysh2theta2 = np.float64(Keldysh2theta**2)
-    EllipticE2_theta = ellipe( Keldysh2theta2 )
+    EllipticE2_theta = ellipe( np.sqrt(Keldysh2theta2) ) #BUG: sqrt is necessary if one wants to recover the definition of Keldysh, as Gulley2012 made a mistake in the definition of x (only there!). 
     omegaLaser = 2.*pi*c/wavelength #SI
-    xGulley     = 2.*Egap/(np.pi * omegaLaser) * np.sqrt(1.-gamma**2)/(gamma) * EllipticE2_theta
+    #xGulley     = 2.*Egap/(np.pi * omegaLaser) * np.sqrt(1.-gamma**2)/(gamma) * EllipticE2_theta #BUG 1: this generates complex numbers in the MPI regime. It must be sqrt(1+gamma**2), like in Keldysh paper. 
+    xGulley     = 2.*Egap/(np.pi * hbar * omegaLaser) * np.sqrt(1.+gamma**2)/(gamma) * EllipticE2_theta #BUG 2: Gulley must have forgotten a hbar. It is needed for dimensional conistency. 
     return xGulley
 
 
@@ -195,9 +196,9 @@ def Gulley_Compute_Elliptics(Keldysh1phi, Keldysh2theta):
   # print "Keldysh1phi2 = "+str(Keldysh1phi2)
   distant_to_unity = np.float128(1E0) - Keldysh1phi2_128
   distant_to_unity2= np.float128(1E0) - Keldysh2theta2_128
-  if (distant_to_unity < 1E-320 or distant_to_unity2 < 1E-320): #then it gonna crash for sure. 
+  if (distant_to_unity.all() < 1E-320 or distant_to_unity2.all() < 1E-320): #then it gonna crash for sure. 
     print "** Error on ellipk: argument 1 is singular. Distance to unit = "+str(distant_to_unity)+"Please increase precision on Keldysh1phi or use ellipkm1 function (careful, argument IS not the same)."
-  elif(distant_to_unity < 1E-10 or distant_to_unity2 < 1E-10): 
+  elif(distant_to_unity.all() < 1E-10 or distant_to_unity2.all() < 1E-10): 
     #threshold where functions ellipk and ellipkm1 give different values
     EllipticK1_phi   = ellipkm1( np.float64(distant_to_unity ) )
     EllipticK2_theta = ellipkm1( np.float64(distant_to_unity2) )
@@ -372,7 +373,7 @@ def GenerateKeldyshGulleyDatabase(Egap, meff, wavelength, PeakField, order, Refr
   xGulley = GulleyX(Egap, gamma, k2, wavelength) #generating the X parameter of Gulley
   
   KeldyshFunctionResultGulley = KeldyshFunctionGulley( k1, k2, xGulley, gamma, order, wavelength ) #Egap is not directly used in Gulleys version.
-  wPI = IonizationRate_Gulley(k1, KeldyshFunctionResultGulley, xGulley, wavelength, meff)
+  wPI = IonizationRate_Gulley(k1, k2,  KeldyshFunctionResultGulley, xGulley, wavelength, meff)
   return wPI
 #}}}
 

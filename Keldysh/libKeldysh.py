@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2013-2018 T. J.-Y. Derrien
+# Copyright (C) 2013-2019 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -176,11 +176,12 @@ def KeldyshFunction(Keldysh1phi, Keldysh2theta, Ueff, nmax, wavelength): #{{{
 
 ## Strange function used by Gulley, not by others. 
 def GulleyX(Egap, gamma, Keldysh2theta, wavelength):
-    Keldysh2theta2 = np.float64(Keldysh2theta**2)
-    EllipticE2_theta = ellipe( np.sqrt(Keldysh2theta2) ) #BUG: sqrt is necessary if one wants to recover the definition of Keldysh, as Gulley2012 made a mistake in the definition of x (only there!). 
+    #Keldysh2theta2 = np.float64(Keldysh2theta**2)
+    #EllipticE2_theta = ellipe( Keldysh2theta2 )
+    EllipticE2_theta = ellipe( np.float64(Keldysh2theta) ) #NOTE, bug is in Gulley2012: sqrt is necessary if one wants to recover the definition of Keldysh. Gulley2012 made a mistake in the definition of x (only there!). But E(...) implementation requires E(x^2) to work. 
     omegaLaser = 2.*pi*c/wavelength #SI
     #xGulley     = 2.*Egap/(np.pi * omegaLaser) * np.sqrt(1.-gamma**2)/(gamma) * EllipticE2_theta #BUG 1: this generates complex numbers in the MPI regime. It must be sqrt(1+gamma**2), like in Keldysh paper. 
-    xGulley     = 2.*Egap/(np.pi * hbar * omegaLaser) * np.sqrt(1.+gamma**2)/(gamma) * EllipticE2_theta #BUG 2: Gulley must have forgotten a hbar. It is needed for dimensional conistency. 
+    xGulley     = 2.*Egap/(np.pi * hbar * omegaLaser) * np.sqrt(1.+gamma**2)/(gamma) * EllipticE2_theta #BUG 2: Gulley must have forgotten a hbar. It is needed for dimensional consistency. 
     return xGulley
 
 
@@ -226,7 +227,7 @@ def KeldyshFunctionGulley(Keldysh1phi, Keldysh2theta, xGulley, gamma, nmax, wave
   sumtable1   = np.exp( - n_tab * omegaGulley )
   thetaGulley = np.pi**2/(4. * EllipticK2_theta * EllipticE2_theta) #may be sensitive here
   #xGulley     = 2.*Egap/(np.pi * omegaLaser) * np.sqrt(1.-gamma**2)/(gamma) * EllipticE2_theta
-  nu          = np.trunc(xGulley+1)-xGulley
+  nu          = np.trunc(xGulley+1.)-xGulley
   sumtable = np.multiply(sumtable1, DawsonIntegral(np.sqrt(thetaGulley * (n_tab + 2. * nu))))
   #pi*np.sqrt( ((2.0*np.trunc(Ueff/hbar/omegaLaser+1.))-2.0*Ueff/hbar/omegaLaser + n_tab) / (4.0 * ellipk(Keldysh2theta2)*ellipe(Keldysh2theta2)) ) ) ) #/4 K E correction, according to Zhukov
   #print "Effective gap: "+str(Ueff/e)+" eV."
@@ -372,9 +373,9 @@ def GenerateKeldyshGulleyDatabase(Egap, meff, wavelength, PeakField, order, Refr
   
   xGulley = GulleyX(Egap, gamma, k2, wavelength) #generating the X parameter of Gulley
   
-  KeldyshFunctionResultGulley = KeldyshFunctionGulley( k1, k2, xGulley, gamma, order, wavelength ) #Egap is not directly used in Gulleys version.
+  KeldyshFunctionResultGulley = KeldyshFunctionGulley( k1, k2, xGulley, gamma, order, wavelength )
   wPI = IonizationRate_Gulley(k1, k2,  KeldyshFunctionResultGulley, xGulley, wavelength, meff)
-  return wPI
+  return wPI, KeldyshFunctionResultGulley, xGulley
 #}}}
 
 #print "** Vectorizing functions..."

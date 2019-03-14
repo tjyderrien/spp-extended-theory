@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2013-2018 T. J.-Y. Derrien
+# Copyright (C) 2013-2019 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -42,6 +42,13 @@ from scipy.constants import c, epsilon_0, mu_0, pi, e, m_e, h, hbar, Avogadro
 
 from libUnits import *
 from libDatabase import *
+from libPlotting import plot2dHeatMap
+
+rc('font',**{'family':'sans-serif','sans-serif':['Helvetica'], 'size':'14'})
+## for Palatino and other serif fonts use:
+#rc('font', **{'family':'serif', 'serif':['Palatino'], 'size':'16'})
+rc('text', usetex=True) #True: Does not work on Draco. Just put False, then, and it will be smooth. 
+mp.rcParams['legend.numpoints'] = 1
 
 ## Conversion between field and intensity (SI units)
 # TODO: As it is absorbed field, it should multiplied by real(optical index)
@@ -90,18 +97,93 @@ def VZ_FieldNormalization(Egap, meff, wavelength):
 
 VZ_FieldNormalization = np.vectorize(VZ_FieldNormalization)
 
-## Interfaces bicolor tables of V. Zhukov bicolor Keldysh model with the laser parameters
+
+def VP_ChooseLibrary(FieldEnvelope1, FieldEnvelope2, wavelength1, wavelength2, CEP1, CEP2, Egap=2.56*e, meff=0.2226):
+    InvertedFields=True
+    VZ_basename = ''
+    Header = "[libKeldyshZhukov] VP_ChooseLibrary: "
+    if( np.max(FieldEnvelope2) < 1e-3 ): #single pulse mode
+        Dictionnary = {'FieldSquaredLog10': 0, 'log10wpi': 1, 'photons': 2, 'energy': 3, 'wpi': 4, 'FieldSquared1': 5} #Monochromatic case
+        DataFolder  = 'Zhukov/Monochrome/'
+        DataFileName={'1030': DataFolder+'DLG1030mono.dat', '800': DataFolder+'DLG800mono.dat', '400': DataFolder+'DLG400mono.dat'}
+        print Header+"Choosing the right database..."
+        if(wavelength1   == 800e-9):
+            VZ_basename = DataFileName['800']
+        elif(wavelength1 == 400e-9):
+            VZ_basename = DataFileName['400']
+        elif(wavelength1 == 1030e-9):
+            VZ_basename = DataFileName['1030']
+        else: 
+            print Header+"** Warning: numerical integration from VP Zhukov is not available. Please use single color Keldysh-Gruzdev model, that is available in this library. "
+    elif((wavelength1 == 800e-9 and wavelength2 == 1030e-9) or (wavelength1 == 1030e-9 and wavelength2 == 800e-9)): #BicolorCase.
+        #TODO: the two sets could be inverted! Therefore data should be swept.
+        InvertedFields=True
+        Dictionnary={'FieldSquared1': 0, 'FieldSquared2': 1, 'wpi': 2} #Bichromatic case
+        DataFolder  = 'Zhukov/800x1030/'
+        
+        DataFileName={'phi=0': 'Wpi800x1600fi=0.dat', 'phi=pi/2': 'Wpi800x1600fi=0.dat', 'phi=pi/3': 'Wpi800x1600fi=pi_over_3.dat', 'phi=pi/4': 'Wpi800x1600fi=pi_over_4.dat'}
+        
+        if(CEP2==0. or CEP2==pi/2.):
+            VZ_basename = DataFolder+DataFileName['phi=0']
+        elif(CEP2 == pi/3.):
+            VZ_basename = DataFolder+DataFileName['phi=pi/3']
+        elif(CEP2 == pi/4.): 
+            VZ_basename = DataFolder+DataFileName['phi=pi/4']
+        else: 
+            print Header+"Fields value are not available for 800x1600 nm."
+            exit()
+        print "THIS SET IS BROKEN. Waiting for the input of Vladimir Zhukov."
+        exit()
+        
+    elif((wavelength1 == 400e-9 and wavelength2 == 2*wavelength1) or (wavelength1 == 800e-9 and wavelength2 == wavelength1/2.)):
+        #TODO: the two sets could be inverted! 
+        InvertedFields=True
+        Dictionnary={'FieldSquared1': 0, 'FieldSquared2': 1, 'wpi': 2 } #Bichromatic case
+        DataFolder  = 'Zhukov/800x400nm/'
+        DataFileName={'phi=0': 'W400x800fi=0.dat', 'phi=pi/4': 'W400x800fi=pina4.dat'}
+        if(CEP2==0.):
+            VZ_basename = DataFolder+DataFileName['phi=0']
+        elif(CEP2 == pi/4.): 
+            VZ_basename = DataFolder+DataFileName['phi=pi/4']
+        elif(CEP2 == pi/2.):
+            VZ_basename = DataFolder+DataFileName['phi=0']
+        else: 
+            print Header+"Fields value are not available for the specified particular case of 400x800 nm."
+            exit()
+    elif((wavelength1 == 800e-9 and wavelength2 == 2.*wavelength1) or (wavelength1 == 800e-9 and wavelength2 == wavelength1*2.)):
+        #TODO: the two sets could be inverted! 
+        InvertedFields=False
+        Dictionnary={'FieldSquared1': 0, 'FieldSquared2': 1, 'wpi': 2} #Bichromatic case
+        DataFolder  = 'Zhukov/800x1600/'
+        
+        DataFileName={'phi=0': 'Wpi800x1600fi=0.dat', 'phi=pi/2': 'Wpi800x1600fi=0.dat', 'phi=pi/3': 'Wpi800x1600fi=pi_over_3.dat', 'phi=pi/4': 'Wpi800x1600fi=pi_over_4.dat'}
+        
+        if(CEP2==0. or CEP2==pi/2.):
+            VZ_basename = DataFolder+DataFileName['phi=0']
+        elif(CEP2 == pi/3.):
+            VZ_basename = DataFolder+DataFileName['phi=pi/3']
+        elif(CEP2 == pi/4.): 
+            VZ_basename = DataFolder+DataFileName['phi=pi/4']
+        else: 
+            print Header+"Fields value are not available for 800x1600 nm."
+            exit()
+    else:
+        print Header+"THIS COMBINATION OF WAVES IS NOT AVAILABLE. Please kindly ask the corresponding data to Prof. Vladimir Zhukov, zukov@ict.nsc.ru." 
+        exit()
+    return VZ_basename, Dictionnary, InvertedFields
+
+## Provide bicolor tables of V. Zhukov bicolor Keldysh model for the selected wavelengths
 # Returns the W_PI coefficients from V. Zhukov model to be integrated in time for bi-color laser pulses
-def VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength1 = 800e-9, wavelength2 = 800e-9, CEP1=0., CEP2=0., Egap=2.56*e, meff=0.2226, tau1=10e-15, tau2=10e-15, Delay=0., dt = 1E-17, N_total=5E28, t0=0.0): #{{{
-  Header="[libKeldysh] "
-  
-  print Header+"Defining the laser pulse..."
-  # t0 = 0e0
-  tmin = -1.*tau1+t0
-  tmax =  1.*tau2+t0 + Delay
-  
-  print Header+"** Info: Number of time steps = "+str(int((tmax-tmin)/dt))+"."
-  instants=np.arange(tmin,tmax,dt)
+# @param FieldEnvelope1: field1 where Wpi will be interpolated at.
+# @param FieldEnvelope2: field2 where Wpi will be interpolated at.
+# @param wavelength1: 1st color. Not order sensitive. 
+# @param wavelength2: 2nd color. Not order sensitive. 
+# @param CEP1: should stay to 0
+# @param CEP2: can change to simple values (pi/2, pi/3, pi/4)
+# @param Egap: value in Joules
+# @param meff: effective mass (no dimension)
+def VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength1 = 800e-9, wavelength2 = 800e-9, CEP1=0., CEP2=0., Egap=2.56*e, meff=0.2226, crystal_density=5E28): #{{{
+  Header="[libKeldyshZhukov] "
   
   # Printing info on the pulses
   IntensityEnvelope1=FieldToIntensity(FieldEnvelope1)
@@ -114,7 +196,7 @@ def VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength1 = 800e-9, w
   print Header+"** Info: Peak intensity 2= "+str(np.max(IntensityEnvelope2)/1E4)+" W/cm^2."
   print Header+"** Info: Peak field amplitude 2= "+str(np.max(FieldEnvelope2)/1E9)+" V/nm."
 
-  # 0. Expressing FieldEnvelopes in CGS
+  # 0. Expressing Fields in CGS
   FieldNormalizationCoeff1_SI, FieldNormalizationCoeff1_CGS = VZ_FieldNormalization(Egap, meff, wavelength1)
   FieldNormalizationCoeff2_SI, FieldNormalizationCoeff2_CGS = VZ_FieldNormalization(Egap, meff, wavelength2)
   
@@ -128,8 +210,8 @@ def VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength1 = 800e-9, w
   FieldEnvelope1_CGS = Field_SI_to_CGS(FieldEnvelope1)
   FieldEnvelope2_CGS = Field_SI_to_CGS(FieldEnvelope2)
   
-  print Header+"Field1 [CGS] = "+str(FieldEnvelope1_CGS.max())
-  print Header+"Field2 [CGS] = "+str(FieldEnvelope2_CGS.max())
+  print Header+"Field1 [CGS] = "+str(np.max(FieldEnvelope1_CGS))
+  print Header+"Field2 [CGS] = "+str(np.max(FieldEnvelope2_CGS))
   
   FieldEnvelopeNormalized1_CGS = FieldEnvelope1_CGS / FieldNormalizationCoeff1_CGS
   FieldEnvelopeNormalized2_CGS = FieldEnvelope2_CGS / FieldNormalizationCoeff2_CGS
@@ -147,60 +229,11 @@ def VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength1 = 800e-9, w
   print Header+"** Info: Egap = "+str(Egap/e)+" eV"
   print ""
 
-  #Choosing the right column index in the data files
-  print Header+"** Selecting the right headers..."
-  VZ_basename = ''
-  if( FieldEnvelopeNormalized2_CGS.max() == 0. ): # was wavelength1 == wavelength2.  
-    Dictionnary = {'FieldSquaredLog10': 0, 'log10wpi': 1, 'photons': 2, 'energy': 3, 'wpi': 4, 'FieldSquared1': 5} #Monochromatic case
-    DataFolder  = 'Zhukov/Monochrome/'
-    DataFileName={'1030': DataFolder+'DLG1030mono.dat', '800': DataFolder+'DLG800mono.dat', '400': DataFolder+'DLG400mono.dat'}
-    print Header+"Choosing the right database..."
-    if(wavelength1   == 800e-9):
-      VZ_basename = DataFileName['800']
-    elif(wavelength1 == 400e-9):
-      VZ_basename = DataFileName['400']
-    elif(wavelength1 == 1030e-9):
-      VZ_basename = DataFileName['1030']
-    else: 
-      print Header+"** Warning: single color general Keldysh model is available in this library. "
-  elif((wavelength1 == 800e-9 and wavelength2 == 1030e-9) or (wavelength1 == 1030e-9 and wavelength2 == 800e-9)): 
-    #TODO: the two sets could be inverted! Therefore data should be swept.
-    print "THIS SET IS BROKEN. Waiting for the input of Vladimir Zhukov."
-    exit()
-    
-  elif((wavelength1 == 400e-9 and wavelength2 == 2*wavelength1) or (wavelength1 == 800e-9 and wavelength2 == wavelength1/2.)):
-    #TODO: the two sets could be inverted! 
-    Dictionnary={'FieldSquared1': 0, 'FieldSquared2': 1, 'wpi': 2 } #Bichromatic case
-    DataFolder  = 'Zhukov/800x400nm/'
-    DataFileName={'phi=0': 'W400x800fi=0.dat', 'phi=pi/4': 'W400x800fi=pina4.dat'}
-    if(CEP2==0.):
-      VZ_basename = DataFolder+DataFileName['phi=0']
-    elif(CEP2 == pi/4.): 
-      VZ_basename = DataFolder+DataFileName['phi=pi/4']
-    elif(CEP2 == pi/2.):
-      VZ_basename = DataFolder+DataFileName['phi=0']
-    else: 
-      print Header+"Fields value are not available for the specified particular case of 400x800 nm."
-      exit()
-  elif((wavelength1 == 800e-9 and wavelength2 == 2.*wavelength1) or (wavelength1 == 800e-9 and wavelength2 == wavelength1*2.)):
-    #TODO: the two sets could be inverted! 
-    Dictionnary={'FieldSquared1': 0, 'FieldSquared2': 1, 'wpi': 2} #Bichromatic case
-    DataFolder  = 'Zhukov/800x1600/'
-    
-    DataFileName={'phi=0': 'Wpi800x1600fi=0.dat', 'phi=pi/2': 'Wpi800x1600fi=0.dat', 'phi=pi/3': 'Wpi800x1600fi=pi_over_3.dat', 'phi=pi/4': 'Wpi800x1600fi=pi_over_4.dat'}
-    
-    if(CEP2==0. or CEP==pi/2.):
-      VZ_basename = DataFolder+DataFileName['phi=0']
-    elif(CEP2 == pi/3.):
-      VZ_basename = DataFolder+DataFileName['phi=pi/3']
-    elif(CEP2 == pi/4.): 
-      VZ_basename = DataFolder+DataFileName['phi=pi/4']
-    else: 
-      print Header+"Fields value are not available for 800x1600 nm."
-      exit()
-  else:
-    print Header+"THIS COMBINATION OF WAVES IS NOT AVAILABLE. Please kindly ask the corresponding data to Prof. Vladimir Zhukov, zukov@ict.nsc.ru." 
-    exit()
+  # 1. Choosing the right data file
+  print Header+"** Selecting the right VP Zhukov datafile..."
+  VZ_basename, Dictionnary, InvertedFields=VP_ChooseLibrary(FieldEnvelope1, FieldEnvelope2, wavelength1, wavelength2, CEP1, CEP2, Egap=2.56*e, meff=0.2226)
+  
+  
   print Header+"Path: "+VZ_basename
   IndexWpi           = Dictionnary['wpi']
   IndexFieldSquared1 = Dictionnary['FieldSquared1']
@@ -217,7 +250,7 @@ def VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength1 = 800e-9, w
     print Header+"Path was empty."
     exit()
   
-  deltaField_CGS = 0.0025 #TODO: automatic step from the database file? Isnt it a bit small ?!
+  deltaField_CGS = 0.0025 #TODO: automatic step from the database file? 
   deltaField_SI = Field_CGS_to_SI(deltaField_CGS)
   
   # Time to filter the entries with the required normaliezd field in the relevant database
@@ -231,28 +264,41 @@ def VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength1 = 800e-9, w
     #print DB_FieldSquaredNorm1.shape, DB_FieldSquaredNorm2.shape, DB_Wpi.shape
     print Header+"Data well imported from DB."
     
+    # Do we need a 2D matrix interpolation? 
     # This works for 2D matrix interpolation
     print Header+"** Preparing interpolation of w_pi(E1,E2)..."
-    xdim = int(np.sqrt(len(DB_FieldSquaredNorm1)))
+    xdim = int(np.sqrt(len(DB_FieldSquaredNorm1))) #NOTE: assumes data are square. True for 800x1600, CEP=0 at least.
     print xdim
     Wpi_2D_X  = DB_FieldSquaredNorm1.reshape(xdim, xdim)
+    #print Wpi_2D_X
     Wpi_2D_Y  = DB_FieldSquaredNorm2.reshape(xdim, xdim)
+    #print Wpi_2D_Y
     Wpi_2D    = DB_Wpi.reshape((xdim, xdim))
+    #print Wpi_2D
     Wpi_X     = Wpi_2D_X[:,0]
+    #print Wpi_X
     Wpi_Y     = Wpi_2D_Y[0,:]
-  
+    #print Wpi_Y
+    Wpi_2D_t = np.transpose(Wpi_2D)
     print Header+"** Interpolating the w_PI..."
     #InterpolationOrder=1
-    WPI_func = interp2d(Wpi_X, Wpi_Y, Wpi_2D) #interfaces w_PI with E1, E2 values, as a function in RxR. 
-  
+    # WARNING: the 800x1600 files have #1: E2**1 !! and #2: E1**2 ! Therefore we had to transpose the matrix. 
+    if(InvertedFields):
+        WPI_func = interp2d(Wpi_X, Wpi_Y, Wpi_2D_t) #interfaces w_PI with E1, E2 values, as a function in RxR. 
+    else:
+        WPI_func = interp2d(Wpi_X, Wpi_Y, Wpi_2D)
     print Header+"Range of the interpolant: "
     print FieldEnvelopeNormalized1_CGS.min(), FieldEnvelopeNormalized1_CGS.max()
+    print FieldEnvelopeNormalized2_CGS.min(), FieldEnvelopeNormalized2_CGS.max()
+    
+    print Header+"Trying to 2D-interpolate at one (E1,E2) point: "
+    print WPI_func(FieldEnvelopeNormalized1_CGS**2, FieldEnvelopeNormalized2_CGS**2)
+    # NOTE: The code works until here. 
     
     # Interpolating the right W_PI [CGS unit!]
     # WPI [SI] = m^-3 s^-1
     # WPI [CGS]= cm^-3.s^-1
-    w_PI_CGS_matrix = WPI_func(FieldEnvelopeNormalized1_CGS**2, FieldEnvelopeNormalized2_CGS**2) #hence w_PI_CGS: This function is giving a full matrix in RxR. I just want a list indexed on instants. Maybe capture the diagonal of this matrix? This would correspond to the same instants.
-    w_PI_CGS = w_PI_CGS_matrix.diagonal()
+    w_PI_CGS = WPI_func(FieldEnvelopeNormalized1_CGS**2, FieldEnvelopeNormalized2_CGS**2) 
     # w_PI_CGS is in particles per cm^-3. 
   elif(NumberOfColors == 1): 
     print Header+"** Info: selected the single color Keldysh tables."
@@ -273,8 +319,8 @@ def VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength1 = 800e-9, w
   
   print Header+"** Conversion to W_PI (SI)..."
   # Normalization coefficient given by Vladimir. 
-  OverallCoefficient = 128.*Egap/(pi*hbar)*N_total #CGS unit? #What is this 128 ? 
-  w_PI_SI = OverallCoefficient * (Length_CGS_to_SI(1.))**-3 * w_PI_CGS 
+  # OverallCoefficient = 128.*Egap/(pi*hbar)*N_total #CGS unit?
+  w_PI_SI = crystal_density * w_PI_CGS * 1E15 #as simple as this, according to VP Zhukov. 
   
   print Header+"range(w_PI_SI) = ", w_PI_SI.min(), w_PI_SI.max()
   print Header+"dimension(w_PI_SI) = ", w_PI_SI.shape
@@ -288,10 +334,22 @@ def VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength1 = 800e-9, w
   # We shall call w_PI_SI for each instantaneous field1 and field2. 
   # 
   
-  print ""
+  return w_PI_SI
+#}}}
+
+## Perform temporal integration on the VZ_Bicolor tables for a given pulse. 
+def VP_BicolorNexc(tau1, tau2, t0, Delay):
+  print Header+"Defining the laser pulse..."
+  # t0 = 0e0
+  tmin = -1.*tau1+t0
+  tmax =  1.*tau2+t0 + Delay
+  
+  print Header+"** Info: Number of time steps = "+str(int((tmax-tmin)/dt))+"."
+  instants=np.arange(tmin,tmax,dt)
+  
   print Header+"Temporal integration..."
   
-  # Temporal integration without limiter
+  
   
   # Just multiply array of w_PI by dt, with limited to Ntotal
   #N_excited_Keldysh = dN_excited_Keldysh.cumsum()
@@ -308,5 +366,75 @@ def VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength1 = 800e-9, w
   N_excited_Zhukov = np.multiply( np.exp(-ExpArg_Zhukov), N_total * np.exp(ExpArg_Zhukov) - N_total + N_initial)
   
   #N_excited_Gruzdev = np.multiply( np.exp(-ExpArg_Gruzdev), N_total * np.exp(ExpArg_Gruzdev) - N_total + N_initial)
-  return instants, N_excited_Zhukov, w_PI_SI, w_PI_CGS
-#}}}
+  return instants, N_excited_Zhukov
+
+def VPZ_Wpi0D():
+# Trying to extract one single value from Zhukov files. 
+    Efield1=1E8; Efield2=1E9; wavelength1=800e-9; wavelength2=1600e-9; CEP1=0; CEP2=0; 
+    Egap = 2.56*e; meff=0.2226
+    VZ_generateWpiTables(Efield1, Efield2, wavelength1, wavelength2, CEP1, CEP2, Egap, meff)
+
+def VPZ_Wpi1D():
+    # Now trying to extract a sequence of values from Zhukov files. 
+    Egap = 2.56*e; meff=0.2226
+    Efield2=1E8; wavelength1=800e-9; wavelength2=1600e-9; CEP1=0; CEP2=0; 
+    Efield1_log = np.linspace(8,10,100)
+    Efield1 = np.power(10.,Efield1_log)
+    Wpi = VZ_generateWpiTables(Efield1, Efield2, wavelength1, wavelength2, CEP1, CEP2, Egap, meff)
+    # NOTE: add a warning when interpolation occurs OUT of boundaries!
+
+    plt.figure()
+    plt.plot(Efield1, Wpi)
+    plt.xlabel(r"$E_2$ (V/nm)")
+    plt.ylabel(r"$w_{PI}$ (m$^{-3}$.s$^{-1}$)")
+    plt.show()
+
+
+## Plot the (E1, E2) map of W_PI according to VP Zhukov theories.
+def VPZ_Wpi2D(wavelength1, wavelength2, Efield1_max, Efield2_max, CEP2=0., Egap=2.56*e, meff=0.2226):
+    # Now trying to extract a sequence of values from Zhukov files. 
+    #Egap = 2.56*e; meff=0.2226
+    #wavelength1=800e-9; wavelength2=1600e-9; CEP1=0; CEP2=0; 
+    CEP1=0.
+    #Efield1_max = 0.8E10
+    #Efield2_max = 0.4E10
+    Efield1_log = np.linspace(8,np.log10(Efield1_max),800)
+    Efield1 = np.power(10.,Efield1_log)
+    Efield2_log = np.linspace(8,np.log10(Efield2_max),800)
+    Efield2 = np.power(10.,Efield2_log)
+
+    Wpi = VZ_generateWpiTables(Efield1, Efield2, wavelength1, wavelength2, CEP1, CEP2, Egap, meff)
+    # NOTE: add a warning when interpolation occurs OUT of boundaries!
+
+    print np.shape(Wpi)
+
+    QuantityTitle = r"$w_{PI}$ (Zhukov)"
+    filename      = "Zhukov_"+str(wavelength1*1E9)+"nm-"+str(wavelength2*1E9)+"nm-CEP2-"+str(round(CEP2/pi,2))
+    
+    #heatmap, xedges, yedges = np.histogram2d(Efield1, Efield2, bins=(np.size(Efield1), np.size(Efield2)))
+    #extent = [xedges[0], xedges[-1], yedges[0], yedges[-1]]
+    #print extent
+    #plt.imshow(Wpi, extent=extent, interpolation='nearest')
+    #plot2dHeatMap(Efield1, Efield2, Wpi, QuantityTitle, filename)
+    #plt.plot(Efield2, Wpi)
+    
+    plt.figure()
+    cmap = mp.cm.get_cmap(name='Blues', lut=None)
+    plt.xlabel(r"$E_1$ (V/nm)")
+    plt.ylabel(r"$E_2$ (V/nm)")
+    plt.title(r"$w_{PI}(\lambda_1=$"+str(wavelength1*1E9)+r"$,\lambda_2=$"+str(wavelength2*1E9)+r"$)$, [m$^{-3}$.s$^{-1}$], $\phi=$"+str(round(CEP2/pi,2))+r"$\pi$")
+    plt.contourf(Efield1, Efield2, Wpi, cmap=cmap)
+    plt.colorbar()
+    plt.tight_layout()
+    plt.savefig(filename+".eps")
+    plt.savefig(filename+".png")
+    plt.show()
+
+
+#VPZ_Wpi2D(800e-9, 400e-9, 9E9, 1.6E10, 0.)
+#VPZ_Wpi2D(800e-9, 400e-9, 9E9, 1.6E10, pi/4.)
+#VPZ_Wpi2D(800e-9, 400e-9, 9E9, 1.6E10, pi/3.)
+#VPZ_Wpi2D(800e-9, 1600e-9, 4E9, 2E9, 0.)
+#VPZ_Wpi2D(800e-9, 1600e-9, 4E9, 2E9, pi/4.)
+#VPZ_Wpi2D(800e-9, 1600e-9, 4E9, 2E9, pi/3.)
+#VPZ_Wpi2D(800e-9, 1030e-9, 0.8E10, 1E10)

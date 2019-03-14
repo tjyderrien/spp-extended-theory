@@ -1552,15 +1552,16 @@ def PreparePublicationFigure_OxideFraction():
     ## Takes ~ 30 min run
     ## Preparing SPP period using an external file
     #CrCrXOY_Lisunov  = np.loadtxt("Dostovalov-Cr/Cr-Cr2O3-CrO2/Sergei_Lisunov/OptProperties_Cr_with_oxides.csv", skiprows=2)
-    CrCrXOY_Lisunov  = np.loadtxt("Dostovalov-Cr/Cr-Cr2O3-CrO2/Sergei_Lisunov/OptProperties_Cr_with_oxides_corrected.csv", skiprows=0)
+    #CrCrXOY_Lisunov  = np.loadtxt("Dostovalov-Cr/Cr-Cr2O3-CrO2/Sergei_Lisunov/OptProperties_Cr_with_oxides_corrected.csv", skiprows=0)
+    CrCrXOY_Lisunov  = np.loadtxt("Dostovalov-Cr/Cr-Cr2O3-CrO2/Sergei_Lisunov/OptProperties_Cr_with_oxides_corrected_porous20percents.csv", skiprows=0)
     limiter = 2 #limit the number of cells to get, then we can update the plot without recomputing the whole thing.
     CrCrXOY_fraction   = CrCrXOY_Lisunov[:,0]
     epsR_CrCrXOY_L     = CrCrXOY_Lisunov[:,1]
     epsC_CrCrXOY_L     = CrCrXOY_Lisunov[:,2]
     eps_CrCrXOY_L = np.add(epsR_CrCrXOY_L, np.multiply(1.j, epsC_CrCrXOY_L))
-    NumberOfSuperImposedPlots=1
+    NumberOfSuperImposedPlots=4
     Every = 20*NumberOfSuperImposedPlots
-    Shift = int(0*Every/NumberOfSuperImposedPlots) #enable to plot shifted plots to avoid superimposition
+    Shift = int(3*Every/NumberOfSuperImposedPlots) #enable to plot shifted plots to avoid superimposition
     ScenarioOfCrOxideMixture_ext(eps_CrCrXOY_L[Shift::Every], epsAir, epsBK7, CrCrXOY_fraction[Shift::Every], 'Cr_compounds_oxide', 'Air', 'BK7')
 
 # =====================
@@ -1579,18 +1580,19 @@ thickness_size = 60 #Fraction_size
 
 def PublicationFigure_SequentialMG2mixing_Derrien(Fraction_size): # Building my own optical data
     fractionOxide, epsCrOxidized = RepeatLisunovMixtureOfOxides(Fraction_size)
-    NumberOfSuperImposedPlots=1
-    Every = 1*NumberOfSuperImposedPlots
+    NumberOfSuperImposedPlots=4
+    Every = 20*NumberOfSuperImposedPlots
     Shift = int(0*Every/NumberOfSuperImposedPlots) #enable to plot shifted plots to avoid superimposition
     ScenarioOfCrOxideMixture_ext(epsCrOxidized[Shift::Every], epsAir, epsBK7, fractionOxide[Shift::Every], 'Cr_compounds_oxide', 'Air', 'BK7')
 
-#PreparePublicationFigure_OxideFraction()
+PreparePublicationFigure_OxideFraction()
 #ScenarioOfCrOxideMixture_ext(eps_CrCrXOY_L[Shift::Every], epsAir, epsBK7, CrCrXOY_fraction[Shift::Every], 'Cr_compounds_oxide', 'Air', 'BK7')
 #PublicationFigure_SequentialMG2mixing_Derrien(Fraction_size)
 
 Te_max = 1E10
 #PeriodsAsFunctionOfTemperature(epsTi, epsBK7, epsAir, Fraction_size, 'Cr', 'BK7', True, False, True, Te_max)
 
-epsCrO2_2o1e = MaxwellGarnett2(epsCrO2_o, epsCrO2_e, 1./3.) #This does
-ScenarioOfSimultaneousMixingMG3(epsCr, epsCr2O3, epsCrO2_2o1e, epsBK7, Fraction_size, 'Cr', 'Cr2O3', 'CrO2', 'BK7', False, False, True, False)
+## 3-materials mixture provides accurate comparison with experiments
+#epsCrO2_2o1e = MaxwellGarnett2(epsCrO2_o, epsCrO2_e, 1./3.) #This does
+#ScenarioOfSimultaneousMixingMG3(epsCr, epsCr2O3, epsCrO2_2o1e, epsBK7, Fraction_size, 'Cr', 'Cr2O3', 'CrO2', 'BK7', False, False, True, False)
 

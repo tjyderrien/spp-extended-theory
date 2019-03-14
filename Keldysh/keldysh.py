@@ -26,20 +26,7 @@ print "** Loading Stark module [De Giovannini, U.; Hubener, H. & Rubio, A., Nano
 print "** Info: this file contains examples how to use the Keldysh library. "
 print "         It also contains validation cases of the present theory on Si and known references. "
 
-## Test the Keldysh model using silicon band gap given by the LDA functionals. 
-def SiliconLDAbandGap(): #{{{
-  print "Defining Si material parameters..."
-
-  Egap = 2.56e0*e; #3.4e0*e #LDA band gap of Si: 2.58 eV. #1.12e0*e for indirect band gap; 
-  meff=0.2226e0; #Effective mass of Si
-  Ntotal=1.*5E28
-  order=200
-  
-  wavelength = 800e-9;
-  tau=7e-15; dt = 1E-17; CEP=0e0
-  #PeakFluence = 1.0*1E4 #J/cm2 * 1E4 = J/m2
-  #PeakField   = np.sqrt(2e0 * PeakFluence / (tau * c * epsilon_0))
-  PeakField = 5E9
+def Test_Keldysh(Egap, meff, PeakField, wavelength, order):
   print Header+"Peak field ="+str(PeakField/1E9)+" V/nm"
   
   print "=== SIMPLE QUANTITIES ==="
@@ -83,6 +70,24 @@ def SiliconLDAbandGap(): #{{{
   print "wPI(Keldysh)="+str(wPI)
   print "wPI(Gruzdev)="+str(wPIg)
   print "wPI(Gulley) ="+str(wPIgulley)
+
+
+## Test the Keldysh model using silicon band gap given by the LDA functionals. 
+def SiliconLDAbandGap(): #{{{
+  print "Defining Si material parameters..."
+
+  Egap = 2.56e0*e; #3.4e0*e #LDA band gap of Si: 2.58 eV. #1.12e0*e for indirect band gap; 
+  meff=0.2226e0; #Effective mass of Si
+  Ntotal=1.*5E28
+  order=200
+  
+  wavelength = 800e-9;
+  tau=7e-15; dt = 1E-17; CEP=0e0
+  #PeakFluence = 1.0*1E4 #J/cm2 * 1E4 = J/m2
+  #PeakField   = np.sqrt(2e0 * PeakFluence / (tau * c * epsilon_0))
+  PeakField = 1E8
+
+  Test_Keldysh(Egap, meff, PeakField, wavelength, order)
 
   print "===== COMPARING THE EFFECTIVE GAPS using Stark effect ===="
   
@@ -268,6 +273,8 @@ def SilicaGulley2012(): #{{{
   print "Defining SiO2 material parameters from [Gulley 2012]..."
   numpoints=1000
   
+  order = 50 
+  
   Egap = 9e0*e; #band gap of SiO2
   meff = 1e0; #Effective mass of SiO2
   N_total=10.*5E28; #valence band electron density #to avoid limitation
@@ -279,6 +286,10 @@ def SilicaGulley2012(): #{{{
   PeakField = np.sqrt(2. * PeakIntensity / c / epsilon_0) #I = 0.5 c n0 eps0 E²
   print Header+"Peak field (min, max): "+str(np.min(PeakField)/1E9)+" V/nm, "+str(np.max(PeakField/1E9))+" V/nm."
   
+  #PeakField = 1E9
+  
+  Test_Keldysh(Egap, meff, PeakField, wavelength, order)
+  #exit()
   
   t0=0. #defines the instant 0.
   Delay = 0. #delay between maxima of the pulses
@@ -314,10 +325,12 @@ def SilicaGulley2012(): #{{{
 
   #print Header+"** Info: PulseEnvelope.EPS and PNG were written in the current folder. "
 
-  order = 100
+  #order = 100
   ShowPlot = True
 
-  timeKeldysh, N_Keldysh_SI, N_Gruzdev_SI, gamma, wPI, wPIg, N_excited_Keldysh_trapz, N_excited_Gruzdev_trapz = generateWpiTables(Egap, meff, wavelength, tau, PeakField, dt, order, N_total, t0, False)
+  #timeKeldysh, N_Keldysh_SI, N_Gruzdev_SI, gamma, wPI, wPIg, N_excited_Keldysh_trapz, N_excited_Gruzdev_trapz = generateWpiTables(Egap, meff, wavelength, tau, PeakField, dt, order, N_total, t0, False)
+  
+  wPI, QGulley, xGulley = GenerateKeldyshGulleyDatabase(Egap, meff, wavelength, PeakField, order)
   
   ### plot w_PI(intensity)
   print Header+"Importing Gruzdev [2014] data..."
@@ -332,9 +345,11 @@ def SilicaGulley2012(): #{{{
   print Header+"Plotting as function of laser field intensity ..."
   plt.figure()
   plt.xlabel("Intensity (W/cm$^{2}$)")
-  plt.ylabel("$w_{PI}$ (cm$^{-3}$ fs$^{-1}$)")
+  plt.ylabel("$w_{PI}$ (cm$^{-3}$ s$^{-1}$)")
   #plt.loglog(1e-4*FieldToIntensity(PeakField.real), 1e-6*1e-15*wPI,  linestyle="-", color="r", label=r"$w_{PI}$ "+ShortRefKeldysh)
   plt.loglog(1e-4*FieldToIntensity(PeakField.real), 1e-6*wPI, linestyle="-", color="b", label=r"$w_{PI}$ "+ShortRefGulley)
+  plt.loglog(1e-4*FieldToIntensity(PeakField.real), QGulley, linestyle="-", color="r", label=r"$Q(\gamma,x)$ "+ShortRefGulley)
+  plt.loglog(1e-4*FieldToIntensity(PeakField.real), xGulley, linestyle="--", color="r", label=r"$x$ "+ShortRefGulley)
   plt.loglog(1e-4*Gulley2012[:,0], 1e-6*Gulley2012[:,1], linestyle="-", color="k", label="Data from "+ShortRefGulley) #JUST FOR VALIDATION. 
   plt.grid()
   plt.legend(loc='best')
@@ -384,6 +399,7 @@ def SilicaGruzdev2014(): #{{{
   
   wavelength = 800e-9;
   tau=35e-15; dt = 1E-17; CEP=0e0
+  
   #PeakFluence = 1.0*1E4 #J/cm2 * 1E4 = J/m2
   #PeakField   = np.sqrt(2e0 * PeakFluence / (tau * c * epsilon_0))
   PeakIntensity_log = np.linspace(np.log10(1e14), np.log10(1e18), numpoints)
@@ -443,8 +459,8 @@ def SilicaGruzdev2014(): #{{{
 #SiliconTunneling()
 
 
-SiliconLDAbandGap()
-#SilicaGulley2012()
+#SiliconLDAbandGap()
+SilicaGulley2012()
 #SilicaGruzdev2014()
 #SilicaGraef2017()
 

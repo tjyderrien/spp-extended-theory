@@ -93,10 +93,10 @@ def SiliconLDAbandGap(): #{{{
   
   print "== Preparing Giovannini et al model... =="
   DME = 1. #from the paper #-1+2j #arbitrary!
-  Efield_SI_log = np.linspace(8,11, 50)
-  #Efield_SI     = np.power(10.,Efield_SI_log)
+  Efield_SI_log = np.linspace(8,11, 200)
+  Efield_SI     = np.power(10.,Efield_SI_log)
   
-  Efield_SI     = 1e5  
+  #Efield_SI     = 1e9  
 
   E_gap_SI      = Egap
   omega_SI      = 2.*np.pi * c / wavelength
@@ -106,79 +106,96 @@ def SiliconLDAbandGap(): #{{{
   Efield_AU = Field_SI_to_AU(Efield_SI)
   E_gap_AU  = Energy_eV_to_Hartree(E_gap_SI/e)
   omega_AU  = Energy_eV_to_Hartree(omega_SI*hbar/e)
+  
+  def Test():
+        
+    
+    print "== USELESS: 2-band 1-photon (4x4) original numerical attempt"
+    Enumerical_min = Stark2bands1photon_EnergyShift_notcorrected_numerical(Efield_AU, omega_AU, E_gap_AU, DME, 50)
+    
+    #Enumerical_max = Stark2bands1photon_EnergyShift_notcorrected_numerical(np.max(Efield_AU), omega_AU, E_gap_AU, DME, 50)
+    
+    # Removing numerical degeneracies
+    Enumerical_min = np.round(Enumerical_min, 8)
+    Enumerical_min_set = set(Enumerical_min.flatten())
+    #Enumerical_max = np.round(Enumerical_max, 8)
+    #Enumerical_max_set = set(Enumerical_max.flatten())
+    
+    Enumerical_min_eV = np.round(Energy_Hartree_to_eV(Enumerical_min), 8)
+    Enumerical_min_set_eV = set(Enumerical_min_eV.flatten())
+    #Enumerical_max_eV = np.round(Energy_Hartree_to_eV(Enumerical_max), 8)
+    #Enumerical_max_set_eV = set(Enumerical_max_eV.flatten())
+    
+    #Enumerical_min_set = [set(v) for v in Enumerical_min]
+    #Enumerical_max_set = map(np.unique, Enumerical_max)
+    
+    # For comparison, we compute the 4x4 original. 
+    ENC1, ENC2, ENC3, ENC4, EgapShift_AU = Stark2bands1photon_Cropped_EnergyShift_notcorrected_exact(Efield_AU, omega_AU, E_gap_AU, DME)
+    
+    print "USELESS: 4x4 original - exact values"
+    print "eV: "
+    print Energy_Hartree_to_eV(ENC1)
+    print Energy_Hartree_to_eV(ENC2)
+    print Energy_Hartree_to_eV(ENC3)
+    print Energy_Hartree_to_eV(ENC4)
+    print ""
+    print "USELESS: 4x4 original - numerical attempt"
+    print "eV:"
+    #print Enumerical_min_set
+    print np.array(Enumerical_min_set_eV)
 
-  print "== USELESS: 4x4 original numerical attempt"
-  Enumerical_min = Stark4bandsEnergyShift_notcorrected_numerical(Efield_AU, omega_AU, E_gap_AU, DME, 50)
+    ## NOTE: Numerical solver works well for 4x4 original case. 
+    
+    # Now we have corrected the 6x6 and found exact solution
+    E1, E2, E3, E4, E5, E6 = Stark2bands1photon_EnergyShift_modified_exact(Efield_AU, omega_AU, E_gap_AU, DME)
+    print ""
+    print "VALID: 2 BANDS - 1 PHOTON - 6x6 modified exact"
+    print "eV: "
+    print Energy_Hartree_to_eV(E1)
+    print Energy_Hartree_to_eV(E2)
+    print Energy_Hartree_to_eV(E3)
+    print Energy_Hartree_to_eV(E4)
+    print Energy_Hartree_to_eV(E5)
+    print Energy_Hartree_to_eV(E6)
+    
+    ## Let's go for 12x12 matrix, only numerical. 
+    print ""
+    print "4 BANDS - 1 PHOTON - 12x12 - numerical approach"
+    FourBandsOnePhoton_E     = Stark4bands1photon_EnergyShift_notcorrected_numerical(Efield_AU, omega_AU, E_gap_AU, DME, 50)
+    FourBandsOnePhoton_Eigen = Stark4bands1photon_EnergyShift_eigen(Efield_AU, omega_AU, E_gap_AU, DME)
+    
+    FourBandsOnePhoton_E_round = np.round(FourBandsOnePhoton_E, 8)
+    FourBandsOnePhoton_E_round_set = set(FourBandsOnePhoton_E_round.flatten())
+    FourBandsOnePhoton_Eigen_round = np.round(FourBandsOnePhoton_Eigen, 8)
+    FourBandsOnePhoton_Eigen_round_set = set(FourBandsOnePhoton_Eigen_round.flatten())
+    #Enumerical_max = np.round(Enumerical_max, 8)
+    #Enumerical_max_set = set(Enumerical_max.flatten())
+    
+    FourBandsOnePhoton_E_round_eV = np.round(Energy_Hartree_to_eV(FourBandsOnePhoton_E_round), 5)
+    FourBandsOnePhoton_E_round_set_eV = set(FourBandsOnePhoton_E_round_eV.flatten())
+    FourBandsOnePhoton_Eigen_round_eV = np.round(Energy_Hartree_to_eV(FourBandsOnePhoton_Eigen_round), 5)
+    FourBandsOnePhoton_Eigen_round_set_eV = set(FourBandsOnePhoton_Eigen_round_eV.flatten())
+    
+    print "eV:"
+    print FourBandsOnePhoton_E_round_set_eV
+    print "eV: eigensolver: "
+    print FourBandsOnePhoton_Eigen_round_eV
+    
+    print ""
+    print "2 BANDS - 2 PHOTONS - 10x10 numerical (eigen solver)"
+    TwoBandsTwoPhotons_Eigen       = Stark2bands2photons_EnergyShift_eigen(Efield_AU, omega_AU, E_gap_AU, DME)
+    TwoBandsTwoPhotons_Eigen_eV    = Energy_Hartree_to_eV(TwoBandsTwoPhotons_Eigen)
+    TwoBandsTwoPhotons_Eigen_round     = np.round(TwoBandsTwoPhotons_Eigen, 8)
+    TwoBandsTwoPhotons_Eigen_round_set = set(TwoBandsTwoPhotons_Eigen_round.flatten())
+    TwoBandsTwoPhotons_Eigen_round_eV = np.round(Energy_Hartree_to_eV(TwoBandsTwoPhotons_Eigen_round), 5)
+    TwoBandsTwoPhotons_Eigen_round_set_eV = set(TwoBandsTwoPhotons_Eigen_round_eV.flatten())
+    
+    print "eV: eigensolver: "
+    print Energy_Hartree_to_eV(TwoBandsTwoPhotons_Eigen)
+    #print TwoBandsTwoPhotons_Eigen_round_eV.flatten()
+    print np.shape(TwoBandsTwoPhotons_Eigen_round_eV)
   
-  #Enumerical_max = Stark6bandsEnergyShift_notcorrected_numerical(np.max(Efield_AU), omega_AU, E_gap_AU, DME, 50)
-  
-  # Removing numerical degeneracies
-  Enumerical_min = np.round(Enumerical_min, 8)
-  Enumerical_min_set = set(Enumerical_min.flatten())
-  #Enumerical_max = np.round(Enumerical_max, 8)
-  #Enumerical_max_set = set(Enumerical_max.flatten())
-  
-  Enumerical_min_eV = np.round(Energy_Hartree_to_eV(Enumerical_min), 8)
-  Enumerical_min_set_eV = set(Enumerical_min_eV.flatten())
-  #Enumerical_max_eV = np.round(Energy_Hartree_to_eV(Enumerical_max), 8)
-  #Enumerical_max_set_eV = set(Enumerical_max_eV.flatten())
-  
-  #Enumerical_min_set = [set(v) for v in Enumerical_min]
-  #Enumerical_max_set = map(np.unique, Enumerical_max)
-  
-  # For comparison, we compute the 4x4 original. 
-  ENC1, ENC2, ENC3, ENC4, EgapShift_AU = Stark4bandsEnergyShift_notcorrected_exact(Efield_AU, omega_AU, E_gap_AU, DME)
-  
-  print "USELESS: 4x4 original - exact values"
-  print "eV: "
-  print Energy_Hartree_to_eV(ENC1)
-  print Energy_Hartree_to_eV(ENC2)
-  print Energy_Hartree_to_eV(ENC3)
-  print Energy_Hartree_to_eV(ENC4)
-  print ""
-  print "USELESS: 4x4 original - numerical attempt"
-  print "eV:"
-  #print Enumerical_min_set
-  print np.array(Enumerical_min_set_eV)
-
-  ## NOTE: Numerical solver works well for 4x4 original case. 
-  
-  # Now we have corrected the 6x6 and found exact solution
-  E1, E2, E3, E4, E5, E6 = Stark6bandsEnergyShift_modified_exact(Efield_AU, omega_AU, E_gap_AU, DME)
-  print ""
-  print "VALID: 6x6 modified exact"
-  print "eV: "
-  print Energy_Hartree_to_eV(E1)
-  print Energy_Hartree_to_eV(E2)
-  print Energy_Hartree_to_eV(E3)
-  print Energy_Hartree_to_eV(E4)
-  print Energy_Hartree_to_eV(E5)
-  print Energy_Hartree_to_eV(E6)
-  
-  ## Let's go for 12x12 matrix, only numerical. 
-  print ""
-  print "12x12 - numerical approach"
-  FourBands_E = Stark12bandsEnergyShift_notcorrected_numerical(Efield_AU, omega_AU, E_gap_AU, DME, 50)
-  FourBands_Eigen = Stark12bandsEnergyShift_eigen(Efield_AU, omega_AU, E_gap_AU, DME)
-  
-  FourBands_E_round = np.round(FourBands_E, 8)
-  FourBands_E_round_set = set(FourBands_E_round.flatten())
-  FourBands_Eigen_round = np.round(FourBands_Eigen, 8)
-  FourBands_Eigen_round_set = set(FourBands_Eigen_round.flatten())
-  #Enumerical_max = np.round(Enumerical_max, 8)
-  #Enumerical_max_set = set(Enumerical_max.flatten())
-  
-  FourBands_E_round_eV = np.round(Energy_Hartree_to_eV(FourBands_E_round), 5)
-  FourBands_E_round_set_eV = set(FourBands_E_round_eV.flatten())
-  FourBands_Eigen_round_eV = np.round(Energy_Hartree_to_eV(FourBands_Eigen_round), 5)
-  FourBands_Eigen_round_set_eV = set(FourBands_Eigen_round_eV.flatten())
-  
-  print "eV:"
-  print FourBands_E_round_set_eV
-  print "eV: eigensolver: "
-  print FourBands_Eigen_round_eV
-  
-  exit()
+  #exit()
 ## Generalizing to many fields
 
   print "== Preparing Keldysh model of Stark effect... =="
@@ -186,16 +203,33 @@ def SiliconLDAbandGap(): #{{{
   k1_t      = Keldysh1phi(gamma_t); k2_t = Keldysh2theta(gamma_t)
   EgapEff_t = EffectiveGap(E_gap_SI, k1_t, k2_t)
   
+  print "Plotting scattered graph..."
+  print np.shape(Efield_AU)
+  
+  # TODO: How to plot the obtained eigen values? 
   plt.figure()
+  #print Efield_SI
+  for element in Efield_SI: 
+      print element
+      TwoBandsTwoPhotons_Eigen       = Stark2bands2photons_EnergyShift_eigen(Field_SI_to_AU(element), omega_AU, E_gap_AU, DME)
+      TwoBandsTwoPhotons_Eigen_eV    = Energy_Hartree_to_eV(TwoBandsTwoPhotons_Eigen)
+      print TwoBandsTwoPhotons_Eigen_eV
+      plt.scatter(np.ones(np.size(TwoBandsTwoPhotons_Eigen_eV))*element, TwoBandsTwoPhotons_Eigen_eV, c="black", s=1) 
+  #plt.scatter(Field_AU_to_SI(Efield_AU), TwoBandsTwoPhotons_Eigen_round_eV, s=1, c=(1,1,1))
   plt.semilogx(Efield_SI, EgapEff_t/e, 'r-', label=r'$E_g^{eff}$, Keldysh-Stark (1964)')
+  
+  
   #plt.semilogx(Efield_SI, Energy_Hartree_to_eV(EgapShift_AU), 'b-', label=r'Floquet $E_g$ (2016)')
-  plt.semilogx(Efield_SI, Energy_Hartree_to_eV(E1-E2), 'b-', label=r"$E_g + \Delta E_{Stark}=E_1-E_2$")
-  plt.semilogx(Efield_SI, Energy_Hartree_to_eV(E1), 'k--', label="Floquet bands")
-  plt.semilogx(Efield_SI, Energy_Hartree_to_eV(E2), 'k--')
-  plt.semilogx(Efield_SI, Energy_Hartree_to_eV(E3), 'k--')
-  plt.semilogx(Efield_SI, Energy_Hartree_to_eV(E4), 'k--')
-  plt.semilogx(Efield_SI, Energy_Hartree_to_eV(E5), 'k--')
-  plt.semilogx(Efield_SI, Energy_Hartree_to_eV(E6), 'k--')
+  #plt.semilogx(Efield_SI, Energy_Hartree_to_eV(E1-E2), 'b-', label=r"$E_g + \Delta E_{Stark}=E_1-E_2$")
+  
+  
+  #plt.semilogx(Efield_SI, Energy_Hartree_to_eV(E1), 'k--', label="Floquet bands")
+  #plt.semilogx(Efield_SI, Energy_Hartree_to_eV(E2), 'k--')
+  #plt.semilogx(Efield_SI, Energy_Hartree_to_eV(E3), 'k--')
+  #plt.semilogx(Efield_SI, Energy_Hartree_to_eV(E4), 'k--')
+  #plt.semilogx(Efield_SI, Energy_Hartree_to_eV(E5), 'k--')
+  #plt.semilogx(Efield_SI, Energy_Hartree_to_eV(E6), 'k--')
+  
   #plt.semilogx(Efield_SI, Energy_Hartree_to_eV(ENC1), 'b--', label="Floquet bands")
   #plt.semilogx(Efield_SI, Energy_Hartree_to_eV(ENC2), 'b--')
   #plt.semilogx(Efield_SI, Energy_Hartree_to_eV(ENC3), 'b--')
@@ -205,6 +239,8 @@ def SiliconLDAbandGap(): #{{{
   plt.legend(loc='best')
   plt.tight_layout()
   plt.show()
+  
+  exit()
 
   print "==== EXTRAPOLATION TO TEMPORAL ASPECTS ====="
   t0=0. #defines the instant 0.
@@ -395,10 +431,11 @@ def SilicaGruzdev2014(): #{{{
   meff=0.6e0; #Effective mass of Si
   N_total=1.*5E28
   numpoints = 1000
-  optical_index = 1.5356
+  #optical_index = 1.5356 #800nm
+  optical_index = 1.45 #1030nm
   
-  wavelength = 800e-9;
-  tau=35e-15; dt = 1E-17; CEP=0e0
+  wavelength = 1030e-9;
+  tau=250e-15; dt = 1E-17; CEP=0e0
   
   #PeakFluence = 1.0*1E4 #J/cm2 * 1E4 = J/m2
   #PeakField   = np.sqrt(2e0 * PeakFluence / (tau * c * epsilon_0))
@@ -439,9 +476,9 @@ def SilicaGruzdev2014(): #{{{
   plt.xlabel("Intensity (W/cm$^{2}$)")
   plt.ylabel("$w_{PI}$ (cm$^{-3}$ fs$^{-1}$)")
   #plt.loglog(1e-4*FieldToIntensity(PeakField.real), 1e-6*1e-15*wPI,  linestyle="-", color="r", label=r"$w_{PI}$ "+ShortRefKeldysh)
-  plt.loglog(1e-4*FieldToIntensity(PeakField.real), 1e-6*1e-15*wPIg, linestyle="-", color="b", label=r"$w_{PI}$ "+ShortRefGruzdev)
+  plt.loglog(1e-4*FieldToIntensity(PeakField.real), 1e-6*1e-15*wPIg, linestyle="-", color="b", label=r"$w_{PI}$ "+ShortRefGruzdev+r", $\lambda=$"+str(wavelength*1E9)+" nm")
   #plt.loglog(1e-4*FieldToIntensity(PeakField.real), 1e-6*1e-15*wPIg, linestyle="-", color="g", label=r"$w_{PI}$ "+ShortRefGruzdev)
-  plt.loglog(Gruzdev2014[:,0], Gruzdev2014[:,1], linestyle="--", color="k", label="Data from "+ShortRefGruzdev) #JUST FOR VALIDATION. 
+  #plt.loglog(Gruzdev2014[:,0], Gruzdev2014[:,1], linestyle="--", color="k", label="Data from "+ShortRefGruzdev) #JUST FOR VALIDATION. 
   plt.grid()
   plt.legend(loc='best')
   plt.xlim((1E10, 1E14))
@@ -459,8 +496,8 @@ def SilicaGruzdev2014(): #{{{
 #SiliconTunneling()
 
 
-#SiliconLDAbandGap()
-SilicaGulley2012()
+SiliconLDAbandGap()
+#SilicaGulley2012()
 #SilicaGruzdev2014()
 #SilicaGraef2017()
 

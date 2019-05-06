@@ -100,7 +100,6 @@ def Stark2bands1photon_Cropped_EnergyShift_notcorrected_exact(Efield_AU, omega_A
     return E1, E2, E3, E4, EgapShift_AU
 #}}}   
 
-
 ### Solves the characteristic polynom for the eigen values of band gap modification    
 def Stark2bands1photon_Cropped_EnergyShift_polynom_numerical(eigen, Efield_AU, omega_AU, E_gap_AU, DME_AU=1):
     M         = DME_AU

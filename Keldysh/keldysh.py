@@ -93,9 +93,9 @@ def SiliconLDAbandGap(): #{{{
   
   print "== Preparing Giovannini et al model... =="
   DME = 1. #from the paper #-1+2j #arbitrary!
-  Efield_SI_log = np.linspace(8,11, 200)
-  Efield_SI     = np.power(10.,Efield_SI_log)
-  
+  #Efield_SI_log = np.linspace(8,11, 200)
+  #Efield_SI     = np.power(10.,Efield_SI_log)
+  Efield_SI     = np.linspace(0, 1E11, 200)
   #Efield_SI     = 1e9  
 
   E_gap_SI      = Egap
@@ -206,8 +206,50 @@ def SiliconLDAbandGap(): #{{{
   print "Plotting scattered graph..."
   print np.shape(Efield_AU)
   
-  # TODO: How to plot the obtained eigen values? 
+  # PLOTTING THE 2-bands 1-photon Stark effect
   plt.figure()
+  plt.xlabel("Field amplitude (V/m)")
+  plt.ylabel("Band energy level (eV)")
+  
+  for element in Efield_SI:
+      print element
+      E1, E2, E3, E4, E5, E6         = Stark2bands1photon_EnergyShift_modified_exact(Field_SI_to_AU(element), omega_AU, E_gap_AU, DME)
+      TwoBandsOnePhoton_Eigen        = [E1, E2, E3, E4, E5, E6]
+      TwoBandsOnePhoton_Eigen_eV    = Energy_Hartree_to_eV(TwoBandsOnePhoton_Eigen)
+      print TwoBandsOnePhoton_Eigen_eV
+      plt.scatter(np.ones(np.size(TwoBandsOnePhoton_Eigen_eV))*element, TwoBandsOnePhoton_Eigen_eV, c="black", s=1)
+  plt.plot(Efield_SI, 0.5*EgapEff_t/e, 'r-', label=r'$E_g^{eff}$, Keldysh-Stark (1964)')
+  plt.plot(Efield_SI, -0.5*EgapEff_t/e, 'r-')
+  plt.title("2 bands, 1 photon Stark effect")
+  plt.legend(loc='best')
+  plt.tight_layout()
+  plt.savefig("TwoBandsOnePhoton.eps")
+  plt.show()
+  
+  
+  # PLOTTING THE 4-bands 1-photon Stark effect
+  plt.figure()
+  plt.xlabel("Field amplitude (V/m)")
+  plt.ylabel("Band energy level (eV)")
+  
+  for element in Efield_SI:
+      print element
+      FourBandsOnePhoton_Eigen       = Stark4bands1photon_EnergyShift_eigen(Field_SI_to_AU(element), omega_AU, E_gap_AU, DME)
+      FourBandsOnePhoton_Eigen_eV    = Energy_Hartree_to_eV(FourBandsOnePhoton_Eigen)
+      print FourBandsOnePhoton_Eigen_eV
+      plt.scatter(np.ones(np.size(FourBandsOnePhoton_Eigen_eV))*element, FourBandsOnePhoton_Eigen_eV, c="black", s=1)
+  plt.plot(Efield_SI, 0.5*EgapEff_t/e, 'r-', label=r'$E_g^{eff}$, Keldysh-Stark (1964)')
+  plt.plot(Efield_SI, -0.5*EgapEff_t/e, 'r-')
+  plt.title("4 bands, 1 photon Stark effect")
+  plt.legend(loc='best')
+  plt.tight_layout()
+  plt.savefig("FourBandsOnePhoton.eps")
+  plt.show()
+  
+  # PLOTTING THE 2-bands 2-photon Stark effect
+  plt.figure()
+  plt.xlabel("Field amplitude (V/m)")
+  plt.ylabel("Band energy level (eV)")
   #print Efield_SI
   for element in Efield_SI: 
       print element
@@ -216,8 +258,13 @@ def SiliconLDAbandGap(): #{{{
       print TwoBandsTwoPhotons_Eigen_eV
       plt.scatter(np.ones(np.size(TwoBandsTwoPhotons_Eigen_eV))*element, TwoBandsTwoPhotons_Eigen_eV, c="black", s=1) 
   #plt.scatter(Field_AU_to_SI(Efield_AU), TwoBandsTwoPhotons_Eigen_round_eV, s=1, c=(1,1,1))
-  plt.semilogx(Efield_SI, EgapEff_t/e, 'r-', label=r'$E_g^{eff}$, Keldysh-Stark (1964)')
-  
+  plt.plot(Efield_SI, 0.5*EgapEff_t/e, 'r-', label=r'$E_g^{eff}$, Keldysh-Stark (1964)')
+  plt.plot(Efield_SI, -0.5*EgapEff_t/e, 'r-')
+  plt.title("2 bands, 2 photons Stark effect")
+  plt.legend(loc='best')
+  plt.tight_layout()
+  plt.savefig("TwoBandsTwoPhotons.eps")
+  plt.show()
   
   #plt.semilogx(Efield_SI, Energy_Hartree_to_eV(EgapShift_AU), 'b-', label=r'Floquet $E_g$ (2016)')
   #plt.semilogx(Efield_SI, Energy_Hartree_to_eV(E1-E2), 'b-', label=r"$E_g + \Delta E_{Stark}=E_1-E_2$")
@@ -234,11 +281,6 @@ def SiliconLDAbandGap(): #{{{
   #plt.semilogx(Efield_SI, Energy_Hartree_to_eV(ENC2), 'b--')
   #plt.semilogx(Efield_SI, Energy_Hartree_to_eV(ENC3), 'b--')
   #plt.semilogx(Efield_SI, Energy_Hartree_to_eV(ENC4), 'b--')
-  plt.xlabel("Field amplitude (V/m)")
-  plt.ylabel("Band energy level (eV)")
-  plt.legend(loc='best')
-  plt.tight_layout()
-  plt.show()
   
   exit()
 

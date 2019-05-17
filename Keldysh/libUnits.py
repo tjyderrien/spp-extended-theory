@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 import numpy as np
-from scipy.constants import c
+from scipy.constants import c, pi
 
 c_SI = c
 ## @package libUnits

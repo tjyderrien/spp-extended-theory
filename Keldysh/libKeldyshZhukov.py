@@ -98,13 +98,16 @@ def VZ_FieldNormalization(Egap, meff, wavelength):
 VZ_FieldNormalization = np.vectorize(VZ_FieldNormalization)
 
 
-def VP_ChooseLibrary(FieldEnvelope1, FieldEnvelope2, wavelength1, wavelength2, CEP1, CEP2, Egap=2.56*e, meff=0.2226):
+def VP_ChooseLibrary(FieldEnvelope1, FieldEnvelope2, wavelength1, wavelength2, CEP1, CEP2, Egap=2.56*e, meff=0.2226, PathPrefix=""):
+    #print "Path prefix: "+PathPrefix
+    Header="[libKeldyshZhukov: VP_ChooseLibrary: ]"
+    print "** Info: selected wavelength: "+str(wavelength1*1E9)+" nm."
     InvertedFields=True
     VZ_basename = ''
     Header = "[libKeldyshZhukov] VP_ChooseLibrary: "
     if( np.max(FieldEnvelope2) < 1e-3 ): #single pulse mode
         Dictionnary = {'FieldSquaredLog10': 0, 'log10wpi': 1, 'photons': 2, 'energy': 3, 'wpi': 4, 'FieldSquared1': 5} #Monochromatic case
-        DataFolder  = 'Zhukov/Monochrome/'
+        DataFolder  = PathPrefix+'Zhukov/Monochrome/'
         DataFileName={'1030': DataFolder+'DLG1030mono.dat', '800': DataFolder+'DLG800mono.dat', '400': DataFolder+'DLG400mono.dat'}
         print Header+"Choosing the right database..."
         if(wavelength1   == 800e-9):
@@ -119,7 +122,7 @@ def VP_ChooseLibrary(FieldEnvelope1, FieldEnvelope2, wavelength1, wavelength2, C
         #TODO: the two sets could be inverted! Therefore data should be swept.
         InvertedFields=True
         Dictionnary={'FieldSquared1': 0, 'FieldSquared2': 1, 'wpi': 2} #Bichromatic case
-        DataFolder  = 'Zhukov/800x1030/'
+        DataFolder  = PathPrefix+'Zhukov/800x1030/'
         
         DataFileName={'phi=0': 'Wpi800x1600fi=0.dat', 'phi=pi/2': 'Wpi800x1600fi=0.dat', 'phi=pi/3': 'Wpi800x1600fi=pi_over_3.dat', 'phi=pi/4': 'Wpi800x1600fi=pi_over_4.dat'}
         
@@ -139,7 +142,7 @@ def VP_ChooseLibrary(FieldEnvelope1, FieldEnvelope2, wavelength1, wavelength2, C
         #TODO: the two sets could be inverted! 
         InvertedFields=True
         Dictionnary={'FieldSquared1': 0, 'FieldSquared2': 1, 'wpi': 2 } #Bichromatic case
-        DataFolder  = 'Zhukov/800x400nm/'
+        DataFolder  = PathPrefix+'Zhukov/800x400nm/'
         DataFileName={'phi=0': 'W400x800fi=0.dat', 'phi=pi/4': 'W400x800fi=pina4.dat'}
         if(CEP2==0.):
             VZ_basename = DataFolder+DataFileName['phi=0']
@@ -154,7 +157,7 @@ def VP_ChooseLibrary(FieldEnvelope1, FieldEnvelope2, wavelength1, wavelength2, C
         #TODO: the two sets could be inverted! 
         InvertedFields=False
         Dictionnary={'FieldSquared1': 0, 'FieldSquared2': 1, 'wpi': 2} #Bichromatic case
-        DataFolder  = 'Zhukov/800x1600/'
+        DataFolder  = PathPrefix+'Zhukov/800x1600/'
         
         DataFileName={'phi=0': 'Wpi800x1600fi=0.dat', 'phi=pi/2': 'Wpi800x1600fi=0.dat', 'phi=pi/3': 'Wpi800x1600fi=pi_over_3.dat', 'phi=pi/4': 'Wpi800x1600fi=pi_over_4.dat'}
         
@@ -169,7 +172,7 @@ def VP_ChooseLibrary(FieldEnvelope1, FieldEnvelope2, wavelength1, wavelength2, C
             exit()
     else:
         print Header+"THIS COMBINATION OF WAVES IS NOT AVAILABLE. Please kindly ask the corresponding data to Prof. Vladimir Zhukov, zukov@ict.nsc.ru." 
-        exit()
+        #exit() 
     return VZ_basename, Dictionnary, InvertedFields
 
 ## Provide bicolor tables of V. Zhukov bicolor Keldysh model for the selected wavelengths
@@ -182,7 +185,7 @@ def VP_ChooseLibrary(FieldEnvelope1, FieldEnvelope2, wavelength1, wavelength2, C
 # @param CEP2: can change to simple values (pi/2, pi/3, pi/4)
 # @param Egap: value in Joules
 # @param meff: effective mass (no dimension)
-def VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength1 = 800e-9, wavelength2 = 800e-9, CEP1=0., CEP2=0., Egap=2.56*e, meff=0.2226, crystal_density=5E28): #{{{
+def VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength1 = 800e-9, wavelength2 = 800e-9, CEP1=0., CEP2=0., Egap=2.56*e, meff=0.2226, crystal_density=5E28, PathPrefix=""): #{{{
   Header="[libKeldyshZhukov] "
   
   # Printing info on the pulses
@@ -231,8 +234,7 @@ def VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength1 = 800e-9, w
 
   # 1. Choosing the right data file
   print Header+"** Selecting the right VP Zhukov datafile..."
-  VZ_basename, Dictionnary, InvertedFields=VP_ChooseLibrary(FieldEnvelope1, FieldEnvelope2, wavelength1, wavelength2, CEP1, CEP2, Egap=2.56*e, meff=0.2226)
-  
+  VZ_basename, Dictionnary, InvertedFields=VP_ChooseLibrary(FieldEnvelope1, FieldEnvelope2, wavelength1, wavelength2, CEP1, CEP2, 2.56*e, 0.2226, PathPrefix)
   
   print Header+"Path: "+VZ_basename
   IndexWpi           = Dictionnary['wpi']
@@ -248,7 +250,7 @@ def VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength1 = 800e-9, w
     databasecontents   = loadtxt(VZ_basename, skiprows=2)
   else: 
     print Header+"Path was empty."
-    exit()
+    return 0 #we leave the function
   
   deltaField_CGS = 0.0025 #TODO: automatic step from the database file? 
   deltaField_SI = Field_CGS_to_SI(deltaField_CGS)

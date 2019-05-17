@@ -38,6 +38,7 @@ Header="[libKeldysh] "
 ShortRefKeldysh = "[Keldysh (1964)]"
 ShortRefGruzdev = "[Gruzdev (2014)]"
 ShortRefGulley  = "[Gulley (2012)]"
+ShortRefShcheblanov = "[Shcheblanov (2017)]"
 
 ## Computes the adiabadicity parameter
 # @param Egap: band gap energy (in Joules)

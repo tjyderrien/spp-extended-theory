@@ -26,7 +26,8 @@ print "** Loading Stark module [De Giovannini, U.; Hubener, H. & Rubio, A., Nano
 print "** Info: this file contains examples how to use the Keldysh library. "
 print "         It also contains validation cases of the present theory on Si and known references. "
 
-def Test_Keldysh(Egap, meff, PeakField, wavelength, order):
+## Applies Keldysh model to the solid state parameters passed in argument. 
+def Test_Keldysh(Egap, meff, PeakField, wavelength, order): #{{{
   print Header+"Peak field ="+str(PeakField/1E9)+" V/nm"
   
   print "=== SIMPLE QUANTITIES ==="
@@ -70,18 +71,18 @@ def Test_Keldysh(Egap, meff, PeakField, wavelength, order):
   print "wPI(Keldysh)="+str(wPI)
   print "wPI(Gruzdev)="+str(wPIg)
   print "wPI(Gulley) ="+str(wPIgulley)
+#}}}
 
-
-## Test the Keldysh model using silicon band gap given by the LDA functionals. 
+## Test the Keldysh model using silicon band gap given by the LDA functionals. Also plots Stark shift as function of the laser intensity. 
 def SiliconLDAbandGap(): #{{{
   print "Defining Si material parameters..."
 
-  Egap = 2.56e0*e; #3.4e0*e #LDA band gap of Si: 2.58 eV. #1.12e0*e for indirect band gap; 
+  Egap = 2.56*e; #SiO2 #2.56e0*e; #3.4e0*e #LDA band gap of Si: 2.58 eV. #1.12e0*e for indirect band gap; 
   meff=0.2226e0; #Effective mass of Si
   Ntotal=1.*5E28
   order=200
   
-  wavelength = 800e-9;
+  wavelength = 800e-9; #1600e-9;
   tau=7e-15; dt = 1E-17; CEP=0e0
   #PeakFluence = 1.0*1E4 #J/cm2 * 1E4 = J/m2
   #PeakField   = np.sqrt(2e0 * PeakFluence / (tau * c * epsilon_0))
@@ -95,7 +96,9 @@ def SiliconLDAbandGap(): #{{{
   DME = 1. #from the paper #-1+2j #arbitrary!
   #Efield_SI_log = np.linspace(8,11, 200)
   #Efield_SI     = np.power(10.,Efield_SI_log)
-  Efield_SI     = np.linspace(0, 1E11, 200)
+  Efield_SI     = np.linspace(0, 5E10, 200)
+  RefractiveIndex = 1 #1: for far field, # 1.45: for near field in silica
+  
   #Efield_SI     = 1e9  
 
   E_gap_SI      = Egap
@@ -107,98 +110,100 @@ def SiliconLDAbandGap(): #{{{
   E_gap_AU  = Energy_eV_to_Hartree(E_gap_SI/e)
   omega_AU  = Energy_eV_to_Hartree(omega_SI*hbar/e)
   
-  def Test():
+  #def Test():
         
     
-    print "== USELESS: 2-band 1-photon (4x4) original numerical attempt"
-    Enumerical_min = Stark2bands1photon_EnergyShift_notcorrected_numerical(Efield_AU, omega_AU, E_gap_AU, DME, 50)
+    #print "== USELESS: 2-band 1-photon (4x4) original numerical attempt"
+    #Enumerical_min = Stark2bands1photon_EnergyShift_notcorrected_numerical(Efield_AU, omega_AU, E_gap_AU, DME, 50)
     
-    #Enumerical_max = Stark2bands1photon_EnergyShift_notcorrected_numerical(np.max(Efield_AU), omega_AU, E_gap_AU, DME, 50)
+    ##Enumerical_max = Stark2bands1photon_EnergyShift_notcorrected_numerical(np.max(Efield_AU), omega_AU, E_gap_AU, DME, 50)
     
-    # Removing numerical degeneracies
-    Enumerical_min = np.round(Enumerical_min, 8)
-    Enumerical_min_set = set(Enumerical_min.flatten())
-    #Enumerical_max = np.round(Enumerical_max, 8)
-    #Enumerical_max_set = set(Enumerical_max.flatten())
+    ## Removing numerical degeneracies
+    #Enumerical_min = np.round(Enumerical_min, 8)
+    #Enumerical_min_set = set(Enumerical_min.flatten())
+    ##Enumerical_max = np.round(Enumerical_max, 8)
+    ##Enumerical_max_set = set(Enumerical_max.flatten())
     
-    Enumerical_min_eV = np.round(Energy_Hartree_to_eV(Enumerical_min), 8)
-    Enumerical_min_set_eV = set(Enumerical_min_eV.flatten())
-    #Enumerical_max_eV = np.round(Energy_Hartree_to_eV(Enumerical_max), 8)
-    #Enumerical_max_set_eV = set(Enumerical_max_eV.flatten())
+    #Enumerical_min_eV = np.round(Energy_Hartree_to_eV(Enumerical_min), 8)
+    #Enumerical_min_set_eV = set(Enumerical_min_eV.flatten())
+    ##Enumerical_max_eV = np.round(Energy_Hartree_to_eV(Enumerical_max), 8)
+    ##Enumerical_max_set_eV = set(Enumerical_max_eV.flatten())
     
-    #Enumerical_min_set = [set(v) for v in Enumerical_min]
-    #Enumerical_max_set = map(np.unique, Enumerical_max)
+    ##Enumerical_min_set = [set(v) for v in Enumerical_min]
+    ##Enumerical_max_set = map(np.unique, Enumerical_max)
     
-    # For comparison, we compute the 4x4 original. 
-    ENC1, ENC2, ENC3, ENC4, EgapShift_AU = Stark2bands1photon_Cropped_EnergyShift_notcorrected_exact(Efield_AU, omega_AU, E_gap_AU, DME)
+    ## For comparison, we compute the 4x4 original. 
+    #ENC1, ENC2, ENC3, ENC4, EgapShift_AU = Stark2bands1photon_Cropped_EnergyShift_notcorrected_exact(Efield_AU, omega_AU, E_gap_AU, DME)
     
-    print "USELESS: 4x4 original - exact values"
-    print "eV: "
-    print Energy_Hartree_to_eV(ENC1)
-    print Energy_Hartree_to_eV(ENC2)
-    print Energy_Hartree_to_eV(ENC3)
-    print Energy_Hartree_to_eV(ENC4)
-    print ""
-    print "USELESS: 4x4 original - numerical attempt"
-    print "eV:"
-    #print Enumerical_min_set
-    print np.array(Enumerical_min_set_eV)
+    #print "USELESS: 4x4 original - exact values"
+    #print "eV: "
+    #print Energy_Hartree_to_eV(ENC1)
+    #print Energy_Hartree_to_eV(ENC2)
+    #print Energy_Hartree_to_eV(ENC3)
+    #print Energy_Hartree_to_eV(ENC4)
+    #print ""
+    #print "USELESS: 4x4 original - numerical attempt"
+    #print "eV:"
+    ##print Enumerical_min_set
+    #print np.array(Enumerical_min_set_eV)
 
-    ## NOTE: Numerical solver works well for 4x4 original case. 
+    ### NOTE: Numerical solver works well for 4x4 original case. 
     
-    # Now we have corrected the 6x6 and found exact solution
-    E1, E2, E3, E4, E5, E6 = Stark2bands1photon_EnergyShift_modified_exact(Efield_AU, omega_AU, E_gap_AU, DME)
-    print ""
-    print "VALID: 2 BANDS - 1 PHOTON - 6x6 modified exact"
-    print "eV: "
-    print Energy_Hartree_to_eV(E1)
-    print Energy_Hartree_to_eV(E2)
-    print Energy_Hartree_to_eV(E3)
-    print Energy_Hartree_to_eV(E4)
-    print Energy_Hartree_to_eV(E5)
-    print Energy_Hartree_to_eV(E6)
+    ## Now we have corrected the 6x6 and found exact solution
+    #E1, E2, E3, E4, E5, E6 = Stark2bands1photon_EnergyShift_modified_exact(Efield_AU, omega_AU, E_gap_AU, DME)
+    #print ""
+    #print "VALID: 2 BANDS - 1 PHOTON - 6x6 modified exact"
+    #print "eV: "
+    #print Energy_Hartree_to_eV(E1)
+    #print Energy_Hartree_to_eV(E2)
+    #print Energy_Hartree_to_eV(E3)
+    #print Energy_Hartree_to_eV(E4)
+    #print Energy_Hartree_to_eV(E5)
+    #print Energy_Hartree_to_eV(E6)
     
-    ## Let's go for 12x12 matrix, only numerical. 
-    print ""
-    print "4 BANDS - 1 PHOTON - 12x12 - numerical approach"
-    FourBandsOnePhoton_E     = Stark4bands1photon_EnergyShift_notcorrected_numerical(Efield_AU, omega_AU, E_gap_AU, DME, 50)
-    FourBandsOnePhoton_Eigen = Stark4bands1photon_EnergyShift_eigen(Efield_AU, omega_AU, E_gap_AU, DME)
+    ### Let's go for 12x12 matrix, only numerical. 
+    #print ""
+    #print "4 BANDS - 1 PHOTON - 12x12 - numerical approach"
+    #FourBandsOnePhoton_E     = Stark4bands1photon_EnergyShift_notcorrected_numerical(Efield_AU, omega_AU, E_gap_AU, DME, 50)
+    #FourBandsOnePhoton_Eigen = Stark4bands1photon_EnergyShift_eigen(Efield_AU, omega_AU, E_gap_AU, DME)
     
-    FourBandsOnePhoton_E_round = np.round(FourBandsOnePhoton_E, 8)
-    FourBandsOnePhoton_E_round_set = set(FourBandsOnePhoton_E_round.flatten())
-    FourBandsOnePhoton_Eigen_round = np.round(FourBandsOnePhoton_Eigen, 8)
-    FourBandsOnePhoton_Eigen_round_set = set(FourBandsOnePhoton_Eigen_round.flatten())
-    #Enumerical_max = np.round(Enumerical_max, 8)
-    #Enumerical_max_set = set(Enumerical_max.flatten())
+    #FourBandsOnePhoton_E_round = np.round(FourBandsOnePhoton_E, 8)
+    #FourBandsOnePhoton_E_round_set = set(FourBandsOnePhoton_E_round.flatten())
+    #FourBandsOnePhoton_Eigen_round = np.round(FourBandsOnePhoton_Eigen, 8)
+    #FourBandsOnePhoton_Eigen_round_set = set(FourBandsOnePhoton_Eigen_round.flatten())
+    ##Enumerical_max = np.round(Enumerical_max, 8)
+    ##Enumerical_max_set = set(Enumerical_max.flatten())
     
-    FourBandsOnePhoton_E_round_eV = np.round(Energy_Hartree_to_eV(FourBandsOnePhoton_E_round), 5)
-    FourBandsOnePhoton_E_round_set_eV = set(FourBandsOnePhoton_E_round_eV.flatten())
-    FourBandsOnePhoton_Eigen_round_eV = np.round(Energy_Hartree_to_eV(FourBandsOnePhoton_Eigen_round), 5)
-    FourBandsOnePhoton_Eigen_round_set_eV = set(FourBandsOnePhoton_Eigen_round_eV.flatten())
+    #FourBandsOnePhoton_E_round_eV = np.round(Energy_Hartree_to_eV(FourBandsOnePhoton_E_round), 5)
+    #FourBandsOnePhoton_E_round_set_eV = set(FourBandsOnePhoton_E_round_eV.flatten())
+    #FourBandsOnePhoton_Eigen_round_eV = np.round(Energy_Hartree_to_eV(FourBandsOnePhoton_Eigen_round), 5)
+    #FourBandsOnePhoton_Eigen_round_set_eV = set(FourBandsOnePhoton_Eigen_round_eV.flatten())
     
-    print "eV:"
-    print FourBandsOnePhoton_E_round_set_eV
-    print "eV: eigensolver: "
-    print FourBandsOnePhoton_Eigen_round_eV
+    #print "eV:"
+    #print FourBandsOnePhoton_E_round_set_eV
+    #print "eV: eigensolver: "
+    #print FourBandsOnePhoton_Eigen_round_eV
     
-    print ""
-    print "2 BANDS - 2 PHOTONS - 10x10 numerical (eigen solver)"
-    TwoBandsTwoPhotons_Eigen       = Stark2bands2photons_EnergyShift_eigen(Efield_AU, omega_AU, E_gap_AU, DME)
-    TwoBandsTwoPhotons_Eigen_eV    = Energy_Hartree_to_eV(TwoBandsTwoPhotons_Eigen)
-    TwoBandsTwoPhotons_Eigen_round     = np.round(TwoBandsTwoPhotons_Eigen, 8)
-    TwoBandsTwoPhotons_Eigen_round_set = set(TwoBandsTwoPhotons_Eigen_round.flatten())
-    TwoBandsTwoPhotons_Eigen_round_eV = np.round(Energy_Hartree_to_eV(TwoBandsTwoPhotons_Eigen_round), 5)
-    TwoBandsTwoPhotons_Eigen_round_set_eV = set(TwoBandsTwoPhotons_Eigen_round_eV.flatten())
+    #print ""
+    #print "2 BANDS - 2 PHOTONS - 10x10 numerical (eigen solver)"
+    #TwoBandsTwoPhotons_Eigen       = Stark2bands2photons_EnergyShift_eigen(Efield_AU, omega_AU, E_gap_AU, DME)
+    #TwoBandsTwoPhotons_Eigen_eV    = Energy_Hartree_to_eV(TwoBandsTwoPhotons_Eigen)
+    #TwoBandsTwoPhotons_Eigen_round     = np.round(TwoBandsTwoPhotons_Eigen, 8)
+    #TwoBandsTwoPhotons_Eigen_round_set = set(TwoBandsTwoPhotons_Eigen_round.flatten())
+    #TwoBandsTwoPhotons_Eigen_round_eV = np.round(Energy_Hartree_to_eV(TwoBandsTwoPhotons_Eigen_round), 5)
+    #TwoBandsTwoPhotons_Eigen_round_set_eV = set(TwoBandsTwoPhotons_Eigen_round_eV.flatten())
     
-    print "eV: eigensolver: "
-    print Energy_Hartree_to_eV(TwoBandsTwoPhotons_Eigen)
-    #print TwoBandsTwoPhotons_Eigen_round_eV.flatten()
-    print np.shape(TwoBandsTwoPhotons_Eigen_round_eV)
+    #print "eV: eigensolver: "
+    #print Energy_Hartree_to_eV(TwoBandsTwoPhotons_Eigen)
+    ##print TwoBandsTwoPhotons_Eigen_round_eV.flatten()
+    #print np.shape(TwoBandsTwoPhotons_Eigen_round_eV)
   
-  #exit()
-## Generalizing to many fields
+  ##exit()
 
-  print "== Preparing Keldysh model of Stark effect... =="
+## Generalizing to many fields
+  print "== Preparing Stark shift as function of field intensity... =="
+  
+  ## Keldysh Stark shift, 2 levels, 1 photon. 
   gamma_t   = gammaKeldysh(E_gap_SI, 1.0, Efield_SI, wavelength)
   k1_t      = Keldysh1phi(gamma_t); k2_t = Keldysh2theta(gamma_t)
   EgapEff_t = EffectiveGap(E_gap_SI, k1_t, k2_t)
@@ -206,30 +211,40 @@ def SiliconLDAbandGap(): #{{{
   print "Plotting scattered graph..."
   print np.shape(Efield_AU)
   
+  filename=str(round(E_gap_SI/e))+"eV-"+str(wavelength*1E9)+"nm"
+  
   # PLOTTING THE 2-bands 1-photon Stark effect
   plt.figure()
-  plt.xlabel("Field amplitude (V/m)")
+  #plt.xlabel("Field amplitude (V/m)")
+  plt.xlabel(r"Laser intensity (W/m$^2$)")
   plt.ylabel("Band energy level (eV)")
   
+  # Preparing the 2-levels 2-photon, and 4-levels 1-photon Stark shifts. 
   for element in Efield_SI:
       print element
       E1, E2, E3, E4, E5, E6         = Stark2bands1photon_EnergyShift_modified_exact(Field_SI_to_AU(element), omega_AU, E_gap_AU, DME)
       TwoBandsOnePhoton_Eigen        = [E1, E2, E3, E4, E5, E6]
       TwoBandsOnePhoton_Eigen_eV    = Energy_Hartree_to_eV(TwoBandsOnePhoton_Eigen)
       print TwoBandsOnePhoton_Eigen_eV
-      plt.scatter(np.ones(np.size(TwoBandsOnePhoton_Eigen_eV))*element, TwoBandsOnePhoton_Eigen_eV, c="black", s=1)
-  plt.plot(Efield_SI, 0.5*EgapEff_t/e, 'r-', label=r'$E_g^{eff}$, Keldysh-Stark (1964)')
-  plt.plot(Efield_SI, -0.5*EgapEff_t/e, 'r-')
+      Intensity_el  = 0.5*c*epsilon_0*element**2*RefractiveIndex
+      #plt.scatter(np.ones(np.size(TwoBandsOnePhoton_Eigen_eV))*element, TwoBandsOnePhoton_Eigen_eV, c="black", s=1)
+      plt.scatter(np.ones(np.size(TwoBandsOnePhoton_Eigen_eV))*Intensity_el, TwoBandsOnePhoton_Eigen_eV, c="black", s=1)
+  Intensity_SI  = 0.5*c*epsilon_0*Efield_SI**2*RefractiveIndex
+  #plt.plot(Efield_SI, 0.5*EgapEff_t/e, 'r-', label=r'$E_g^{eff}$, Keldysh-Stark (1964)')
+  #plt.plot(Efield_SI, -0.5*EgapEff_t/e, 'r-')
+  plt.plot(Intensity_SI, 0.5*EgapEff_t/e, 'r-', label=r'$E_g^{eff}$, Keldysh-Stark (1964)')
+  plt.plot(Intensity_SI, -0.5*EgapEff_t/e, 'r-')
   plt.title("2 bands, 1 photon Stark effect")
   plt.legend(loc='best')
   plt.tight_layout()
-  plt.savefig("TwoBandsOnePhoton.eps")
-  plt.show()
+  plt.savefig(filename+"_TwoBandsOnePhoton.eps")
+  #plt.show()
   
   
   # PLOTTING THE 4-bands 1-photon Stark effect
   plt.figure()
-  plt.xlabel("Field amplitude (V/m)")
+  #plt.xlabel("Field amplitude (V/m)")
+  plt.xlabel(r"Laser intensity (W/m$^2$)")
   plt.ylabel("Band energy level (eV)")
   
   for element in Efield_SI:
@@ -237,18 +252,24 @@ def SiliconLDAbandGap(): #{{{
       FourBandsOnePhoton_Eigen       = Stark4bands1photon_EnergyShift_eigen(Field_SI_to_AU(element), omega_AU, E_gap_AU, DME)
       FourBandsOnePhoton_Eigen_eV    = Energy_Hartree_to_eV(FourBandsOnePhoton_Eigen)
       print FourBandsOnePhoton_Eigen_eV
-      plt.scatter(np.ones(np.size(FourBandsOnePhoton_Eigen_eV))*element, FourBandsOnePhoton_Eigen_eV, c="black", s=1)
-  plt.plot(Efield_SI, 0.5*EgapEff_t/e, 'r-', label=r'$E_g^{eff}$, Keldysh-Stark (1964)')
-  plt.plot(Efield_SI, -0.5*EgapEff_t/e, 'r-')
+      Intensity_el  = 0.5*c*epsilon_0*element**2*RefractiveIndex
+      #plt.scatter(np.ones(np.size(FourBandsOnePhoton_Eigen_eV))*element, FourBandsOnePhoton_Eigen_eV, c="black", s=1)
+      plt.scatter(np.ones(np.size(FourBandsOnePhoton_Eigen_eV))*Intensity_el, FourBandsOnePhoton_Eigen_eV, c="black", s=1)
+  Intensity_SI  = 0.5*c*epsilon_0*Efield_SI**2*RefractiveIndex
+  #plt.plot(Efield_SI, 0.5*EgapEff_t/e, 'r-', label=r'$E_g^{eff}$, Keldysh-Stark (1964)')
+  #plt.plot(Efield_SI, -0.5*EgapEff_t/e, 'r-')
+  plt.plot(Intensity_SI, 0.5*EgapEff_t/e, 'r-', label=r'$E_g^{eff}$, Keldysh-Stark (1964)')
+  plt.plot(Intensity_SI, -0.5*EgapEff_t/e, 'r-')
   plt.title("4 bands, 1 photon Stark effect")
   plt.legend(loc='best')
   plt.tight_layout()
-  plt.savefig("FourBandsOnePhoton.eps")
-  plt.show()
+  plt.savefig(filename+"_FourBandsOnePhoton.eps")
+  #plt.show()
   
   # PLOTTING THE 2-bands 2-photon Stark effect
   plt.figure()
-  plt.xlabel("Field amplitude (V/m)")
+  #plt.xlabel("Field amplitude (V/m)")
+  plt.xlabel(r"Laser intensity (W/m$^2$)")
   plt.ylabel("Band energy level (eV)")
   #print Efield_SI
   for element in Efield_SI: 
@@ -256,14 +277,19 @@ def SiliconLDAbandGap(): #{{{
       TwoBandsTwoPhotons_Eigen       = Stark2bands2photons_EnergyShift_eigen(Field_SI_to_AU(element), omega_AU, E_gap_AU, DME)
       TwoBandsTwoPhotons_Eigen_eV    = Energy_Hartree_to_eV(TwoBandsTwoPhotons_Eigen)
       print TwoBandsTwoPhotons_Eigen_eV
-      plt.scatter(np.ones(np.size(TwoBandsTwoPhotons_Eigen_eV))*element, TwoBandsTwoPhotons_Eigen_eV, c="black", s=1) 
+      Intensity_el  = 0.5*c*epsilon_0*element**2*RefractiveIndex
+      #plt.scatter(np.ones(np.size(TwoBandsTwoPhotons_Eigen_eV))*element, TwoBandsTwoPhotons_Eigen_eV, c="black", s=1)
+      plt.scatter(np.ones(np.size(TwoBandsTwoPhotons_Eigen_eV))*Intensity_el, TwoBandsTwoPhotons_Eigen_eV, c="black", s=1) 
   #plt.scatter(Field_AU_to_SI(Efield_AU), TwoBandsTwoPhotons_Eigen_round_eV, s=1, c=(1,1,1))
-  plt.plot(Efield_SI, 0.5*EgapEff_t/e, 'r-', label=r'$E_g^{eff}$, Keldysh-Stark (1964)')
-  plt.plot(Efield_SI, -0.5*EgapEff_t/e, 'r-')
+  Intensity_SI  = 0.5*c*epsilon_0*Efield_SI**2*RefractiveIndex
+  #plt.plot(Efield_SI, 0.5*EgapEff_t/e, 'r-', label=r'$E_g^{eff}$, Keldysh-Stark (1964)')
+  #plt.plot(Efield_SI, -0.5*EgapEff_t/e, 'r-')
+  plt.plot(Intensity_SI, 0.5*EgapEff_t/e, 'r-', label=r'$E_g^{eff}$, Keldysh-Stark (1964)')
+  plt.plot(Intensity_SI, -0.5*EgapEff_t/e, 'r-')
   plt.title("2 bands, 2 photons Stark effect")
   plt.legend(loc='best')
   plt.tight_layout()
-  plt.savefig("TwoBandsTwoPhotons.eps")
+  plt.savefig(filename+"_TwoBandsTwoPhotons.eps")
   plt.show()
   
   #plt.semilogx(Efield_SI, Energy_Hartree_to_eV(EgapShift_AU), 'b-', label=r'Floquet $E_g$ (2016)')
@@ -282,41 +308,60 @@ def SiliconLDAbandGap(): #{{{
   #plt.semilogx(Efield_SI, Energy_Hartree_to_eV(ENC3), 'b--')
   #plt.semilogx(Efield_SI, Energy_Hartree_to_eV(ENC4), 'b--')
   
+  print "##### PREPARING NUMERICAL INTEGRATION OF KELDYSH CONTOUR by VP Zhukov."
+  plt.figure()
+  Intensity_SI  = 0.5*c*epsilon_0*Efield_SI**2*RefractiveIndex
+  wPI_Zhukov = VZ_generateWpiTables(Efield_SI*np.sqrt(RefractiveIndex), 0., wavelength, 800e-9, 0., 0., Egap, meff, Ntotal)
+  ExportToTxt(wPI_Zhukov, "Zhukov_Wpi"+str(wavelength*1E9)+"nm.csv")
+  plt.xlabel(r"Laser intensity (W/m$^2$)")
+  plt.ylabel(r"Excitation rate $w_{\mathrm{PI}}$ (m$^{-3}s^{-1}$)")
+  plt.loglog(Intensity_SI, wPI_Zhukov,'.', label="Num. int. Keldysh")
+  plt.legend(loc='best')
+  plt.tight_layout()
+  plt.grid()
+  filename="Zhukov_NumInt-"+str(round(Egap/e))+"eV-"+str(1E9*wavelength)+".eps"
+  plt.savefig(filename)
+  print Header+"** Info:"+filename+"was created.")
+  plt.show()
   exit()
+#}}}
 
-  print "==== EXTRAPOLATION TO TEMPORAL ASPECTS ====="
-  t0=0. #defines the instant 0.
-  Delay = 0e-15 #delay between maxima of the pulses
-  tmin=-2.*tau + t0; tmax=2.*tau + Delay + t0
+## Repeats results from Gulley2012, but could not be repeated so far. 
+def KeldyshGulley():
 
-  instants = np.arange(tmin, tmax, dt)
-  #print "Time range: "+str(instants.min())+", "+str(instants.max())+"."
+  #print "==== EXTRAPOLATION TO TEMPORAL ASPECTS ====="
+  #t0=0. #defines the instant 0.
+  #Delay = 0e-15 #delay between maxima of the pulses
+  #tmin=-2.*tau + t0; tmax=2.*tau + Delay + t0
 
-  PeakField2  = 0. #PeakField
-  CEP2        = 0.*pi
-  wavelength2 = wavelength / 2.
+  #instants = np.arange(tmin, tmax, dt)
+  ##print "Time range: "+str(instants.min())+", "+str(instants.max())+"."
 
-  print Header+"** Test: building single pulse centered on 0..."
-  FieldEnvelope1, RealField1 = PulseSquaredSinTemporalShape(instants, tau, PeakField, wavelength, CEP, t0, 0.)
+  #PeakField2  = 0. #PeakField
+  #CEP2        = 0.*pi
+  #wavelength2 = wavelength / 2.
 
-  print Header+"** Test: We build a second pulse with a delay..."
-  FieldEnvelope2, RealField2 = PulseSquaredSinTemporalShape(instants, tau, PeakField2, wavelength2, CEP2, t0, Delay)
+  #print Header+"** Test: building single pulse centered on 0..."
+  #FieldEnvelope1, RealField1 = PulseSquaredSinTemporalShape(instants, tau, PeakField, wavelength, CEP, t0, 0.)
 
-  print Header+"** Test: building a bicolor double pulse"
+  #print Header+"** Test: We build a second pulse with a delay..."
+  #FieldEnvelope2, RealField2 = PulseSquaredSinTemporalShape(instants, tau, PeakField2, wavelength2, CEP2, t0, Delay)
 
-  FieldEnvelopeTot, RealFieldTot = PulseSquaredSinTemporalShapeDoublePulse(instants, tau, tau, PeakField, PeakField2, wavelength, wavelength2, CEP, CEP2, t0, Delay)
+  #print Header+"** Test: building a bicolor double pulse"
 
-  plt.plot(instants, RealField1.real, 'r-')
-  plt.plot(instants, FieldEnvelope1.real, 'r--')
-  plt.plot(instants, RealField2.real, 'b-')
-  plt.plot(instants, FieldEnvelope2.real, 'b--')
-  plt.plot(instants, RealFieldTot.real, 'k-')
-  plt.plot(instants, FieldEnvelopeTot.real, 'k--')
-  plt.xlabel('')
-  filename = 'PulseEnvelopes-'+str(wavelength*1E9)+'nm-'+str(wavelength2*1E9)+'nm-CEP2'+str(CEP/pi * 180.)+'+delay'+str(Delay*1E15)+'fs'
-  plt.savefig(filename+'.eps')
-  plt.savefig(filename+'.png')
-  #plt.show()
+  #FieldEnvelopeTot, RealFieldTot = PulseSquaredSinTemporalShapeDoublePulse(instants, tau, tau, PeakField, PeakField2, wavelength, wavelength2, CEP, CEP2, t0, Delay)
+
+  #plt.plot(instants, RealField1.real, 'r-')
+  #plt.plot(instants, FieldEnvelope1.real, 'r--')
+  #plt.plot(instants, RealField2.real, 'b-')
+  #plt.plot(instants, FieldEnvelope2.real, 'b--')
+  #plt.plot(instants, RealFieldTot.real, 'k-')
+  #plt.plot(instants, FieldEnvelopeTot.real, 'k--')
+  #plt.xlabel('')
+  #filename = 'PulseEnvelopes-'+str(wavelength*1E9)+'nm-'+str(wavelength2*1E9)+'nm-CEP2'+str(CEP/pi * 180.)+'+delay'+str(Delay*1E15)+'fs'
+  #plt.savefig(filename+'.eps')
+  #plt.savefig(filename+'.png')
+  ##plt.show()
 
   print Header+"** Info: PulseEnvelope.EPS and PNG were written in the current folder. "
 
@@ -465,7 +510,7 @@ def SiliconTunneling(): #{{{
     
 #}}}                                
     
-
+## Plots the wPI of Keldysh-Gruzdev model for SiO2 as function of intensity. 
 def SilicaGruzdev2014(): #{{{
   print "Defining SiO2 material parameters..."
 
@@ -473,10 +518,15 @@ def SilicaGruzdev2014(): #{{{
   meff=0.6e0; #Effective mass of Si
   N_total=1.*5E28
   numpoints = 1000
-  #optical_index = 1.5356 #800nm
-  optical_index = 1.45 #1030nm
-  
   wavelength = 1030e-9;
+  if(wavelength==800e-9): 
+    optical_index = 1.5356 #800nm
+  elif (wavelength==1030E-9):
+    optical_index = 1.45 #1030nm
+  else: 
+    print Header+"** Warning: optical refractive index was taken equal to 1. "
+    optical_index=1. 
+  
   tau=250e-15; dt = 1E-17; CEP=0e0
   
   #PeakFluence = 1.0*1E4 #J/cm2 * 1E4 = J/m2

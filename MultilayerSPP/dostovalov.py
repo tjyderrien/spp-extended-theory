@@ -400,12 +400,7 @@ def Burke_SymmetricModes(thickness_size):
     eps3 = 1.5**2 # eps2 #eps2: symmetric modes       #environment | substrate
     # Note: Inverting eps2 and eps3 should have no effect on the possible modes, but only on field amplification. 
     
-    # Conversion to beta/k0: 
-    def PeriodToBetaNorm(period): 
-        # period = 2.*np.pi / beta.real
-        k0 = 2.*np.pi / wavelength
-        beta_norm_re = np.divide(np.divide(2.*np.pi, period), k0)
-        return beta_norm_re
+
     
     #thickness_size = 20
     thickness_min  = 0.1e-9
@@ -567,13 +562,6 @@ def Derrien_HRLIPSSonMoFilms(wavelength, thickness_size):
     # Medium 3: environment
     eps3 = 1.0 #.5**2 # eps2 #eps2: symmetric modes       #environment | substrate
     # Note: Inverting eps2 and eps3 should have no effect on the possible modes, but only on field amplification. 
-    
-    # Conversion to beta/k0: 
-    def PeriodToBetaNorm(period): 
-        # period = 2.*np.pi / beta.real
-        k0 = 2.*np.pi / wavelength
-        beta_norm_re = np.divide(np.divide(2.*np.pi, period), k0)
-        return beta_norm_re
     
     #thickness_size = 20
     thickness_min  = 0.1e-9

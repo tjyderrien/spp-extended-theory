@@ -174,30 +174,44 @@ def ThreeLayerEigenSolver(t, k1, k2, k3, eps1, eps2, eps3):
     w,v = LA.eig(matrix)
     return w
 
-wavelength=633e-9
-numberofroots = 10
-# Medium 1: thin film.
-eps1 = -19.+0.53j     #Ag thin film
-# Medium 2: substrate. 
-eps2 = 4. #3.999999+0.004j
-# Medium 3: environment
-eps3 = 1.5**2 # eps2 #eps2: symmetric modes       #environment | substrate
-# Note: Inverting eps2 and eps3 should have no effect on the possible modes, but only on field amplification. 
-k0 = 2.*np.pi/wavelength
-ke1 = (k0**2)*eps1
-ke2 = (k0**2)*eps2
-ke3 = (k0**2)*eps3
+# Conversion from period to to beta/k0: 
+def PeriodToBetaNorm(period): 
+    # period = 2.*np.pi / beta.real
+    k0 = 2.*np.pi / wavelength
+    beta_norm_re = np.divide(np.divide(2.*np.pi, period), k0)
+    return beta_norm_re
 
-sgn1 = 1.
-sgn2 = 1.
+# Conversion from SPP decay length to beta/k0:
+def LsppToBetaNorm(Lspp): 
+    # Lspp = 0.5/Im(beta) #Im(beta)=0.5/Lspp. 
+    k0 = 2.*np.pi / wavelength
+    beta_norm_im = np.divide(np.divide(0.5, Lspp), k0)
+    return beta_norm_im
 
-beta = 1.+1j
+#wavelength=633e-9
+#numberofroots = 10
+## Medium 1: thin film.
+#eps1 = -19.+0.53j     #Ag thin film
+## Medium 2: substrate. 
+#eps2 = 4. #3.999999+0.004j
+## Medium 3: environment
+#eps3 = 1.5**2 # eps2 #eps2: symmetric modes       #environment | substrate
+## Note: Inverting eps2 and eps3 should have no effect on the possible modes, but only on field amplification. 
+#k0 = 2.*np.pi/wavelength
+#ke1 = (k0**2)*eps1
+#ke2 = (k0**2)*eps2
+#ke3 = (k0**2)*eps3
 
-k1 = cmath.sqrt(beta**2 - ke1)/eps1
-k2 = sgn1*cmath.sqrt(beta**2 - ke2)/eps2
-k3 = sgn2*cmath.sqrt(beta**2 - ke3)/eps3
-sol = ThreeLayerEigenSolver(28e-9, k1, k2, k3, eps1, eps2, eps3)
-print(sol)
+#sgn1 = 1.
+#sgn2 = 1.
+
+#beta = 1.+1j
+
+#k1 = cmath.sqrt(beta**2 - ke1)/eps1
+#k2 = sgn1*cmath.sqrt(beta**2 - ke2)/eps2
+#k3 = sgn2*cmath.sqrt(beta**2 - ke3)/eps3
+#sol = ThreeLayerEigenSolver(28e-9, k1, k2, k3, eps1, eps2, eps3)
+#print(sol)
 
 # The best would be to converge this towards finding beta such as matrix would be solved. 
 # But still, for any beta, we obtain 4 eigen values. 

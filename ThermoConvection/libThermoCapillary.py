@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2013-2018 T. J.-Y. Derrien
+# Copyright (C) 2013-2019 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,7 +22,8 @@
 # Chapter IV of PhD thesis: Derrien, T. J.-Y., Nanostructuring of solar cells by femtosecond laser irradiation. Theoretical study of the formation mechanisms. Université de la Méditerranée - Aix Marseille II, 2012. 
 # Jean Berthier and Pascal Silberzan, "Microfluidics for Biotechnology", Artech House (2009).
 
-from libThermalPropertiesMaterials import *
+from libThermalProperties_Silicon import *
+#from libThermalProperties_Silica import *
 from libNonDimensionalNumbers import *
 
 from cycler import cycler
@@ -87,7 +88,7 @@ def omega_Levchenko(omega_0, thickness, k):
 
 def SurfaceTensionDerivation(T, surface_tension_model=0):
   # We have two possile models to compute derivative of surface tension
-  surface_tension, surface_tension_deriv = Silica_SurfaceTension(T) 
+  surface_tension, surface_tension_deriv = Liquid_SurfaceTension(T) 
   if(surface_tension_model == 0): #analytic approach
     surface_tension_diff = surface_tension_deriv
   elif (surface_tension_model == 1):
@@ -146,7 +147,7 @@ def plotThermoConvectiveInstability(wavelength, fluence, pulseFWHM, thickness, T
     #T=np.arange(1300.,2000., 10.) #length should be greater than 1, strictly. 
     print Header+"Temperature of the liquid [K]: "+str(T)
 
-    surface_tension, surface_tension_deriv = Silica_SurfaceTension(T)
+    surface_tension, surface_tension_deriv = Liquid_SurfaceTension(T)
     print Header+"Surface tension [N.m2]: "+str(surface_tension)
 
     k_laser = 2.*pi/laser_wavelength #m-1
@@ -155,7 +156,7 @@ def plotThermoConvectiveInstability(wavelength, fluence, pulseFWHM, thickness, T
 
     print Header+"** Selected modes (1/m): "+str(k)+" 1/m, equiv. to "+str(1E9*2.*pi/k)+" nm."
 
-    #if( T < Silica_MeltingTemperature() ): 
+    #if( T < MeltingTemperature() ): 
     #print Header+"** Absurd: silica should reach melting temperature. "
     #exit()
     
@@ -165,12 +166,12 @@ def plotThermoConvectiveInstability(wavelength, fluence, pulseFWHM, thickness, T
     print Header+"Laser absorptivity: "+str(100.*Absorptivity)+" %"
     print Header+"Laser intensity   : "+str(laser_intensity*1E-4)+ "W/cm2."
 
-    mass_density         = Silica_Liquid_VolumicMass()
-    dynamic_viscosity    = Silica_DynamicViscosity(T)
-    diffusivity          = Silica_Liquid_HeatDiffusivity(T)
-    thermal_conductivity = Silica_Liquid_ThermalConductivity(T)
+    mass_density         = Liquid_VolumicMass()
+    dynamic_viscosity    = DynamicViscosity(T)
+    diffusivity          = Liquid_HeatDiffusivity(T)
+    thermal_conductivity = Liquid_ThermalConductivity(T)
 
-    print Header+"== Silica data =="
+    print Header+"== Materials data =="
     print Header+"Mass density: "+str(mass_density)+" kg/m3."
     print Header+"Dynamic viscosity: "+str(dynamic_viscosity)+"Pa.s"
     print Header+"Heat diffusivity: "+str(diffusivity)+" m2/s."
@@ -206,15 +207,15 @@ def plotThermoConvectiveInstability(wavelength, fluence, pulseFWHM, thickness, T
     print Header+"AI/kappa [K/nm]: "+str(1E-9*laser_intensity / thermal_conductivity)
 
     print Header+"** Checking heat conductivity (m2/s) for solid silica at 300 K.: "
-    print Header+"T-dependent diffusivity (m2/s): "+str(Silica_HeatConductivity(300.) / ( Silica_Solid_HeatCapacity(300.) * mass_density)) #m2/s
-    print Header+"Constant data from Bauerle book: "+str(Silica_Solid_HeatDiffusivity(T))
+    print Header+"T-dependent diffusivity (m2/s): "+str(HeatConductivity(300.) / ( Solid_HeatCapacity(300.) * mass_density)) #m2/s
+    print Header+"Constant data from Bauerle book: "+str(Solid_HeatDiffusivity(T))
     print ""
     print Header+"** Checking heat conductivity (m2/s) for liquid silica at 1300 K.: "
-    print Header+"T-dependent diffusivity (m2/s): "+str(Silica_HeatConductivity(1300.) / ( Silica_Liquid_HeatCapacity(300.) * mass_density)) #m2/s
+    print Header+"T-dependent diffusivity (m2/s): "+str(HeatConductivity(1300.) / ( Liquid_HeatCapacity(300.) * mass_density)) #m2/s
     print ""
     print Header+"** Checking heat conductivity (m2/s) for liquid silica at 2000 K.: "
-    print Header+"T-dependent diffusivity (m2/s): "+str(Silica_HeatConductivity(2000.) / ( Silica_Liquid_HeatCapacity(300.) * mass_density)) #m2/s
-    print Header+"Constant data from Bauerle book: "+str(Silica_Liquid_HeatDiffusivity(T)) 
+    print Header+"T-dependent diffusivity (m2/s): "+str(HeatConductivity(2000.) / ( Liquid_HeatCapacity(300.) * mass_density)) #m2/s
+    print Header+"Constant data from Bauerle book: "+str(Liquid_HeatDiffusivity(T)) 
 
     sound_velocity       = SoundVelocity_Levchenko(mass_density, Peclet_Number, T, surface_tension_diff, ThermalSource_diff)
     gamma_Levchenko      = InstabilityGrowthRate_Levchenko(kinematic_viscosity, k, omega, thickness, sound_velocity, omega_0, Peclet_Number, diffusivity)

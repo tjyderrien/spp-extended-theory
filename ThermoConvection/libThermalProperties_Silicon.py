@@ -25,15 +25,18 @@
 
 from libSPP import *
 
-from scipy.constants import h, hbar, e, gravitational_constant, Boltzmann
+from scipy.constants import h, hbar, e, gravitational_constant, Boltzmann, N_A
 gravity = gravitational_constant
 k_b     = Boltzmann
-
+N_Av    = N_A
 #print "Boltzmann constant: "+str(k_b)+" J.s."
 
 Header = "[libThermalPropertiesMaterials] "
 
 ## SILICON
+
+def VaporizationTemperature():
+  return 3530. #K
 
 def MeltingTemperature():
   return 1687. #K
@@ -45,7 +48,7 @@ def Solid_VolumicMass():
   return 2.329e3 #kg/m3
 
 def Liquid_MolarMass():
-  return 
+  return 28.085E-3 #kg/mol #solid Si was used here. But does it matters for the molar mass? 
 
 def Liquid_VolumicMass():
   return 2.553e3 #kg/m3
@@ -102,8 +105,8 @@ def DynamicViscosity(T):
     print Header+"** Warning: dynamic viscosity was taken out of range (materials temperature must be liquid). "
     result = 0e0
   else: 
-    Volume = np.power(Liquid_Density()*N_Av/MolarMass,-1)
-    result = h * N_Av*np.exp(3.8*T_vap/T)/Volume
+    Volume = np.power(Liquid_Density()*N_Av/Liquid_MolarMass(),-1)
+    result = h * N_Av*np.exp(3.8*VaporizationTemperature()/T)/Volume
   return result
 
 

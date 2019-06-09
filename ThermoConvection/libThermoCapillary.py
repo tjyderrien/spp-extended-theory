@@ -92,7 +92,10 @@ def SurfaceTensionDerivation(T, surface_tension_model=0):
   if(surface_tension_model == 0): #analytic approach
     surface_tension_diff = surface_tension_deriv
   elif (surface_tension_model == 1):
-    surface_tension_diff = np.divide(np.diff(surface_tension), np.diff(T)) #numeric derivation
+    if(np.shape(T)<=1): 
+        print Header+"** Warning: there are not enough temperature samples to compute the diff(T). "
+    T_t = np.linspace(np.min(T)-1, np.max(T)+1, np.ndim(surface_tension)) 
+    surface_tension_diff = np.divide(np.diff(surface_tension), np.diff(T_t)) #numeric derivation
   else: 
     print Header+"** Error. Surface tension computation in SoundVelocity_Levchenko function."
   return surface_tension_diff

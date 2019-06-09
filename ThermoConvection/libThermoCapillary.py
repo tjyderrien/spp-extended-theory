@@ -194,7 +194,7 @@ def plotThermoConvectiveInstability(wavelength, fluence, pulseFWHM, thickness, T
     print Header+"omega_0_Levchenko: "+str(omega_0)+" Hz."
     print Header+"omega_Levchenko: "+str(omega)+" Hz."
 
-    surface_tension_diff = SurfaceTensionDerivation(T, 0.) #0: use analytical model, #1: use numerical model (use only if surfacetension(T) is non-linear)
+    surface_tension_diff = SurfaceTensionDerivation(T, 1.) #0: use analytical model, #1: use numerical model (use only if surfacetension(T) is non-linear)
     #print Header+"** Checking diff(surface_tension): "+str(surface_tension_diff)
     print ""
 

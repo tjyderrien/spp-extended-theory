@@ -108,7 +108,11 @@ def VP_ChooseLibrary(FieldEnvelope1, FieldEnvelope2, wavelength1, wavelength2, C
     if( np.max(FieldEnvelope2) < 1e-3 ): #single pulse mode
         
         DataFolder  = PathPrefix+'Zhukov/Monochrome/'
-        DataFileName={'1030': DataFolder+'DLG1030mono.dat', '800': DataFolder+'DLG800mono.dat', '400': DataFolder+'DLG400mono.dat', '1600': DataFolder+'DLG-1600-2_56.dat', '3200': DataFolder+'DLG-3200-2_56.dat'}
+        DataFileName={'1030': DataFolder+'DLG1030mono.dat', 
+                      '800': DataFolder+'DLG800mono.dat', 
+                      '400': DataFolder+'DLG400mono.dat', 
+                      '1600': DataFolder+'DLG-1600-2_56_extended.dat', 
+                      '3200': DataFolder+'DLG-3200-2_56.dat'}
         print Header+"Choosing the right database..."
         if(wavelength1   == 800e-9):
             VZ_basename = DataFileName['800']
@@ -392,19 +396,20 @@ def VP_BicolorNexc(tau1, tau2, t0, Delay):
   return instants, N_excited_Zhukov
 
 ## Test function for fetching a value from files provided by VP Zhukov. 
-def VPZ_Wpi0D():
+def VPZ_Wpi0D(): #{{{
 # Trying to extract one single value from Zhukov files. 
     Efield1=1E9; Efield2=0; wavelength1=1600e-9; wavelength2=1600e-9; CEP1=0; CEP2=0; 
     Egap = 2.56*e; meff=0.2226
     VZ_generateWpiTables(Efield1, Efield2, wavelength1, wavelength2, CEP1, CEP2, Egap, meff)
+#}}}
 
 ## Test function for fetching a batch of values from files provided by VP Zhukov. 
-def VPZ_Wpi1D():
+def VPZ_Wpi1D(): #{{{
     # Now trying to extract a sequence of values from Zhukov files. 
     Egap = 2.56*e; meff=0.2226
     Efield2=0.0E0; 
     
-    wavelength1=1600e-9; CEP1=0; 
+    wavelength1=3200e-9; CEP1=0; 
     wavelength2=1600e-9; CEP2=0; 
     
     Efield1_log = np.linspace(8,10,100)
@@ -414,10 +419,11 @@ def VPZ_Wpi1D():
     # NOTE: add a warning when interpolation occurs OUT of boundaries!
 
     plt.figure()
-    plt.plot(Efield1, Wpi, 'o-')
+    plt.loglog(Efield1, Wpi, 'o-')
     plt.xlabel(r"$E_1$ (V/m)")
     plt.ylabel(r"$w_{PI}$ (m$^{-3}$.s$^{-1}$)")
     plt.show()
+#}}}
 
 
 ## Plot the (E1, E2) map of W_PI according to VP Zhukov theories.
@@ -461,7 +467,7 @@ def VPZ_Wpi2D(wavelength1, wavelength2, Efield1_max, Efield2_max, CEP2=0., Egap=
     plt.show()
 
 #VPZ_Wpi0D()
-#VPZ_Wpi1D()
+VPZ_Wpi1D()
 # VPZ_Wpi2D(800e-9, 400e-9, 9E9, 0E0, 0.)
 #VPZ_Wpi2D(800e-9, 400e-9, 9E9, 1.6E10, 0.)
 #VPZ_Wpi2D(800e-9, 400e-9, 9E9, 1.6E10, pi/4.)

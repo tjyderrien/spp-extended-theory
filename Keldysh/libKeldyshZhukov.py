@@ -108,21 +108,24 @@ def VP_ChooseLibrary(FieldEnvelope1, FieldEnvelope2, wavelength1, wavelength2, C
     if( np.max(FieldEnvelope2) < 1e-3 ): #single pulse mode
         
         DataFolder  = PathPrefix+'Zhukov/Monochrome/'
-        DataFileName={'1030': DataFolder+'DLG1030mono.dat', 
-                      '800': DataFolder+'DLG800mono.dat', 
+        DataFileName={'1030': DataFolder+'2_56ev1030mkm.dat', 
+                      '800': DataFolder+'2_56ev800tot.dat',
+                      #'800': DataFolder+'DLG800mono.dat', 
                       '400': DataFolder+'DLG400mono.dat', 
-                      '1600': DataFolder+'DLG-1600-2_56_extended.dat', 
-                      '3200': DataFolder+'DLG-3200-2_56.dat'}
+                      '1600': DataFolder+'2_56ev1600mkm-A.dat',
+                      '3200': DataFolder+'2_56_3200new.dat'}
         print Header+"Choosing the right database..."
         if(wavelength1   == 800e-9):
             VZ_basename = DataFileName['800']
-            Dictionnary = {'FieldSquaredLog10': 0, 'log10wpi': 1, 'photons': 2, 'energy': 3, 'wpi': 4, 'FieldSquared1': 5} #Monochromatic case
+            Dictionnary = {'FieldSquaredLog10': 0, 'log10wpi': 1}
+            #Dictionnary = {'FieldSquaredLog10': 0, 'log10wpi': 1, 'photons': 2, 'energy': 3, 'wpi': 4, 'FieldSquared1': 5} #Monochromatic case
         elif(wavelength1 == 400e-9):
             VZ_basename = DataFileName['400']
             Dictionnary = {'FieldSquaredLog10': 0, 'log10wpi': 1, 'photons': 2, 'energy': 3, 'wpi': 4, 'FieldSquared1': 5} #Monochromatic case
         elif(wavelength1 == 1030e-9):
             VZ_basename = DataFileName['1030']
-            Dictionnary = {'FieldSquaredLog10': 0, 'log10wpi': 1, 'photons': 2, 'energy': 3, 'wpi': 4, 'FieldSquared1': 5} #Monochromatic case
+            #Dictionnary = {'FieldSquaredLog10': 0, 'log10wpi': 1, 'photons': 2, 'energy': 3, 'wpi': 4, 'FieldSquared1': 5} #Monochromatic case
+            Dictionnary = {'FieldSquaredLog10': 0, 'log10wpi': 1}
         elif(wavelength1 == 1600e-9): 
             VZ_basename = DataFileName['1600']
             Dictionnary = {'FieldSquaredLog10': 0, 'log10wpi': 1}
@@ -324,7 +327,7 @@ def VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength1 = 800e-9, w
     w_PI_CGS = WPI_func(FieldEnvelopeNormalized1_CGS**2, FieldEnvelopeNormalized2_CGS**2) 
     # w_PI_CGS is in particles per cm^-3. 
   elif(NumberOfColors == 1): 
-    if(wavelength1 in [1600E-9, 3200E-9]):
+    if(wavelength1 in [800e-9, 1030e-9, 1030e-9, 1600E-9, 3200E-9]):
         DB_FieldSquaredNorm1 = np.power(10.,databasecontents[:,Dictionnary['FieldSquaredLog10']]) #this is a mapping
     else:
         DB_FieldSquaredNorm1 = databasecontents[:,Dictionnary['FieldSquared1']] #this is a mapping
@@ -467,7 +470,7 @@ def VPZ_Wpi2D(wavelength1, wavelength2, Efield1_max, Efield2_max, CEP2=0., Egap=
     plt.show()
 
 #VPZ_Wpi0D()
-VPZ_Wpi1D()
+#VPZ_Wpi1D()
 # VPZ_Wpi2D(800e-9, 400e-9, 9E9, 0E0, 0.)
 #VPZ_Wpi2D(800e-9, 400e-9, 9E9, 1.6E10, 0.)
 #VPZ_Wpi2D(800e-9, 400e-9, 9E9, 1.6E10, pi/4.)

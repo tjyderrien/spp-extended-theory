@@ -37,31 +37,41 @@ def BackgroundForMie(order=1):
     # Import optical data of the SiOx.
     filename="Starinskiy_Properties_SiOx.csv"
     SiOx_nk = np.loadtxt(filename)
-    wavelength_t = SiOx_nk[:, 0]*1E-9
+    wavelength_t = SiOx_nk[:, 0]*1E-9 #in m
     n_t          = SiOx_nk[:, 1]
     k_t          = SiOx_nk[:, 2]
     # Interpolate between the points
-    n_func = InterpolatedUnivariateSpline(1E9*wavelength_t, n_t, k=order)
-    k_func = InterpolatedUnivariateSpline(1E9*wavelength_t, k_t, k=order)
-    #print n_func(500) #WORKS.
-    #print k_func(500) #WORKS.
+    n_func = InterpolatedUnivariateSpline(wavelength_t, n_t, k=order) #wavelength in m
+    k_func = InterpolatedUnivariateSpline(wavelength_t, k_t, k=order)
+    #print n_func(500e-9) #WORKS.
+    #print k_func(500e-9) #WORKS.
     
-    # Import spectrum of bulk Ag from Palik data
+    # Import (n,k)[wavelength] spectrum of bulk Ag from Palik data
     filename = "/home/hilase/Documents/spp-extended-theory/SimpleSPP/Database/Ag-Johnson"
     nk_NP_t  = np.loadtxt(filename, skiprows=4)
     wavelength_NP_t = nk_NP_t[:,0]*1E-6
     n_NP_t   = nk_NP_t[:,1]
     k_NP_t   = nk_NP_t[:,2]
-    n_NP_func = InterpolatedUnivariateSpline(1E6*wavelength_NP_t, n_NP_t, k=order)
-    k_NP_func = InterpolatedUnivariateSpline(1E6*wavelength_NP_t, k_NP_t, k=order)
+    n_NP_func = InterpolatedUnivariateSpline(wavelength_NP_t, n_NP_t, k=order)
+    k_NP_func = InterpolatedUnivariateSpline(wavelength_NP_t, k_NP_t, k=order)
+    
+    #print n_NP_t 
+    #print n_NP_func(wavelength_NP_t) #WORKS
     
     # We interpolate the freshly captured data from Johnson/Palik/other on the wavelenth of interest
-    n_NP_t_new = n_NP_func(wavelength_t)
-    k_NP_t_new = k_NP_func(wavelength_t)
-    eps_NP_t = np.power(np.add(n_NP_t_new, np.multiply(1.j, k_NP_t_new)), 2)
+    
+    n_NP_t_new = n_NP_func(wavelength_t) #WORKS
+    k_NP_t_new = k_NP_func(wavelength_t) #WORKS
+    
+    #print n_NP_t, n_NP_t_new #WORKS
+    #print k_NP_t, k_NP_t_new #WORKS
+    
+    eps_NP_t = np.power(np.add(n_NP_t_new, np.multiply(1.j, k_NP_t_new)), 2) #(n+ik)**2
+    #print n_NP_t+1j*k_NP_t, np.sqrt(eps_NP_t) #WORKS
         
     # We mix nanoparticles with the air, first. 
-    # BUG: did Sergey Starinskiy renormalized the volume fraction before deducing it? 
+    # BUG: did Sergey Starinskiy renormalized the volume fraction before deducing it? After discussion, it should clearly be recomputed. 
+    
     eps_AirNP_7nm  = MaxwellGarnett2(epsAir, eps_NP_t, 0.06)
     eps_AirNP_10nm = MaxwellGarnett2(epsAir, eps_NP_t, 0.08)
     eps_AirNP_12nm = MaxwellGarnett2(epsAir, eps_NP_t, 0.10)
@@ -71,7 +81,7 @@ def BackgroundForMie(order=1):
     
     # We mix nanoparticles with SiOx
     # BUG: did Sergey Starinskiy renormalized the volume fraction before deducing it? 
-    eps_SiOxNP_7nm  = MaxwellGarnett2(eps_SiOx_t, eps_NP_t, 0.06)
+    eps_SiOxNP_7nm  = MaxwellGarnett2(eps_SiOx_t, eps_NP_t, 0.06) #BUG: we generate negative imaginary parts ?! Error in MaxwellGarnett2 ?
     eps_SiOxNP_10nm = MaxwellGarnett2(eps_SiOx_t, eps_NP_t, 0.08)
     eps_SiOxNP_12nm = MaxwellGarnett2(eps_SiOx_t, eps_NP_t, 0.10)
     

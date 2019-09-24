@@ -103,9 +103,9 @@ def Drude_Ti(wavelength, epsilon, Te):#{{{
 
 ## Fresnel reflectivity formula at single interface
 # Input:
-#   eps1: complex-valued permittivity 1+j0
-#   eps2: idem, for medium2
-#   angle: angle of incidence (deg or rad?)
+#   @param eps1: complex-valued permittivity 1+j0
+#   @param eps2: idem, for medium2
+#   @param angle: angle of incidence (deg or rad?)
 # Output: 
 #   interface reflectivity (float) R
 def reflectivity(eps1, eps2, angle=0, pola="S"):#{{{
@@ -124,8 +124,22 @@ def reflectivity(eps1, eps2, angle=0, pola="S"):#{{{
   return R
 #}}}
 
+## Complex transmission formula at single interface (normal incidence case)
+# Input:
+#   @param eps1: complex-valued permittivity 1+j0
+#   @param eps2: idem, for medium2
+# Output: 
+#   interface complex transmission (complex)
+def ComplexTransmission(eps1, eps2):
+    return 2*np.sqrt(eps1)/(np.sqrt(eps2)+np.sqrt(eps1))
+
 ## Computes complex valued reflectivity with normal angle of incidence. Useful 
 # for computing further media
+# Input:
+#   @param eps1: complex-valued permittivity 1+j0
+#   @param eps2: idem, for medium2
+# Output: 
+#   Complex reflectivity. Must be |z|**2 to have the right reflectivity. 
 def ComplexReflectivity(eps1, eps2): #{{{
   r = ((eps1**0.5e0-eps2**0.5e0)/(eps1**0.5e0+eps2**0.5e0))
   return r
@@ -1060,19 +1074,33 @@ def MaxwellGarnett3(eps1, eps2, eps3, fraction1, fraction2, fraction3):
 
 ## Lorentz-Lorenz method: see the Maxwell-Garnett model ( MaxwellGarnett2() )
 def LorentzLorenz2(eps1, eps2, fraction):
-  return MaxwellGarnett2(eps1, esp2, fraction)
+  return MaxwellGarnett2(eps1, eps2, fraction)
 
 ## Lorentz-Lorenz method: see the Maxwell-Garnett model ( MaxwellGarnett3() )
 def LorentzLorenz3(eps1, eps2, eps3, fraction1, fraction2):
   return MaxwellGarnett3(eps1, esp2, eps3, fraction1, fraction2)
 
-Drude_Cr = np.vectorize(Drude_Cr)
-Drude_Ti = np.vectorize(Drude_Ti)
-EpsilonToIndex = np.vectorize(EpsilonToIndex)
+## Bruggeman method to compute the effective dielectric permittivity
+# @param eps1: dielectric permittivity of the ambient medium
+# @param eps2: dielectric permittivity of the nanoparticle medium
+# @param fraction2: volume fraction ratio of the eps2 medium inside the medium1. WARNING: if medium1 is a film, careful to compute the right geometry dependent volume fraction. 
+def Bruggeman2(eps1, eps2, fraction2): #{{{
+   # We use Bruggeman theory for 2 media, and provide both analytical solutions. 
+   SquareRootContent=4*eps1**2 + 4*eps1*eps2 -12*fraction2*eps1**2 + 18*eps1*fraction2*eps2 + eps2**2 - 6*fraction2*eps2**2 + 9*fraction2**2*eps1**2 - 18*fraction2**2*eps1*eps2 + 9*fraction2**2*eps2**2
+   FirstTerm = 0.5*eps1 - 0.25*eps2 - 0.75*fraction2*eps1 + 0.75*fraction2*eps2 
+   sol1 = FirstTerm - 0.25 * np.sqrt(SquareRootContent)
+   sol2 = FirstTerm + 0.25 * np.sqrt(SquareRootContent)
+   return sol1, sol2
+#}}}
+         
+Drude_Cr        = np.vectorize(Drude_Cr)
+Drude_Ti        = np.vectorize(Drude_Ti)
+EpsilonToIndex  = np.vectorize(EpsilonToIndex)
 MaxwellGarnett2 = np.vectorize(MaxwellGarnett2)
 MaxwellGarnett3 = np.vectorize(MaxwellGarnett3)
-LorentzLorenz2 = np.vectorize(LorentzLorenz2)
-LorentzLorenz3 = np.vectorize(LorentzLorenz3)
+LorentzLorenz2  = np.vectorize(LorentzLorenz2)
+LorentzLorenz3  = np.vectorize(LorentzLorenz3)
+Bruggeman2      = np.vectorize(Bruggeman2)
 
 #print "Attempt to use Maxwell-Garnett."
 
@@ -1087,12 +1115,31 @@ LorentzLorenz3 = np.vectorize(LorentzLorenz3)
 # @param wavelength: wavelength (in meters) of the indicent photon
 # @param eps123: complex dielectric permittivity of media 1 2 and 3
 # @param thickness2: thickness of medium 2
-def BiLayerReflectivity(wavelength, eps1, eps2, eps3, thickness2):
+def BiLayerReflectivity(wavelength, eps1, eps2, eps3, thickness2): #{{{
   phi2 = np.multiply(2.*np.pi*thickness2/wavelength, (np.sqrt(eps2))) 
   ##TODO: For the non-normal absorption, use Kovalenko formula of refraction. 
   r12  = ComplexReflectivity(eps1, eps2)
   r23  = ComplexReflectivity(eps2, eps3)
   r13  = (r12 + r23*np.exp(2.j*phi2)) / (1.+r12*r23*np.exp(2.j*phi2))
   return r13*np.conjugate(r13)
+#}}}
 
+## Compute transmission from a 3-material thin film configuration, where media 1 and 3 are semi-infinite. Formula originates from Stenzel book, page 108. Warning: formula from Born and Wolf may contain mistakes. It could not be validated for perfect dielectrics. 
+# @param wavelength: wavelength (in meters) of the indicent photon
+# @param eps123: complex dielectric permittivity of media 1 2 and 3
+# @param thickness2: thickness of medium 2
+def BiLayerTransmission(wavelength, eps1, eps2, eps3, thickness2): #{{{
+   n3  = np.sqrt(eps3); n1 = np.sqrt(eps1)
+   #r12  = ComplexReflectivity(eps1, eps2);  
+   r21 = ComplexReflectivity(eps2, eps1)
+   r23 = ComplexReflectivity(eps2, eps3); #r32 = ComplexReflectivity(eps3, eps2)                                                                            
+   t12 = ComplexTransmission(eps1, eps2); #t21 = ComplexTransmission(eps2, eps1)
+   t23 = ComplexTransmission(eps2, eps3); #t32 = ComplexTransmission(eps3, eps2)
+   delta = 2*np.pi/wavelength * thickness2 * np.sqrt(eps2)
+   t13 = t12 * t23 * np.exp(1j*delta)/(1.-r21*r23*np.exp(2j*delta))
+   T13 = np.real(n3)/np.real(n1) * t13 * np.conjugate(t13) #total transmittivity
+   return T13
+#}}}                                                                           
 BiLayerReflectivity = np.vectorize(BiLayerReflectivity)
+BiLayerTransmission = np.vectorize(BiLayerTransmission)
+

@@ -178,41 +178,6 @@ def BackgroundForMie(): #{{{
     nk_SiOxNP_10nm  = np.sqrt(eps_SiOxNP_10nm)
     nk_SiOxNP_12nm  = np.sqrt(eps_SiOxNP_12nm)
     
-    ## We export write the final contents into CSV files, for Sergey. 
-    Sample1="nk_AirNP_7nm.csv"
-    Sample2="nk_AirNP_10nm.csv"
-    Sample3="nk_AirNP_12nm.csv"
-             
-    Sample4="nk_SiOxNP_7nm.csv"
-    Sample5="nk_SiOxNP_10nm.csv"
-    Sample6="nk_SiOxNP_12nm.csv"
-    
-    Sample7="nk_SiOxNP_7nm_strict.csv"
-    Sample8="nk_SiOxNP_10nm_strict.csv"
-    Sample9="nk_SiOxNP_12nm_strict.csv"
-    
-    header="wavelength (nm)\tn(matrix)\tk(matrix)\tn(NP)\tk(NP)\tn(eff)\tk(eff)"
-    
-    Sample1_Array=list(zip(*[np.real(1E9*wavelength_new_t), np.real(epsAir_t),   np.imag(epsAir_t)  , np.real(n_NP_t_new), np.real(k_NP_t_new), np.real(nk_AirNP_7nm  ), np.imag(nk_AirNP_7nm  )]))
-    Sample2_Array=list(zip(*[np.real(1E9*wavelength_new_t), np.real(epsAir_t),   np.imag(epsAir_t)  , np.real(n_NP_t_new), np.real(k_NP_t_new), np.real(nk_AirNP_10nm ), np.imag(nk_AirNP_10nm )]))
-    Sample3_Array=list(zip(*[np.real(1E9*wavelength_new_t), np.real(epsAir_t),   np.imag(epsAir_t)  , np.real(n_NP_t_new), np.real(k_NP_t_new), np.real(nk_AirNP_12nm ), np.imag(nk_AirNP_12nm )]))
-    Sample4_Array=list(zip(*[np.real(1E9*wavelength_new_t), n_SiOx_new,          k_SiOx_new,          np.real(n_NP_t_new), np.real(k_NP_t_new), np.real(nk_SiOxNP_7nm ), np.imag(nk_SiOxNP_7nm )]))
-    Sample5_Array=list(zip(*[np.real(1E9*wavelength_new_t), n_SiOx_new,          k_SiOx_new,          np.real(n_NP_t_new), np.real(k_NP_t_new), np.real(nk_SiOxNP_10nm), np.imag(nk_SiOxNP_10nm)]))
-    Sample6_Array=list(zip(*[np.real(1E9*wavelength_new_t), n_SiOx_new,          k_SiOx_new,          np.real(n_NP_t_new), np.real(k_NP_t_new), np.real(nk_SiOxNP_12nm), np.imag(nk_SiOxNP_12nm)]))
-    Sample7_Array=list(zip(*[np.real(1E9*wavelength_new_t), n_SiOx_new,          k_SiOx_new,          np.real(n_NP_t_new), np.real(k_NP_t_new), np.real(nk_SiOxNP_7nm_strict),  np.imag(nk_SiOxNP_7nm_strict)]))
-    Sample8_Array=list(zip(*[np.real(1E9*wavelength_new_t), n_SiOx_new,          k_SiOx_new,          np.real(n_NP_t_new), np.real(k_NP_t_new), np.real(nk_SiOxNP_10nm_strict), np.imag(nk_SiOxNP_10nm_strict)]))
-    Sample9_Array=list(zip(*[np.real(1E9*wavelength_new_t), n_SiOx_new,          k_SiOx_new,          np.real(n_NP_t_new), np.real(k_NP_t_new), np.real(nk_SiOxNP_12nm_strict), np.imag(nk_SiOxNP_12nm_strict)]))
-    
-    np.savetxt(Sample1, Sample1_Array, fmt='%1.4e', header=header, delimiter=",")
-    np.savetxt(Sample2, Sample2_Array, fmt='%1.4e', header=header, delimiter=",")
-    np.savetxt(Sample3, Sample3_Array, fmt='%1.4e', header=header, delimiter=",")
-    np.savetxt(Sample4, Sample4_Array, fmt='%1.4e', header=header, delimiter=",")
-    np.savetxt(Sample5, Sample5_Array, fmt='%1.4e', header=header, delimiter=",")
-    np.savetxt(Sample6, Sample6_Array, fmt='%1.4e', header=header, delimiter=",")
-    np.savetxt(Sample7, Sample7_Array, fmt='%1.4e', header=header, delimiter=",")
-    np.savetxt(Sample8, Sample8_Array, fmt='%1.4e', header=header, delimiter=",")
-    np.savetxt(Sample9, Sample9_Array, fmt='%1.4e', header=header, delimiter=",")
-    
     ## OPTICAL DATA FOR SUBSTRATE
     #eps_SiO2_t
     
@@ -223,21 +188,21 @@ def BackgroundForMie(): #{{{
     
     film_thickness = 30E-9 #experimental value given by Sergey
     
-    Tomega1_7nm  = BiLayerTransmission(wavelength_new_t, epsAir_t, eps_AirNP_7nm,  eps_SiO2_t, film_thickness)
-    Tomega1_10nm = BiLayerTransmission(wavelength_new_t, epsAir_t, eps_AirNP_10nm, eps_SiO2_t, film_thickness)
-    Tomega1_12nm = BiLayerTransmission(wavelength_new_t, epsAir_t, eps_AirNP_12nm, eps_SiO2_t, film_thickness)
+    Tomega1_7nm  = BiLayerTransmission(wavelength_new_t, epsAir_t, eps_AirNP_7nm,  eps_SiO2_t, film_thickness) #Sample1
+    Tomega1_10nm = BiLayerTransmission(wavelength_new_t, epsAir_t, eps_AirNP_10nm, eps_SiO2_t, film_thickness) #Sample2
+    Tomega1_12nm = BiLayerTransmission(wavelength_new_t, epsAir_t, eps_AirNP_12nm, eps_SiO2_t, film_thickness) #Sample3
     
     ## CONFIG 2, 3 NP sizes
     ## SiOx | SiOx + Ag NP (t=t_NP strict) | SiO2
-    Tomega2_7nm  = BiLayerTransmission(wavelength_new_t, eps_SiOx_t, eps_SiOxNP_7nm_strict,  eps_SiO2_t, 7e-9)
-    Tomega2_10nm = BiLayerTransmission(wavelength_new_t, eps_SiOx_t, eps_SiOxNP_10nm_strict, eps_SiO2_t, 10E-9)
-    Tomega2_12nm = BiLayerTransmission(wavelength_new_t, eps_SiOx_t, eps_SiOxNP_12nm_strict, eps_SiO2_t, 12E-9)
+    Tomega2_7nm  = BiLayerTransmission(wavelength_new_t, eps_SiOx_t, eps_SiOxNP_7nm_strict,  eps_SiO2_t, 7e-9) #Sample7
+    Tomega2_10nm = BiLayerTransmission(wavelength_new_t, eps_SiOx_t, eps_SiOxNP_10nm_strict, eps_SiO2_t, 10E-9)#Sample8
+    Tomega2_12nm = BiLayerTransmission(wavelength_new_t, eps_SiOx_t, eps_SiOxNP_12nm_strict, eps_SiO2_t, 12E-9)#Sample9
     
     ## CONFIG 3, 3 NP sizes
     ## air | SiOx + Ag NP (t=t_SiOx experimental) | SiO2 
-    Tomega3_7nm  = BiLayerTransmission(wavelength_new_t, epsAir_t, eps_SiOxNP_7nm,  eps_SiO2_t, film_thickness)
-    Tomega3_10nm = BiLayerTransmission(wavelength_new_t, epsAir_t, eps_SiOxNP_10nm, eps_SiO2_t, film_thickness)
-    Tomega3_12nm = BiLayerTransmission(wavelength_new_t, epsAir_t, eps_SiOxNP_12nm, eps_SiO2_t, film_thickness)
+    Tomega3_7nm  = BiLayerTransmission(wavelength_new_t, epsAir_t, eps_SiOxNP_7nm,  eps_SiO2_t, film_thickness) #Sample4
+    Tomega3_10nm = BiLayerTransmission(wavelength_new_t, epsAir_t, eps_SiOxNP_10nm, eps_SiO2_t, film_thickness) #Sample5
+    Tomega3_12nm = BiLayerTransmission(wavelength_new_t, epsAir_t, eps_SiOxNP_12nm, eps_SiO2_t, film_thickness) #Sample6
     
     print "** DEBUG **"
     print Tomega1_7nm
@@ -281,8 +246,40 @@ def BackgroundForMie(): #{{{
     plt.savefig(filename+".png")
     plt.show()
     
+    ## We export write the final contents into CSV files, for Sergey. 
+    Sample1="Air-AirAndAgNP7nm-30nmThick-SiO2.csv"
+    Sample2="Air-AirAndAgNP10nm-30nmThick-SiO2.csv"
+    Sample3="Air-AirAndAgNP12nm-30nmThick-SiO2.csv"
+             
+    Sample4="Air-SiOxAndAgNP7nm-30nmThick-SiO2.csv"
+    Sample5="Air-SiOxAndAgNP10nm-30nmThick-SiO2.csv"
+    Sample6="Air-SiOxAndAgNP12nm-30nmThick-SiO2.csv"
     
+    Sample7="SiOx-SiOxAndAgNP7nm-7nmThick-SiO2.csv"
+    Sample8="SiOx-SiOxAndAgNP10nm-10nmThick-SiO2.csv"
+    Sample9="SiOx-SiOxAndAgNP12nm-12nmThick-SiO2.csv"
     
+    header="wavelength (nm)\tn(matrix)\tk(matrix)\tn(NP)\tk(NP)\tn(eff)\tk(eff)\tTransmission"
+    
+    Sample1_Array=list(zip(*[np.real(1E9*wavelength_new_t), np.real(epsAir_t),   np.imag(epsAir_t)  , np.real(n_NP_t_new), np.real(k_NP_t_new), np.real(nk_AirNP_7nm  ), np.imag(nk_AirNP_7nm  ), np.real(Tomega1_7nm )]))
+    Sample2_Array=list(zip(*[np.real(1E9*wavelength_new_t), np.real(epsAir_t),   np.imag(epsAir_t)  , np.real(n_NP_t_new), np.real(k_NP_t_new), np.real(nk_AirNP_10nm ), np.imag(nk_AirNP_10nm ), np.real(Tomega1_10nm)]))
+    Sample3_Array=list(zip(*[np.real(1E9*wavelength_new_t), np.real(epsAir_t),   np.imag(epsAir_t)  , np.real(n_NP_t_new), np.real(k_NP_t_new), np.real(nk_AirNP_12nm ), np.imag(nk_AirNP_12nm ), np.real(Tomega1_12nm)]))
+    Sample4_Array=list(zip(*[np.real(1E9*wavelength_new_t), n_SiOx_new,          k_SiOx_new,          np.real(n_NP_t_new), np.real(k_NP_t_new), np.real(nk_SiOxNP_7nm ), np.imag(nk_SiOxNP_7nm ), np.real(Tomega3_7nm )]))
+    Sample5_Array=list(zip(*[np.real(1E9*wavelength_new_t), n_SiOx_new,          k_SiOx_new,          np.real(n_NP_t_new), np.real(k_NP_t_new), np.real(nk_SiOxNP_10nm), np.imag(nk_SiOxNP_10nm), np.real(Tomega3_10nm)]))
+    Sample6_Array=list(zip(*[np.real(1E9*wavelength_new_t), n_SiOx_new,          k_SiOx_new,          np.real(n_NP_t_new), np.real(k_NP_t_new), np.real(nk_SiOxNP_12nm), np.imag(nk_SiOxNP_12nm), np.real(Tomega3_12nm)]))
+    Sample7_Array=list(zip(*[np.real(1E9*wavelength_new_t), n_SiOx_new,          k_SiOx_new,          np.real(n_NP_t_new), np.real(k_NP_t_new), np.real(nk_SiOxNP_7nm_strict),  np.imag(nk_SiOxNP_7nm_strict),  np.real(Tomega2_7nm )]))
+    Sample8_Array=list(zip(*[np.real(1E9*wavelength_new_t), n_SiOx_new,          k_SiOx_new,          np.real(n_NP_t_new), np.real(k_NP_t_new), np.real(nk_SiOxNP_10nm_strict), np.imag(nk_SiOxNP_10nm_strict), np.real(Tomega2_10nm)]))
+    Sample9_Array=list(zip(*[np.real(1E9*wavelength_new_t), n_SiOx_new,          k_SiOx_new,          np.real(n_NP_t_new), np.real(k_NP_t_new), np.real(nk_SiOxNP_12nm_strict), np.imag(nk_SiOxNP_12nm_strict), np.real(Tomega2_12nm)]))
+    
+    np.savetxt(Sample1, Sample1_Array, fmt='%1.4e', header=header, delimiter=",")
+    np.savetxt(Sample2, Sample2_Array, fmt='%1.4e', header=header, delimiter=",")
+    np.savetxt(Sample3, Sample3_Array, fmt='%1.4e', header=header, delimiter=",")
+    np.savetxt(Sample4, Sample4_Array, fmt='%1.4e', header=header, delimiter=",")
+    np.savetxt(Sample5, Sample5_Array, fmt='%1.4e', header=header, delimiter=",")
+    np.savetxt(Sample6, Sample6_Array, fmt='%1.4e', header=header, delimiter=",")
+    np.savetxt(Sample7, Sample7_Array, fmt='%1.4e', header=header, delimiter=",")
+    np.savetxt(Sample8, Sample8_Array, fmt='%1.4e', header=header, delimiter=",")
+    np.savetxt(Sample9, Sample9_Array, fmt='%1.4e', header=header, delimiter=",")
     
     return 0
 #}}}

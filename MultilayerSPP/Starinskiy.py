@@ -31,6 +31,10 @@ from scipy.interpolate import InterpolatedUnivariateSpline
 from libMaterials import MaxwellGarnett2, Bruggeman2, BiLayerTransmission
 from libDatabase import ExportToTxt
 
+WhichMaterial="Mo" #Ti, Ag, Mo
+WhichSource="Ordal" #Ordal. Johnson. 
+Unit=1E-6 #Palik: 1E-10. Others: 1E-6 most of the time. 
+
 epsAir=1.
 
 ## Compute the volume fraction of nanoparticles in a film assuming measurement was performed on a square area
@@ -62,8 +66,9 @@ def ImportOpticalDataForSiOxFilm(order=2):
     #print k_func(500e-9) #WORKS.
     
     # Import (n,k)[wavelength] spectrum of bulk Ag from Palik data
-    filename = "/home/hilase/Documents/spp-extended-theory/SimpleSPP/Database/Ag-Johnson"
-    #filename = "/home/hilase/Documents/spp-extended-theory/SimpleSPP/Database/Au-Johnson" #just changing 1 single character and you get Gold instead of Ag... 
+    #filename = "/home/hilase/Documents/spp-extended-theory/SimpleSPP/Database/Ag-Johnson"
+    #filename = "/home/hilase/Documents/spp-extended-theory/SimpleSPP/Database/Au-Johnson" #just changing 1 single character and you get Gold instead of Ag...
+    filename = "/home/hilase/Documents/spp-extended-theory/SimpleSPP/Database/"+WhichMaterial+"-"+WhichSource 
     nk_NP_t  = np.loadtxt(filename, skiprows=4)
     wavelength_NP_t = nk_NP_t[:,0]*1E-6
     n_NP_t   = nk_NP_t[:,1]
@@ -239,7 +244,7 @@ def BackgroundForMie(): #{{{
     ax3.plot(wavelength_new_t_show, Tomega3_12nm, "-.", label=r"air | 30 nm [SiO$_x$ + (NP 12 nm)] | SiO$_2$")
     ax3.legend(loc="best")
     
-    filename="Starinskiy_AgNP"
+    filename="Starinskiy_"+WhichMaterial+"NP"
     
     plt.tight_layout()
     
@@ -248,17 +253,17 @@ def BackgroundForMie(): #{{{
     plt.show()
     
     ## We export write the final contents into CSV files, for Sergey. 
-    Sample1="Air-AirAndAgNP7nm-30nmThick-SiO2.csv"
-    Sample2="Air-AirAndAgNP10nm-30nmThick-SiO2.csv"
-    Sample3="Air-AirAndAgNP12nm-30nmThick-SiO2.csv"
+    Sample1="Air-AirAnd"+WhichMaterial+"NP7nm-30nmThick-SiO2.csv"
+    Sample2="Air-AirAnd"+WhichMaterial+"NP10nm-30nmThick-SiO2.csv"
+    Sample3="Air-AirAnd"+WhichMaterial+"NP12nm-30nmThick-SiO2.csv"
              
-    Sample4="Air-SiOxAndAgNP7nm-30nmThick-SiO2.csv"
-    Sample5="Air-SiOxAndAgNP10nm-30nmThick-SiO2.csv"
-    Sample6="Air-SiOxAndAgNP12nm-30nmThick-SiO2.csv"
+    Sample4="Air-SiOxAnd"+WhichMaterial+"NP7nm-30nmThick-SiO2.csv"
+    Sample5="Air-SiOxAnd"+WhichMaterial+"NP10nm-30nmThick-SiO2.csv"
+    Sample6="Air-SiOxAnd"+WhichMaterial+"NP12nm-30nmThick-SiO2.csv"
     
-    Sample7="SiOx-SiOxAndAgNP7nm-7nmThick-SiO2.csv"
-    Sample8="SiOx-SiOxAndAgNP10nm-10nmThick-SiO2.csv"
-    Sample9="SiOx-SiOxAndAgNP12nm-12nmThick-SiO2.csv"
+    Sample7="SiOx-SiOxAnd"+WhichMaterial+"NP7nm-7nmThick-SiO2.csv"
+    Sample8="SiOx-SiOxAnd"+WhichMaterial+"NP10nm-10nmThick-SiO2.csv"
+    Sample9="SiOx-SiOxAnd"+WhichMaterial+"NP12nm-12nmThick-SiO2.csv"
     
     header="wavelength (nm)\tn(matrix)\tk(matrix)\tn(NP)\tk(NP)\tn(eff)\tk(eff)\tTransmission"
     

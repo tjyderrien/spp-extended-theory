@@ -63,6 +63,7 @@ def ImportOpticalDataForSiOxFilm(order=2):
     
     # Import (n,k)[wavelength] spectrum of bulk Ag from Palik data
     filename = "/home/hilase/Documents/spp-extended-theory/SimpleSPP/Database/Ag-Johnson"
+    #filename = "/home/hilase/Documents/spp-extended-theory/SimpleSPP/Database/Au-Johnson" #just changing 1 single character and you get Gold instead of Ag... 
     nk_NP_t  = np.loadtxt(filename, skiprows=4)
     wavelength_NP_t = nk_NP_t[:,0]*1E-6
     n_NP_t   = nk_NP_t[:,1]

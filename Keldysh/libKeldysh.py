@@ -81,6 +81,7 @@ def gammaKeldysh(Egap, meff, Efield, wavelength, RefractiveIndex=1.): #{{{
 def gammaKeldysh_Atoms(Egap, meff, Efield, wavelength, RefractiveIndex=1.): #{{{
   RefractiveIndex_real = RefractiveIndex.real
   #print Egap, meff, Efield
+  RecoverSolidGamma=1. #1: no action. 0.5: recovers the solid gamma value
   omegaLaser=2.*pi*c/wavelength
   ErrorMessage=""
   # Validity limit
@@ -90,7 +91,7 @@ def gammaKeldysh_Atoms(Egap, meff, Efield, wavelength, RefractiveIndex=1.): #{{{
     ErrorMessage=ErrorMessage+"** Error details: "+str(int(wavelength*1E9))+" nm wavelength is too small for the gap "+str(float(Egap)/e)+".\n"
     #exit() #Avoid to quit, so that octopus still compare its results. 
   if (Efield > 1e-1): #if vectorial, then abs changed its meaning
-    result = omegaLaser*np.sqrt(2.*m_e*meff*Egap)/e/(Efield) #NOTE: no dependence to optical index for adiabadicity coefficient
+    result = omegaLaser*np.sqrt(RecoverSolidGamma*2.*m_e*meff*Egap)/e/(Efield) #NOTE: no dependence to optical index for adiabadicity coefficient
     #print Efield, result
   else:
     ErrorMessage=ErrorMessage+"gamma(): Divergence, as field equals = 0. Singular case of Keldysh functions. Should give w_PI = 0 then...\n"
@@ -448,12 +449,15 @@ def BristowLaw(wavelength, Egap):#{{{
 # @param order: integration order for Keldysh model (integer, no unit)
 # @param RefractiveIndex: in Gruzdev2014, Epeak must be multiplied by sqrt(RefractiveIndex) to EXACTLY repeat his results. This originates that pulse duration is shortened in matter. 
 def GenerateKeldyshDatabase(Egap, meff, wavelength, PeakField, order, RefractiveIndex=1): #{{{
+  KillStarkEffect=False #WARNING: just for DEBUG purposes: this disables the effective gap for computation of Wpi. 
   ErrorMessage = ""
   # I = 0.5 c epsilon_0 n0 E**2
   # E = np.sqrt(2 I / c / epsilon_0 / n0)
   gamma = gammaKeldysh(Egap, meff, PeakField, wavelength, RefractiveIndex.real) #valid for scalar data
   k1 = Keldysh1phi(gamma); k2 = Keldysh2theta(gamma) #valid
   EgapEff = EffectiveGap(Egap, k1, k2) # Original formula from Keldysh. Warning: scipy.special.ellipe (https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.ellipe.html#scipy.special.ellipe) uses a different convention than Maple, Wikipedia or mpmath.
+  if(KillStarkEffect):
+      EgapEff=Egap
   KeldyshFunctionResultG = KeldyshFunction_Gruzdev( k1, k2, EgapEff, order, wavelength )
   wPIg = IonizationRate_Gruzdev(k1, k2, KeldyshFunctionResultG, EgapEff, wavelength, meff)
   return wPIg
@@ -518,6 +522,9 @@ GenerateKeldyshDatabase                 = np.vectorize(GenerateKeldyshDatabase)
 # @param order: integration order for Keldysh model (integer, no unit)
 # @N_total: limiter for the ionizable number of electrons (float, m^{-3})
 def generateWpiTables(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, tau = 10e-15, FieldEnvelope = 1e9, dt = 1E-17, order = 50, N_total=4*5E28, t0=0.0, TemporalIntegration=False, OpticalIndex=1.): #{{{
+                                                                                                                                                                                                                     
+  KillStarkEffect=False #WARNING: just for DEBUG purposes: this disables the effective gap for computation of Wpi. 
+  
   Header="[libKeldysh] generateWpiTables: "
   print Header+"Defining the laser pulse..."
   # t0 = 0e0
@@ -558,7 +565,8 @@ def generateWpiTables(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, tau
   print Header+"** Info: effective Egap: ["+str(np.min(EgapEff/e))+", "+str(np.max(EgapEff)/e)+"] eV."
   print Header+"** Info: effective Atomic potential: ["+str(np.min(EffAtomPotential/e))+", "+str(np.max(EffAtomPotential)/e)+"] eV."
   #print Header+"** Debug info: Keldysh1phi: min,max = ( "+str(np.min(k1))+", "+str(np.max(k1))+"), Keldysh2theta = "+str(k2)
-  
+  if(KillStarkEffect):
+      EgapEff=Egap
   KeldyshFunctionResult  = KeldyshFunction( k1, k2, EgapEff, order, wavelength )
   KeldyshFunctionResultG = KeldyshFunction_Gruzdev( k1, k2, EgapEff, order, wavelength )
   

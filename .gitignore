@@ -4,9 +4,6 @@
 *.tmp
 *.dat
 *.report
-*.eps
-*.png
-*.svg
 *.log
 *.csv
 *.bak

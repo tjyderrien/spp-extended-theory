@@ -106,14 +106,15 @@ def plotSipe1D_sectionX(wavelength, epsilon, f=0.1e0, s=0.4e0, theta=0e0): #{{{
     plt.figure(figsize=(SizeX,SizeY))
     plt.xlabel(r'$\kappa$')
     plt.ylabel(r'$\eta$')
-    plt.title(r'$\theta=$'+str(int(theta*180./np.pi))+' deg')
+    #plt.title(r'$\theta=$'+str(int(theta*180./np.pi))+' deg')
+    plt.title(r'$s=$'+str(round(s,1)))
     print kapparange.shape, etaSresult.shape
     plt.plot(kapparange, etaPresult, '-', label=r'$\eta(\kappa_x; \kappa_y=0)$') #$\eta_P$')
     plt.plot(kapparange, etaSresult, '-', label=r'$\eta(\kappa_y; \kappa_x=0)$')
     print etaSresult
     plt.grid()
     plt.legend(fancybox=True, framealpha=1)
-    plt.savefig('SipeEtaKappaX.eps')
+    plt.savefig('SipeEtaKappaX-s'+str(s)+'.eps')
     plt.show()
     #exit()
 #}}}
@@ -543,5 +544,20 @@ def plotStephanGraf_Materials2018(): #{{{
     plotGenericSipeMaps(0.0, 1.1, k_precision, 0., 0.1, 0.4, PlotMaterials, PlotDrude, False)
     plotGenericSipeMaps(0.0, 1.2, k_precision, 0., 0.1, 0.4, PlotMaterials, PlotDrude, False)
 #}}}
-for angle in [0.,1.,2.,5.,10.,20.,30.,40.,50.,60.,70.,80.,85.]:
-    plotSipe1D_sectionX(1026e-9, -0.6721223+24.8657476j, 0.1, 0.4, angle*pi/180.)
+#for angle in [0.,1.,2.,5.,10.,20.,30.,40.,50.,60.,70.,80.,85.]:
+    #plotSipe1D_sectionX(1026e-9, -0.6721223+24.8657476j, 0.1, 0.4, angle*pi/180.)
+    
+wavelength=1026e-9
+epsilon = -0.6721223+24.8657476j #Cr, 1026 nm.
+f=0.1
+angle=0.
+
+selvedge = 5e-9 #s = l_c / selvedge
+#l_c=[1E-9, 2e-9, 5e-9, 10e-9]
+l_c = [ 0.4 * selvedge ]
+print "Correlation length = "+str(l_c)
+shape_factors = np.divide(l_c, selvedge)
+print "s numbers: "+str(shape_factors)
+
+for s in shape_factors:
+    plotSipe1D_sectionX(wavelength, epsilon, f, s, angle)

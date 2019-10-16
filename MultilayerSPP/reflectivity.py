@@ -21,19 +21,23 @@
 from libMaterials import *
 import matplotlib.pyplot as plt
 
-## EXAMPLE OF USAGE at 800 nm
-wavelength=1064e-9
+## EXAMPLE OF USAGE 
+wavelength=1030e-9
 
+## TODO: replace this by a function taking data in MaterialOpticalData.csv !
 epsAir=1.;
 if(wavelength == 1064e-9): 
     epsMo=-14.083065233570098+20.789041764340013j; epsSiO2=1.4496**2; epsSLG = 2.2889 + 0.000014899j
 elif(wavelength == 800e-9): 
     epsMo=2.08+24.52j; epsSiO2=1.4533**2; epsSLG = 2.3018 + 0.0000075160j
+elif(wavelength==1030e-9):
+    epsSi   = 12.80259+0.0109j
+    epsSiO2 = 2.1026565205
 
 # Medium 1: thin film. 
-eps2 = epsMo        #thin film
+eps2 = epsSiO2        #thin film
 # Medium 2: substrate. 
-eps3 = epsSLG # | epsSiO2       #epsBK7 #environment | substrate
+eps3 = epsSi # | epsSiO2       #epsBK7 #environment | substrate
 # Medium 3: environment
 eps1 = epsAir       #environment | substrate
 # Note: Inverting eps2 and eps3 should have no effect on the possible modes, but only on field amplification. 
@@ -43,11 +47,12 @@ eps1 = epsAir       #environment | substrate
     #eps2=-14.083065233570098+20.789041764340013j; eps3=1.4496**2
 #elif(wavelength == 800e-9): 
     #eps2=2.08+24.52j; eps3=1.4533**2
-thickness2 = np.arange(1e-9, 200e-9, 1e-9)
+thickness_log = np.linspace(-9, np.log10(500e-9), 200)
+thickness2 = np.power(10., thickness_log)
 
 R = BiLayerReflectivity(wavelength, eps1, eps2, eps3, thickness2)
 
-filename = "Mo-"+str(int(1E9*wavelength))+"-Reflectivity"
+filename = "SiO2-Si-"+str(int(1E9*wavelength))+"-Reflectivity"
 
 plt.figure()
 plt.xlabel("Film thickness (nm)")

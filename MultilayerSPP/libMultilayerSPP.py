@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2018 F. Preucil, T.J.-Y. Derrien
+# Copyright (C) 2019 F. Preucil, T.J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@ import numpy as np
 from scipy.optimize import root
 from itertools import product
 from time import time
+import numpy.linalg as LA
 
 def func(betaR, eps1, eps2, eps3, k0, t, sgn1, sgn2):
     beta = betaR[0] + betaR[1]*1.j
@@ -155,3 +156,62 @@ def findroots(eps1, eps2, eps3, wavelength, t, x_min, x_max, y_min, y_max, x_ste
                   #-1E4, 1E4,
                   #30, 30,
                   #2)
+
+## We turn the nonlinear solver into a matrix form, and find out the eigen vealues directly, without going through a nonlinear solver. 
+# @param k1: thin film wavenumber, 
+# @param k2: environment wavenumber, 
+# @param k3: substrate wavenumber
+# @param eps1: thin film complex permittivity
+# @param eps2: environment complex permittivity
+# @param eps3: substrate complex permittivity
+def ThreeLayerEigenSolver(t, k1, k2, k3, eps1, eps2, eps3):
+    A11=np.exp(-k3*t/2.); A12=0.; A13=-np.exp(k1*t/2.); A14=-np.exp(-k1*t/2.);
+    A21=k3/eps3*np.exp(-k3*t/2.); A22=0.; A23=k1/eps1*np.exp(k1*t/2.); A24=-k1/eps3*np.exp(-k1*t/2.)
+    A31=0.; A32=-np.exp(-k2*t/2.); A33=np.exp(-k1*t/2.); A34=np.exp(k1*t/2.) 
+    A41=0.; A42=k2/eps2*np.exp(-k2*t/2.); A43=-k1/eps1*np.exp(-k1*t/2.); A44=k1/eps1*np.exp(k1*t/2.)
+    matrix=np.array([[A11, A12, A13, A14], [A21, A22, A23, A24], [A31, A32, A33, A34], [A41, A42, A43, A44]])
+    del A11, A12, A13, A14, A21, A22, A23, A24, A31, A32, A33, A34, A41, A42, A43, A44
+    w,v = LA.eig(matrix)
+    return w
+
+# Conversion from period to to beta/k0: 
+def PeriodToBetaNorm(period): 
+    # period = 2.*np.pi / beta.real
+    k0 = 2.*np.pi / wavelength
+    beta_norm_re = np.divide(np.divide(2.*np.pi, period), k0)
+    return beta_norm_re
+
+# Conversion from SPP decay length to beta/k0:
+def LsppToBetaNorm(Lspp): 
+    # Lspp = 0.5/Im(beta) #Im(beta)=0.5/Lspp. 
+    k0 = 2.*np.pi / wavelength
+    beta_norm_im = np.divide(np.divide(0.5, Lspp), k0)
+    return beta_norm_im
+
+#wavelength=633e-9
+#numberofroots = 10
+## Medium 1: thin film.
+#eps1 = -19.+0.53j     #Ag thin film
+## Medium 2: substrate. 
+#eps2 = 4. #3.999999+0.004j
+## Medium 3: environment
+#eps3 = 1.5**2 # eps2 #eps2: symmetric modes       #environment | substrate
+## Note: Inverting eps2 and eps3 should have no effect on the possible modes, but only on field amplification. 
+#k0 = 2.*np.pi/wavelength
+#ke1 = (k0**2)*eps1
+#ke2 = (k0**2)*eps2
+#ke3 = (k0**2)*eps3
+
+#sgn1 = 1.
+#sgn2 = 1.
+
+#beta = 1.+1j
+
+#k1 = cmath.sqrt(beta**2 - ke1)/eps1
+#k2 = sgn1*cmath.sqrt(beta**2 - ke2)/eps2
+#k3 = sgn2*cmath.sqrt(beta**2 - ke3)/eps3
+#sol = ThreeLayerEigenSolver(28e-9, k1, k2, k3, eps1, eps2, eps3)
+#print(sol)
+
+# The best would be to converge this towards finding beta such as matrix would be solved. 
+# But still, for any beta, we obtain 4 eigen values. 

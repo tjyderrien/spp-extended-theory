@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2013-2018 T. J.-Y. Derrien
+# Copyright (C) 2013-2019 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -57,7 +57,7 @@ def importFromNKtable(wavelength, folder, filename, plotting=1, unit=1E-6):#{{{
   # interpolate n and k on new wavelength mesh
   order=1
   #wavelengths = np.arange(np.amin(wavelength2),np.amax(wavelength2), precision) #regular mesh, AWFUL for memory
-  print "Generating new wavelength mesh: ("+str(np.amin(wavelength2))+", "+str(np.amax(wavelength2))+")"
+  print "importFromNKtable: Generating new wavelength mesh: ("+str(np.amin(wavelength2))+", "+str(np.amax(wavelength2))+")"
   wavelengths = np.logspace(np.amin(np.log10(wavelength2)), np.amax(np.log10(wavelength2)), num=numrows, base=base, endpoint = True)
 
   print "New wavelength mesh has "+str(numrows)+" rows."
@@ -71,9 +71,9 @@ def importFromNKtable(wavelength, folder, filename, plotting=1, unit=1E-6):#{{{
 	#wavelength = 800e-9
 	ni = fni(wavelength); ki = fki(wavelength)
 	epsilon = (ni+1j*ki)**2
-	print "Interpolated permittivity at "+str(wavelength*1e9)+" nm = "+str(epsilon)
+	print "importFromNKtable: Interpolated permittivity at "+str(wavelength*1e9)+" nm = "+str(epsilon)
   except: 
-	  print "Interpolation for "+str(wavelength*1E9)+" nm failed."
+	  print "importFromNKtable: Interpolation for "+str(wavelength*1E9)+" nm failed."
 	  
   #try:
 	#wavelength = 532e-9
@@ -224,9 +224,9 @@ def importFromEpsilonTable(wavelength, folder, filename, plotting=True, unit=1E-
     #print wavelength, ni, ki
     epsilon = (ni+1j*ki) #NOTE: we are picking up the epsRe, and epsIm directly here
     print "" 
-    print "Interpolated permittivity at "+str(wavelength*1E9)+" nm = "+str(epsilon)
+    print "importFromEpsilonTable: Interpolated permittivity at "+str(wavelength*1E9)+" nm = "+str(epsilon)
   except: 
-    print "Interpolation for "+str(wavelength*1E9)+" nm failed."
+    print "importFromEpsilonTable: Interpolation for "+str(wavelength*1E9)+" nm failed."
 	  
   # defining the new epsR and epsC on a common mesh
   ni = fni(wavelengths)
@@ -383,10 +383,13 @@ def importFromAbsorptionData(wavelength, folder, filename, plotting): #{{{
 def importFromTable(wavelength, folder, filename, plotting): #{{{
   # Look for Palik into the name
   if(filename.find("Palik") > 0):
+    print "Palik data identified."
     unit1 = 1E-10 #Palik data
-  if(filename.find("Gori") > 0): 
+  elif(filename.find("Gori") > 0): 
+    print "Gori data identified."
     unit1 = 1E-9
   else:
+    print "** Warning: Default case: choosing um for the input."
     unit1 = 1E-6 #Other data
  
   # Fetch data
@@ -400,6 +403,8 @@ def importFromTable(wavelength, folder, filename, plotting): #{{{
     
   n = DataArray[:,1]; kk = DataArray[:,2];
 
+  print n
+
   # Interpolating using splines
   order = 1
   fni = InterpolatedUnivariateSpline(wavelengths, n, k=order)
@@ -408,8 +413,9 @@ def importFromTable(wavelength, folder, filename, plotting): #{{{
   #Interpolated one optical constants
   #wavelength = 1030e-9
   ni = fni(wavelength); ki = fki(wavelength)
+  print wavelength, ni, ki
   epsilon = (ni+1j*ki)**2
-  print "Interpolated permittivity at "+str(wavelength*1e9)+" nm = "+str(epsilon)
+  print "importFromTable: Interpolated permittivity at "+str(wavelength*1e9)+" nm = "+str(epsilon)
 
   # Interpolate the full array and check it visually
   nimesh = fni(wavelengths); kimesh = fki(wavelengths)

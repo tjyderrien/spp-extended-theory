@@ -5,6 +5,7 @@
 # This module aims at computing the band gap energy as function of the average laser fieled induced by the Stark effect
 
 import numpy as np
+import numpy.linalg as LA
 import matplotlib.pyplot as plt
 from scipy.constants import c, epsilon_0, mu_0, pi, e, m_e, h, hbar
 
@@ -16,7 +17,7 @@ from libAtomicUnits import *
 
 ## Provides the change of the branch electronic levels
 # From simple Floquet Hamiltonian on constant pulse of frequency omega, the shift of 6 bands with the electric field is given. The eigen values have been computed from the Hamiltonian given in the Nano Letters. 
-def Stark6bandsEnergyShift_modified_exact(Efield_AU, omega_AU, E_gap_AU, DME_AU=1): #{{{
+def Stark2bands1photon_EnergyShift_modified_exact(Efield_AU, omega_AU, E_gap_AU, DME_AU=1): #{{{                                                                                            
     M         = DME_AU
     Mbar      = np.conj(DME_AU)
     
@@ -43,7 +44,7 @@ def Stark6bandsEnergyShift_modified_exact(Efield_AU, omega_AU, E_gap_AU, DME_AU=
 #}}}
 
 ### Solves the characteristic polynom for the eigen values of band gap modification    
-def Stark6bandsEnergyShift_polynom_numerical(eigen, Efield_AU, omega_AU, E_gap_AU, DME_AU=1):
+def Stark2bands1photon_EnergyShift_polynom_numerical(eigen, Efield_AU, omega_AU, E_gap_AU, DME_AU=1):
     M         = DME_AU
     Mbar      = np.conj(DME_AU)
     
@@ -61,7 +62,7 @@ def Stark6bandsEnergyShift_polynom_numerical(eigen, Efield_AU, omega_AU, E_gap_A
     
     return A6 * eigen**6 + A4 * eigen**4 + A3 * eigen**3 + A2*eigen**2 + A1 * eigen + A0
 
-def Stark6bandsEnergyShift_notcorrected_numerical(Efield_AU, omega_AU, E_gap_AU, DME_AU=1, x_steps=50):
+def Stark2bands1photon_EnergyShift_notcorrected_numerical(Efield_AU, omega_AU, E_gap_AU, DME_AU=1, x_steps=50):
     # Solver parameters
     x_min = -1E15       #-1E10
     x_max = 1E15       #1E10
@@ -76,7 +77,7 @@ def Stark6bandsEnergyShift_notcorrected_numerical(Efield_AU, omega_AU, E_gap_AU,
     unique = []
     start = time()
     for x in np.linspace(x_min, x_max, num=x_steps):
-        nrt = root(Stark6bandsEnergyShift_polynom_numerical, (x), args=(Efield_AU, omega_AU, E_gap_AU, DME_AU), method='hybr')
+        nrt = root(Stark2bands1photon_EnergyShift_polynom_numerical, (x), args=(Efield_AU, omega_AU, E_gap_AU, DME_AU), method='hybr')
         #print nrt
         #checking = func(nrt.x, eps1, eps2, eps3, k0, t, sgn1, sgn2)
         if (nrt.success):
@@ -84,7 +85,7 @@ def Stark6bandsEnergyShift_notcorrected_numerical(Efield_AU, omega_AU, E_gap_AU,
         
     return np.unique(roots)
     
-def Stark4bandsEnergyShift_notcorrected_exact(Efield_AU, omega_AU, E_gap_AU, DME_AU=1): #{{{
+def Stark2bands1photon_Cropped_EnergyShift_notcorrected_exact(Efield_AU, omega_AU, E_gap_AU, DME_AU=1): #{{{
     M         = DME_AU
     Mbar      = np.conj(DME_AU)
     
@@ -99,9 +100,8 @@ def Stark4bandsEnergyShift_notcorrected_exact(Efield_AU, omega_AU, E_gap_AU, DME
     return E1, E2, E3, E4, EgapShift_AU
 #}}}   
 
-
 ### Solves the characteristic polynom for the eigen values of band gap modification    
-def Stark4bandsEnergyShift_polynom_numerical(eigen, Efield_AU, omega_AU, E_gap_AU, DME_AU=1):
+def Stark2bands1photon_Cropped_EnergyShift_polynom_numerical(eigen, Efield_AU, omega_AU, E_gap_AU, DME_AU=1):
     M         = DME_AU
     Mbar      = np.conj(DME_AU)
     
@@ -117,7 +117,7 @@ def Stark4bandsEnergyShift_polynom_numerical(eigen, Efield_AU, omega_AU, E_gap_A
     
     return A4 * eigen**4 + A3 * eigen**3 + A2*eigen**2 + A1 * eigen + A0
 
-def Stark4bandsEnergyShift_notcorrected_numerical(Efield_AU, omega_AU, E_gap_AU, DME_AU=1, x_steps=100):
+def Stark2bands1photon_EnergyShift_notcorrected_numerical(Efield_AU, omega_AU, E_gap_AU, DME_AU=1, x_steps=100):
     # Solver parameters
     x_min = -1       #-1E10
     x_max = 1       #1E10
@@ -130,7 +130,7 @@ def Stark4bandsEnergyShift_notcorrected_numerical(Efield_AU, omega_AU, E_gap_AU,
     unique = []
     start = time()
     for x in np.linspace(x_min, x_max, num=x_steps):
-        nrt = root(Stark4bandsEnergyShift_polynom_numerical, (x), args=(Efield_AU, omega_AU, E_gap_AU, DME_AU), method='hybr')
+        nrt = root(Stark2bands1photon_Cropped_EnergyShift_polynom_numerical, (x), args=(Efield_AU, omega_AU, E_gap_AU, DME_AU), method='hybr')
         #print nrt
         #checking = func(nrt.x, eps1, eps2, eps3, k0, t, sgn1, sgn2)
         if (nrt.success):
@@ -139,7 +139,7 @@ def Stark4bandsEnergyShift_notcorrected_numerical(Efield_AU, omega_AU, E_gap_AU,
     return np.unique(roots)
 
 ### Solves the characteristic polynom for the eigen values of band gap modification    
-def Stark12bandsEnergyShift_polynom_numerical(eigen, Efield_AU, omega_AU, E_gap_AU, DME_AU=1):
+def Stark4bands1photon_EnergyShift_polynom_numerical(eigen, Efield_AU, omega_AU, E_gap_AU, DME_AU=1):
     M         = DME_AU
     Mbar      = np.conj(DME_AU)
     
@@ -172,7 +172,7 @@ def Stark12bandsEnergyShift_polynom_numerical(eigen, Efield_AU, omega_AU, E_gap_
     
     return A12 * eigen**12 + A11*eigen**11 + A10*eigen**10 + A9*eigen**9 + A8*eigen**8 + A7*eigen**7 + A6*eigen**6 + A5*eigen**5 + A4 * eigen**4 + A3 * eigen**3 + A2*eigen**2 + A1 * eigen + A0
 
-def Stark12bandsEnergyShift_notcorrected_numerical(Efield_AU, omega_AU, E_gap_AU, DME_AU=1, x_steps=100):
+def Stark4bands1photon_EnergyShift_notcorrected_numerical(Efield_AU, omega_AU, E_gap_AU, DME_AU=1, x_steps=100):
     # Solver parameters
     x_min = -1       #-1E10
     x_max = 1       #1E10
@@ -185,14 +185,65 @@ def Stark12bandsEnergyShift_notcorrected_numerical(Efield_AU, omega_AU, E_gap_AU
     unique = []
     start = time()
     for x in np.linspace(x_min, x_max, num=x_steps):
-        nrt = root(Stark12bandsEnergyShift_polynom_numerical, (x), args=(Efield_AU, omega_AU, E_gap_AU, DME_AU), method='hybr')
+        nrt = root(Stark4bands1photon_EnergyShift_polynom_numerical, (x), args=(Efield_AU, omega_AU, E_gap_AU, DME_AU), method='hybr')
         #print nrt
         #checking = func(nrt.x, eps1, eps2, eps3, k0, t, sgn1, sgn2)
         if (nrt.success):
             roots.append(nrt.x)
         
     return np.unique(roots)
+
+# We call a linear algebra library instead of using Filip solver.
+def Stark4bands1photon_EnergyShift_eigen(Efield_AU, omega_AU, E_gap_AU, DME_AU=1):
+    M         = DME_AU
+    Mbar      = np.conj(DME_AU)
+    AMover2=Efield_AU*M/2.
+    AMover2c=Efield_AU*Mbar/2.
+    matrix = np.array(
+        [[E_gap_AU/2.-omega_AU, -omega_AU, -omega_AU, -omega_AU, 0, AMover2, AMover2,AMover2,0,0,0,0], 
+         [-omega_AU, E_gap_AU/2.-omega_AU,-omega_AU, -omega_AU, AMover2c, 0, AMover2, AMover2, 0, 0, 0, 0], 
+         [-omega_AU, -omega_AU, -E_gap_AU/2.-omega_AU, -omega_AU, AMover2c, AMover2c, 0.,AMover2, 0, 0, 0, 0], 
+         [-omega_AU, -omega_AU, -0.5*E_gap_AU-omega_AU, -omega_AU, AMover2c, AMover2c, AMover2c, 0, 0, 0, 0, 0], 
+         [0, AMover2, AMover2, AMover2, E_gap_AU/2., 0, 0, 0, 0, AMover2, AMover2, AMover2],
+         [AMover2c, 0, AMover2, AMover2, 0, 0.5*E_gap_AU, 0, 0, AMover2c, 0, AMover2, AMover2], 
+         [AMover2c, AMover2c, 0, AMover2, 0, 0, -0.5*E_gap_AU, 0, AMover2c, AMover2c, 0, AMover2],
+         [AMover2c, AMover2c, AMover2c, 0, 0, 0, 0, -0.5*E_gap_AU, AMover2c, AMover2c, AMover2c, 0],
+         [0, 0, 0, 0, 0, AMover2, AMover2, AMover2, 0.5*E_gap_AU+omega_AU, omega_AU, omega_AU, omega_AU], 
+         [0, 0, 0, 0, AMover2c, 0, AMover2, AMover2, omega_AU, 0.5*E_gap_AU+omega_AU, omega_AU, omega_AU], 
+         [0, 0, 0, 0, AMover2c, AMover2c, 0, AMover2, omega_AU, omega_AU, -0.5*E_gap_AU+omega_AU, omega_AU], 
+         [0, 0, 0, 0, AMover2c, AMover2c, AMover2c, 0, omega_AU, omega_AU, omega_AU, -0.5*E_gap_AU+omega_AU]])
     
+    #print np.size(matrix)
+    
+    w, v = LA.eig(matrix)
+    return w
+
+# We call a linear algebra library instead of using Filip solver.
+def Stark2bands2photons_EnergyShift_eigen(Efield_AU, omega_AU, E_gap_AU, DME_AU=1):
+    M         = DME_AU
+    Mbar      = np.conj(DME_AU)
+    AMover2=Efield_AU*M/2.
+    AMover2c=Efield_AU*Mbar/2.
+    matrix = np.array(
+        [[E_gap_AU/2.-2.*omega_AU, -2.*omega_AU, 0, AMover2, 0, 0, 0, 0, 0, 0], 
+         [-2.*omega_AU, -E_gap_AU/2.-2.*omega_AU, AMover2c, 0, 0, 0, 0, 0, 0, 0],
+         
+         [0, AMover2, E_gap_AU/2.-omega_AU, -omega_AU, 0, AMover2, 0, 0, 0, 0], 
+         [AMover2c, 0, -omega_AU, -0.5*E_gap_AU-omega_AU, AMover2c, 0, 0, 0, 0, 0], 
+         
+         [0, 0, 0, AMover2, E_gap_AU/2., 0, 0, AMover2, 0, 0],
+         [0, 0, AMover2c, 0, 0, -0.5*E_gap_AU, AMover2c, 0, 0, 0], 
+         
+         [0, 0, 0, 0, 0, AMover2, 0.5*E_gap_AU+omega_AU, 0, 0, AMover2],
+         [0, 0, 0, 0, AMover2c, 0, 0, -0.5*E_gap_AU+omega_AU, AMover2c, 0],
+         
+         [0, 0, 0, 0, 0, 0, 0, AMover2, 0.5*E_gap_AU+2.*omega_AU, 0], 
+         [0, 0, 0, 0, 0, 0, AMover2c, 0, 0, -0.5*E_gap_AU+2*omega_AU]])
+    #print np.size(matrix)
+    
+    w, v = LA.eig(matrix)
+    return w
+
 def TestingNumericalSolver4():
     samples = 10
     DME = 1. #-1+2j #arbitrary!
@@ -210,7 +261,7 @@ def TestingNumericalSolver4():
     #Eexact=np.zeros((samples,20))
     #index=0
     for index in np.arange(0,len(Efield_AU)):
-        Eexact= Stark4bandsEnergyShift_notcorrected_numerical(Efield_AU[index], omega_AU, E_gap_AU, DME, 20)
+        Eexact= Stark2bands1photon_EnergyShift_notcorrected_numerical(Efield_AU[index], omega_AU, E_gap_AU, DME, 20)
         roots.append(np.unique(Eexact)) #removes numerical degeneracies
 
     print np.shape(Efield_AU)
@@ -223,8 +274,8 @@ def TestingNumericalSolver4():
 
 #exit()
 
-#E1, E2, E3, E4, E5, E6 = Stark6bandsEnergyShift_modified_exact(Efield_AU, omega_AU, E_gap_AU, DME)
-#ENC1, ENC2, ENC3, ENC4, EgapShift_AU = Stark4bandsEnergyShift_notcorrected_exact(Efield_AU, omega_AU, E_gap_AU, DME)
+#E1, E2, E3, E4, E5, E6 = Stark2bands1photon_EnergyShift_modified_exact(Efield_AU, omega_AU, E_gap_AU, DME)
+#ENC1, ENC2, ENC3, ENC4, EgapShift_AU = Stark2bands1photon_Cropped_EnergyShift_notcorrected_exact(Efield_AU, omega_AU, E_gap_AU, DME)
 
 #plt.figure()
 ##plt.scatter(Efield_AU, roots, 'g+', label="6x6 (original)")

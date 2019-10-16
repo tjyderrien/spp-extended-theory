@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2013-2018 T. J.-Y. Derrien
+# Copyright (C) 2013-2019 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -65,10 +65,18 @@ def FilterDatabaseContains(SPPdb, query, FieldIndex):
 # /!\ content of query cell should be exact
 #
 def FilterDatabaseLowerThan(SPPdb, query, FieldIndex):
+  SPPdbFiltered = np.array(SPPdb[SPPdb[:,FieldIndex]<=query,:]) #uses a table of booleans to select
+  return SPPdbFiltered
+
+def FilterDatabaseStriclyLowerThan(SPPdb, query, FieldIndex):
   SPPdbFiltered = np.array(SPPdb[SPPdb[:,FieldIndex]<query,:]) #uses a table of booleans to select
   return SPPdbFiltered
 
 def FilterDatabaseGreaterThan(SPPdb, query, FieldIndex):
+  SPPdbFiltered = np.array(SPPdb[SPPdb[:,FieldIndex]>=query,:]) #uses a table of booleans to select
+  return SPPdbFiltered
+
+def FilterDatabaseStrictlyGreaterThan(SPPdb, query, FieldIndex):
   SPPdbFiltered = np.array(SPPdb[SPPdb[:,FieldIndex]>query,:]) #uses a table of booleans to select
   return SPPdbFiltered
 
@@ -124,13 +132,13 @@ def ExtractDataDb(SPPdbFiltered):
 ## Export an SPP array to a CSV file
 # SPP array must be produced with one of the SPPactiveInterfaces functions
 #
-def ExportToTxt(dbarray, filename):
+def ExportToTxt(dbarray, filename, header=""):
   
   try: 
-    np.savetxt(filename, dbarray, fmt="%s", delimiter='\t', newline='\n',comments='#')
+    np.savetxt(filename, dbarray, fmt="%s", delimiter='\t', header=header, newline='\n',comments='#')
     out = 0
   except: 
-    print "Could not output SPP database into a file"
+    print "Could not write database into a file."
     out = 1
   
   #counter=0

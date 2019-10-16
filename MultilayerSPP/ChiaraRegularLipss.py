@@ -71,12 +71,6 @@ def MoltenSiLayerOnSi(wavelength): #{{{
     x_steps =  50    #70
     y_steps =  50    #70
 
-    def PeriodToBetaNorm(period): 
-            # period = 2.*np.pi / beta.real
-            k0 = 2.*np.pi / wavelength
-            beta_norm_re = np.divide(np.divide(2.*np.pi, period), k0)
-            return beta_norm_re
-
     ## Reorganizes the order of fields and output only necessary information
     def SplitSummaryTable(summary): #{{{
         if(len(summary[:,0])==0): #if table is empty, avoids the crash

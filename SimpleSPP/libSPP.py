@@ -46,7 +46,7 @@ from libMath import *
 
 lengthunit = 1e-9
 eta = 0.1 #assumed precision error on the dielectric permittivity
-UsingTeX=True #TODO: set to False for Windows users
+UsingTeX=False #TODO: set to False for Windows users
 
 ## 0: all permisive, no verification on SPP excitation condition
 ## 1: use the RegularLIPSScondition, softer than pure SPP excitation condition

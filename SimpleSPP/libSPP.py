@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2013-2018 T. J.-Y. Derrien
+# Copyright (C) 2013-2019 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -34,6 +34,8 @@ from matplotlib import rc, font_manager
 from scipy.constants import c, epsilon_0, mu_0, pi, e, m_e, h
 from matplotlib.legend_handler import HandlerLine2D
 import sys
+from colorama import Fore
+from colorama import Style
 
 # IMPORT CUSTOM LIBRARIES
 # from libKeldysh import *
@@ -44,17 +46,17 @@ from libMath import *
 
 lengthunit = 1e-9
 eta = 0.1 #assumed precision error on the dielectric permittivity
-UsingTeX=True #TODO: set to False for Windows users
+UsingTeX=False #TODO: set to False for Windows users
 
 ## 0: all permisive, no verification on SPP excitation condition
 ## 1: use the RegularLIPSScondition, softer than pure SPP excitation condition
 ## 2: Period != 0 is necessary for a material to be listed in results
 ## 3: Extreme level: use ExperimentallyAchievable() to verify possibility of decay depth > optical penetration depth
-LevelOfSPPaccuracy=1
+LevelOfSPPaccuracy=0
 
 # Settings for matplotlib: taken from https://stackoverflow.com/questions/12322738/how-do-i-change-the-axis-tick-font-in-a-matplotlib-plot-when-rendering-using-lat
-sizeOfFont = 18
-FontName='Helvetica' #'cm'
+sizeOfFont = 10
+FontName='cm' #Helvetica
 fontProperties = {'family':'sans-serif','sans-serif':[FontName],
     'weight' : 'normal', 'size' : sizeOfFont}
 ticks_font = font_manager.FontProperties(family=FontName, style='italic',
@@ -84,7 +86,7 @@ def betaSPP(wavelength, eps1, eps2):#{{{
     try:
         value = omega/c * cmath.sqrt(eps1 * eps2 / (eps1 + eps2))
     except: 
-        print "betaSPP: singular case"
+        print "**Info: betaSPP: singular case"
         value = -1e0+0e0j
     return value
 #}}}
@@ -323,13 +325,13 @@ def deltaLspp(wavelength, eps1, eps2, deps1r, deps1c, deps2r, deps2c): #{{{
 
 
 ## Computes the SPP decay depth in one slab
-def DecayDepth(kzSPP):#{{{
+def DecayDepth(kzSPP):#{{{ #trying with module instead of real part
   if(kzSPP.real != 0): 
-    result=2e0*pi/kzSPP.real
-  else: 
-    result = -1.
-    #print "Singular case for DecayDepth."
-  return result
+      kzSPPnorm=np.sqrt(kzSPP.real**2 + kzSPP.imag**2)
+  else:
+      kzSPPnorm = -1
+  return 1e0/kzSPPnorm
+  #return 2e0*pi/kzSPP.real
 #}}}
 
 ## Computes the complex wavenumber in direction of incident laser, perp. to SPP propagation. 
@@ -434,7 +436,16 @@ def SPPactiveInterfaces(dbarray, comment):#{{{
         # 0: compute for every materials, blindly
         # 1: compute when SPPcondition() or OldSPPcondition() return True. 
         # 2: compute only using the RegularLIPSScondition (more permissive than SPP excitation conditions)
-        if ((SPPcondition(eps1,eps2)) or (OldSPPcondition(eps1,eps2)) or RegularLIPSScondition):
+        if(LevelOfSPPaccuracy==0): 
+            Condition=True
+        elif(LevelOfSPPaccuracy==1): 
+            Condition=((SPPcondition(eps1,eps2)) or (OldSPPcondition(eps1,eps2)))
+        elif(LevelOfSPPaccuracy==2):
+            Condition=RegularLIPSScondition
+        else: 
+            print Header+"** Error: level of tolerance over SPP conditions is not well indicated. See libSPP.py: LevelOfSPPaccuracy."
+            exit()
+        if(Condition):
 	        Period=(period(betaSPP(wavelength1,eps1, eps2))/lengthunit)
 	        SPPdecayDepth1=(DecayDepth(kzSPP(wavelength1, eps1, eps2))/lengthunit)
 	        SPPdecayDepth2=(DecayDepth(kzSPP(wavelength2, eps2, eps1))/lengthunit)

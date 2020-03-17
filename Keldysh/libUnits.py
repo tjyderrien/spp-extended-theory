@@ -1,7 +1,7 @@
 #!/usr/bin/env python2.7
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2013-2017 T. J.-Y. Derrien
+# Copyright (C) 2013-2019 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 import numpy as np
+from scipy.constants import c, pi
 
+c_SI = c
 ## @package libUnits
 ## Provides routines to safely convert in SI units or CGS units. 
 
@@ -70,14 +72,14 @@ def Energy_SI_to_CGS(SI):
 ## Converts electric charge in Coulomb (SI unit) to statC (CGS unit)
 # Validated on Jackson book: 1 C ~ 3E9 statC 
 def electric_charge_SI_to_CGS(SI):
-  c_CGS = Velocity_SI_to_CGS(c)
+  c_CGS = Velocity_SI_to_CGS(c_SI)
   conversion = c_CGS / 10.
   return SI * conversion
 
 ## Converts electric charge in statC (CGS unit) to Coulomb (SI unit)
 # Validated on Jackson book: 1 C ~ 3E9 statC 
 def electric_charge_CGS_to_SI(CGS):
-  c_CGS = Velocity_SI_to_CGS(c)
+  c_CGS = Velocity_SI_to_CGS(c_SI)
   conversion = c_CGS / 10.
   return CGS / conversion
 
@@ -88,7 +90,7 @@ def electric_charge_CGS_to_SI(CGS):
 #                = 1E8 / c_SI * 1E-4 = 1E2 / c_SI
 #                = 1E6 / c_CGS
 def Field_CGS_to_SI(CGS):
-  c_CGS      = Velocity_SI_to_CGS(c)
+  c_CGS      = Velocity_SI_to_CGS(c_SI)
   conversion = 1E6 / c_CGS
   return CGS/conversion
 
@@ -99,7 +101,7 @@ def Field_CGS_to_SI(CGS):
 #                = 1E8 / c_SI * 1E-4 = 1E2 / c_SI
 #                = 1E6 / c_CGS
 def Field_SI_to_CGS(SI):
-  c_CGS      = Velocity_SI_to_CGS(c) #[cm/s]
+  c_CGS      = Velocity_SI_to_CGS(c_SI) #[cm/s]
   conversion = 1E6 / c_CGS
   return SI*conversion
 

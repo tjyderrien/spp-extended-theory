@@ -4,3 +4,6 @@
 *.tmp
 *.dat
 *.report
+*.log
+*.csv
+*.bak

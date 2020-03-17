@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2013-2017 T. J.-Y. Derrien
+# Copyright (C) 2013-2018 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,7 +23,11 @@
 # Chapter IV of PhD thesis: Derrien, T. J.-Y., Nanostructuring of solar cells by femtosecond laser irradiation. Theoretical study of the formation mechanisms. Université de la Méditerranée - Aix Marseille II, 2012. 
 # Jean Berthier and Pascal Silberzan, "Microfluidics for Biotechnology", Artech House (2009).
 
-from libThermalPropertiesMaterials import *
+from libThermalProperties_Silicon import *
+#from libThermalProperties_Silica import *
+
+
+Header="libNonDimensionalNumbers: "
 
 ## Collision time for the matter momentum damping
 # @param density: density of the liquid

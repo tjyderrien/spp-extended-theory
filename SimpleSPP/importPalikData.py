@@ -1,7 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2013-2017 T. J.-Y. Derrien
+# Copyright (C) 2013-2019 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -57,7 +57,7 @@ def importFromNKtable(wavelength, folder, filename, plotting=1, unit=1E-6):#{{{
   # interpolate n and k on new wavelength mesh
   order=1
   #wavelengths = np.arange(np.amin(wavelength2),np.amax(wavelength2), precision) #regular mesh, AWFUL for memory
-  print "Generating new wavelength mesh: ("+str(np.amin(wavelength2))+", "+str(np.amax(wavelength2))+")"
+  print "importFromNKtable: Generating new wavelength mesh: ("+str(np.amin(wavelength2))+", "+str(np.amax(wavelength2))+")"
   wavelengths = np.logspace(np.amin(np.log10(wavelength2)), np.amax(np.log10(wavelength2)), num=numrows, base=base, endpoint = True)
 
   print "New wavelength mesh has "+str(numrows)+" rows."
@@ -71,9 +71,9 @@ def importFromNKtable(wavelength, folder, filename, plotting=1, unit=1E-6):#{{{
 	#wavelength = 800e-9
 	ni = fni(wavelength); ki = fki(wavelength)
 	epsilon = (ni+1j*ki)**2
-	print "Interpolated permittivity at "+str(wavelength*1e9)+" nm = "+str(epsilon)
+	print "importFromNKtable: Interpolated permittivity at "+str(wavelength*1e9)+" nm = "+str(epsilon)
   except: 
-	  print "Interpolation for "+str(wavelength*1E9)+" nm failed."
+	  print "importFromNKtable: Interpolation for "+str(wavelength*1E9)+" nm failed."
 	  
   #try:
 	#wavelength = 532e-9
@@ -224,9 +224,9 @@ def importFromEpsilonTable(wavelength, folder, filename, plotting=True, unit=1E-
     #print wavelength, ni, ki
     epsilon = (ni+1j*ki) #NOTE: we are picking up the epsRe, and epsIm directly here
     print "" 
-    print "Interpolated permittivity at "+str(wavelength*1E9)+" nm = "+str(epsilon)
+    print "importFromEpsilonTable: Interpolated permittivity at "+str(wavelength*1E9)+" nm = "+str(epsilon)
   except: 
-    print "Interpolation for "+str(wavelength*1E9)+" nm failed."
+    print "importFromEpsilonTable: Interpolation for "+str(wavelength*1E9)+" nm failed."
 	  
   # defining the new epsR and epsC on a common mesh
   ni = fni(wavelengths)
@@ -236,11 +236,11 @@ def importFromEpsilonTable(wavelength, folder, filename, plotting=True, unit=1E-
   if(plotting):
     plt.figure()
     plt.xlabel(r'$\mathcal{R}e(\varepsilon)$ (nm)')
-    plt.ylabel('n, k')
-    plt.semilogx(wavelength1*1e9, n, 'bs', label='Re(eps) data')
-    plt.semilogx(wavelength2*1e9, kk, 'rs', label='Im(eps) data')
-    plt.semilogx(wavelengths*1e9, ni, 'b-', label='Re(eps) interp')
-    plt.semilogx(wavelengths*1e9, ki, 'r-', label='Im(eps) interp')
+    plt.ylabel(r'Re$(\varepsilon)$, Im($\varepsilon$)')
+    plt.semilogx(wavelength1*1e9, n, 'bs',  label=r'Re$(\varepsilon)$ data')
+    plt.semilogx(wavelength2*1e9, kk, 'rs', label=r'Im$(\varepsilon)$ data')
+    plt.semilogx(wavelengths*1e9, ni, 'b-', label=r'Re$(\varepsilon)$ interp')
+    plt.semilogx(wavelengths*1e9, ki, 'r-', label=r'Im$(\varepsilon)$ interp')
     plt.grid()
     plt.legend(loc=1)
     plt.savefig('GraphData.eps')
@@ -302,16 +302,16 @@ def importFromEpsilonTable_batch(folder, filename, plotting=True, unit=1E-10): #
   # defining the new epsR and epsC on a common mesh
   ni = fni(wavelengths)
   ki = fki(wavelengths)
-  epsilons = (ni+1.j*ki) ##!! Names are misleading here: we actually work dielectric permittivities! 
+  epsilons = (ni+1.j*ki) ##WARNING: Names are misleading here: we actually work dielectric permittivities! 
 
   if(plotting):
     plt.figure()
     plt.xlabel(r'$\mathcal{R}e(\varepsilon)$ (nm)')
     plt.ylabel(r'$Re(\varepsilon)$, $Im(\varepsilon)$')
-    plt.semilogx(wavelength1*1e9, n, 'bs', label='Re(eps) data')
-    plt.semilogx(wavelength2*1e9, kk, 'rs', label='Im(eps) data')
-    plt.semilogx(wavelengths*1e9, ni, 'b-', label='Re(eps) interp')
-    plt.semilogx(wavelengths*1e9, ki, 'r-', label='Im(eps) interp')
+    plt.semilogx(wavelength1*1e9, n, 'bs',  label=r'Re$(\varepsilon)$ data')
+    plt.semilogx(wavelength2*1e9, kk, 'rs', label=r'Im$(\varepsilon)$ data')
+    plt.semilogx(wavelengths*1e9, ni, 'b-', label=r'Re$(\varepsilon)$ interp')
+    plt.semilogx(wavelengths*1e9, ki, 'r-', label=r'Im$(\varepsilon)$ interp')
     plt.grid()
     plt.legend(loc=1)
     plt.savefig('GraphData.eps')
@@ -383,8 +383,13 @@ def importFromAbsorptionData(wavelength, folder, filename, plotting): #{{{
 def importFromTable(wavelength, folder, filename, plotting): #{{{
   # Look for Palik into the name
   if(filename.find("Palik") > 0):
+    print "Palik data identified."
     unit1 = 1E-10 #Palik data
+  elif(filename.find("Gori") > 0): 
+    print "Gori data identified."
+    unit1 = 1E-9
   else:
+    print "** Warning: Default case: choosing um for the input."
     unit1 = 1E-6 #Other data
  
   # Fetch data
@@ -398,6 +403,8 @@ def importFromTable(wavelength, folder, filename, plotting): #{{{
     
   n = DataArray[:,1]; kk = DataArray[:,2];
 
+  print n
+
   # Interpolating using splines
   order = 1
   fni = InterpolatedUnivariateSpline(wavelengths, n, k=order)
@@ -406,8 +413,9 @@ def importFromTable(wavelength, folder, filename, plotting): #{{{
   #Interpolated one optical constants
   #wavelength = 1030e-9
   ni = fni(wavelength); ki = fki(wavelength)
+  print wavelength, ni, ki
   epsilon = (ni+1j*ki)**2
-  print "Interpolated permittivity at "+str(wavelength*1e9)+" nm = "+str(epsilon)
+  print "importFromTable: Interpolated permittivity at "+str(wavelength*1e9)+" nm = "+str(epsilon)
 
   # Interpolate the full array and check it visually
   nimesh = fni(wavelengths); kimesh = fki(wavelengths)
@@ -542,9 +550,9 @@ try: #TODO: should we select by author? Or by units?
     filename = "ZnO-GoriAndBond"
     print "Material: "+filename+"."
     print "Wavelength = "+str(wavelength)+" nm"
-    nk = importFromTable(wavelength*1e-9, folder, filename, plotting)
-    epsilon = nk**2
-    print epsilon
+    epsilon = importFromTable(wavelength*1e-9, folder, filename, plotting) #Careful: misleading neames. These data have been stored as dielectric permittivities, but this function inteprets it as nk. 
+    #epsilon = nk**2
+    #print nk
     print "You can add the following directly inside 'MaterialOpticalDatabaseForPlasmonics.csv'"
     print filename+"\t"+"?"+"\t"+str(int(wavelength))+"\t"+str(epsilon.real)+"\t"+str(epsilon.imag)+"\t?\t?\t?\t?\t?"
   elif(source == "Gori"):
@@ -568,7 +576,8 @@ try: #TODO: should we select by author? Or by units?
     #print energiesGori_J, epsilonGori #output format: J, epsilon
     wavelengthsGori  = h*c/(energiesGori_J) #output format: meters
     #print wavelengthsGori, epsilonGori
-    GoriFile = np.array([wavelengthsGori*1E9, epsilonGori.real, epsilonGori.imag])
+    nGori=np.sqrt(epsilonGori)
+    GoriFile = np.array([wavelengthsGori*1E9, nGori.real, nGori.imag])
     ExportToTxt(np.flipud(np.transpose(GoriFile)), "ZnO-Gori.csv")
     print Header+"** Exported Gori file. "
     
@@ -578,7 +587,10 @@ try: #TODO: should we select by author? Or by units?
     energiesGori2, epsilonGori2  = importFromEpsilonTable_batch(folderGori, filenameGori2, plotting, 1E0) #unit in nm
     energiesGori_J2   = e*energiesGori2
     wavelengthsGori2  = h*c/(energiesGori_J2) #output format: meters
-    Gori2File = np.array([wavelengthsGori2*1E9, epsilonGori2.real, epsilonGori2.imag])
+    
+    nGori2 = np.sqrt(epsilonGori2)
+    
+    Gori2File = np.array([wavelengthsGori2*1E9, nGori2.real, nGori2.imag])
     ExportToTxt(np.flipud(np.transpose(Gori2File)), "ZnO-Gori2.csv")
     print Header+"** Exported Gori2 file. "
     #print "Combining the two Gori sets of data..."
@@ -596,7 +608,7 @@ try: #TODO: should we select by author? Or by units?
     print Header+"Info: Imported ZnO-Bond data."
     epsilonBond  =  np.multiply(nkBond, nkBond) #converting (n,k) to (epsR, epsC)
     print Header+"Info: Converted ZnO-Bond to dielectric permittivity."
-    BondFile = np.array([wavelengthsBond*1E9, epsilonBond.real, epsilonBond.imag])
+    BondFile = np.array([wavelengthsBond*1E9, nkBond.real, nkBond.imag])
     ExportToTxt(np.transpose(BondFile), "ZnO-Bond.csv")
     print Header+"** Exported Bond file. "
     
@@ -614,6 +626,17 @@ try: #TODO: should we select by author? Or by units?
     plt.savefig("ZnO-reconstructed.eps")
     plt.show()
     
+    print "DONT FORGET TO ACCOLATE THE OPTICAL DATA TO A FILE ZnO-GariAndBond."
+  elif(source == "Chase"):
+    print "** Info: branching with CrO2 Chase optical data..."
+    folder = "Database/"
+    filename = "CrO2-Chase"
+    importFromEpsilonTable(wavelength, folder, filename, True, 1E-6)
+  elif(source == "Chase-X"):
+    print "** Info: branching with CrO2 Chase optical data..."
+    folder = "Database/"
+    filename = "CrO2-Chase-X"
+    importFromEpsilonTable(wavelength, folder, filename, True, 1E-6)
   else: #TODO: revise the design here. 
     #folder = "Database/PalikGraph/" #TODO: Ag-Johnson and BK7-Maliton are in ./Database actually.
     folder = "Database/"

@@ -1,7 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2013-2017 T. J.-Y. Derrien
+# Copyright (C) 2013-2018 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,7 +19,8 @@
 ## @package plotMultimaterials
 ## Generate plots for many materials contained into a given database.
 # 
-# This allows to perform comparisons of interesting quantities between many materials, for specific wavelengths. 
+# This allows to perform comparisons of interesting quantities between many 
+# materials, for specific wavelengths. 
 
 # IMPORT LIBRARIES
 from libSPP import *

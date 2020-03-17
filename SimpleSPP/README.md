@@ -1,5 +1,7 @@
 # README #
 
+Symbolic change. 
+
 # Concept
 
 This set of Python functions is aiming at performing calculations to predict spectroscopical features of laser-matter interaction. In particular, emphasis is put on prediction of Surface Plasmon Polaritons on various materials, and for various wavelengths. 

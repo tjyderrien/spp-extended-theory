@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2013-2017 T. J.-Y. Derrien
+# Copyright (C) 2013-2019 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,8 +22,12 @@
 # Chapter IV of PhD thesis: Derrien, T. J.-Y., Nanostructuring of solar cells by femtosecond laser irradiation. Theoretical study of the formation mechanisms. Université de la Méditerranée - Aix Marseille II, 2012. 
 # Jean Berthier and Pascal Silberzan, "Microfluidics for Biotechnology", Artech House (2009).
 
-from libThermalPropertiesMaterials import *
+from libThermalProperties_Silicon import *
+#from libThermalProperties_Silica import *
 from libNonDimensionalNumbers import *
+
+from cycler import cycler
+import matplotlib as mpl
 
 #============== THESE ROUTINES ARE MESSY AND DONT EXACTLY FOLLOW THE SIMPLEST FORMULATION GIVEN IN ORIGINAL PAPER. 
 def Term1(T, k, depth, dynamic_viscosity, density, surface_tension):
@@ -70,7 +74,7 @@ def KinematicViscosity(dynamic_viscosity, mass_density):
 
 # Physical meaning? 
 # Source: Levchenko paper
-def omega0_Levchenko(density, gravity, thickness, surface_tension):
+def omega0_Levchenko(density, gravity, thickness, surface_tension, k):
   result = np.sqrt(density * (gravity * thickness * density + surface_tension * k **3) ) / density
   return result
 
@@ -82,13 +86,16 @@ def omega_Levchenko(omega_0, thickness, k):
   formula2 = np.sqrt(omega_0 ** 2 * np.tanh(k*thickness))
   return formula2
 
-def SurfaceTensionDerivation(surface_tension_model=0):
+def SurfaceTensionDerivation(T, surface_tension_model=0):
   # We have two possile models to compute derivative of surface tension
-  surface_tension, surface_tension_deriv = Silica_SurfaceTension(T) 
+  surface_tension, surface_tension_deriv = Liquid_SurfaceTension(T) 
   if(surface_tension_model == 0): #analytic approach
     surface_tension_diff = surface_tension_deriv
   elif (surface_tension_model == 1):
-    surface_tension_diff = surface_tension.diff() / T.diff() #numeric derivation
+    if(np.shape(T)<=1): 
+        print Header+"** Warning: there are not enough temperature samples to compute the diff(T). "
+    T_t = np.linspace(np.min(T)-1, np.max(T)+1, np.ndim(surface_tension)) 
+    surface_tension_diff = np.divide(np.diff(surface_tension), np.diff(T_t)) #numeric derivation
   else: 
     print Header+"** Error. Surface tension computation in SoundVelocity_Levchenko function."
   return surface_tension_diff
@@ -133,98 +140,139 @@ def InstabilityGrowthRate_Levchenko(kinematic_viscosity, k, omega, thickness, so
 
 #============== HERE WE SIMPY USE THE ROUTINES
 
+## Prepare the plot and non-dimensional study on thermo-convective instability. 
+# @param wavelength: laser wavelength (in meters)
+# @param fluence:    laser fluence (in J/m2)
+# @param pulseFWHM:  laser pulse duration (FWHM) (in seconds)
+# @param thickness:  molten layer thickness (in meters)
+# @param T:          molten layer temperature (in K)
+def plotThermoConvectiveInstability(wavelength, fluence, pulseFWHM, thickness, T):
+    #T=np.arange(1300.,2000., 10.) #length should be greater than 1, strictly. 
+    print Header+"Temperature of the liquid [K]: "+str(T)
+
+    surface_tension, surface_tension_deriv = Liquid_SurfaceTension(T)
+    print Header+"Surface tension [N.m2]: "+str(surface_tension)
+
+    k_laser = 2.*pi/laser_wavelength #m-1
+    k = np.arange(k_laser/10., 10.*k_laser, k_laser/100.) #NOTE: this is vector style. 
+    #k = k_laser #index-based programming style
+
+    print Header+"** Selected modes (1/m): "+str(k)+" 1/m, equiv. to "+str(1E9*2.*pi/k)+" nm."
+
+    #if( T < MeltingTemperature() ): 
+    #print Header+"** Absurd: silica should reach melting temperature. "
+    #exit()
+    
+    Absorptivity = 1. #total
+    laser_intensity = laser_fluence / laser_FWHM
+
+    print Header+"Laser absorptivity: "+str(100.*Absorptivity)+" %"
+    print Header+"Laser intensity   : "+str(laser_intensity*1E-4)+ "W/cm2."
+
+    mass_density         = Liquid_VolumicMass()
+    dynamic_viscosity    = DynamicViscosity(T)
+    diffusivity          = Liquid_HeatDiffusivity(T)
+    thermal_conductivity = Liquid_ThermalConductivity(T)
+
+    print Header+"== Materials data =="
+    print Header+"Mass density: "+str(mass_density)+" kg/m3."
+    print Header+"Dynamic viscosity: "+str(dynamic_viscosity)+"Pa.s"
+    print Header+"Heat diffusivity: "+str(diffusivity)+" m2/s."
+    print Header+"Thermal conductivity: "+str(thermal_conductivity)+" W/m/K."
+
+    #print Header+"** PhD thesis complicated formulas"
+    #print Term1(T, k, thickness, dynamic_viscosity, mass_density, surface_tension) #TODO: compare with Maple
+    #print Term2(T, k, surface_tension, Absorptivity, laser_intensity, dynamic_viscosity) #TODO: compare with Maple<
+    #print InstabilityGrowthRate(T, k, depth, dynamic_viscosity, mass_density, surface_tension, Absorptivity, laser_intensity)
+
+    kinematic_viscosity  = KinematicViscosity(dynamic_viscosity, mass_density)
+    print Header+"Kinematic viscosity: "+str(kinematic_viscosity)+" m2/s."
+    print ""
+    print Header+"** Levchenko original paper formulas"
+    Peclet_Number        = PecletNumber(kinematic_viscosity, diffusivity)
+    omega_0              = omega0_Levchenko(mass_density, gravity, thickness, surface_tension, k)
+    omega                = omega_Levchenko(omega_0, thickness, k)
+
+    print Header+"Peclet number: "+str(Peclet_Number)+"."
+    print Header+"omega_0_Levchenko: "+str(omega_0)+" Hz."
+    print Header+"omega_Levchenko: "+str(omega)+" Hz."
+
+    surface_tension_diff = SurfaceTensionDerivation(T, 1.) #0: use analytical model, #1: use numerical model (use only if surfacetension(T) is non-linear)
+    #print Header+"** Checking diff(surface_tension): "+str(surface_tension_diff)
+    print ""
+
+    Te_Levy2017  = 1E6 #K
+    Nexc_Derrien = 1E26 #m-3
+    Ce = 1.5 * k_b * Nexc_Derrien
+    tau_e_ph_Levy2017 = 1e-12
+    ThermalSource_diff   = ThermalSourceModels(laser_intensity, thermal_conductivity, Absorptivity, 1, Ce/tau_e_ph_Levy2017, Te_Levy2017, T) #used without TTM for now
+    print Header+"** Checking diff(ThermalSource): "+str(ThermalSource_diff*1E-9)+" K/nm vs diff(T)/thickness: "+str(T/thickness*1E-9)+" K/nm."
+    print Header+"AI/kappa [K/nm]: "+str(1E-9*laser_intensity / thermal_conductivity)
+
+    print Header+"** Checking heat conductivity (m2/s) for solid silica at 300 K.: "
+    print Header+"T-dependent diffusivity (m2/s): "+str(HeatConductivity(300.) / ( Solid_HeatCapacity(300.) * mass_density)) #m2/s
+    print Header+"Constant data from Bauerle book: "+str(Solid_HeatDiffusivity(T))
+    print ""
+    print Header+"** Checking heat conductivity (m2/s) for liquid silica at 1300 K.: "
+    print Header+"T-dependent diffusivity (m2/s): "+str(HeatConductivity(1300.) / ( Liquid_HeatCapacity(300.) * mass_density)) #m2/s
+    print ""
+    print Header+"** Checking heat conductivity (m2/s) for liquid silica at 2000 K.: "
+    print Header+"T-dependent diffusivity (m2/s): "+str(HeatConductivity(2000.) / ( Liquid_HeatCapacity(300.) * mass_density)) #m2/s
+    print Header+"Constant data from Bauerle book: "+str(Liquid_HeatDiffusivity(T)) 
+
+    sound_velocity       = SoundVelocity_Levchenko(mass_density, Peclet_Number, T, surface_tension_diff, ThermalSource_diff)
+    gamma_Levchenko      = InstabilityGrowthRate_Levchenko(kinematic_viscosity, k, omega, thickness, sound_velocity, omega_0, Peclet_Number, diffusivity)
+
+    print Header+"Thermo-convective instability growth rate [1/s]: "+str(gamma_Levchenko)
+
+    #plt.figure()
+    ##plt.loglog(np.divide(2*pi,k),-gamma_Levchenko)
+    #plt.loglog(np.divide(2*pi,k)/laser_wavelength,-gamma_Levchenko)
+    ##plt.xlabel(r"$\Lambda$ (m)")
+    #plt.xlabel(r"$\Lambda/\lambda$")
+    #plt.ylabel(r"$\gamma$ (s$^-1$)")
+    #plt.ylim((1e5,1e14))
+    #title    = r"$T=$"+str(int(T))+r" K, $h=$"+str(int(thickness*1E9))+" nm"
+    #filename = "T"+str(T)+"K-h"+str(thickness*1E9)+"nm"
+    #plt.title(title)
+    #plt.grid()
+    #plt.tight_layout()
+    #plt.savefig(filename+".png")
+    #plt.savefig(filename+".eps")
+    #print Header+"** Info: wrote "+filename+".png."
+    #plt.show()
+    
+    return np.divide(2*pi,k), -gamma_Levchenko
+
 laser_wavelength = 1025e-9 #m
-laser_fluence = 4E4 #J/m2
-laser_FWHM = 300e-15 #s
-thickness = 50e-9 #molten depth thickness [m]
+laser_fluence    = 4E4 #J/m2
+laser_FWHM       = 300e-15 #s
+#thickness        = 50e-9 #molten depth thickness [m]
+#T                = 2000. #K
 
-#T=np.arange(1300.,2000., 10.) #length should be greater than 1, strictly. 
-T = 2000. #K
-print Header+"Temperature of the liquid [K]: "+str(T)
+#plotThermoConvectiveInstability(laser_wavelength, laser_fluence, laser_FWHM, 50e-9 , 1300.)
+#plotThermoConvectiveInstability(laser_wavelength, laser_fluence, laser_FWHM, 100e-9, 1300.)
+#plotThermoConvectiveInstability(laser_wavelength, laser_fluence, laser_FWHM, 200e-9, 1300.)
 
-surface_tension, surface_tension_deriv = Silica_SurfaceTension(T)
-print Header+"Surface tension [N.m2]: "+str(surface_tension)
+mpl.rcParams['axes.prop_cycle'] = cycler('color', ['#5729ce', '#0652ff', '#069af3', '#7bb274', '#fbeeac', '#feb308',  '#f4320c', '#c44240']) # mbcgyrk')
 
-k_laser = 2.*pi/laser_wavelength #m-1
-k = np.arange(k_laser/10., 10.*k_laser, k_laser/100.) #NOTE: this is vector style. 
-#k = k_laser #index-based programming style
-
-print Header+"** Selected modes (1/m): "+str(k)+" 1/m, equiv. to "+str(1E9*2.*pi/k)+" nm."
-
-#if( T < Silica_MeltingTemperature() ): 
-  #print Header+"** Absurd: silica should reach melting temperature. "
-  #exit()
-  
-Absorptivity = 1. #total
-laser_intensity = laser_fluence / laser_FWHM
-
-print Header+"Laser absorptivity: "+str(100.*Absorptivity)+" %"
-print Header+"Laser intensity   : "+str(laser_intensity*1E-4)+ "W/cm2."
-
-mass_density         = Silica_Liquid_VolumicMass()
-dynamic_viscosity    = Silica_DynamicViscosity(T)
-diffusivity          = Silica_Liquid_HeatDiffusivity(T)
-thermal_conductivity = Silica_Liquid_ThermalConductivity(T)
-
-print Header+"== Silica data =="
-print Header+"Mass density: "+str(mass_density)+" kg/m3."
-print Header+"Dynamic viscosity: "+str(dynamic_viscosity)+"Pa.s"
-print Header+"Heat diffusivity: "+str(diffusivity)+" m2/s."
-print Header+"Thermal conductivity: "+str(thermal_conductivity)+" W/m/K."
-
-#print Header+"** PhD thesis complicated formulas"
-#print Term1(T, k, thickness, dynamic_viscosity, mass_density, surface_tension) #TODO: compare with Maple
-#print Term2(T, k, surface_tension, Absorptivity, laser_intensity, dynamic_viscosity) #TODO: compare with Maple<
-#print InstabilityGrowthRate(T, k, depth, dynamic_viscosity, mass_density, surface_tension, Absorptivity, laser_intensity)
-
-kinematic_viscosity  = KinematicViscosity(dynamic_viscosity, mass_density)
-print Header+"Kinematic viscosity: "+str(kinematic_viscosity)+" m2/s."
-print ""
-print Header+"** Levchenko original paper formulas"
-Peclet_Number        = PecletNumber(kinematic_viscosity, diffusivity)
-omega_0              = omega0_Levchenko(mass_density, gravity, thickness, surface_tension)
-omega                = omega_Levchenko(omega_0, thickness, k)
-
-print Header+"Peclet number: "+str(Peclet_Number)+"."
-print Header+"omega_0_Levchenko: "+str(omega_0)+" Hz."
-print Header+"omega_Levchenko: "+str(omega)+" Hz."
-
-surface_tension_diff = SurfaceTensionDerivation(0) #0: use analytical model, #1: use numerical model (use only if surfacetension(T) is non-linear)
-#print Header+"** Checking diff(surface_tension): "+str(surface_tension_diff)
-print ""
-
-Te_Levy2017  = 1E6 #K
-Nexc_Derrien = 1E26 #m-3
-Ce = 1.5 * k_b * Nexc_Derrien
-tau_e_ph_Levy2017 = 1e-12
-ThermalSource_diff   = ThermalSourceModels(laser_intensity, thermal_conductivity, Absorptivity, 1, Ce/tau_e_ph_Levy2017, Te_Levy2017, T) #used without TTM for now
-print Header+"** Checking diff(ThermalSource): "+str(ThermalSource_diff*1E-9)+" K/nm vs diff(T)/thickness: "+str(T/thickness*1E-9)+" K/nm."
-print Header+"AI/kappa [K/nm]: "+str(1E-9*laser_intensity / thermal_conductivity)
-
-print Header+"** Checking heat conductivity (m2/s) for solid silica at 300 K.: "
-print Header+"T-dependent diffusivity (m2/s): "+str(Silica_HeatConductivity(300.) / ( Silica_Solid_HeatCapacity(300.) * mass_density)) #m2/s
-print Header+"Constant data from Bauerle book: "+str(Silica_Solid_HeatDiffusivity(T))
-print ""
-print Header+"** Checking heat conductivity (m2/s) for liquid silica at 1300 K.: "
-print Header+"T-dependent diffusivity (m2/s): "+str(Silica_HeatConductivity(1300.) / ( Silica_Liquid_HeatCapacity(300.) * mass_density)) #m2/s
-print ""
-print Header+"** Checking heat conductivity (m2/s) for liquid silica at 2000 K.: "
-print Header+"T-dependent diffusivity (m2/s): "+str(Silica_HeatConductivity(2000.) / ( Silica_Liquid_HeatCapacity(300.) * mass_density)) #m2/s
-print Header+"Constant data from Bauerle book: "+str(Silica_Liquid_HeatDiffusivity(T)) 
-
-sound_velocity       = SoundVelocity_Levchenko(mass_density, Peclet_Number, T, surface_tension_diff, ThermalSource_diff)
-gamma_Levchenko      = InstabilityGrowthRate_Levchenko(kinematic_viscosity, k, omega, thickness, sound_velocity, omega_0, Peclet_Number, diffusivity)
-
-print Header+"Thermo-convective instability growth rate [1/s]: "+str(gamma_Levchenko)
-
-plt.figure()
-#plt.loglog(np.divide(2*pi,k),-gamma_Levchenko)
-plt.loglog(np.divide(2*pi,k)/laser_wavelength,-gamma_Levchenko)
-#plt.xlabel(r"$\Lambda$ (m)")
-plt.xlabel(r"$\Lambda/\lambda$")
-plt.ylabel(r"$\gamma$ (s$^-1$)")
-filename = "T"+str(T)+"K-h"+str(thickness*1E9)+"nm"
-plt.title(filename)
-plt.savefig(filename+".png")
-#plt.show()
-
+for T in [2000]:
+    plt.figure()
+    for thickness in [20e-9, 50e-9, 75e-9, 100e-9, 150e-9, 200e-9, 300e-9, 500e-9]:
+        Period, gamma = plotThermoConvectiveInstability(laser_wavelength, laser_fluence, laser_FWHM, thickness, T)
+        plt.loglog(Period, gamma, '', label=r'$h=$'+str(int(thickness*1e9))+ " nm")
+    plt.xlabel(r"$\Lambda$ (m)")
+    #plt.xlabel(r"$\Lambda/\lambda$")
+    plt.ylabel(r"$\gamma$ (s$^{-1}$)")
+    plt.ylim((1e5,1e14))
+    plt.axvline(x=laser_wavelength, color='k', linestyle='--', linewidth=0.5)
+    title    = r"$T=$"+str(int(T))+r" K"
+    filename = "T"+str(T)+"K-h-MultipleThicknesses"
+    #plt.title(title)
+    plt.grid()
+    plt.tight_layout()
+    #plt.legend(loc='best')
+    plt.savefig(filename+".png")
+    plt.savefig(filename+".eps")
+    print Header+"** Info: wrote "+filename+".png."
+    plt.show()

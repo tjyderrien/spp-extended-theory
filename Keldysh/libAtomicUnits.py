@@ -1,1 +1,1 @@
-../../octopus/02-Slab2D/libAtomicUnits.py
+../../octopus-slabs/02-Slab2D/libAtomicUnits.py

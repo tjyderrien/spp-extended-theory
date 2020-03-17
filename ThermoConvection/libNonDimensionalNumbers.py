@@ -23,7 +23,10 @@
 # Chapter IV of PhD thesis: Derrien, T. J.-Y., Nanostructuring of solar cells by femtosecond laser irradiation. Theoretical study of the formation mechanisms. Université de la Méditerranée - Aix Marseille II, 2012. 
 # Jean Berthier and Pascal Silberzan, "Microfluidics for Biotechnology", Artech House (2009).
 
-from libThermalPropertiesMaterials import *
+from libThermalProperties_Silicon import *
+#from libThermalProperties_Silica import *
+
+
 Header="libNonDimensionalNumbers: "
 
 ## Collision time for the matter momentum damping

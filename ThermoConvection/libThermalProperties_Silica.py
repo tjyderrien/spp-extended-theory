@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2013-2018 T. J.-Y. Derrien
+# Copyright (C) 2013-2019 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -33,50 +33,52 @@ k_b     = Boltzmann
 
 Header = "[libThermalPropertiesMaterials] "
 
-def Silica_Solid_VolumicMass():
+
+## SILICA 
+def Solid_VolumicMass():
   return 2.5e3 #kg/m3
 
-def Silica_Liquid_VolumicMass():
+def Liquid_VolumicMass():
   return 2.2e3 #kg/m3
 
-def Silica_Solid_ThermalConductivity(T):
-  if(T >= Silica_MeltingTemperature()): 
-    print Header+"** Warning: Silica_Solid_ThermalConductivity() is used out validity range. "
+def Solid_ThermalConductivity(T):
+  if(T >= MeltingTemperature()): 
+    print Header+"** Warning: Solid_ThermalConductivity() is used out validity range. "
   result = 0.14E2 #W/m/K [Bauerle data]
   return result
 
-def Silica_Liquid_ThermalConductivity(T):
-  if(T < Silica_MeltingTemperature()): 
-    print Header+"** Warning: Silica_Liquid_ThermalConductivity() is used out of its validity range. "
+def Liquid_ThermalConductivity(T):
+  if(T < MeltingTemperature()): 
+    print Header+"** Warning: Liquid_ThermalConductivity() is used out of its validity range. "
   return 0.014E2 #W/m/K [Bauerle data]
 
-def Silica_Solid_HeatDiffusivity(T):
-  if(T >= Silica_MeltingTemperature()): 
-    print Header+"** Warning: Silica_Solid_HeatDiffusivity() is used out of its validity range. "
+def Solid_HeatDiffusivity(T):
+  if(T >= MeltingTemperature()): 
+    print Header+"** Warning: Solid_HeatDiffusivity() is used out of its validity range. "
   return 0.086e-4 #m2/s
 
-def Silica_Liquid_HeatDiffusivity(T):
-  if(T < Silica_MeltingTemperature()): 
-    print Header+"** Warning: Silica_Liquid_HeatDiffusivity() is used out of its validity range. "
+def Liquid_HeatDiffusivity(T):
+  if(T < MeltingTemperature()): 
+    print Header+"** Warning: Liquid_HeatDiffusivity() is used out of its validity range. "
   return 0.009E-4 #m2/s
 
-def Silica_Solid_HeatCapacity(T):
-  if(T >= Silica_MeltingTemperature()): 
-    print Header+"** Warning: Silica_Solid_HeatCapacity() is used out of its validity range. "
+def Solid_HeatCapacity(T):
+  if(T >= MeltingTemperature()): 
+    print Header+"** Warning: Solid_HeatCapacity() is used out of its validity range. "
   # to be multiplied by density!
   return 0.74e3 #J / kg / K
 
-def Silica_Liquid_HeatCapacity(T):
+def Liquid_HeatCapacity(T):
   # to be multiplied by density!
-  if(T < Silica_MeltingTemperature()): 
-    print Header+"** Warning: Silica_Liquid_HeatCapacity() is used out of its validity range. "
+  if(T < MeltingTemperature()): 
+    print Header+"** Warning: Liquid_HeatCapacity() is used out of its validity range. "
   return 0.72E3 #J / kg / K
 
 ## Thermal Conductivity of silica, for a wide range of temperatures. 
 #Fitted on Wray, Kurt L. and Connolly, Thomas J., "Thermal Conductivity of Clear Fused Silica at High Temperatures", Journal of Applied Physics (1959), 1702--1705.
-def Silica_HeatConductivity(T):
+def HeatConductivity(T):
   if(T < 300. or T > 2000.):
-    print Header+"** Warning: Silica_HeatConductivity() was used out of its validity range."
+    print Header+"** Warning: HeatConductivity() was used out of its validity range."
   a3 = 7.06418e-10
   a2 = -3.96976e-6
   a1 = 7.56664e-3
@@ -87,20 +89,20 @@ def Silica_HeatConductivity(T):
 # @param T: temperature (K)
 #Fitted on Boyd K et al., "Surface tension and viscosity measurement of optical glasses using a scanning CO 2 laser", Optical Materials Express (2012), 1101--1110.
 #BUG: validity range? 
-def Silica_SurfaceTension(T):
+def SurfaceTension(T):
   a = 1.54E-5; b=0.267; 
   return a*T+b, a
 
 ## Silica melting temperature (in K)
 # Source? 
-def Silica_MeltingTemperature(): 
+def MeltingTemperature(): 
   return 1300. 
 
 ## Dynamic viscosity of fused silica (in Pa.s)
 #Fitted on Urbain et al, "Viscosity of liquid silica, silicates and alumino-silicates", Geochimica et Cosmochimica Acta (1982), 1061--1072.
 # @param T: temperature (K). Validity range: 1300-2000 K 
-def Silica_DynamicViscosity(T):
-  Tm_SiO2   = Silica_MeltingTemperature() #K
+def DynamicViscosity(T):
+  Tm_SiO2   = MeltingTemperature() #K
   Tmax_SiO2 = 2000e0 #K [arbitrary?]
   if(T < Tm_SiO2 or T>Tmax_SiO2):
     print Header+"** Warning: dynamic viscosity was taken out of range (SiO2 temperature must be liquid). "
@@ -113,14 +115,14 @@ def Silica_DynamicViscosity(T):
 ## Returns temperature-dependent band-gap energy of SiO2 (in eV).
 # @param T: temperature (in K). Validity range: 300 K - 2000 K.
 # Saito, K. & Ikushima, A. J. Absorption edge in silica glass Physical Review B, 2000, 62, 8584
-def Silica_BandGapEnergy(T):
+def BandGapEnergy(T):
   Egap0  = 8.52 #eV
   L0     = 10.3e0
   omega0 = 0.079*e / hbar
   X      = 0.33e0
   return Egap0 - L0*( hbar * omega0 / e * (0.5e0 + 1E0/( np.exp(hbar*omega0 / kb / T) - 1E0 ) ) + 0.5E0 * X * hbar * omega0 )
 
-Silica_HeatConductivity = np.vectorize(Silica_HeatConductivity)
-Silica_SurfaceTension = np.vectorize(Silica_SurfaceTension)
-Silica_DynamicViscosity = np.vectorize(Silica_DynamicViscosity)
-Silica_BandGapEnergy = np.vectorize(Silica_BandGapEnergy)
+HeatConductivity = np.vectorize(HeatConductivity)
+SurfaceTension = np.vectorize(SurfaceTension)
+DynamicViscosity = np.vectorize(DynamicViscosity)
+BandGapEnergy = np.vectorize(BandGapEnergy)

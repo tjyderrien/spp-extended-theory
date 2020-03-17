@@ -108,17 +108,24 @@ def VP_ChooseLibrary(FieldEnvelope1, FieldEnvelope2, wavelength1, wavelength2, C
     if( np.max(FieldEnvelope2) < 1e-3 ): #single pulse mode
         
         DataFolder  = PathPrefix+'Zhukov/Monochrome/'
-        DataFileName={'1030': DataFolder+'DLG1030mono.dat', '800': DataFolder+'DLG800mono.dat', '400': DataFolder+'DLG400mono.dat', '1600': DataFolder+'DLG-1600-2_56.dat', '3200': DataFolder+'DLG-3200-2_56.dat'}
+        DataFileName={'1030': DataFolder+'2_56ev1030mkm.dat', 
+                      '800': DataFolder+'2_56ev800tot.dat',
+                      #'800': DataFolder+'DLG800mono.dat', 
+                      '400': DataFolder+'DLG400mono.dat', 
+                      '1600': DataFolder+'2_56ev1600mkm-A.dat',
+                      '3200': DataFolder+'2_56_3200new.dat'}
         print Header+"Choosing the right database..."
         if(wavelength1   == 800e-9):
             VZ_basename = DataFileName['800']
-            Dictionnary = {'FieldSquaredLog10': 0, 'log10wpi': 1, 'photons': 2, 'energy': 3, 'wpi': 4, 'FieldSquared1': 5} #Monochromatic case
+            Dictionnary = {'FieldSquaredLog10': 0, 'log10wpi': 1}
+            #Dictionnary = {'FieldSquaredLog10': 0, 'log10wpi': 1, 'photons': 2, 'energy': 3, 'wpi': 4, 'FieldSquared1': 5} #Monochromatic case
         elif(wavelength1 == 400e-9):
             VZ_basename = DataFileName['400']
             Dictionnary = {'FieldSquaredLog10': 0, 'log10wpi': 1, 'photons': 2, 'energy': 3, 'wpi': 4, 'FieldSquared1': 5} #Monochromatic case
         elif(wavelength1 == 1030e-9):
             VZ_basename = DataFileName['1030']
-            Dictionnary = {'FieldSquaredLog10': 0, 'log10wpi': 1, 'photons': 2, 'energy': 3, 'wpi': 4, 'FieldSquared1': 5} #Monochromatic case
+            #Dictionnary = {'FieldSquaredLog10': 0, 'log10wpi': 1, 'photons': 2, 'energy': 3, 'wpi': 4, 'FieldSquared1': 5} #Monochromatic case
+            Dictionnary = {'FieldSquaredLog10': 0, 'log10wpi': 1}
         elif(wavelength1 == 1600e-9): 
             VZ_basename = DataFileName['1600']
             Dictionnary = {'FieldSquaredLog10': 0, 'log10wpi': 1}
@@ -320,7 +327,7 @@ def VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength1 = 800e-9, w
     w_PI_CGS = WPI_func(FieldEnvelopeNormalized1_CGS**2, FieldEnvelopeNormalized2_CGS**2) 
     # w_PI_CGS is in particles per cm^-3. 
   elif(NumberOfColors == 1): 
-    if(wavelength1 in [1600E-9, 3200E-9]):
+    if(wavelength1 in [800e-9, 1030e-9, 1030e-9, 1600E-9, 3200E-9]):
         DB_FieldSquaredNorm1 = np.power(10.,databasecontents[:,Dictionnary['FieldSquaredLog10']]) #this is a mapping
     else:
         DB_FieldSquaredNorm1 = databasecontents[:,Dictionnary['FieldSquared1']] #this is a mapping
@@ -392,19 +399,20 @@ def VP_BicolorNexc(tau1, tau2, t0, Delay):
   return instants, N_excited_Zhukov
 
 ## Test function for fetching a value from files provided by VP Zhukov. 
-def VPZ_Wpi0D():
+def VPZ_Wpi0D(): #{{{
 # Trying to extract one single value from Zhukov files. 
     Efield1=1E9; Efield2=0; wavelength1=1600e-9; wavelength2=1600e-9; CEP1=0; CEP2=0; 
     Egap = 2.56*e; meff=0.2226
     VZ_generateWpiTables(Efield1, Efield2, wavelength1, wavelength2, CEP1, CEP2, Egap, meff)
+#}}}
 
 ## Test function for fetching a batch of values from files provided by VP Zhukov. 
-def VPZ_Wpi1D():
+def VPZ_Wpi1D(): #{{{
     # Now trying to extract a sequence of values from Zhukov files. 
     Egap = 2.56*e; meff=0.2226
     Efield2=0.0E0; 
     
-    wavelength1=1600e-9; CEP1=0; 
+    wavelength1=3200e-9; CEP1=0; 
     wavelength2=1600e-9; CEP2=0; 
     
     Efield1_log = np.linspace(8,10,100)
@@ -414,10 +422,11 @@ def VPZ_Wpi1D():
     # NOTE: add a warning when interpolation occurs OUT of boundaries!
 
     plt.figure()
-    plt.plot(Efield1, Wpi, 'o-')
+    plt.loglog(Efield1, Wpi, 'o-')
     plt.xlabel(r"$E_1$ (V/m)")
     plt.ylabel(r"$w_{PI}$ (m$^{-3}$.s$^{-1}$)")
     plt.show()
+#}}}
 
 
 ## Plot the (E1, E2) map of W_PI according to VP Zhukov theories.

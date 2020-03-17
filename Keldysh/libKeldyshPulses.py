@@ -70,12 +70,13 @@ def PulseSquaredSinTemporalShape(t, tau, PeakField, wavelength, CEP=0., t0=0., P
 # @param CEP: carrier envelope phase inside the envelope (rad)
 # @param t0: central time of the first pulse
 # @param PulseDelay: adds a delay to the pulse with respect to t0. 
-def PulseSmoothTopHatShape(t, tau, tauRise, PeakField, wavelength, CEP=0., t0=0., PulseDelay=0.):
+# @param power: 2 by default. Increase to 4 for low intensities if necessary.
+def PulseSmoothTopHatShape(t, tau, tauRise, PeakField, wavelength, CEP=0., t0=0., PulseDelay=0., power=2.):
   t1 = t0 + PulseDelay #in case of second pulse
-  tA = t1 - tau/2 # instant to open  the top hat pulse
-  tB = t1 + tau/2 # instant to close the top hat pulse
+  tA = t1 - tau/2. # instant to open  the top hat pulse
+  tB = t1 + tau/2. # instant to close the top hat pulse
   omega = 2e0*pi*c/wavelength
-  Envelope = PeakField * ( np.sin( 0.5*pi*((t-tA-tauRise)/(tauRise)) )**2 * step(t-tA+tauRise) * (1.-step(t-tA)) + np.sin( 0.5*pi*((t-tB-tauRise)/(tauRise)))**2 * step(t-tB) * (1. - step(t-(tB+tauRise))) + step(t-tA) * (1.-step(t-tB)) ) #Checked and plotted with Maple.
+  Envelope = PeakField * ( np.sin( 0.5*pi*((t-tA-tauRise)/(tauRise)) )**power * step(t-tA+tauRise) * (1.-step(t-tA)) + np.sin( 0.5*pi*((t-tB-tauRise)/(tauRise)))**2 * step(t-tB) * (1. - step(t-(tB+tauRise))) + step(t-tA) * (1.-step(t-tB)) ) #Checked and plotted with Maple.
   Phase = np.exp(1e0j*(omega*t+CEP))
   Field = Envelope * Phase
   return Envelope, Field

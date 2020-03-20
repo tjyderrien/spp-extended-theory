@@ -28,11 +28,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.interpolate import InterpolatedUnivariateSpline
 
-from libMaterials import MaxwellGarnett2, Bruggeman2, BiLayerTransmission
+from libMaterials import MaxwellGarnett2, Bruggeman2, BiLayerTransmission, BiLayerReflectivity
 from libDatabase import ExportToTxt
 
-WhichMaterial="Mo" #Ti, Ag, Mo
-WhichSource="Ordal" #Ordal. Johnson. 
+WhichMaterial="Mo"       #Ti, Ag, Au, Mo
+WhichSource="Ordal"     #Mo
+#WhichSource="Johnson"    #Ti, Ag, Au
 Unit=1E-6 #Palik: 1E-10. Others: 1E-6 most of the time. 
 
 epsAir=1.
@@ -187,7 +188,7 @@ def BackgroundForMie(): #{{{
     ## OPTICAL DATA FOR SUBSTRATE
     #eps_SiO2_t
     
-    ## COMPUTING TRANMISSION SPECTRA
+    ## COMPUTING TRANMISSION AND REFLECTION SPECTRA
     ## 
     ## CONFIG 1, 3 NP sizes
     ## air | air + Ag NP (t=t_SiOx (exp.)) | SiO2
@@ -198,11 +199,19 @@ def BackgroundForMie(): #{{{
     Tomega1_10nm = BiLayerTransmission(wavelength_new_t, epsAir_t, eps_AirNP_10nm, eps_SiO2_t, film_thickness) #Sample2
     Tomega1_12nm = BiLayerTransmission(wavelength_new_t, epsAir_t, eps_AirNP_12nm, eps_SiO2_t, film_thickness) #Sample3
     
+    Romega1_7nm  = BiLayerReflectivity(wavelength_new_t, epsAir_t, eps_AirNP_7nm,  eps_SiO2_t, film_thickness) #Sample1
+    Romega1_10nm = BiLayerReflectivity(wavelength_new_t, epsAir_t, eps_AirNP_10nm, eps_SiO2_t, film_thickness) #Sample2
+    Romega1_12nm = BiLayerReflectivity(wavelength_new_t, epsAir_t, eps_AirNP_12nm, eps_SiO2_t, film_thickness) #Sample3
+    
     ## CONFIG 2, 3 NP sizes
     ## SiOx | SiOx + Ag NP (t=t_NP strict) | SiO2
     Tomega2_7nm  = BiLayerTransmission(wavelength_new_t, eps_SiOx_t, eps_SiOxNP_7nm_strict,  eps_SiO2_t, 7e-9) #Sample7
     Tomega2_10nm = BiLayerTransmission(wavelength_new_t, eps_SiOx_t, eps_SiOxNP_10nm_strict, eps_SiO2_t, 10E-9)#Sample8
     Tomega2_12nm = BiLayerTransmission(wavelength_new_t, eps_SiOx_t, eps_SiOxNP_12nm_strict, eps_SiO2_t, 12E-9)#Sample9
+    
+    Romega2_7nm  = BiLayerReflectivity(wavelength_new_t, eps_SiOx_t, eps_SiOxNP_7nm_strict,  eps_SiO2_t, 7e-9) #Sample7
+    Romega2_10nm = BiLayerReflectivity(wavelength_new_t, eps_SiOx_t, eps_SiOxNP_10nm_strict, eps_SiO2_t, 10E-9)#Sample8
+    Romega2_12nm = BiLayerReflectivity(wavelength_new_t, eps_SiOx_t, eps_SiOxNP_12nm_strict, eps_SiO2_t, 12E-9)#Sample9
     
     ## CONFIG 3, 3 NP sizes
     ## air | SiOx + Ag NP (t=t_SiOx experimental) | SiO2 
@@ -210,47 +219,77 @@ def BackgroundForMie(): #{{{
     Tomega3_10nm = BiLayerTransmission(wavelength_new_t, epsAir_t, eps_SiOxNP_10nm, eps_SiO2_t, film_thickness) #Sample5
     Tomega3_12nm = BiLayerTransmission(wavelength_new_t, epsAir_t, eps_SiOxNP_12nm, eps_SiO2_t, film_thickness) #Sample6
     
+    Romega3_7nm  = BiLayerReflectivity(wavelength_new_t, epsAir_t, eps_SiOxNP_7nm,  eps_SiO2_t, film_thickness) #Sample4
+    Romega3_10nm = BiLayerReflectivity(wavelength_new_t, epsAir_t, eps_SiOxNP_10nm, eps_SiO2_t, film_thickness) #Sample5
+    Romega3_12nm = BiLayerReflectivity(wavelength_new_t, epsAir_t, eps_SiOxNP_12nm, eps_SiO2_t, film_thickness) #Sample6
+    
     print "** DEBUG **"
     print Tomega1_7nm
     
     ## Plotting the final results. 
-    plt.figure()
-    ax1=plt.subplot(311)
-    #ax1.set_xlabel("Light wavelength (nm)")
-    #ax1.set_ylabel("Transmission")
     
-    ax2=plt.subplot(312)
-    #ax2.set_xlabel("Light wavelength (nm)")
-    #ax2.set_ylabel("Transmission")
-    
-    ax3=plt.subplot(313)
-    ax3.set_xlabel("Light wavelength (nm)")
-    ax3.set_ylabel("Transmission")
-    
-    wavelength_new_t_show = np.multiply(1E9, wavelength_new_t)
-    
-    ax1.plot(wavelength_new_t_show, Tomega1_7nm , "-" ,  label=r"air | 30 nm [air + (NP 7 nm)] | SiO$_2$")
-    ax1.plot(wavelength_new_t_show, Tomega2_7nm , "--",  label=r"SiO$_x$ | (SiO$_x$ + NP) 7 nm | SiO$_2$")
-    ax1.plot(wavelength_new_t_show, Tomega3_7nm , "-.",  label=r"air | 30 nm [SiO$_x$ + (NP 7 nm)] | SiO$_2$")
-    ax1.legend(loc="best")
+    for MethodNumber in [1,2,3]: 
+        plt.figure()
+        ax1=plt.subplot(311)
+        #ax1.set_xlabel("Light wavelength (nm)")
+        #ax1.set_ylabel("Transmission")
         
-    ax2.plot(wavelength_new_t_show, Tomega1_10nm, "-" , label=r"air | 30 nm [air + (NP 10 nm)] | SiO$_2$")
-    ax2.plot(wavelength_new_t_show, Tomega2_10nm, "--", label=r"SiO$_x$ | (SiO$_x$ + NP) 10 nm | SiO$_2$")
-    ax2.plot(wavelength_new_t_show, Tomega3_10nm, "-.", label=r"air | 30 nm [SiO$_x$ + (NP 10 nm)] | SiO$_2$")
-    ax2.legend(loc="best")
-    
-    ax3.plot(wavelength_new_t_show, Tomega1_12nm, "-" , label=r"air | 30 nm [air + (NP 12 nm)] | SiO$_2$")
-    ax3.plot(wavelength_new_t_show, Tomega2_12nm, "--", label=r"SiO$_x$ | (SiO$_x$ + NP) 12 nm | SiO$_2$")
-    ax3.plot(wavelength_new_t_show, Tomega3_12nm, "-.", label=r"air | 30 nm [SiO$_x$ + (NP 12 nm)] | SiO$_2$")
-    ax3.legend(loc="best")
-    
-    filename="Starinskiy_"+WhichMaterial+"NP"
-    
-    plt.tight_layout()
-    
-    plt.savefig(filename+".eps")
-    plt.savefig(filename+".png")
-    plt.show()
+        ax2=plt.subplot(312)
+        #ax2.set_xlabel("Light wavelength (nm)")
+        #ax2.set_ylabel("Transmission")
+        
+        ax3=plt.subplot(313)
+        ax3.set_xlabel("Light wavelength (nm)")
+        ax3.set_ylabel("T, 1-R")
+        
+        wavelength_new_t_show = np.multiply(1E9, wavelength_new_t)
+        
+        # METHOD 1
+        if(MethodNumber==1):
+            ax1.plot(wavelength_new_t_show, Tomega1_7nm , "b-" ,  label=r"air | 30 nm [air + (NP 7 nm)] | SiO$_2$")
+            ax1.plot(wavelength_new_t_show, 1-Romega1_7nm , "r-" )
+            ax2.plot(wavelength_new_t_show, Tomega1_10nm, "b-" , label=r"air | 30 nm [air + (NP 10 nm)] | SiO$_2$")
+            ax2.plot(wavelength_new_t_show, 1-Romega1_10nm, "r-" )
+            ax3.plot(wavelength_new_t_show, Tomega1_12nm, "b-" , label=r"air | 30 nm [air + (NP 12 nm)] | SiO$_2$")
+            ax3.plot(wavelength_new_t_show, 1-Romega1_12nm, "r-" )
+
+        # METHOD 2
+        elif(MethodNumber==2):
+            ax1.plot(wavelength_new_t_show, Tomega2_7nm , "b--",  label=r"SiO$_x$ | (SiO$_x$ + NP) 7 nm | SiO$_2$")
+            ax1.plot(wavelength_new_t_show, 1-Romega2_7nm , "r--")
+            ax2.plot(wavelength_new_t_show, Tomega2_10nm, "b--", label=r"SiO$_x$ | (SiO$_x$ + NP) 10 nm | SiO$_2$")
+            ax2.plot(wavelength_new_t_show, 1-Romega2_10nm, "r--")
+            ax3.plot(wavelength_new_t_show, Tomega2_12nm, "b--", label=r"SiO$_x$ | (SiO$_x$ + NP) 12 nm | SiO$_2$")
+            ax3.plot(wavelength_new_t_show, 1-Romega2_12nm, "r--")
+        
+        # METHOD 3
+        elif(MethodNumber==3):
+            ax1.plot(wavelength_new_t_show, Tomega3_7nm , "b-.",  label=r"air | 30 nm [SiO$_x$ + (NP 7 nm)] | SiO$_2$")
+            ax1.plot(wavelength_new_t_show, 1-Romega3_7nm , "r-.")
+            ax2.plot(wavelength_new_t_show, Tomega3_10nm, "b-.", label=r"air | 30 nm [SiO$_x$ + (NP 10 nm)] | SiO$_2$")
+            ax2.plot(wavelength_new_t_show, 1-Romega3_10nm, "r-.")
+            ax3.plot(wavelength_new_t_show, Tomega3_12nm, "b-.", label=r"air | 30 nm [SiO$_x$ + (NP 12 nm)] | SiO$_2$")
+            ax3.plot(wavelength_new_t_show, 1-Romega3_12nm, "r-.")
+            
+        ax1.legend(loc="best")
+        ax2.legend(loc="best")
+        ax3.legend(loc="best")
+        
+        ax1.set_xlim([50.,3000.])
+        ax2.set_xlim([50.,3000.])
+        ax3.set_xlim([50.,3000.])
+        
+        ax1.set_xscale("log")
+        ax2.set_xscale("log")
+        ax3.set_xscale("log")
+        
+        filename="Starinskiy_"+WhichMaterial+"NP-Method"+str(MethodNumber)
+        
+        plt.tight_layout()
+        
+        plt.savefig(filename+".eps")
+        plt.savefig(filename+".png")
+        plt.show()
     
     ## We export write the final contents into CSV files, for Sergey. 
     Sample1="Air-AirAnd"+WhichMaterial+"NP7nm-30nmThick-SiO2.csv"

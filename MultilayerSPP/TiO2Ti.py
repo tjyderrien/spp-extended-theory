@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2018 T.J.-Y. Derrien
+# Copyright (C) 2018-2020 T.J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -43,7 +43,7 @@ neTiO2      = np.power(10., np.linspace(np.log10(1E24), np.log10(1E29), NumberOf
 #print("Shape of Ne array: ", np.shape(neTiO2)[0])
 
 #t = 100E-9 #thickness of the layer in meters
-t_list = [151e-9] #thickness = 10e-9
+t_list = [32e-9] #[60e-9] #[151e-9] #thickness = 10e-9
 #t_list = np.power(10., np.linspace(np.log10(1e-9), np.log10(300e-9), NumberOfPoints))
 #meshes the initial guess area, all numbers are from the space of betas
 x_min = -6e7 #-1E10

@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2013-2018 T. J.-Y. Derrien
+# Copyright (C) 2013-2019 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -68,7 +68,7 @@ SizeY = 6.
 #@param theta: angle of incidence (rad) 
 #@param f: Filling factor
 #@param s: Shape factor
-def plotSipe1D_sectionX(wavelength, epsilon, f=0.1e0, s=0.4e0, theta=0e0): #{{{
+def plotSipe1D_sectionX(wavelength, epsilon, f=0.1e0, s=0.4e0, theta=0e0, filename="SipeSections.eps"): #{{{
     # Meshes for solution
     #kappax = np.arange(0, 4, 0.1)
     #kappay = np.arange(0, 4, 0.1)
@@ -114,7 +114,7 @@ def plotSipe1D_sectionX(wavelength, epsilon, f=0.1e0, s=0.4e0, theta=0e0): #{{{
     print etaSresult
     plt.grid()
     plt.legend(fancybox=True, framealpha=1)
-    plt.savefig('SipeEtaKappaX-s'+str(s)+'.eps')
+    plt.savefig(filename+'-s'+str(s)+'.eps')
     plt.show()
     #exit()
 #}}}
@@ -502,11 +502,11 @@ def plotSipeMaps_ChiaraSi(Nexc=3.75E27,CollFreqTime=1.1e-15):
     meff=0.18
     EpsSiExc = Drude(wavelength, Nexc, epsSi0, nu, meff)
     #print nCr
-    plotSipe1D_sectionX(1030e-9, EpsSiExc, filling, shape)
+    plotSipe1D_sectionX(1030e-9, EpsSiExc, filling, shape, angle)
     
 #plotSipeMaps_ChiaraSi()
 
-def plotSipeMaps_Dostovalov_Cr():
+def plotSipeMaps_Dostovalov_Cr(): #{{{
     unit = 1E-9
     wavelength = 1026E-9
     wavelength_nm = wavelength * 1E9 # 1026.0 #1064.0
@@ -524,6 +524,7 @@ def plotSipeMaps_Dostovalov_Cr():
     nCr = np.sqrt(epsCr) #0.5, 1.5, 3.5
     print nCr
     plotSipe1D_sectionX(1026e-9, nCr**2, filling, shape)
+#}}}
 
 def plotStephanGraf_Materials2018(): #{{{
     #maps prepared for Stephane Gräf on generalized Sipe model (2018)
@@ -546,18 +547,67 @@ def plotStephanGraf_Materials2018(): #{{{
 #}}}
 #for angle in [0.,1.,2.,5.,10.,20.,30.,40.,50.,60.,70.,80.,85.]:
     #plotSipe1D_sectionX(1026e-9, -0.6721223+24.8657476j, 0.1, 0.4, angle*pi/180.)
+
+def plotSipeSection_Dostovalov_Cr(): #{{{    
+    wavelength=1026e-9
+    epsilon = -0.6721223+24.8657476j #Cr, 1026 nm.
+    f=0.1
+    angle=0.
+
+    selvedge = 5e-9 #s = l_c / selvedge
+    #l_c=[1E-9, 2e-9, 5e-9, 10e-9]
+    l_c = [ 0.4 * selvedge ]
+    print "Correlation length = "+str(l_c)
+    shape_factors = np.divide(l_c, selvedge) #this originates from deep details of Sipe paper.
+    print "s numbers: "+str(shape_factors)
+
+    for s in shape_factors:
+        plotSipe1D_sectionX(wavelength, epsilon, f, s, angle)
+#}}}
+
+def plotSipeMaps_KovaricekSi_fs(wavelength=1030e-9, epsSi0=12.80259+0.0109j, Nexc=3.75E27,CollFreqTime=1.0e-15, filename="KovaricekSi"):
+    unit = 1E-9
+    #wavelength = 1030E-9
+    wavelength_nm = wavelength * 1E9 # 1026.0 #1064.0
+    select = str(int(wavelength_nm))
+    request = select+".0"
+    kpointnumber = 500
+    filling = 0.1
+    shape = 0.4
+    angle = 0.
+    #plotSipeFromDatabase(request, "Cr (Johnson 1974)", wavelength, kpointnumber, 'Air', angle, filling, shape)
+    #plotSipeFromDatabase(request, "Si (Palik)", wavelength, kpointnumber, 'Air', angle, filling, shape)
+    #epsSi0 = 
+    nu=CollFreqTime**-1
+    meff=0.18
+    EpsSiExc = Drude(wavelength, Nexc, epsSi0, nu, meff)
+    #print nCr
+    plotSipe1D_sectionX(wavelength, EpsSiExc, filling, shape, angle, filename)
     
-wavelength=1026e-9
-epsilon = -0.6721223+24.8657476j #Cr, 1026 nm.
-f=0.1
-angle=0.
+## One needs: 
+## - Period(Si0, N_exc, 1030e-9) #Done by hand. 
+plotSipeMaps_KovaricekSi_fs(1030e-9, 12.80259+0.0109j, 0E27, 1.0e-15, "Kovaricek_Si_1030nm")
+### - Period(l-Si, 0, 1030e-9)    # 
+plotSipeMaps_KovaricekSi_fs(1030e-9, -16.90553111+60.8265925j, 0E27, 1.0e-15, "Kovaricek_LiquidSi_1030nm")
 
-selvedge = 5e-9 #s = l_c / selvedge
-#l_c=[1E-9, 2e-9, 5e-9, 10e-9]
-l_c = [ 0.4 * selvedge ]
-print "Correlation length = "+str(l_c)
-shape_factors = np.divide(l_c, selvedge)
-print "s numbers: "+str(shape_factors)
+## - Period(Si0, N_exc, 1064e-9) # TODO 
+plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 0E27, 1.0e-15, "Kovaricek_Si_1064nm")
+### - Period(l-Si, 0, 1064e-9)
+#plotSipeMaps_KovaricekSi_fs(1064e-9, -16.92943996+62.91836213j, 0E27, 1.0e-15, "Kovaricek_LiquidSi_1064nm")
 
-for s in shape_factors:
-    plotSipe1D_sectionX(wavelength, epsilon, f, s, angle)
+plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 1E26, 1.0e-15, "Kovaricek_Si_1064nm_Ne1E26")
+plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 1E27, 1.0e-15, "Kovaricek_Si_1064nm_Ne1E27")
+plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 1.5E27, 1.0e-15, "Kovaricek_Si_1064nm_Ne1.5E27")
+plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 2E27  , 1.0e-15, "Kovaricek_Si_1064nm_Ne2E27")
+plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 2.5E27  , 1.0e-15, "Kovaricek_Si_1064nm_Ne2.5E27")
+plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 2.75E27  , 1.0e-15, "Kovaricek_Si_1064nm_Ne2.75E27")
+plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 3E27  , 1.0e-15, "Kovaricek_Si_1064nm_Ne3E27")
+plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 3.5E27  , 1.0e-15, "Kovaricek_Si_1064nm_Ne3.5E27")
+plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 3.75E27  , 1.0e-15, "Kovaricek_Si_1064nm_Ne3.75E27")
+plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 4E27  , 1.0e-15, "Kovaricek_Si_1064nm_Ne4E27")
+plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 4.5E27  , 1.0e-15, "Kovaricek_Si_1064nm_Ne4.5E27")
+plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 5E27  , 1.0e-15, "Kovaricek_Si_1064nm_Ne5E27")
+plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 5.5E27  , 1.0e-15, "Kovaricek_Si_1064nm_Ne5.5E27")
+plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 6E27  , 1.0e-15, "Kovaricek_Si_1064nm_Ne6E27")
+plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 7E27  , 1.0e-15, "Kovaricek_Si_1064nm_Ne7E27")
+plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 1E28  , 1.0e-15, "Kovaricek_Si_1064nm_Ne1E28")

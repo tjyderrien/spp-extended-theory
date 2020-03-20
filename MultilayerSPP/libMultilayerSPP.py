@@ -175,7 +175,7 @@ def ThreeLayerEigenSolver(t, k1, k2, k3, eps1, eps2, eps3):
     return w
 
 # Conversion from period to to beta/k0: 
-def PeriodToBetaNorm(period): 
+def PeriodToBetaNorm(period, wavelength): 
     # period = 2.*np.pi / beta.real
     k0 = 2.*np.pi / wavelength
     beta_norm_re = np.divide(np.divide(2.*np.pi, period), k0)

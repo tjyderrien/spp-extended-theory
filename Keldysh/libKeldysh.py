@@ -448,8 +448,8 @@ def BristowLaw(wavelength, Egap):#{{{
 # @param PeakField: laser field amplitude (scalar, V/m)
 # @param order: integration order for Keldysh model (integer, no unit)
 # @param RefractiveIndex: in Gruzdev2014, Epeak must be multiplied by sqrt(RefractiveIndex) to EXACTLY repeat his results. This originates that pulse duration is shortened in matter. 
-def GenerateKeldyshDatabase(Egap, meff, wavelength, PeakField, order, RefractiveIndex=1): #{{{
-  KillStarkEffect=False #WARNING: just for DEBUG purposes: this disables the effective gap for computation of Wpi. 
+# @param KillStarkEffect: this disables the effective gap for computation of Wpi. Useful to split the contribution of the dressing-induced replication and of Stark shift. 
+def GenerateKeldyshDatabase(Egap, meff, wavelength, PeakField, order, RefractiveIndex=1, KillStarkEffect=False): #{{{
   ErrorMessage = ""
   # I = 0.5 c epsilon_0 n0 E**2
   # E = np.sqrt(2 I / c / epsilon_0 / n0)

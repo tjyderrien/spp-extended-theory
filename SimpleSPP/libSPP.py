@@ -46,7 +46,7 @@ from libMath import *
 
 lengthunit = 1e-9
 eta = 0.1 #assumed precision error on the dielectric permittivity
-UsingTeX=False #TODO: set to False for Windows users
+UsingTeX=True #TODO: set to False for Windows or linux cluster users
 
 ## 0: all permisive, no verification on SPP excitation condition
 ## 1: use the RegularLIPSScondition, softer than pure SPP excitation condition
@@ -55,7 +55,7 @@ UsingTeX=False #TODO: set to False for Windows users
 LevelOfSPPaccuracy=0
 
 # Settings for matplotlib: taken from https://stackoverflow.com/questions/12322738/how-do-i-change-the-axis-tick-font-in-a-matplotlib-plot-when-rendering-using-lat
-sizeOfFont = 10
+sizeOfFont = 14
 FontName='cm' #Helvetica
 fontProperties = {'family':'sans-serif','sans-serif':[FontName],
     'weight' : 'normal', 'size' : sizeOfFont}

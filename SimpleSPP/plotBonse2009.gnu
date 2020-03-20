@@ -1,12 +1,12 @@
 #!gnuplot
 
-filename="Si-1030nm-SipeDrude.csv"
+filename="Si-1064nm-SipeDrude.csv"
 
-set output '1030nm-Bonse2009.eps'
+set output '1064nm-Bonse2009.eps'
 set terminal postscript eps enhanced color font 'Helvetica, 24'
 
 set xlabel 'CB electron density (cm^{-3})'
-set ylabel 'LIPSS period (nm)'
+set ylabel 'Surface wave period (nm)'
 set y2label 'Efficacy factor (u.a.)'
 
 set key bottom right

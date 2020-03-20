@@ -76,29 +76,32 @@ def Test_Keldysh(Egap, meff, PeakField, wavelength, order): #{{{
 ## Test the Keldysh model using silicon band gap given by the LDA functionals. Also plots Stark shift as function of the laser intensity. 
 def SiliconLDAbandGap(): #{{{
   print "Defining Si material parameters..."
-
+  unit = 1E-4 #W/m2 to W/cm2.
   Egap = 2.56*e; #SiO2 #2.56e0*e; #3.4e0*e #LDA band gap of Si: 2.58 eV. #1.12e0*e for indirect band gap; 
   meff=0.2226e0; #Effective mass of Si
   Ntotal=1.*5E28
   order=200
   
-  wavelength = 800e-9; #1600e-9;
+  wavelength = 800e-9; #1600e-9; #3200e-9 #  
   tau=7e-15; dt = 1E-17; CEP=0e0
   #PeakFluence = 1.0*1E4 #J/cm2 * 1E4 = J/m2
   #PeakField   = np.sqrt(2e0 * PeakFluence / (tau * c * epsilon_0))
-  PeakField = 1E8
-
+  PeakField = 3E9
+  
   Test_Keldysh(Egap, meff, PeakField, wavelength, order)
-
+  #exit()
   print "===== COMPARING THE EFFECTIVE GAPS using Stark effect ===="
   
   print "== Preparing Giovannini et al model... =="
   DME = 1. #from the paper #-1+2j #arbitrary!
-  #Efield_SI_log = np.linspace(8,11, 200)
-  #Efield_SI     = np.power(10.,Efield_SI_log)
-  Efield_SI     = np.linspace(0, 5E10, 200)
-  RefractiveIndex = 1 #1: for far field, # 1.45: for near field in silica
-  
+  Efield_SI_log = np.linspace(8,12, 200)
+  Efield_SI     = np.power(10.,Efield_SI_log)
+  #Efield_SI     = np.linspace(0, 5E10, 200)
+  OpticalIndex={ #data from Palik! 
+        483e-9: 4.4028, 484e-9: 4.3964,
+        800e-9: 3.6924167231905, 1600e-9: 3.4826, 
+        2200e-9: 3.4548, 2600e-9: 3.4457, 3200e-9: 3.43438589865999}
+  RefractiveIndex = OpticalIndex[wavelength] #1: for far field, # 1.45: for near field in silica
   #Efield_SI     = 1e9  
 
   E_gap_SI      = Egap
@@ -204,7 +207,7 @@ def SiliconLDAbandGap(): #{{{
   print "== Preparing Stark shift as function of field intensity... =="
   
   ## Keldysh Stark shift, 2 levels, 1 photon. 
-  gamma_t   = gammaKeldysh(E_gap_SI, 1.0, Efield_SI, wavelength)
+  gamma_t   = gammaKeldysh(E_gap_SI, 1.0, Efield_SI*np.sqrt(RefractiveIndex), wavelength)
   k1_t      = Keldysh1phi(gamma_t); k2_t = Keldysh2theta(gamma_t)
   EgapEff_t = EffectiveGap(E_gap_SI, k1_t, k2_t)
   
@@ -214,22 +217,22 @@ def SiliconLDAbandGap(): #{{{
   filename=str(round(E_gap_SI/e))+"eV-"+str(wavelength*1E9)+"nm"
   
   # PLOTTING THE 2-bands 1-photon Stark effect
-  plt.figure()
+  ax1=plt.figure()
   #plt.xlabel("Field amplitude (V/m)")
-  plt.xlabel(r"Laser intensity (W/m$^2$)")
+  plt.xlabel(r"Laser intensity (W/cm$^2$)")
   plt.ylabel("Band energy level (eV)")
   
   # Preparing the 2-levels 2-photon, and 4-levels 1-photon Stark shifts. 
   for element in Efield_SI:
       print element
-      E1, E2, E3, E4, E5, E6         = Stark2bands1photon_EnergyShift_modified_exact(Field_SI_to_AU(element), omega_AU, E_gap_AU, DME)
+      E1, E2, E3, E4, E5, E6         = Stark2bands1photon_EnergyShift_modified_exact(Field_SI_to_AU(element*np.sqrt(RefractiveIndex)), omega_AU, E_gap_AU, DME)
       TwoBandsOnePhoton_Eigen        = [E1, E2, E3, E4, E5, E6]
       TwoBandsOnePhoton_Eigen_eV    = Energy_Hartree_to_eV(TwoBandsOnePhoton_Eigen)
       print TwoBandsOnePhoton_Eigen_eV
       Intensity_el  = 0.5*c*epsilon_0*element**2*RefractiveIndex
       #plt.scatter(np.ones(np.size(TwoBandsOnePhoton_Eigen_eV))*element, TwoBandsOnePhoton_Eigen_eV, c="black", s=1)
-      plt.scatter(np.ones(np.size(TwoBandsOnePhoton_Eigen_eV))*Intensity_el, TwoBandsOnePhoton_Eigen_eV, c="black", s=1)
-  Intensity_SI  = 0.5*c*epsilon_0*Efield_SI**2*RefractiveIndex
+      plt.scatter(unit * np.ones(np.size(TwoBandsOnePhoton_Eigen_eV))*Intensity_el, TwoBandsOnePhoton_Eigen_eV, c="black", s=1)
+  Intensity_SI  = unit * 0.5*c*epsilon_0*Efield_SI**2*RefractiveIndex
   #plt.plot(Efield_SI, 0.5*EgapEff_t/e, 'r-', label=r'$E_g^{eff}$, Keldysh-Stark (1964)')
   #plt.plot(Efield_SI, -0.5*EgapEff_t/e, 'r-')
   plt.plot(Intensity_SI, 0.5*EgapEff_t/e, 'r-', label=r'$E_g^{eff}$, Keldysh-Stark (1964)')
@@ -244,18 +247,18 @@ def SiliconLDAbandGap(): #{{{
   # PLOTTING THE 4-bands 1-photon Stark effect
   plt.figure()
   #plt.xlabel("Field amplitude (V/m)")
-  plt.xlabel(r"Laser intensity (W/m$^2$)")
+  plt.xlabel(r"Laser intensity (W/cm$^2$)")
   plt.ylabel("Band energy level (eV)")
   
   for element in Efield_SI:
       print element
-      FourBandsOnePhoton_Eigen       = Stark4bands1photon_EnergyShift_eigen(Field_SI_to_AU(element), omega_AU, E_gap_AU, DME)
+      FourBandsOnePhoton_Eigen       = Stark4bands1photon_EnergyShift_eigen(Field_SI_to_AU(element*np.sqrt(RefractiveIndex)), omega_AU, E_gap_AU, DME)
       FourBandsOnePhoton_Eigen_eV    = Energy_Hartree_to_eV(FourBandsOnePhoton_Eigen)
       print FourBandsOnePhoton_Eigen_eV
       Intensity_el  = 0.5*c*epsilon_0*element**2*RefractiveIndex
       #plt.scatter(np.ones(np.size(FourBandsOnePhoton_Eigen_eV))*element, FourBandsOnePhoton_Eigen_eV, c="black", s=1)
-      plt.scatter(np.ones(np.size(FourBandsOnePhoton_Eigen_eV))*Intensity_el, FourBandsOnePhoton_Eigen_eV, c="black", s=1)
-  Intensity_SI  = 0.5*c*epsilon_0*Efield_SI**2*RefractiveIndex
+      plt.scatter(unit * np.ones(np.size(FourBandsOnePhoton_Eigen_eV))*Intensity_el, FourBandsOnePhoton_Eigen_eV, c="black", s=1)
+  Intensity_SI  = unit * 0.5*c*epsilon_0*Efield_SI**2*RefractiveIndex
   #plt.plot(Efield_SI, 0.5*EgapEff_t/e, 'r-', label=r'$E_g^{eff}$, Keldysh-Stark (1964)')
   #plt.plot(Efield_SI, -0.5*EgapEff_t/e, 'r-')
   plt.plot(Intensity_SI, 0.5*EgapEff_t/e, 'r-', label=r'$E_g^{eff}$, Keldysh-Stark (1964)')
@@ -269,19 +272,19 @@ def SiliconLDAbandGap(): #{{{
   # PLOTTING THE 2-bands 2-photon Stark effect
   plt.figure()
   #plt.xlabel("Field amplitude (V/m)")
-  plt.xlabel(r"Laser intensity (W/m$^2$)")
+  plt.xlabel(r"Laser intensity (W/cm$^2$)")
   plt.ylabel("Band energy level (eV)")
   #print Efield_SI
   for element in Efield_SI: 
       print element
-      TwoBandsTwoPhotons_Eigen       = Stark2bands2photons_EnergyShift_eigen(Field_SI_to_AU(element), omega_AU, E_gap_AU, DME)
+      TwoBandsTwoPhotons_Eigen       = Stark2bands2photons_EnergyShift_eigen(Field_SI_to_AU(element*np.sqrt(RefractiveIndex)), omega_AU, E_gap_AU, DME)
       TwoBandsTwoPhotons_Eigen_eV    = Energy_Hartree_to_eV(TwoBandsTwoPhotons_Eigen)
       print TwoBandsTwoPhotons_Eigen_eV
       Intensity_el  = 0.5*c*epsilon_0*element**2*RefractiveIndex
       #plt.scatter(np.ones(np.size(TwoBandsTwoPhotons_Eigen_eV))*element, TwoBandsTwoPhotons_Eigen_eV, c="black", s=1)
-      plt.scatter(np.ones(np.size(TwoBandsTwoPhotons_Eigen_eV))*Intensity_el, TwoBandsTwoPhotons_Eigen_eV, c="black", s=1) 
+      plt.scatter(unit * np.ones(np.size(TwoBandsTwoPhotons_Eigen_eV))*Intensity_el, TwoBandsTwoPhotons_Eigen_eV, c="black", s=1) 
   #plt.scatter(Field_AU_to_SI(Efield_AU), TwoBandsTwoPhotons_Eigen_round_eV, s=1, c=(1,1,1))
-  Intensity_SI  = 0.5*c*epsilon_0*Efield_SI**2*RefractiveIndex
+  Intensity_SI  = unit * 0.5*c*epsilon_0*Efield_SI**2*RefractiveIndex
   #plt.plot(Efield_SI, 0.5*EgapEff_t/e, 'r-', label=r'$E_g^{eff}$, Keldysh-Stark (1964)')
   #plt.plot(Efield_SI, -0.5*EgapEff_t/e, 'r-')
   plt.plot(Intensity_SI, 0.5*EgapEff_t/e, 'r-', label=r'$E_g^{eff}$, Keldysh-Stark (1964)')
@@ -289,6 +292,7 @@ def SiliconLDAbandGap(): #{{{
   plt.title("2 bands, 2 photons Stark effect")
   plt.legend(loc='best')
   plt.tight_layout()
+  #plt.xscale('log')
   plt.savefig(filename+"_TwoBandsTwoPhotons.eps")
   plt.show()
   
@@ -315,13 +319,13 @@ def SiliconLDAbandGap(): #{{{
   ExportToTxt(wPI_Zhukov, "Zhukov_Wpi"+str(wavelength*1E9)+"nm.csv")
   plt.xlabel(r"Laser intensity (W/m$^2$)")
   plt.ylabel(r"Excitation rate $w_{\mathrm{PI}}$ (m$^{-3}s^{-1}$)")
-  plt.loglog(Intensity_SI, wPI_Zhukov,'.', label="Num. int. Keldysh")
+  plt.loglog(unit * Intensity_SI, wPI_Zhukov,'.', label="Num. int. Keldysh")
   plt.legend(loc='best')
   plt.tight_layout()
   plt.grid()
   filename="Zhukov_NumInt-"+str(round(Egap/e))+"eV-"+str(1E9*wavelength)+".eps"
   plt.savefig(filename)
-  print Header+"** Info:"+filename+"was created.")
+  print Header+"** Info:"+filename+"was created."
   plt.show()
   exit()
 #}}}

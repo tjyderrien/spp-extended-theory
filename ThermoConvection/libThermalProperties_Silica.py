@@ -89,7 +89,7 @@ def HeatConductivity(T):
 # @param T: temperature (K)
 #Fitted on Boyd K et al., "Surface tension and viscosity measurement of optical glasses using a scanning CO 2 laser", Optical Materials Express (2012), 1101--1110.
 #BUG: validity range? 
-def SurfaceTension(T):
+def Liquid_SurfaceTension(T):
   a = 1.54E-5; b=0.267; 
   return a*T+b, a
 

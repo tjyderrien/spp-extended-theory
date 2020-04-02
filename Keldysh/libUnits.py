@@ -1,7 +1,7 @@
 #!/usr/bin/env python2.7
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2013-2019 T. J.-Y. Derrien
+# Copyright (C) 2013-2020 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,11 +19,12 @@
 import numpy as np
 from scipy.constants import c, pi
 
-c_SI = c
 ## @package libUnits
-## Provides routines to safely convert in SI units or CGS units. 
+# Provides routines to safely convert in SI units or CGS units. 
 
-## Convert length units from CGS to SI
+c_SI = c
+
+# Convert length units from CGS to SI
 # Validated on https://en.wikipedia.org/wiki/Centimetre%E2%80%93gram%E2%80%93second_system_of_units#Electromagnetic_units_in_various_CGS_systems
 def Length_CGS_to_SI(CGS):
   return CGS / 1e2

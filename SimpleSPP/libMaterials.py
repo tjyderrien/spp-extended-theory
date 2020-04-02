@@ -1,9 +1,7 @@
 #!/usr/bin/env python2
 #-*- coding: utf-8 -*-
-## @package libMaterials 
-# Functions describing materials and their interaction with light. 
 
-# Copyright (C) 2013-2018 T. J.-Y. Derrien
+# Copyright (C) 2013-2020 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,6 +15,9 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>
+
+## @package libMaterials 
+# Functions describing materials and their interaction with light. 
 
 import numpy as np
 import cmath

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2013-2018 T. J.-Y. Derrien, F. Preucil
+# Copyright (C) 2013-2020 T. J.-Y. Derrien, F. Preucil
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 ## @package libKeldyshUlrich
+# Routines for the semiconductor Bloch equation approach from C. Ulrich and of P. B. Corkum. 
 
 import math, cmath
 import numpy as np

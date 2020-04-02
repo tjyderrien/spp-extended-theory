@@ -16,7 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>
 
-## @module plotTemperature.py presents properties of SPP as function of temperature of a material. 
+## @package plotTemperature
+# Presents properties of SPP as function of temperature of a material. 
 # Of course, temperature-dependent optical data of the material are necessary. 
 
 # IMPORT LIBRARIES

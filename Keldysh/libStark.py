@@ -283,20 +283,10 @@ def Kronecker(i,j):
 
 
 ## Returns the Floquet band structure at a given k-point assuming <MPI_number> photons transitions. 
-def ComputeFloquetBandStructure(filename, nb_atoms, Z_electrons, kpoints, unocc_states, MPI_number, Efield_SI, wavelength_SI, num_time_steps, listoffiles, Complex_valued_ME=False, field_polarization_dir=0, spin_occupation=2, verbose=1, CaptureDirectGap=True): #{{{
+def ComputeFloquetBandStructure(filename, nb_atoms, Z_electrons, kpoints, unocc_states, MPI_number, Efield_SI, wavelength_SI, num_time_steps, eigenvalues, matrixelements, Complex_valued_ME=False, field_polarization_dir=0, spin_occupation=2, verbose=1): #{{{
     Header="[libStark: ComputeFloquetBandStructure(): ] "
     
-    gamma_point_files, gamma_point_files_index = ExtractFileForGivenKpoint(filename, kpoints, listoffiles, CaptureDirectGap, verbose, field_polarization_dir)
-    
-    # TODO: We don't need to do this each time. Get this out and do it once for all. 
-    matrixelements, matrix_side = ReadDipolarMatrixElements(Z_electrons, unocc_states, gamma_point_files, Complex_valued_ME)
-    
-    ## 5. Extract eigen values at k-point <kpoints_index> from "info" file
-    # TODO: this can also be put outside for optimization
-    eigenvalues=GetEigenValue(gamma_point_files_index[0], "info", verbose)
-    if(verbose==1):
-        print eigenvalues
-    
+    matrix_side=Z_electrons+unocc_states
     ## 6. Build then diagonalize the Floquet Hamiltonian. 
     # 6.1:Build the eigenvalued matrix
     H_GS=np.zeros((matrix_side, matrix_side))*1j
@@ -358,7 +348,7 @@ def ComputeFloquetBandStructure(filename, nb_atoms, Z_electrons, kpoints, unocc_
     
     ## Rabi frequeqncy is time dependent, and is a large matrix. We mainly need the extrema for now. 
     # These correspond to 
-    #def Rabi_extrema(tmin, tmax, dt, omega_AU, Efield_AU, matrixelements): #{{{
+    # d e f Rabi_extrema(tmin, tmax, dt, omega_AU, Efield_AU, matrixelements): #{{{
         #Rabi_init=RabiMatrix_AU(tmin, omega_AU, Efield_AU, matrixelements)
         #Rabi_sum = RabiMatrix_AU(tmax, omega_AU, Efield_AU, matrixelements)     
         #Rabi_t = [] # Rabi_sum = np.zeros(np.shape(Rabi_init))*0j #initialization
@@ -392,7 +382,7 @@ def ComputeFloquetBandStructure(filename, nb_atoms, Z_electrons, kpoints, unocc_
     
     ## Returns the optimal omega_AU for disabling tunneling
     # In principle....
-    #def OmegaCutoff(Efield_AU, dipole, MPI_number, rootnum=1):
+    #d e f OmegaCutoff(Efield_AU, dipole, MPI_number, rootnum=1):
         #return np.sqrt( Efield_AU*np.divide( dipole, BesselJzeros( MPI_number, rootnum ) ) )
     
     #print Header+"Test: BesselJzeros(MPI_number, 1): "+str(BesselJzeros(MPI_number, 1))

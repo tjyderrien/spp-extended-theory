@@ -1,7 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2013-2017 T. J.-Y. Derrien
+# Copyright (C) 2013-2020 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -64,6 +64,9 @@ MaterialFile2 = query+source
 
 # ============= BYPASSING COMMAND LINE =============
 
+SpecialWavelength=800e-9 #this wavelength will be indicated on the graphs
+xmin=0   #nm
+xmax=2E3 #nm
 MaterialFolder="Database"
 
 MaterialFile1="Air"
@@ -184,16 +187,16 @@ print "Checking quality of interpolation for the dielectric function..."
 plt.figure()
 plt.xlabel('Wavelength (nm)')
 plt.ylabel('epsilon')
-plt.semilogx(1e9*wavelengths1, eps1.real, 'b+', label='Re('+MaterialFile1+')')
-plt.semilogx(1e9*wavelengths, eps1new.real, 'b-', label='interp $Re('+MaterialFile1+')$')
+plt.semilogx(1e9*wavelengths1, eps1.real, 'b+', label=r'Re('+MaterialFile1+')')
+plt.semilogx(1e9*wavelengths, eps1new.real, 'b-', label='interp Re('+MaterialFile1+')')
 plt.semilogx(1e9*wavelengths1, eps1.imag, 'k+', label='Im('+MaterialFile1+')')
-plt.semilogx(1e9*wavelengths, eps1new.imag, 'k-', label='interp $Im('+MaterialFile1+')$')
+plt.semilogx(1e9*wavelengths, eps1new.imag, 'k-', label='interp Im('+MaterialFile1+')')
 plt.semilogx(1e9*wavelengths2, eps2.real, 'r+', label='Re('+MaterialFile2+')')
-plt.semilogx(1e9*wavelengths, eps2new.real, 'r-', label='interp $Re('+MaterialFile2+')$')
+plt.semilogx(1e9*wavelengths, eps2new.real, 'r-', label='interp Re('+MaterialFile2+')')
 plt.semilogx(1e9*wavelengths2, eps2.imag, 'g+', label='Im('+MaterialFile2+')')
-plt.semilogx(1e9*wavelengths, eps2new.imag, 'g-', label='interp $Im('+MaterialFile2+')$')
+plt.semilogx(1e9*wavelengths, eps2new.imag, 'g-', label='interp Im('+MaterialFile2+')')
 plt.legend(loc=2)
-plt.title('Dielectric permittivity')
+plt.title(r'$\varepsilon(\lambda)$')
 plt.savefig(MaterialFile1+MaterialFile2+'epsilon.png')
 plt.show()
 
@@ -206,123 +209,123 @@ kspp = betaSPP(wavelengths, eps1new, eps2new)
 omegaspp = omega(wavelengths)
 #omegaspp = np.sort(omegaspp)
 
-#plt.figure()
-#plt.xlabel('k $(m^{-1})$')
-#plt.ylabel('$\omega$ ($s^{-1}$)')
-#plt.plot(kspp.real, omegaspp, label='SPP')
+plt.figure()
+plt.xlabel(r'k $(m^{-1})$')
+plt.ylabel(r'$\omega$ ($s^{-1}$)')
+plt.plot(kspp.real, omegaspp, label='SPP')
+plt.plot(omega(wavelengths)/c, omega(wavelengths), label='Light line')
+plt.plot(omega(wavelengths)/c, omega(np.add(np.multiply(wavelengths,0e0), SpecialWavelength)), label='Laser '+str(round(SpecialWavelength*1E9,0))+' nm')
+plt.title(r'Dispersion at $'+MaterialFile1+r'$/$'+MaterialFile2+r'$ interface')
+plt.legend(loc=2)
+plt.savefig(MaterialFile1+MaterialFile2+'Dispersion.eps')
+#plt.show()
+
+print "Plot the SPP period with wavelength..."
+
+plt.figure()
+plt.xlabel(r'Wavelength $\lambda$ $(nm)$')
+plt.ylabel(r'$\Lambda_{\mbox{SPP}}$ ($nm$)')
+plt.loglog(1e9*wavelengths, 1e9 * (2e0*pi/kspp.real)) #label='Near-field period'
+#plt.title('Period of field at $'+MaterialFile1+'$/$'+MaterialFile2+'$ interface')
+plt.legend(loc=2)
+plt.grid(True)
+plt.savefig(MaterialFile1+MaterialFile2+'Period.eps')
+#plt.show()
+
+print "Plot the SPP mean-free path with wavelength..."
+
+plt.figure()
+plt.xlabel(r'Wavelength $\lambda$ $(nm)$')
+plt.ylabel(r'SPP mean-free-path $L_{\mbox{SPP}}$ (\mbox{$\mu$m})')
+plt.plot(1e9*wavelengths, 1e6 * (0.5E0/kspp.imag)) #label=MaterialFile1+'/'+MaterialFile2
+#plt.title('Period of field at $'+MaterialFile1+'$/$'+MaterialFile2+'$ interface')
+plt.legend(loc=2)
+plt.grid(True)
+plt.savefig(MaterialFile1+MaterialFile2+'MeanFreePath.svg')
+#plt.show()
+plt.plot(1e9*wavelengths, 1e6 * (0.5E0/kspp.imag), label=MaterialFile1+'/'+MaterialFile2)
+plt.savefig(MaterialFile1+MaterialFile2+'MeanFreePath-LogLog.eps')
+
+print "Plot the lifetime with wavelength..."
+#RealDerivativeByComplex = np.vectorize(RealDerivativeByComplex)
+SPPgroupVelocity = RealDerivativeByComplex(omegaspp, kspp)
+SPPphaseVelocity = np.divide(omegaspp,kspp)
+
+SPPgroupVelocityHohenau = HohenauGroupVelocity(omegaspp, kspp) #uses Hohenau / Jackson definition of group velocity for non-absorbing materials
+
+print np.shape(omegaspp)
+print np.shape(kspp)
+print np.shape(SPPgroupVelocity)
+print np.shape(SPPgroupVelocityHohenau)
+
+SPPgroupVelocityPlot = np.clip(SPPgroupVelocity.real, 0, 1000E8)
+SPPgroupVelocityHohenau = np.clip(SPPgroupVelocityHohenau, 0, 1000E8)
+
+#print SPPgroupVelocity.real
+#TODO: Group velocity can be negative, and it designates another regime of propagation! 
+#See [Hohenau and JR Krenn, PRB 78, 155405 (2008)]
+plt.figure()
+plt.xlabel(r'Wavelength $\lambda$ (nm)')
+plt.ylabel(r'Velocity $v$ ($\mu$m/ps)')
+plt.plot(1e9*2*pi*c/omegaspp[1:], 1E-6*SPPgroupVelocityPlot, 'b-', label=r'$Re(v_g)$')
+plt.plot(1e9*2*pi*c/omegaspp[1:], 1E-6*SPPgroupVelocityHohenau, 'k-', label=r'$v_g[Re(\beta)]$')
+plt.plot(1e9*2*pi*c/omegaspp, 1E-6*SPPphaseVelocity, 'r--', label=r'$v_{\phi}$')
+#plt.plot(1e9*2*pi*c/omegaspp, c, label=r'$c$')
 #plt.plot(omega(wavelengths)/c, omega(wavelengths), label='Light line')
-#plt.plot(omega(wavelengths)/c, omega(np.add(np.multiply(wavelengths,0e0), 800e-9)), label='Laser 800 nm')
-#plt.title('Dispersion relation at $'+MaterialFile1+'$/$'+MaterialFile2+'$ interface')
-#plt.legend(loc=2)
-#plt.savefig(MaterialFile1+MaterialFile2+'Dispersion.eps')
-##plt.show()
+#plt.plot(omega(wavelengths)/c, omega(np.add(np.multiply(wavelengths,0e0), SpecialWavelength)), label=r'$c$')
+#plt.title(MaterialFile1+'/'+MaterialFile2+' interface')
+plt.legend(loc=4)
+plt.xticks(np.arange(0, 3500, 500))
+plt.axis([xmin,xmax,-300,300])
+plt.savefig(MaterialFile1+MaterialFile2+'Velocities.eps')
+plt.savefig(MaterialFile1+MaterialFile2+'Velocities.png')
+#plt.show()
 
-#print "Plot the SPP period with wavelength..."
+print "Plot SPP lifetime with wavelength..."
+LifeTimeOld = LifeTimeRaether(kspp[1:], eps1new[1:], eps2new[1:])
+LifeTimeNew = LifeTimeVg(kspp[1:], (SPPgroupVelocity.real))
+LifeTimeRe  = LifeTimeVg(kspp[1:], (SPPgroupVelocityHohenau))
+LifeTimePhase = LifeTimeVg(kspp[1:], (SPPphaseVelocity[1:].real))
+LifeTimeApprox = 2e0*(eps2new.real)**2 /( omegaspp * eps1new.real**2 * eps2new.imag) #TODO: origin of this formula ?
 
-#plt.figure()
-#plt.xlabel('Wavelength $\lambda$ $(nm)$')
-#plt.ylabel('$\Lambda_{\mbox{SPP}}$ ($nm$)')
-#plt.loglog(1e9*wavelengths, 1e9 * (2e0*pi/kspp.real)) #label='Near-field period'
-##plt.title('Period of field at $'+MaterialFile1+'$/$'+MaterialFile2+'$ interface')
-#plt.legend(loc=2)
-#plt.grid(True)
-#plt.savefig(MaterialFile1+MaterialFile2+'Period.eps')
-##plt.show()
+print "Lifetime approx."
+print LifeTimeApprox
 
-#print "Plot the SPP mean-free path with wavelength..."
+# Let's clip Lifetime where they are negative (negative group velocity...). 
+LifeTimeOld = np.clip(LifeTimeOld, 0, 1)
+LifeTimeNew = np.clip(LifeTimeNew, 0, 1)
+LifeTimeRe  = np.clip(LifeTimeRe, 0, 1)
+LifeTimePhase  = np.clip(LifeTimePhase, 0, 1)
+LifeTimeApprox = np.clip(LifeTimeApprox, 0, 1)
 
-#plt.figure()
-#plt.xlabel('Wavelength $\lambda$ $(nm)$')
-#plt.ylabel('SPP mean-free-path $L_{\mbox{SPP}}$ (\mbox{$\mu$m})')
-#plt.plot(1e9*wavelengths, 1e6 * (0.5E0/kspp.imag)) #label=MaterialFile1+'/'+MaterialFile2
-##plt.title('Period of field at $'+MaterialFile1+'$/$'+MaterialFile2+'$ interface')
-#plt.legend(loc=2)
-#plt.grid(True)
-#plt.savefig(MaterialFile1+MaterialFile2+'MeanFreePath.svg')
-##plt.show()
-#plt.plot(1e9*wavelengths, 1e6 * (0.5E0/kspp.imag), label=MaterialFile1+'/'+MaterialFile2)
-#plt.savefig(MaterialFile1+MaterialFile2+'MeanFreePath-LogLog.eps')
-
-#print "Plot the lifetime with wavelength..."
-##RealDerivativeByComplex = np.vectorize(RealDerivativeByComplex)
-#SPPgroupVelocity = RealDerivativeByComplex(omegaspp, kspp)
-#SPPphaseVelocity = np.divide(omegaspp,kspp)
-
-#SPPgroupVelocityHohenau = HohenauGroupVelocity(omegaspp, kspp) #uses Hohenau / Jackson definition of group velocity for non-absorbing materials
-
-#print np.shape(omegaspp)
-#print np.shape(kspp)
-#print np.shape(SPPgroupVelocity)
-#print np.shape(SPPgroupVelocityHohenau)
-
-#SPPgroupVelocityPlot = np.clip(SPPgroupVelocity.real, 0, 1000E8)
-#SPPgroupVelocityHohenau = np.clip(SPPgroupVelocityHohenau, 0, 1000E8)
-
-##print SPPgroupVelocity.real
-##TODO: Group velocity can be negative, and it designates another regime of propagation! 
-##See [Hohenau and JR Krenn, PRB 78, 155405 (2008)]
-#plt.figure()
-#plt.xlabel(r'Wavelength $\lambda$ (nm)')
-#plt.ylabel(r'Velocity $v$ ($\mu$m/ps)')
-#plt.plot(1e9*2*pi*c/omegaspp[1:], 1E-6*SPPgroupVelocityPlot, 'b-', label=r'$Re(v_g)$')
-#plt.plot(1e9*2*pi*c/omegaspp[1:], 1E-6*SPPgroupVelocityHohenau, 'k-', label=r'$v_g[Re(\beta)]$')
-#plt.plot(1e9*2*pi*c/omegaspp, 1E-6*SPPphaseVelocity, 'r--', label=r'$v_{\phi}$')
-##plt.plot(1e9*2*pi*c/omegaspp, c, label=r'$c$')
-##plt.plot(omega(wavelengths)/c, omega(wavelengths), label='Light line')
-##plt.plot(omega(wavelengths)/c, omega(np.add(np.multiply(wavelengths,0e0), 800e-9)), label=r'$c$')
-##plt.title(MaterialFile1+'/'+MaterialFile2+' interface')
-#plt.legend(loc=4)
-#plt.xticks(np.arange(0, 3500, 500))
-#plt.axis([500,3500,-300,300])
-#plt.savefig(MaterialFile1+MaterialFile2+'Velocities.eps')
-#plt.savefig(MaterialFile1+MaterialFile2+'Velocities.png')
-##plt.show()
-
-#print "Plot SPP lifetime with wavelength..."
-#LifeTimeOld = LifeTimeRaether(kspp[1:], eps1new[1:], eps2new[1:])
-#LifeTimeNew = LifeTimeVg(kspp[1:], (SPPgroupVelocity.real))
-#LifeTimeRe = LifeTimeVg(kspp[1:], (SPPgroupVelocityHohenau))
-#LifeTimePhase = LifeTimeVg(kspp[1:], (SPPphaseVelocity[1:].real))
-#LifeTimeApprox = 2e0*(eps2new.real)**2 /( omegaspp * eps1new.real**2 * eps2new.imag) #TODO: origin of this formula ?
-
-#print "Lifetime approx."
-#print LifeTimeApprox
-
-## Let's clip Lifetime where they are negative (negative group velocity...). 
-#LifeTimeOld = np.clip(LifeTimeOld, 0, 1)
-#LifeTimeNew = np.clip(LifeTimeNew, 0, 1)
-#LifeTimeRe = np.clip(LifeTimeRe, 0, 1)
-#LifeTimePhase = np.clip(LifeTimePhase, 0, 1)
-#LifeTimeApprox = np.clip(LifeTimeApprox, 0, 1)
-
-## Plotting the SPP lifetime
-#HohenauLabel="Hohenau formula"#17
-#RaetherLabel="Raether formula" #18
-#plt.figure()
-#plt.xlabel('Wavelength $\lambda$ (nm)')
-#plt.ylabel(r'SPP lifetime $\tau_{\textrm{SPP}}$ (ps)')
-#line2,=plt.plot(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeRe, 'r--', label=r'Eq. (17)')
-#line1,=plt.plot(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeOld, 'k-', label=r'Eq. (18)')
-##line3,=plt.plot(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeNew, 'r--', label=r'$\tau_{SPP}=L_{SPP}/v_g$, Eq. (Wirtinger), $\omega \in \mathbb{R}$, $\beta \in \mathbb{C}$')
-##plt.plot(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimePhase, 'r--', label=r'Phase, real $\omega$, complex $\beta$')
-##plt.plot(1e9*2*pi*c/omegaspp, 1E12*LifeTimeApprox, 'b--', label=r'Phase, approx.')
-##plt.title(MaterialFile1+'/'+MaterialFile2+' interface')
-## change style of lines
-#plt.setp(line1, linewidth=3); plt.setp(line2, linewidth=3); #plt.setp(line3, linewidth=3); 
-#plt.legend(loc=2)
-#plt.xticks(np.arange(0, 3500, 500))
-#if(query == "Ti"): #used only for changing the visual scale!
-  #maxLifeTime=0.05
-#elif (query == "Ag"):
-  #maxLifeTime=7
-#elif (query == "Au"):
-  #maxLifeTime=10
-#else:
-  #maxLifeTime=10
-#plt.axis([500,3500,0,maxLifeTime])
-#plt.savefig(MaterialFile1+MaterialFile2+'Lifetime.eps')
-#plt.savefig(MaterialFile1+MaterialFile2+'Lifetime.png')
-##plt.show()
+# Plotting the SPP lifetime
+HohenauLabel="Hohenau formula"#17
+RaetherLabel="Raether formula" #18
+plt.figure()
+plt.xlabel('Wavelength $\lambda$ (nm)')
+plt.ylabel(r'SPP lifetime $\tau_{\textrm{SPP}}$ (ps)')
+line2,=plt.plot(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeRe, 'r--', label=r'$\omega$ real, $k$ complex')
+line1,=plt.plot(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeOld, 'k-', label=r'$\omega$ complex, $k$ real')
+#line3,=plt.plot(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeNew, 'r--', label=r'$\tau_{SPP}=L_{SPP}/v_g$, Eq. (Wirtinger), $\omega \in \mathbb{R}$, $\beta \in \mathbb{C}$')
+#plt.plot(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimePhase, 'r--', label=r'Phase, real $\omega$, complex $\beta$')
+#plt.plot(1e9*2*pi*c/omegaspp, 1E12*LifeTimeApprox, 'b--', label=r'Phase, approx.')
+#plt.title(MaterialFile1+'/'+MaterialFile2+' interface')
+# change style of lines
+plt.setp(line1, linewidth=3); plt.setp(line2, linewidth=3); #plt.setp(line3, linewidth=3); 
+plt.legend(loc=2)
+plt.xticks(np.arange(0, 3500, 500))
+if(query == "Ti"): #used only for changing the visual scale!
+  maxLifeTime=0.05
+elif (query == "Ag"):
+  maxLifeTime=7
+elif (query == "Au"):
+  maxLifeTime=10
+else:
+  maxLifeTime=10
+plt.axis([xmin,xmax,0,maxLifeTime])
+plt.savefig(MaterialFile1+MaterialFile2+'Lifetime.eps')
+plt.savefig(MaterialFile1+MaterialFile2+'Lifetime.png')
+#plt.show()
 
 
 # 
@@ -334,13 +337,13 @@ OpticalPenetrationDepth = 2e0*omega(wavelengths)/c*(eps2new**0.5e0)
 OpticalPenetrationDepth = (OpticalPenetrationDepth.imag)**(-1e0)
 
 plt.figure()
-plt.xlabel('Wavelength $\lambda$ (nm)')
+plt.xlabel(r'Wavelength $\lambda$ (nm)')
 plt.ylabel('Decay depth (m)')
 plt.loglog(1E9*2.*pi*c/omegaspp, SPPdecayDepth, 'r-', label='Plasmonic, medium 1')
 plt.loglog(1E9*2.*pi*c/omegaspp, SPPdecayDepth2, 'r--', label='Plasmonic, medium 2')
 plt.loglog(1E9*2.*pi*c/omegaspp, OpticalPenetrationDepth, 'bx', label='Optical, medium 2')
 plt.legend(loc=1)
-#plt.axis([200,2000,0,10e0])
+#plt.axis([xmin,xmax,0,10e0])
 plt.grid()
 plt.savefig(MaterialFile1+MaterialFile2+'SppDecayDepth.eps')
 plt.savefig(MaterialFile1+MaterialFile2+'SppDecayDepth.png')
@@ -359,6 +362,6 @@ plt.savefig(MaterialFile1+MaterialFile2+'SppDecayDepth.png')
 #plt.savefig(filename+'.eps')
 #plt.savefig(filename+'.png')
 
-if(ShowPictures == True):
+if(ShowPictures):
   plt.show()
 

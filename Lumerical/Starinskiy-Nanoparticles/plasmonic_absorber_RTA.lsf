@@ -1,0 +1,19 @@
+# Reflection/transmission/absorption plot
+f = getdata('R','f');
+T = -transmission('T');
+R = transmission('R');
+?A = 1-R-T;
+plot(c*1e6/f,R,T,A,'wavelength (um)','R/T/A');
+legend('R','T','A');
+
+# |H| at resonance
+H = getresult('xz_profile','H');
+H2 = pinch(H.H2);
+x = H.x;
+z = H.z;
+lambda = H.lambda;
+?fi = find(T,max(T)); # find the frequency point where the absorption becomes maximum
+?lambda = lambda(fi);
+H2 = pinch(H2,3,fi);
+
+image(x*1e6,z*1e6,H2,"x (um)","z (um)","|H|^2 at "+num2str(round(lambda*1e9))+" (nm)");

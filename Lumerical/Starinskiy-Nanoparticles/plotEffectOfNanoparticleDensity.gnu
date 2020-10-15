@@ -12,7 +12,7 @@ set ylabel 'R, T'
 
 set key top Left
 
-set title 'Au NP (x2), 14 nm radois gapped in SiOx (44 nm) on Si'
+set title 'Au NP (x2), 14 nm radius gapped in SiOx (44 nm) on Si'
 
 p "< awk '{ print }' ".folder."AuNPx2-14nmRadius-CentersSeparatedby40nm-InsideSiOx-44nm-SiSubstrate-WavelengthRTA.txt1.csv" u 1:2 w l lt 2 lc rgbcolor "red" t 'gap=40nm, R', \
   "< awk '{ print }' ".folder."AuNPx2-14nmRadius-CentersSeparatedby40nm-InsideSiOx-44nm-SiSubstrate-WavelengthRTA.txt2.csv" u 1:2 w l lt 2 lc rgbcolor "blue" t 'gap=40nm, T', \

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2018-2019 T.J.-Y. Derrien
+# Copyright (C) 2018-2020 T.J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -40,9 +40,6 @@ Header="# [dostovalov.py]: "
 NumberOfPoints=50
 
 #data
-
-
-
             
 #epsBK7      = 2.10277365777   #1030 nm
 epsAir      = 1.+0.j          #air

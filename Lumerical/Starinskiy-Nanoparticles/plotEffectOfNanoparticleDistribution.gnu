@@ -2,9 +2,9 @@
 
 reset
 
-set terminal postscript eps enhanced color font 'Helvetica, 24'
+set terminal postscript eps enhanced color font 'Helvetica, 20'
 
-filmthickness="40"
+filmthickness="44"
 set output 'Wavelength-SiOx('.filmthickness.'nm)OnSiO2-EffectOfRandomDistribution.eps'
 
 folder="02-NanoparticlesOnSubstrates/"
@@ -17,14 +17,22 @@ xscale=1E-3
 set xlabel 'Wavelength (um)'
 set ylabel 'T'
 
+# set title 'NP Au 11.8 nm'
+
 set key below
 
 p "< awk '{ print }' ".folder."AuNPx413-RandomUniformDistributionOnSquareArea250nmSide-11.8nmPM3nmNormalDistributionOfDiameter-SiO2substrate-RTA-Periodic-Seed1234-EvenBetterMesh.txt2.csv" u 1:2 w l lt 1 lc rgbcolor "blue"  t 'AuNP-Random-1234|SiO_2, T', \
    "< awk '{ print }' ".folder."AuNPx423-RandomUniformDistributionOnSquareArea250nmSide-11.8nmPM3nmNormalDistributionOfDiameter-SiO2substrate-RTA-Periodic-Seed4321-EvenBetterMesh.txt2.csv" u 1:2 w l lt 2 lc rgbcolor "blue" t 'AuNP-Random-4321|SiO_2, T', \
    "< awk '{ print }' ".folder."AuNPx426-RandomUniformDistributionOnSquareArea250nmSide-11.8nmPM3nmNormalDistributionOfDiameter-SiO2substrate-RTA-Periodic-Seed1423-EvenBetterMesh-2.txt2.csv" u 1:2 w l lt 3 lc rgbcolor "blue" t 'AuNP-Random-1423|SiO_2, T', \
+   "< awk '{ print }' ".folder."AuNP571-RandomUniformDistributionOnSquareArea250nmSide-11.8nmPM3nmNormalDistributionOfDiameter-SiO2substrate-RTA-Periodic-Seed1423-BetterMesh0.13-AuJohnson-WideSpectrum.txt2.csv" u 1:2 w l lt 4 lc rgbcolor "blue" t 'AuNP-Random-1423, Mesh 0.13, diam. pm 3 nm', \
+   "< awk '{ print }' ".folder."AuNP571-RandomUniformDistributionOnSquareArea250nmSide-11.8nmPM4nmNormalDistributionOfDiameter-SiO2substrate-RTA-Periodic-Seed1423-BetterMesh0.13-AuJohnson-WideSpectrum.txt2.csv" u 1:2 w l lt 5 lc rgbcolor "blue" t 'AuNP-Random-1423, Mesh 0.13, diam. pm 4 nm', \
+   "< awk '{ print }' ".folder."AuNP571-RandomUniformDistributionOnSquareArea250nmSide-11.8nmPM4nmNormalDistributionOfDiameter-SiO2substrate-RTA-Periodic-Seed1423-BetterMesh0.15-AuJohnson-WideSpectrum.txt2.csv" u 1:2 w l lt 6 lc rgbcolor "blue" t 'AuNP-Random-1423, Mesh 0.15, diam. pm 4 nm', \
    "< awk '{ print }' ".folder2."AuNPx413-RandomUniformDistributionOnSquareArea250nmSide-11.8nmPM3nmNormalDistributionOfDiameter-InsideSiOxFilm".filmthickness."nm-SiO2substrate-RTA-Periodic-Seed1234-BetterMesh.txt2.csv" u 1:2 w l lc rgbcolor "red" lt 1 t "(AuNP-Random-1234)+SiO_x(".filmthickness."nm)|SiO_2, T", \
    "< awk '{ print }' ".folder2."AuNPx423-RandomUniformDistributionOnSquareArea250nmSide-11.8nmPM3nmNormalDistributionOfDiameter-InsideSiOxFilm".filmthickness."nm-SiO2substrate-RTA-Periodic-Seed4321-BetterMesh.txt2.csv" u 1:2 w l lc rgbcolor "red" lt 2 t "(AuNP-Random-4321)+SiO_x(".filmthickness."nm)|SiO_2, T", \
    "< awk '{ print }' ".folder2."AuNPx426-RandomUniformDistributionOnSquareArea250nmSide-11.8nmPM3nmNormalDistributionOfDiameter-InsideSiOxFilm".filmthickness."nm-SiO2substrate-RTA-Periodic-Seed1423-BetterMesh.txt2.csv" u 1:2 w l lc rgbcolor "red" lt 3 t "(AuNP-Random-1423)+SiO_x(".filmthickness."nm)|SiO_2, T", \
+   "< awk '{ print }' ".folder2."AuNP571-RandomUniformDistributionOnSquareArea250nmSide-11.8nmPM4nmNormalDistributionOfDiameter-InsideSiOxFilm".filmthickness."nm-SiO2substrate-RTA-Periodic-Seed1423-BetterMesh-SiOxOfSergey-AuJohnson-WideSpectrum-Mesh1.5nm.txt2.csv" u 1:2 w l lc rgbcolor "red" lt 4 t "(AuNP-Random-1423)+SiO_x(".filmthickness."nm)|SiO_2, T, Mesh 1.5, Diam. pm 4 nm", \
+   "< awk '{ print }' ".folder2."AuNP571-RandomUniformDistributionOnSquareArea250nmSide-11.8nmPM4nmNormalDistributionOfDiameter-InsideSiOxFilm".filmthickness."nm-SiO2substrate-RTA-Periodic-Seed1423-BetterMesh-SiOxOfSergey-AuJohnson-WideSpectrum-Mesh1.3nm.txt2.csv" u 1:2 w l lc rgbcolor "red" lt 5 t "(AuNP-Random-1423)+SiO_x(".filmthickness."nm)|SiO_2, T, Mesh 1.3, Diam. pm 4 nm", \
+   "< awk '{ print }' ".folder2."AuNP571-RandomUniformDistributionOnSquareArea250nmSide-11.8nmPM3nmNormalDistributionOfDiameter-InsideSiOxFilm".filmthickness."nm-SiO2substrate-RTA-Periodic-Seed1423-BetterMesh-SiOxOfSergey-AuJohnson-WideSpectrum-Mesh1.3nm.txt2.csv" u 1:2 w l lc rgbcolor "red" lt 6 t "(AuNP-Random-1423)+SiO_x(".filmthickness."nm)|SiO_2, T, Mesh 1.3, Diam. pm 3 nm", \
    T_exp_AuNPSiO2 u     (xscale*$1):2 w l lc rgbcolor "blue" lt 4 t 'Exp. (AuNP 11.8nm)|SiO_2', \
    T_exp_AuNPSiOxSiO2 u (xscale*$1):2 w l lc rgbcolor "red"  lt 4 t 'Exp. SiO_x(AuNP 11.8nm)|SiO_2'
 

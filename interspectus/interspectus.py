@@ -96,8 +96,8 @@ class FamilyOfCurves:
       self.f=np.tile(self.f,(len(self.q),1));
 
     # test shape of input data
-    if (self.q.shape[0] <> self.x.shape[0]) or \
-       (self.x.shape    <> self.f.shape):
+    if (self.q.shape[0] != self.x.shape[0]) or \
+       (self.x.shape    != self.f.shape):
       raise ValueError("Invalid shape of arguments.");
 
     # test for double parameters

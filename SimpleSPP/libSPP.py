@@ -22,27 +22,19 @@
 # T.J.-Y. Derrien et al, Journal of Optics 18, 115007 (2016)
 
 # IMPORT PYTHON LIBRARIES
-import numpy as np
-from numpy import genfromtxt, loadtxt, chararray
-from scipy.optimize import fsolve, root
 import cmath
+
 import matplotlib as mp
-import matplotlib.pyplot as plt
-from scipy.interpolate import InterpolatedUnivariateSpline
+from libLaser import *
+from libMaterials import *
+from libMath import *
 from matplotlib import rc, font_manager
 # from pylab import *
-from scipy.constants import c, epsilon_0, mu_0, pi, e, m_e, h
-from matplotlib.legend_handler import HandlerLine2D
-import sys
-from colorama import Fore
-from colorama import Style
+from scipy.constants import c, pi
 
 # IMPORT CUSTOM LIBRARIES
 # from libKeldysh import *
 from libDatabase import *
-from libLaser import *
-from libMaterials import *
-from libMath import *
 
 lengthunit = 1e-9
 eta = 0.1 #assumed precision error on the dielectric permittivity

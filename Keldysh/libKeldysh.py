@@ -26,9 +26,9 @@
 # - Keldysh-Corkum model, allowing for analytical treatment of mulltiwavelength fields [Physical Review Letters,
 # 2017, 118, 173601]
 
-from libKeldyshZhukov import *
 # from libKeldyshUlrich import * #NOT READY YET
 from libKeldyshPulses import *
+from libKeldyshZhukov import *
 
 rc('font', **{'family': 'serif', 'serif': ['Helvetica'], 'size': '16'})
 rc('text', usetex=False)

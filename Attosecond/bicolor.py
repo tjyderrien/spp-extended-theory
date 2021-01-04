@@ -30,16 +30,16 @@ omega1 = 2*pi*c/wavelength1
 omega2 = 2*pi*c/wavelength2
 #omega2 = 2.18*omega1
 
-print "Wavelength of pulse 1: "+str(wavelength1*1E9)+" nm."
-print "Advised wavelength of pulse 2: "+str(wavelength2*1E9)+" nm."
+print("Wavelength of pulse 1: "+str(wavelength1*1E9)+" nm.")
+print("Advised wavelength of pulse 2: "+str(wavelength2*1E9)+" nm.")
 
 OneCycleMinDuration_SI = max(wavelength1,wavelength2)/c #3 cycles require this time in s
 
-print "Minimum required duration for a run: 3 cycles of "+str(round(1E15*OneCycleMinDuration_SI*3,0))+" fs each."
+print("Minimum required duration for a run: 3 cycles of "+str(round(1E15*OneCycleMinDuration_SI*3,0))+" fs each.")
 
 RequiredThreeCycleTime_AU = Time_SI_to_AU(OneCycleMinDuration_SI*3)
-print "Total required duration for 3 cycles (a.u.): "+str(RequiredThreeCycleTime_AU)
+print("Total required duration for 3 cycles (a.u.): "+str(RequiredThreeCycleTime_AU))
 TimeStep_AU = 0.25
 TimeStep_SI = Time_AU_to_SI(TimeStep_AU)
-print "TimeStep octopus = "+str(TimeStep_AU)
-print "Required number of steps for octopus for having 3 cycles: "+str(RequiredThreeCycleTime_AU/TimeStep_AU)
+print("TimeStep octopus = "+str(TimeStep_AU))
+print("Required number of steps for octopus for having 3 cycles: "+str(RequiredThreeCycleTime_AU/TimeStep_AU))

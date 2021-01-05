@@ -11,29 +11,21 @@ The code is now made of 3 branches.
 
 # Main developers
 
-* T.J.-Y. Derrien: developing spp and keldysh theory, programming. 
+* T.J.-Y. Derrien: developing spp and keldysh theory implementations, architecte of the project
 
-* F. Preucil: programming the multilayer solver
+* V. P. Zhukov: numerical data for the numerically integrated atomic Keldysh theory (./Keldysh/Zhukov/)
 
-* Y. Levy: LIPSS database contributor.
+* F. Preucil: programmed the multilayer solver (./MultilayerSPP/) 
 
-* J. Bonse: Provided the tabulated Palik data.
-
-# Current collaborators for this code
-
-* Stephan Gräf (Jena University): user for Sipe theory.
-
-* Inam Mirza (Hilase Centre, Prague): user for compound materials
-
-* Aleksander Kovacevic (Bratislava, Serbia): multilayered materials
+* J. Bonse: Provided the tabulated Palik data (./SimpleSPP/Database/Palik).
 
 # Financial supports
 
-* Adolf Martens Fellowship: BAM Federal Institute for Materials Research and Testing. 
+* 2013-2014: Adolf Martens Fellowship: BAM Federal Institute for Materials Research and Testing. 
 
-* HiLASE projects (State Budget of Czech Republic). 
+* 2014-2020: HiLASE projects (State Budget of Czech Republic). 
 
-* Marie Sklodowska-Curie Actions: funding from the European Commission for the Marie Sklodowska-Curie Individual Fellowship under QuantumLaP project No. 657424. 
+* 2015-2017: Marie Sklodowska-Curie Actions: funding from the European Commission for the Marie Sklodowska-Curie Individual Fellowship under QuantumLaP project No. 657424. 
 
 # Purpose of this project
 

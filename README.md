@@ -8,8 +8,6 @@
 
 # README #
 
-# Null modification
-
 # Structure of the code
 
 The code is now made of 3 branches. 

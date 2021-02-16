@@ -25,12 +25,12 @@ precision = 1E-10
 
 # =======================================================
 if(len(sys.argv)<=2):
-  print "Usage: ./plotMultiwavelength.py           \ "
-  print "    <Name of the substrate (Air, Be, Au, ...)> \ "
-  print "    <Source for data: Palik or name of the 1st author> \ "
-  print "    [<precision>: 1E-9 by default>] \ "
-  print "    [--no-show]"
-  print "Example: ./plotMultiwavelength.py Au Johnson"
+  print("Usage: ./plotMultiwavelength.py           \ ")
+  print("    <Name of the substrate (Air, Be, Au, ...)> \ ")
+  print("    <Source for data: Palik or name of the 1st author> \ ")
+  print("    [<precision>: 1E-9 by default>] \ ")
+  print("    [--no-show]")
+  print("Example: ./plotMultiwavelength.py Au Johnson")
   exit()
 
 #============ Manage the command line input =================
@@ -44,7 +44,7 @@ except:
 try:
   precision = float(sys.argv[3])
 except:
-  print "** Warning: precision was choosed by default: 1E-9 m"
+  print("** Warning: precision was choosed by default: 1E-9 m")
 
 # Command line option for avoiding the visual plotting...
 try:
@@ -53,7 +53,7 @@ try:
   else:
     ShowPictures = True
 except: 
-  print "** Warning: No-show command was not defined."
+  print("** Warning: No-show command was not defined.")
   ShowPictures = True
     
 
@@ -88,28 +88,28 @@ MaterialFile1="Air"
 UnitMat1=1e10
 if(source == "-Palik"):
   UnitMat2=1e10
-  print "** Info: Palik optical data selected..."
+  print("** Info: Palik optical data selected...")
 elif(source == "-Johnson"):
   UnitMat2=1e6
-  print "** Info: Johnson optical data selected..."
+  print("** Info: Johnson optical data selected...")
 elif(source == "-GoriAndBond"):
   UnitMat2=1e9
-  print "** Info: GoriAndBond optical data was selected..."  
+  print("** Info: GoriAndBond optical data was selected...")  
 else:
-  print "** Warning: Rare source of optical data was selected... "
+  print("** Warning: Rare source of optical data was selected... ")
   UnitMat2=1e6
 
 #================ Loading Material dielectric complex permittivity into arrays ====================
 try: 
 	MaterialArray2 = loadtxt(MaterialFolder+'/'+MaterialFile2, delimiter='\t', skiprows=4)
 except: 
-	print "** Warning: Could not read "+MaterialFile2+" database."
-	print "** Warning: Attempting second method..."
+	print(("** Warning: Could not read "+MaterialFile2+" database."))
+	print("** Warning: Attempting second method...")
 	try:
 		MaterialArray2 = loadtxt(MaterialFolder+'/'+MaterialFile2, delimiter=' ', skiprows=4)
-		print "Success."
+		print("Success.")
 	except:
-		print "** Error: Also failed reading of database... Exiting."
+		print("** Error: Also failed reading of database... Exiting.")
 		exit()
 		
 #wavelengths2 = MaterialArray2[:,0]
@@ -123,8 +123,8 @@ except:
   try:
     MaterialArray1 = loadtxt(MaterialFolder+'/'+MaterialFile1, delimiter=' ', skiprows=4)
   except:
-    print "** Warning: Material 1 ("+MaterialFile1+") was not found in "+MaterialFolder+"."
-    print "** Warning: Material 1 was replaced by Air."
+    print(("** Warning: Material 1 ("+MaterialFile1+") was not found in "+MaterialFolder+"."))
+    print("** Warning: Material 1 was replaced by Air.")
     
     MaterialArray1 = np.zeros((nlines, 3))
     MaterialArray1[:,1] = np.ones(nlines) #Air index is 1. 
@@ -152,16 +152,16 @@ del n, k
 #print eps2
 
 # Before doing calculations, we shall interpolate the most dense mesh on the second, and take their intersection. 
-print "Wavelength mesh size 1="+str(eps1.size)
-print "Wavelength mesh size 2="+str(eps2.size)
+print(("Wavelength mesh size 1="+str(eps1.size)))
+print(("Wavelength mesh size 2="+str(eps2.size)))
 
 # dense mesh generation
 # TODO: Error on results when taking Palik data on wide spectrum! 
 wavelengths = np.arange(np.amin(wavelengths2),np.amax(wavelengths2),precision)
-print "Checking if wavelength range is reasonable..."
+print("Checking if wavelength range is reasonable...")
 if (wavelengths.size > 1E6 ):
-  print "** Error: interpolation may be very long to perform..."
-  print "**        Reduce precision."
+  print("** Error: interpolation may be very long to perform...")
+  print("**        Reduce precision.")
   exit()
 
 order=1
@@ -170,14 +170,14 @@ feps1i=InterpolatedUnivariateSpline(wavelengths1, eps1.imag, k=order)
 feps2r=InterpolatedUnivariateSpline(wavelengths2, eps2.real, k=order)
 feps2i=InterpolatedUnivariateSpline(wavelengths2, eps2.imag, k=order)
 
-print "Interpolating on Wavelength mesh size = "+str(wavelengths.size)
+print(("Interpolating on Wavelength mesh size = "+str(wavelengths.size)))
 
 eps1new=np.add(feps1r(wavelengths),np.multiply(1.0j, feps1i(wavelengths)))
 eps2new=np.add(feps2r(wavelengths),np.multiply(1.0j, feps2i(wavelengths)))
 
 #========= Multiwavelength data: DATA ARE NOW READY ======
 
-print "Checking quality of interpolation for the dielectric function..."
+print("Checking quality of interpolation for the dielectric function...")
 plt.figure()
 plt.xlabel('Wavelength (nm)')
 plt.ylabel('epsilon')
@@ -194,7 +194,7 @@ plt.title('Dielectric permittivity')
 plt.savefig(MaterialFile1+MaterialFile2+'epsilon.png')
 plt.show()
 
-print "Plot the SPP dispersion relation..."
+print("Plot the SPP dispersion relation...")
 
 betaSPP = np.vectorize(betaSPP)
 omega = np.vectorize(omega)
@@ -323,7 +323,7 @@ omegaspp = omega(wavelengths)
 
 
 # 
-print "Plotting the SPP decay depth and optical penetration depth..."
+print("Plotting the SPP decay depth and optical penetration depth...")
 
 SPPdecayDepth=DecayDepth(kzSPP(wavelengths, eps1new, eps2new))
 SPPdecayDepth2=DecayDepth(kzSPP(wavelengths, eps2new, eps1new))

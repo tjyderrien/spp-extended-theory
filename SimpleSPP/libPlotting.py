@@ -33,7 +33,7 @@ from libDatabase import *
 #  http://stackoverflow.com/questions/8850142/matplotlib-overlapping-annotations
 def get_text_positions(x_data, y_data, txt_width, txt_height):
 
-  a = zip(y_data, x_data)
+  a = list(zip(y_data, x_data))
   text_positions = y_data.copy()
   for index, (y, x) in enumerate(a):
     local_text_positions = [i for i in a if i[0] > (y - txt_height) 
@@ -54,7 +54,7 @@ def get_text_positions(x_data, y_data, txt_width, txt_height):
 
 ## Prepares the arrows for plotting using overlapping annotations
 def text_plotter(x_data, y_data, text_content, text_positions, axis,txt_width,txt_height, color):
-    for x,y,s,t in zip(x_data, y_data, text_content, text_positions):
+    for x,y,s,t in list(zip(x_data, y_data, text_content, text_positions)):
         axis.text(x - txt_width, 1.01*t, s, rotation=0, color=color)
         if y != t:
             axis.arrow(x, t,0,y-t, color='grey',alpha=0.3, width=0.01, 
@@ -261,7 +261,7 @@ def plotSeveralWavelengths(database1, database2, reverse, metal, query):#{{{
   plt.plot(np.sort(eps2r), Radiation1[::-1], 'b--')
   plt.plot(eps2range, LambdaPMA, 'b-') #TODO: plot using a full range, not eps2r
 
-  #print eps1r
+  #print(eps1r)
   #TODO simplify + combine the 3 following tests
   if(metal):
     if(query=="Au (Palik)"):
@@ -269,7 +269,7 @@ def plotSeveralWavelengths(database1, database2, reverse, metal, query):#{{{
     elif(query=="Ti (Johnson)"):
       plt.axis([0,20,0,900]) ##KEEP 900 please #good for Ti
     else:
-      print "** Error: this query is not a planned case. Query="+query
+      print(("** Error: this query is not a planned case. Query="+query))
       #exit()
   else: #non-metal
     plt.axis([-70,0,0,900]) ##KEEP 900 please
@@ -284,7 +284,7 @@ def plotSeveralWavelengths(database1, database2, reverse, metal, query):#{{{
     elif(query=="SiO2 (Palik)"):
       plt.legend(loc=2) #Good for SiO_2
     else:
-      #print "** Error: this query is not a planned case. Query="+query
+      #print("** Error: this query is not a planned case. Query="+query)
       exit()
   else: #metal case
     plt.legend(loc=1)

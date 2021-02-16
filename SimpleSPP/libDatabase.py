@@ -35,7 +35,7 @@ def CleanStrArray(Material2): #{{{
     linenum = linenum + 1
   return(Material2clean)
 #}}}
-#print Material2clean
+#print(Material2clean)
 
 ## Exact (but any type) filter for the SPP database using any type of query to compare with the field number <index>. 
 # @param SPPdb: a numpy array of strings | integers | reals | complex
@@ -122,7 +122,7 @@ def ExportToTxt(dbarray, filename):
     np.savetxt(filename, dbarray, fmt="%s", delimiter='\t', newline='\n',comments='#')
     out = 0
   except: 
-    print "Could not output SPP database into a file"
+    print("Could not output SPP database into a file")
     out = 1
   
   #counter=0
@@ -132,10 +132,10 @@ def ExportToTxt(dbarray, filename):
       #if (np.mod(counter, 20) == 0):
 	#show the table line each 20 lines, but also put it in a table
 	#if (comment):
-	#print '{0:30s} {1:30s} {2:15s} {3:12s} {4:12s} {5:11s} {6:16s} {7:16s} {8:12s} {9:19s} {10:19s} {11:15s}'.format("# Substrate", "Layer", "Wavelength (nm)", "OldSPPactive", "NewSPPactive", "Period (nm)", "DecayDepth1 (nm)", "DecayDepth2 (nm)", "Reflectivity", "OpticalPenetration1", "OpticalPenetration2", "DecayLength")
-      #print dbarray[counter,:]
+	#print('{0:30s} {1:30s} {2:15s} {3:12s} {4:12s} {5:11s} {6:16s} {7:16s} {8:12s} {9:19s} {10:19s} {11:15s}'.format("# Substrate", "Layer", "Wavelength (nm)", "OldSPPactive", "NewSPPactive", "Period (nm)", "DecayDepth1 (nm)", "DecayDepth2 (nm)", "Reflectivity", "OpticalPenetration1", "OpticalPenetration2", "DecayLength"))
+      #print(dbarray[counter,:])
       #Material1 = i
       #counter=counter+1
-  #print Material1
-      #print '{0:30s} {1:30s} {2:15f} {3:12s} {4:12s} {5:11f} {6:16f} {7:16f} {8:12f}  {9:19f} {10:19f} {11:15f}'.format(Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, RealEps, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength)
+  #print(Material1)
+      #print('{0:30s} {1:30s} {2:15f} {3:12s} {4:12s} {5:11f} {6:16f} {7:16f} {8:12f}  {9:19f} {10:19f} {11:15f}'.format(Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, RealEps, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength))
   return out

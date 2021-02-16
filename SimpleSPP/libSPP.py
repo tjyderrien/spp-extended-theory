@@ -84,7 +84,7 @@ def betaSPP(wavelength, eps1, eps2):#{{{
     try:
         value = omega/c * cmath.sqrt(eps1 * eps2 / (eps1 + eps2))
     except: 
-        print "betaSPP: singular case"
+        print("betaSPP: singular case")
         value = -1e0+0e0j
     return value
 #}}}
@@ -328,7 +328,7 @@ def DecayDepth(kzSPP):#{{{
     result=2e0*pi/kzSPP.real
   else: 
     result = -1.
-    #print "Singular case for DecayDepth."
+    #print("Singular case for DecayDepth.")
   return result
 #}}}
 
@@ -370,10 +370,10 @@ def ExperimentallyAchievable(OpticalPenetrationDepth, DecayDepth):#{{{
 #  If comment=="new", old SPP-active interfaces are removed from the table
 def SPPactiveInterfaces(dbarray, comment):#{{{
   counter=0
-  #print len(dbarray)
+  #print(len(dbarray))
   #sizeDatabase = len(dbarray)
   #sizeOfArray = sizeDatabase**2
-  #print sizeOfArray	
+  #print(sizeOfArray)
 
   SPParray = np.empty((0,20)) #, dtype='|S30')
   
@@ -398,7 +398,7 @@ def SPPactiveInterfaces(dbarray, comment):#{{{
       #calculate SPP condition
       if ((wavelength1 == wavelength2) and ConditionOnGap): #we must consider same wavelength, otherwise there is no meaning, but we also select only metallic substrates
         #if (gap2<0.1): #we select only metallic materials for interface 2 = substrate
-        #print wavelength1, wavelength2
+        #print(wavelength1, wavelength2)
         #if (SPPcondition(eps1, eps2)): #the interface is SPP active
           
         # Build the table of SPP active interfaces
@@ -459,10 +459,10 @@ def SPPactiveInterfaces(dbarray, comment):#{{{
         
         # Print only the experimentally possible cases: SPP active depth must be smaller than absorption depth. 
         # ensure that SPPdecayDepth is smaller than layer thickness, to avoid shift of dispersion relation
-        if(LevelOfSPPaccuracy < 3): 
-		ExperimentalAchievable = True #ExperimentallyAchievable(OpticalPenetration1, SPPdecayDepth1)
+        if(LevelOfSPPaccuracy < 3):
+          ExperimentalAchievable = True #ExperimentallyAchievable(OpticalPenetration1, SPPdecayDepth1)
         else:
-		ExperimentalAchievable = ExperimentallyAchievable(OpticalPenetration1, SPPdecayDepth1)
+          ExperimentalAchievable = ExperimentallyAchievable(OpticalPenetration1, SPPdecayDepth1)
         
         # Print the table of active SPP interfaces for all cases or only new SPP interfaces					
         #if( not (comment=="new")):
@@ -518,7 +518,7 @@ def SPPactiveInterfaces(dbarray, comment):#{{{
       ##calculate SPP condition
       #if ((wavelength1 == wavelength2) and ConditionOnGap): #we must consider same wavelength, otherwise there is no meaning, but we also select only metallic substrates
         ##if (gap2<0.1): #we select only metallic materials for interface 2 = substrate
-        ##print wavelength1, wavelength2
+        ##print(wavelength1, wavelength2)
         ##if (SPPcondition(eps1, eps2)): #the interface is SPP active
           
         ## Build the table of SPP active interfaces
@@ -569,10 +569,10 @@ def SPPactiveInterfaces(dbarray, comment):#{{{
         #if(ExperimentalAchievable and (RealEps!=0)):
           #if (np.mod(counter, 20) == 0): 
             ##show the table line each 20 lines
-            #print '{0:30s} {1:30s} {2:15s} {3:12s} {4:12s} {5:11s} {6:16s} {7:16s} {8:12s} {9:19s} {10:19s}'.format("# Substrate", "Layer", "Wavelength (nm)", "OldSPPactive", "NewSPPactive", "Period (nm)", "DecayDepth1 (nm)", "DecayDepth2 (nm)", "Reflectivity", "OpticalPenetration1", "OpticalPenetration2")
+            #print('{0:30s} {1:30s} {2:15s} {3:12s} {4:12s} {5:11s} {6:16s} {7:16s} {8:12s} {9:19s} {10:19s}'.format("# Substrate", "Layer", "Wavelength (nm)", "OldSPPactive", "NewSPPactive", "Period (nm)", "DecayDepth1 (nm)", "DecayDepth2 (nm)", "Reflectivity", "OpticalPenetration1", "OpticalPenetration2"))
           
           #counter=counter+1
-          #print '{0:30s} {1:30s} {2:15f} {3:12s} {4:12s} {5:11f} {6:16f} {7:16f} {8:12f}  {9:19f} {10:19f}'.format(Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, RealEps, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2)
+          #print('{0:30s} {1:30s} {2:15f} {3:12s} {4:12s} {5:11f} {6:16f} {7:16f} {8:12f}  {9:19f} {10:19f}'.format(Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, RealEps, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2))
         
   #return 0
 
@@ -603,7 +603,7 @@ def SPPactiveInterfaces(dbarray, comment):#{{{
       ##calculate SPP condition
       #if ((wavelength1 == wavelength2) and ConditionOnGap): #we must consider same wavelength, otherwise there is no meaning, but we also select only metallic substrates
         ##if (gap2<0.1): #we select only metallic materials for interface 2 = substrate
-        ##print wavelength1, wavelength2
+        ##print(wavelength1, wavelength2)
         ##if (SPPcondition(eps1, eps2)): #the interface is SPP active
           
         ## Build the table of SPP active interfaces
@@ -654,10 +654,10 @@ def SPPactiveInterfaces(dbarray, comment):#{{{
         #if(ExperimentalAchievable and (RealEps!=0)):
           #if (np.mod(counter, 20) == 0): 
             ##show the table line each 20 lines
-            #print '{0:30s} {1:30s} {2:15s} {3:12s} {4:12s} {5:11s} {6:16s} {7:16s} {8:12s} {9:19s} {10:19s}'.format("# Substrate", "Layer", "Wavelength (nm)", "OldSPPactive", "NewSPPactive", "Period (nm)", "DecayDepth1 (nm)", "DecayDepth2 (nm)", "Reflectivity", "OpticalPenetration1", "OpticalPenetration2")
+            #print('{0:30s} {1:30s} {2:15s} {3:12s} {4:12s} {5:11s} {6:16s} {7:16s} {8:12s} {9:19s} {10:19s}'.format("# Substrate", "Layer", "Wavelength (nm)", "OldSPPactive", "NewSPPactive", "Period (nm)", "DecayDepth1 (nm)", "DecayDepth2 (nm)", "Reflectivity", "OpticalPenetration1", "OpticalPenetration2"))
           
           #counter=counter+1
-          #print '{0:30s} {1:30s} {2:15f} {3:12s} {4:12s} {5:11f} {6:16f} {7:16f} {8:12f}  {9:19f} {10:19f}'.format(Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, RealEps, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2)
+          #print('{0:30s} {1:30s} {2:15f} {3:12s} {4:12s} {5:11f} {6:16f} {7:16f} {8:12f}  {9:19f} {10:19f}'.format(Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, RealEps, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2))
         
   #return 0
 

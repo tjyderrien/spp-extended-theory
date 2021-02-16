@@ -74,7 +74,7 @@ numberlevels = 12 #for the final 2D plot
 #for kappax in meshkappa:
 
 #ftab = np.arange(0, 1, 0.1)
-print "Info: Generating the mesh..."
+print("Info: Generating the mesh...")
 kapparange = np.arange(0.1,2.,0.1)
 #for wavelength in wavelengths
 #for f in ftab:
@@ -113,14 +113,14 @@ query = 'Air'
 #query2= 'Mo (Ordal 1988)'
 #query2= 'Cu (Palik)'
 #query2='SiO2 (Palik)'
-print "Caution: the values of queries must be exactly the one of MaterialDatabase.csv."
+print("Caution: the values of queries must be exactly the one of MaterialDatabase.csv.")
 
 wavelength = 1026.0
 select = str(int(wavelength))
 request = select+".0"
 unit = 1E-9
 wavelength = wavelength * unit
-print "Wavelength = "+str(wavelength/unit)+" nm."
+print("Wavelength = "+str(wavelength/unit)+" nm.")
 
 ## Prepares the usual SipeEfficiencyFactor(kx, ky) for a specific material query2 immersed in Air. 
 # @param wavelength: photon energy given in SI (meters)
@@ -130,44 +130,44 @@ print "Wavelength = "+str(wavelength/unit)+" nm."
 def plotSipeFromDatabase(select, query2, k_precision=5e-2, query='Air'): #{{{
   ## Generate the database
   SPPdb = GenerateDatabase() #Generate from MaterialDatabase.csv
-  print "SPP database has "+str(len(SPPdb))+" entries."
+  print("SPP database has "+str(len(SPPdb))+" entries.")
 
   #print "Full Database:"
   #print SPPdb
 
   # Select the material of interface 1
   SPPdb = FilterDatabase(SPPdb, query, 0)
-  print "Filter on materials: SPP database has now "+str(len(SPPdb))+" entries."
+  print("Filter on materials: SPP database has now "+str(len(SPPdb))+" entries.")
 
   
   # Filter database on materials
   try: 
     title = query2
     SPPdb = FilterDatabase(SPPdb, query2, 1)
-    print "Filter on material: SPP database "+title+" has "+str(len(SPPdb))+" entries."
-    print Header+"Check the level of tolerance in libSPP.py."
+    print("Filter on material: SPP database "+title+" has "+str(len(SPPdb))+" entries.")
+    print(Header+"Check the level of tolerance in libSPP.py.")
     #print SPPdb
   except:
-    print "Exception: no optical data is available for "+query+" at "+title+"."
-    print SPPdb
+    print("Exception: no optical data is available for "+query+" at "+title+".")
+    print(SPPdb)
     exit()
 
-  print SPPdb #works well
+  print(SPPdb) #works well
   # Filter database on wavelength
   title = select+' nm'
   try: 
     SPPdb = FilterDatabase(SPPdb, select, 2)
-    print "Filter on wavelength: SPP database "+title+" has "+str(len(SPPdb))+" entries."
+    print("Filter on wavelength: SPP database "+title+" has "+str(len(SPPdb))+" entries.")
   except:
-    print "Exception: no optical data is available for "+query+" at "+title+"."
-    print SPPdb
+    print("Exception: no optical data is available for "+query+" at "+title+".")
+    print(SPPdb)
     exit()
     
 
 
 
   if(len(SPPdb)==0):
-    print "SPP database returned 0 matching result."
+    print("SPP database returned 0 matching result.")
     exit()
     
   # Extract materials from database
@@ -182,7 +182,7 @@ def plotSipeFromDatabase(select, query2, k_precision=5e-2, query='Air'): #{{{
   epsilon1 = np.add(eps1rM,np.multiply(1e0j, eps1cM))
   epsilon2 = np.add(eps2rM,np.multiply(1e0j, eps2cM))
     
-  print "Mesh generation..."
+  print("Mesh generation...")
   k_precision = 1e-2
   SipeRanges = 2e0
   kx = np.arange(-SipeRanges,SipeRanges,k_precision)
@@ -191,14 +191,14 @@ def plotSipeFromDatabase(select, query2, k_precision=5e-2, query='Air'): #{{{
 
   # calculating Sipe efficiency for many materials
   
-  print "Calculating efficiency for all (kx, ky) values at wavelength "+title+"."
+  print("Calculating efficiency for all (kx, ky) values at wavelength "+title+".")
 
-  print "kxx shape = "+str(kxx.shape)+"."
+  print("kxx shape = "+str(kxx.shape)+".")
   etaSipe = np.zeros(kxx.shape)
 
   materialIndex = 0
-  print "Preparing 2D figure for material "+str(Material2[materialIndex])
-  print epsilon2[materialIndex]
+  print("Preparing 2D figure for material "+str(Material2[materialIndex]))
+  print(epsilon2[materialIndex])
 
   for m in np.arange(0,(kx.size),1):
 	  #idy=0
@@ -211,11 +211,11 @@ def plotSipeFromDatabase(select, query2, k_precision=5e-2, query='Air'): #{{{
 		  #idy=idy+1
 	  #idx=idx+1	
 
-  print etaSipe
+  print(etaSipe)
 
   maximum = np.amax(etaSipe)
-  print maximum
-  print Header+"Plot the graph for one given dielectric permittivity."
+  print(maximum)
+  print(Header+"Plot the graph for one given dielectric permittivity.")
   plt.figure()
   levels = np.arange(0,maximum,maximum/numberlevels)
   CS = plt.contourf(kxx, kyy, etaSipe, levels=levels, cmap=plt.cm.Blues)
@@ -231,11 +231,11 @@ def plotSipeFromDatabase(select, query2, k_precision=5e-2, query='Air'): #{{{
 
 ## Prepare a generalized plot2d of the Sipe model for any material at equilibrium. 
 def plotGenericSipeMaps(): #{{{
-  print Header+"Plot the kappaX for which maximum efficiency is found as function of dielectric permittivity. "
+  print(Header+"Plot the kappaX for which maximum efficiency is found as function of dielectric permittivity. ")
   # This could help to localize problems and limitations of the Sipe theory. 
 
   # Generating kappaX, kappaY meshes. 
-  print "Mesh generation..."
+  print("Mesh generation...")
   k_precision = 0.5
   SipeRanges = 2e0
   #kx = np.arange(0.,SipeRanges,k_precision)
@@ -255,14 +255,14 @@ def plotGenericSipeMaps(): #{{{
   epsI2, epsR2 = np.meshgrid(epsI, epsR)
   epsilon2 = np.add(epsR2,np.multiply(1e0j, epsI2)) #map of all possible dielectric permittivities
 
-  print "Calculating efficiency for all (kx, ky) values at wavelength "+title+"."
+  print("Calculating efficiency for all (kx, ky) values at wavelength "+title+".")
 
   #print "kxx shape = "+str(kxx.shape)+"."
   etaSipe = np.zeros((len(kx), len(ky), len(epsR), len(epsI)))
-  print Header+"Memory usage: "+str(len(kx)*len(ky)*len(epsR)*len(epsI)*64./8./1024./1024.)+" MB."
+  print(Header+"Memory usage: "+str(len(kx)*len(ky)*len(epsR)*len(epsI)*64./8./1024./1024.)+" MB.")
   #print Header+"Memory usage: "+str(len(etaSipe)*64./8./1024.)+" kB."
 
-  print Header+"Shape (kx,ky,epsR,epsI)="+str(np.shape(etaSipe))
+  print(Header+"Shape (kx,ky,epsR,epsI)="+str(np.shape(etaSipe)))
 
   # Building the etaSipe(kx,ky) distribution for all values of permittivities and all kappa_x, kappa_y.
   for j in np.arange(0,len(epsR),1):
@@ -281,7 +281,7 @@ def plotGenericSipeMaps(): #{{{
   #print etaSipe
   maximum = np.amax(etaSipe) #finds maximum value of efficiency
 
-  print Header+"** Info: Maximum value of efficacy: "+str(maximum)
+  print(Header+"** Info: Maximum value of efficacy: "+str(maximum))
   #print etaSipe[0,0,:,:]
   # TODO: find the value of kappaX, kappaY and epsilon for which efficiency is maximum. 
 

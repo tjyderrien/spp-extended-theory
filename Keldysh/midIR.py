@@ -31,18 +31,18 @@ PhotonEnergy=np.divide(h*c,wavelength)
 E = PhotonEnergy / e
 
 def BeamProperties(): 
-    print "Wavelengths (m)"
-    print wavelength
-    print "Photon Energies (eV)"
-    print E
-    print "Duration for 1 cycle (s)"
+    print("Wavelengths (m)")
+    print(wavelength)
+    print("Photon Energies (eV)")
+    print(E)
+    print("Duration for 1 cycle (s)")
     omega = np.divide(2.*np.pi*c,wavelength)
     T = np.divide(2.*np.pi, omega)
-    print T
-    print "Photon frequency (Hz)"
-    print np.divide(2.*np.pi,T)
-    print "Number of cycles in each pulse"
-    print np.divide(tau, T)
+    print(T)
+    print("Photon frequency (Hz)")
+    print(np.divide(2.*np.pi,T))
+    print("Number of cycles in each pulse")
+    print(np.divide(tau, T))
 
 def Si():
     Egap_d = 3.4*e
@@ -76,23 +76,23 @@ wavelength_index = 0 #1, 2
 numpoints = 10
     
 def BeamIntensity(): 
-    print "Peak fluence (J/cm2)"
+    print("Peak fluence (J/cm2)")
     PeakFluence = 2.*EnergyPerPulse / np.pi / w0**2
-    print PeakFluence*1e-4
-    print "Peak intensity (J/m2)"
+    print(PeakFluence*1e-4)
+    print("Peak intensity (J/m2)")
     Ipeak = PeakFluence / tau * np.sqrt(4.*np.log(2.)/np.pi)
-    print Ipeak
-    print "Peak field (V/nm)"
+    print(Ipeak)
+    print("Peak field (V/nm)")
     Efield = np.sqrt(2.*Ipeak / c / epsilon_0) #V/m
-    print Efield/1e9
+    print(Efield/1e9)
     return PeakFluence, Ipeak, Efield
 
 PeakFluence, Ipeak, Efield = BeamIntensity()
 
-print "Keldysh Adiabadicity coefficients"
-print gammaKeldysh(Egap_d, meff, Efield, wavelength)
+print("Keldysh Adiabadicity coefficients")
+print(gammaKeldysh(Egap_d, meff, Efield, wavelength))
 
-print "=== Intensity dependent results ==="
+print("=== Intensity dependent results ===")
 Ipeak_max = 14.95E16 #W/m2
 Efield_max = np.sqrt(2.*Ipeak / c / epsilon_0)
 Efields_log = np.linspace(6, np.log10(Efield_max), numpoints)

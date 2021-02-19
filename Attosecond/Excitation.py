@@ -45,19 +45,19 @@ MaterialDB = loadtxt(database, dtype='str', delimiter='\t')
 query = "ZnO"
 try:
   MaterialDB = FilterDatabaseContains(MaterialDB, query, 0) # Find ZnO for the given wavelength
-  print "Refined database..."
-  print MaterialDB
+  print("Refined database...")
+  print(MaterialDB)
 except: 
-  print "** Error: Material is not contained into Materials database. "
+  print("** Error: Material is not contained into Materials database. ")
   exit()
   
 query = str(int(wavelength*1E9))
 try:
   MaterialDB = FilterDatabaseContains(MaterialDB, query, 2)
-  print "Refined database..."
-  print MaterialDB
+  print("Refined database...")
+  print(MaterialDB)
 except: 
-  print "** Error: this material does not contain the required wavelength. "
+  print("** Error: this material does not contain the required wavelength. ")
 
 # Extract ZnO data from database
 ZnO_name, ZnO_bandgap, ZnO_wavelength, ZnO_epsilonRe, ZnO_epsilonIm = ExtractMaterialData(MaterialDB)
@@ -71,10 +71,10 @@ density_ZnO = 5.61E3 #[kg/m^3]
 N_avogadro = 6.02E23 #[mol^-1]
 MassMol = 81.408E-3 #[kg/mol]
 N_total = density_ZnO / MassMol * N_avogadro # (Density [kg*m^-3] / MassMol [kg/mol] = mol / m3 ) * N_avogadro [mol^-1] = Density [m^-3]
-print "** Info: Maximum excitation density: "+str(N_total)
+print(("** Info: Maximum excitation density: "+str(N_total)))
 
 
-print "** Generating tables of excited electron density..."
+print("** Generating tables of excited electron density...")
 instants, N_excited_Keldysh, N_excited_Gruzdev = generateWpiTables(Egap, meff, wavelength, tau, PeakFluence, dt, order) #wPIg as function of Efield amplitudes (do we need to put the pulse there?)
 
 ShortRefKeldysh = "[Keldysh (1964)]"
@@ -82,21 +82,21 @@ ShortRefGruzdev = "[Gruzdev (2014)]"
 
 #TODO: shall we compute N_exc(t) for each pulse intensity? or make a simple law? Rather compute the whole thing. 
 #N_exc = 
-print ""
-print "** Warning: results may be not converged."
-print "            Reduce dt, and increase order until convergence."
-print ""
+print("")
+print("** Warning: results may be not converged.")
+print("            Reduce dt, and increase order until convergence.")
+print("")
 #print "Maximum density N_ex "+ShortRefKeldysh+" = "+str(N_excited_Keldysh.max())+"."
-print "Maximum density N_ex "+ShortRefGruzdev+" = "+str(N_excited_Gruzdev.max())+"."
-print ""
+print(("Maximum density N_ex "+ShortRefGruzdev+" = "+str(N_excited_Gruzdev.max())+"."))
+print("")
 
-print "** Pluging these excitations into dielectric permittivity change. "
+print("** Pluging these excitations into dielectric permittivity change. ")
 
 
-print "** Get the ZnO dielectric permittivity at equilibrium in database..."
+print("** Get the ZnO dielectric permittivity at equilibrium in database...")
 #print ZnO_epsilonRe[0], ZnO_epsilonIm[0]
 epsilon_inf = float(ZnO_epsilonRe[0]) + 1j * float(ZnO_epsilonIm[0])
-print "** Excitation of the ZnO..."
+print("** Excitation of the ZnO...")
 epsilon_exc = Drude(wavelength, N_excited_Gruzdev.max(), epsilon_inf, collisionRate, meff)
-print "** Epsilon for excited ZnO (maximum value only): "+str(epsilon_exc)+" ."
+print(("** Epsilon for excited ZnO (maximum value only): "+str(epsilon_exc)+" ."))
 #plotPulseToDensity(Egap, meff, wavelength, tau, PeakFluence, dt, order, ShowPlot, 0e0, Ntotal)

@@ -131,11 +131,11 @@ B2 = (C*cmath.exp((k2-k1)*t/2) - D*cmath.exp((k2+k1)*t/2))*(k1*eps2)/(k2*eps1) #
 
 print('Field amplitudes:')
 print()
-print('A:', A)
-print('C:', C)
-print('D:', D)
-print('B:', B)
-print('B2:', B2)
+print(('A:', A))
+print(('C:', C))
+print(('D:', D))
+print(('B:', B))
+print(('B2:', B2))
 
 #field functions
 def Hy(x, z):

@@ -88,7 +88,7 @@ for thickness in t_list:
     for branch in np.arange(0,num_branches):
         for root_number in np.arange(0,num_roots): 
             #print(neTiO2[order], thickness, roots[branch][root_number][0], roots[branch][root_number][1], eps1.real, eps1.imag)
-            print(eps1.real, thickness, roots[branch][root_number][0], roots[branch][root_number][1], eps1.real, eps1.imag, eps1.real*eps2.real+eps1.imag*eps2.imag, eps1.real*eps3.real+eps1.imag*eps3.imag)
+            print((eps1.real, thickness, roots[branch][root_number][0], roots[branch][root_number][1], eps1.real, eps1.imag, eps1.real*eps2.real+eps1.imag*eps2.imag, eps1.real*eps3.real+eps1.imag*eps3.imag))
             #print(neTiO2[order], thickness, roots[branch][root_number][0],
         #print("\n")
 

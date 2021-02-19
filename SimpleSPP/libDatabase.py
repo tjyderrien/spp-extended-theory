@@ -138,7 +138,7 @@ def ExportToTxt(dbarray, filename, header=""):
     np.savetxt(filename, dbarray, fmt="%s", delimiter='\t', header=header, newline='\n',comments='#')
     out = 0
   except: 
-    print "Could not write database into a file."
+    print("Could not write database into a file.")
     out = 1
   
   #counter=0

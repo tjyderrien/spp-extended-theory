@@ -44,7 +44,7 @@ fraction = np.arange(0., 1., 1e-2)
 EffectivePermittivity = MaxwellGarnett2(eps1, eps2, 1.-fraction)
 Reflectivity = reflectivity(1., EffectivePermittivity, 0E0, 'S')
 
-print "Plotting Maxwell-Garnett 2-material mixing."
+print("Plotting Maxwell-Garnett 2-material mixing.")
 plt.figure()
 plt.title('Mixture: '+MaterialFile1+'/'+MaterialFile2+r" ($\lambda=$"+str(int(1E9*wavelength))+" nm)")
 

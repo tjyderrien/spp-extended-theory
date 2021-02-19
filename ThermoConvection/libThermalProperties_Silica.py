@@ -43,42 +43,42 @@ def Liquid_VolumicMass():
 
 def Solid_ThermalConductivity(T):
   if(T >= MeltingTemperature()): 
-    print Header+"** Warning: Solid_ThermalConductivity() is used out validity range. "
+    print(Header+"** Warning: Solid_ThermalConductivity() is used out validity range. ")
   result = 0.14E2 #W/m/K [Bauerle data]
   return result
 
 def Liquid_ThermalConductivity(T):
   if(T < MeltingTemperature()): 
-    print Header+"** Warning: Liquid_ThermalConductivity() is used out of its validity range. "
+    print(Header+"** Warning: Liquid_ThermalConductivity() is used out of its validity range. ")
   return 0.014E2 #W/m/K [Bauerle data]
 
 def Solid_HeatDiffusivity(T):
   if(T >= MeltingTemperature()): 
-    print Header+"** Warning: Solid_HeatDiffusivity() is used out of its validity range. "
+    print(Header+"** Warning: Solid_HeatDiffusivity() is used out of its validity range. ")
   return 0.086e-4 #m2/s
 
 def Liquid_HeatDiffusivity(T):
   if(T < MeltingTemperature()): 
-    print Header+"** Warning: Liquid_HeatDiffusivity() is used out of its validity range. "
+    print(Header+"** Warning: Liquid_HeatDiffusivity() is used out of its validity range. ")
   return 0.009E-4 #m2/s
 
 def Solid_HeatCapacity(T):
   if(T >= MeltingTemperature()): 
-    print Header+"** Warning: Solid_HeatCapacity() is used out of its validity range. "
+    print(Header+"** Warning: Solid_HeatCapacity() is used out of its validity range. ")
   # to be multiplied by density!
   return 0.74e3 #J / kg / K
 
 def Liquid_HeatCapacity(T):
   # to be multiplied by density!
   if(T < MeltingTemperature()): 
-    print Header+"** Warning: Liquid_HeatCapacity() is used out of its validity range. "
+    print(Header+"** Warning: Liquid_HeatCapacity() is used out of its validity range. ")
   return 0.72E3 #J / kg / K
 
 ## Thermal Conductivity of silica, for a wide range of temperatures. 
 #Fitted on Wray, Kurt L. and Connolly, Thomas J., "Thermal Conductivity of Clear Fused Silica at High Temperatures", Journal of Applied Physics (1959), 1702--1705.
 def HeatConductivity(T):
   if(T < 300. or T > 2000.):
-    print Header+"** Warning: HeatConductivity() was used out of its validity range."
+    print(Header+"** Warning: HeatConductivity() was used out of its validity range.")
   a3 = 7.06418e-10
   a2 = -3.96976e-6
   a1 = 7.56664e-3
@@ -105,7 +105,7 @@ def DynamicViscosity(T):
   Tm_SiO2   = MeltingTemperature() #K
   Tmax_SiO2 = 2000e0 #K [arbitrary?]
   if(T < Tm_SiO2 or T>Tmax_SiO2):
-    print Header+"** Warning: dynamic viscosity was taken out of range (SiO2 temperature must be liquid). "
+    print(Header+"** Warning: dynamic viscosity was taken out of range (SiO2 temperature must be liquid). ")
     result = 0e0
   else: 
     a=6.23888379570223e0; b=-14.6668118241314e0; 

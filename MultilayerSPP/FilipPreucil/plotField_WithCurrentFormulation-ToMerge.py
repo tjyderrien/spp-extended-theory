@@ -154,11 +154,11 @@ D = Dh + Dp
 
 print('Field amplitudes:')
 print()
-print('A:', A)
-print('C:', C)
-print('D:', D)
-print('B:', B)
-print('B2:', B2)
+print(('A:', A))
+print(('C:', C))
+print(('D:', D))
+print(('B:', B))
+print(('B2:', B2))
 
 #field functions
 def Hy(x, z):

@@ -96,8 +96,8 @@ class FamilyOfCurves:
       self.f=np.tile(self.f,(len(self.q),1));
 
     # test shape of input data
-    if (self.q.shape[0] <> self.x.shape[0]) or \
-       (self.x.shape    <> self.f.shape):
+    if (self.q.shape[0] != self.x.shape[0]) or \
+       (self.x.shape    != self.f.shape):
       raise ValueError("Invalid shape of arguments.");
 
     # test for double parameters
@@ -148,19 +148,19 @@ class FamilyOfCurves:
       try:
         tckp    = scipy.interpolate.splrep(self.x[iq],self.f[iq],k=k);
       except (ValueError, TypeError):
-        print "\n ERROR: in cubic spline representation!"
-        print "   during interpolation of %s(%s) for parameter %s[%d]=%f " \
-              %(self.fdesc,self.xdesc,self.qdesc,iq,self.q[iq]);
+        print("\n ERROR: in cubic spline representation!")
+        print("   during interpolation of %s(%s) for parameter %s[%d]=%f " \
+              %(self.fdesc,self.xdesc,self.qdesc,iq,self.q[iq]));
 
         # E: input x-array not ascending ?
         if np.any(self.x[1:]-self.x[:-1]<0):
           print("   reason:   input x-values are not ascending");
-          print("   solution: you may change the range of %s\n"%(self.xdesc));
+          print(("   solution: you may change the range of %s\n"%(self.xdesc)));
 
         # E: not enough input points ?
         if self.x.shape[1]<=k:
-          print("   reason:   not enough %s values "% (self.xdesc) \
-                +"for cubic spline interpolation (should be >3)" );
+          print(("   reason:   not enough %s values "% (self.xdesc) \
+                +"for cubic spline interpolation (should be >3)" ));
           print("   solution: reduce order of the spline fit (optional flag 'k')\n");
 
         # plot curves for info
@@ -172,9 +172,9 @@ class FamilyOfCurves:
       try:
         fnew[iq,:]= scipy.interpolate.splev(xnew,tckp);
       except ValueError:
-        print "\n ERROR: in cubic spline evaluation!"
-        print "   during interpolation of %s(%s) for parameter %s[%d]=%f " \
-              %(self.fdesc,self.xdesc,self.qdesc,iq,self.q[iq]);
+        print("\n ERROR: in cubic spline evaluation!")
+        print("   during interpolation of %s(%s) for parameter %s[%d]=%f " \
+              %(self.fdesc,self.xdesc,self.qdesc,iq,self.q[iq]));
 
         # E: xnew outside x-range ?
         if np.any((xnew.min < self.x) | (self.x<xmin.max)):
@@ -226,10 +226,10 @@ class Interpolator:
       # default: w(q) = 1/( Int f(q,x) dx )
       # NOTE: physically this is not justified. Depending on the quantity,
       #       it migth be also better to use 1/( Int f(q,x)*x dx ) !
-      print "\n WARNING: using summation rule w(q) = 1/( Int f(q,x) dx ) " +\
-            "\n          which is probably unphysical. Use wfunc option instead."
+      print("\n WARNING: using summation rule w(q) = 1/( Int f(q,x) dx ) " +\
+            "\n          which is probably unphysical. Use wfunc option instead.")
       Fmax=scipy.integrate.trapz(self.input.f,self.input.x);
-      print self.input.q; print Fmax
+      print(self.input.q); print(Fmax)
       self.__Fmax_tckp = scipy.interpolate.splrep(self.input.q,Fmax,k=self.k);
       self.wfunc = lambda q,x: 1./scipy.interpolate.splev(q,self.__Fmax_tckp);
     else:
@@ -279,9 +279,9 @@ class Interpolator:
     Fmin=F[:,-1].min(); Fmax=F[:,-1].max();     
     Fi=Fi[np.where(Fi<Fmin)];                   # make F(q,x) surjective
     if (Fmax-Fmin)/(Fmax+Fmin) > 0.001:         # check normalization
-      print "\n WARNING: normalization of integrals deviates by "      +\
+      print("\n WARNING: normalization of integrals deviates by "      +\
             "%4.1f%% at x=%4.1f"%(100*(Fmax-Fmin)/(Fmax+Fmin),x[0,-1]) +\
-            "\n         check the sum-rule and eventually increase the x-range."
+            "\n         check the sum-rule and eventually increase the x-range.")
     xi=FamilyOfCurves(q,F,x,
                       qdesc="q",xdesc="F",fdesc="x").interpolate_x(Fi,k=self.k);
                                                 # interp. curves x(q,F) along
@@ -321,7 +321,7 @@ class Interpolator:
     # TODO, check if q/x_new is in q/x
     for q in q_new:
       if q < self.input.q[0] or q > self.input.q[-1]:
-        raise(ValueError("q=%5.3f is outside of the input parameter range!"%q));
+        raise ValueError;
 
     # -- (F) q-interpolation of  xi(Fi,q) -> xi_new(Fi,q_new) -----------------
     xi_new = self.__xi_of_Fi_q.interpolate_x(q_new,k=self.k);
@@ -340,8 +340,8 @@ class Interpolator:
     x_max = xi_new[-1].min();  
     if (x_new.max() > x_max):                   # make xi_new(Fi,q_new) surj.
       x_new = x_new[np.where(x_new<x_max)];
-      print(" WARNING: x-range truncated during inversion to " +\
-            "[%4.1f,%4.1f]"%(xi_new[0,0],x_max));
+      print((" WARNING: x-range truncated during inversion to " +\
+            "[%4.1f,%4.1f]"%(xi_new[0,0],x_max)));
     F_new=FamilyOfCurves(q_new, xi_new.swapaxes(0,1), self.__xi_of_Fi_q.q, 
          qdesc="q_new",xdesc="xi_new",fdesc="Fi").interpolate_x(x_new,k=self.k);
                                     # interpolate curves Fi(q_new,xi_new) along
@@ -397,7 +397,7 @@ if __name__ == '__main__':
       line = file.readline();
       if not line :    break       # EOF reached
       if line[0]=='#': continue    # ignore comment
-      col = map(float,line.split());
+      col = list(map(float,line.split()));
       x.append(col[0]); f.append(col[1]);
     file.close();
     return(f,x);

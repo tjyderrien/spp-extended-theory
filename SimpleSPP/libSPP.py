@@ -86,7 +86,7 @@ def betaSPP(wavelength, eps1, eps2):#{{{
     try:
         value = omega/c * cmath.sqrt(eps1 * eps2 / (eps1 + eps2))
     except: 
-        print "**Info: betaSPP: singular case"
+        print("**Info: betaSPP: singular case")
         value = -1e0+0e0j
     return value
 #}}}
@@ -443,7 +443,7 @@ def SPPactiveInterfaces(dbarray, comment):#{{{
         elif(LevelOfSPPaccuracy==2):
             Condition=RegularLIPSScondition
         else: 
-            print Header+"** Error: level of tolerance over SPP conditions is not well indicated. See libSPP.py: LevelOfSPPaccuracy."
+            print(Header+"** Error: level of tolerance over SPP conditions is not well indicated. See libSPP.py: LevelOfSPPaccuracy.")
             exit()
         if(Condition):
 	        Period=(period(betaSPP(wavelength1,eps1, eps2))/lengthunit)

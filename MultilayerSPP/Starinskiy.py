@@ -223,8 +223,8 @@ def BackgroundForMie(): #{{{
     Romega3_10nm = BiLayerReflectivity(wavelength_new_t, epsAir_t, eps_SiOxNP_10nm, eps_SiO2_t, film_thickness) #Sample5
     Romega3_12nm = BiLayerReflectivity(wavelength_new_t, epsAir_t, eps_SiOxNP_12nm, eps_SiO2_t, film_thickness) #Sample6
     
-    print "** DEBUG **"
-    print Tomega1_7nm
+    print("** DEBUG **")
+    print(Tomega1_7nm)
     
     ## Plotting the final results. 
     
@@ -340,19 +340,19 @@ film_thickness = 30e-9 #Experiment was made with 30 nm.
 
 # Logical
 d_ref = np.sqrt(area_measurement)
-print "== VOLUME FRACTION =="
-print "Nanoparticles in air, no film"
+print("== VOLUME FRACTION ==")
+print("Nanoparticles in air, no film")
 # VolumeFraction_SquareArea(thickness, radius, d_ref, N)
-print VolumeFraction_SquareArea(2.*radius, radius, d_ref, Number_of_particles_per_area)
+print(VolumeFraction_SquareArea(2.*radius, radius, d_ref, Number_of_particles_per_area))
 
-print "Nanoparticles in SiOx film (warning: volume fraction will vary with film thickness)"
-print VolumeFraction_SquareArea(film_thickness, radius, d_ref, Number_of_particles_per_area)
-print "Warning: these values don't take into account the particle distribution."
+print("Nanoparticles in SiOx film (warning: volume fraction will vary with film thickness)")
+print(VolumeFraction_SquareArea(film_thickness, radius, d_ref, Number_of_particles_per_area))
+print("Warning: these values don't take into account the particle distribution.")
 
-print "Nanoparticles in a SiOx film of thickness settled by the nanoparticle average diameter."
-print VolumeFraction_SquareArea(2*radius, radius, d_ref, Number_of_particles_per_area)
-print "Warning: these values don't take into account the particle distribution."
+print("Nanoparticles in a SiOx film of thickness settled by the nanoparticle average diameter.")
+print(VolumeFraction_SquareArea(2*radius, radius, d_ref, Number_of_particles_per_area))
+print("Warning: these values don't take into account the particle distribution.")
 
-print "== EFFECTIVE OPTICAL DATA =="
+print("== EFFECTIVE OPTICAL DATA ==")
 BackgroundForMie()
-print "See .csv files."
+print("See .csv files.")

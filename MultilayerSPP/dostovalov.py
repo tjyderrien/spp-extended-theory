@@ -116,14 +116,14 @@ def ScenarioOfOxidePrecipitation(epsMedium, epsSubstrate, epsEnvironment=1.):
         num_property = roots_shape[1]
 
         for branch in np.arange(0,num_branches-1):
-            print("1.", thickness, roots[branch][0], roots[branch][1], eps1.real, eps1.imag)
+            print(("1.", thickness, roots[branch][0], roots[branch][1], eps1.real, eps1.imag))
 
 ## Preparation of the excited SPP as function of the electron temperature (estimation)
 def PeriodsAsFunctionOfTemperature(epsSample, epsSubstrate=1., epsEnvironment=1., Te_size=10, SampleName='Cr', SubstrateName='BK7', PlotLspp=False, FilterNegativeLspp=False, PlotEpsilons=True, Te_max=1E6):
     
     ## In this function, Te should be interpreted as state of matter (in term of electron temperature)
     
-    print(Header, "# Info: Considering temperature Te of electron in Cr with Cr2O3 with several thicknesses.")
+    print((Header, "# Info: Considering temperature Te of electron in Cr with Cr2O3 with several thicknesses."))
     wavelength = 1026e-9
     #Te_size = 60
     numberofroots = 10 #per branch. 10 exceeds the final number of roots per branch
@@ -149,15 +149,15 @@ def PeriodsAsFunctionOfTemperature(epsSample, epsSubstrate=1., epsEnvironment=1.
     #epsCr_list = Drude_Cr(wavelength, epsSample, Te)
     # MaxwellGarnett2(epsSample, epsOxide, Te) #Te refers to the electron temperature Te here! 
     #NOTE: epsOxide here is Cr oxide, not environment. 
-    print(Header, "# Info: size of the Te matrix: ", Te_size)
-    print(Header, "# Info: preparation of the root finder.")
+    print((Header, "# Info: size of the Te matrix: ", Te_size))
+    print((Header, "# Info: preparation of the root finder."))
     
     #results = Parallel(n_jobs=num_cores)(delayed(processInput)(i) for i in inputs)
 
     #t = 100E-9 #thickness of the layer in meters
     #thickness = 10e-9
     print("\n")
-    print("# Te of electrons in Cr: ", Te)
+    print(("# Te of electrons in Cr: ", Te))
     summary = np.zeros((0, 7))
     ## Preparation of the thin film modeling for various compositions
     for Te_index in np.arange(0,Te_size): #arange excludes the last one, linspace includes it
@@ -179,9 +179,9 @@ def PeriodsAsFunctionOfTemperature(epsSample, epsSubstrate=1., epsEnvironment=1.
                     x_steps, y_steps, numberofroots)
 
         # Preparation of the data for plotting
-        print("\nTe #"+str(Te_index)+"="+str(Te[Te_index]))
+        print(("\nTe #"+str(Te_index)+"="+str(Te[Te_index])))
         num_branches = len(roots) 
-        print("Number of branches: "+str(num_branches)) #number of SPP branches for this sample. 
+        print(("Number of branches: "+str(num_branches))) #number of SPP branches for this sample. 
         #print("ndimn: "+str(np.ndim(roots)))
         
         # This means we have tested <roots_oxidationDegree> samples with different oxidations. 
@@ -197,11 +197,11 @@ def PeriodsAsFunctionOfTemperature(epsSample, epsSubstrate=1., epsEnvironment=1.
         for branch in np.arange(0,num_branches):
             roots_in_branch = roots[branch]
             #print("\n")
-            print("Roots in branch #"+str(branch))
+            print(("Roots in branch #"+str(branch)))
             for order in np.arange(0,len(roots_in_branch)):
                 roots_in_branch_order = roots_in_branch[order]
                 #print("\n")
-                print("Order #"+str(order)+": Period="+str(roots_in_branch_order[0])+" Lspp="+str(roots_in_branch_order[1]))
+                print(("Order #"+str(order)+": Period="+str(roots_in_branch_order[0])+" Lspp="+str(roots_in_branch_order[1])))
                 ToBeAdded = [thickness, branch, order, roots_in_branch_order[0], roots_in_branch_order[1], Te[Te_index], eps1]
                 if(roots_in_branch[order][0] > 1E-15 and abs(roots_in_branch[order][1]) > 1E-10): 
                     # We remove modes were Lspp < 0.1 nm or period < 0. 
@@ -222,7 +222,7 @@ def PeriodsAsFunctionOfTemperature(epsSample, epsSubstrate=1., epsEnvironment=1.
     #exit()
     #return(summary)
     
-    print(Header+"** Preparation of the plots as function of oxide ratio")
+    print((Header+"** Preparation of the plots as function of oxide ratio"))
 
     ExperimentalData_velocity   = np.array([1e-6, 10e-16, 50e-6, 100e-6, 200e-6, 300e-6]) #m/s
     ExperimentalData_LSFL       = np.array([696e-9, 704e-9, 816e-9, 858e-9, -100e0, -100e-9]) #m #better observed for low velocities, i.e., high number of pulses, i.e., largest amounts of oxide
@@ -431,13 +431,13 @@ def Burke_SymmetricModes(thickness_size):
         for branch in np.arange(0,num_branches):
             roots_in_branch = roots[branch]
             #print("\n")
-            print("Roots in branch #"+str(branch))
+            print(("Roots in branch #"+str(branch)))
             for order in np.arange(0,len(roots_in_branch)):
                 roots_in_branch_order = roots_in_branch[order]
                 #print("\n")
                 fraction = 0e0 #irrelevant in this context
-                print("Thickness:"+str(thickness)+", Order #"+str(order)+": Period="+str(roots_in_branch_order[0])+" Lspp="+str(roots_in_branch_order[1]))
-                print("beta/k0="+str(PeriodToBetaNorm(roots_in_branch_order[0])))
+                print(("Thickness:"+str(thickness)+", Order #"+str(order)+": Period="+str(roots_in_branch_order[0])+" Lspp="+str(roots_in_branch_order[1])))
+                print(("beta/k0="+str(PeriodToBetaNorm(roots_in_branch_order[0]))))
                 ToBeAdded = [thickness, branch, order, roots_in_branch_order[0], roots_in_branch_order[1], fraction, eps1]
                 if(abs(roots_in_branch[order][0]) > 1E-15 and abs(roots_in_branch[order][1]) > 1E-10): 
                     # We remove modes were |Lspp| < 0.1 nm or |period| < 0. 
@@ -592,13 +592,13 @@ def Derrien_HRLIPSSonMoFilms(wavelength, thickness_size):
         for branch in np.arange(0,num_branches):
             roots_in_branch = roots[branch]
             #print("\n")
-            print("Roots in branch #"+str(branch))
+            print(("Roots in branch #"+str(branch)))
             for order in np.arange(0,len(roots_in_branch)):
                 roots_in_branch_order = roots_in_branch[order]
                 #print("\n")
                 fraction = 0e0 #irrelevant in this context
-                print("Thickness:"+str(thickness)+", Order #"+str(order)+": Period="+str(roots_in_branch_order[0])+" Lspp="+str(roots_in_branch_order[1]))
-                print("beta/k0="+str(PeriodToBetaNorm(roots_in_branch_order[0])))
+                print(("Thickness:"+str(thickness)+", Order #"+str(order)+": Period="+str(roots_in_branch_order[0])+" Lspp="+str(roots_in_branch_order[1])))
+                print(("beta/k0="+str(PeriodToBetaNorm(roots_in_branch_order[0]))))
                 ToBeAdded = [thickness, branch, order, roots_in_branch_order[0], roots_in_branch_order[1], fraction, eps1]
                 if(abs(roots_in_branch[order][0]) > 1E-15 and abs(roots_in_branch[order][1]) > 1E-10): 
                     # We remove modes were |Lspp| < 0.1 nm or |period| < 0. 
@@ -690,7 +690,7 @@ def Derrien_HRLIPSSonMoFilms(wavelength, thickness_size):
 # Note: Some results exist showing that L_spp < 0. These modes may be physical, and should be discussed 
 # in the frame of the works of P. Berini. 
 def ScenarioOfCrOxideMixture(epsSample, epsOxide=1., epsSubstrate=1., epsEnvironment=1., fraction_size=10, SampleName='Cr', OxideName='Cr2O3', SubstrateName='BK7', PlotLspp=False, FilterNegativeLspp=False, PlotEpsilons=True):
-    print(Header, "# Info: Considering a mixed fraction of Cr with Cr2O3 with several thicknesses.")
+    print((Header, "# Info: Considering a mixed fraction of Cr with Cr2O3 with several thicknesses."))
     wavelength = 1026e-9
     #fraction_size = 60
     numberofroots = 10 #per branch. 10 exceeds the final number of roots per branch
@@ -713,16 +713,16 @@ def ScenarioOfCrOxideMixture(epsSample, epsOxide=1., epsSubstrate=1., epsEnviron
     fraction = np.linspace(fraction_min, fraction_max, fraction_size) #fraction of CrO2 (includes the final value)
     epsCrCr2O3_list = MaxwellGarnett2(epsSample, epsOxide, fraction) #fraction refers to the fraction oxide here! 
     #NOTE: epsOxide here is Cr oxide, not environment. 
-    print(Header, "# Info: size of the fraction matrix: ", fraction_size)
+    print((Header, "# Info: size of the fraction matrix: ", fraction_size))
 
-    print(Header, "# Info: preparation of the root finder.")
+    print((Header, "# Info: preparation of the root finder."))
     
     #results = Parallel(n_jobs=num_cores)(delayed(processInput)(i) for i in inputs)
 
     #t = 100E-9 #thickness of the layer in meters
     #thickness = 10e-9
     print("\n")
-    print("# Fraction of CrO2: ", fraction)
+    print(("# Fraction of CrO2: ", fraction))
     summary = np.zeros((0, 7))
     ## Preparation of the thin film modeling for various compositions
     for fraction_index in np.arange(0,fraction_size): #arange excludes the last one, linspace includes it
@@ -744,9 +744,9 @@ def ScenarioOfCrOxideMixture(epsSample, epsOxide=1., epsSubstrate=1., epsEnviron
                     x_steps, y_steps, numberofroots)
 
         # Preparation of the data for plotting
-        print("\nOxide fraction #"+str(fraction_index)+"="+str(fraction[fraction_index]))
+        print(("\nOxide fraction #"+str(fraction_index)+"="+str(fraction[fraction_index])))
         num_branches = len(roots) 
-        print("Number of branches: "+str(num_branches)) #number of SPP branches for this sample. 
+        print(("Number of branches: "+str(num_branches))) #number of SPP branches for this sample. 
         #print("ndimn: "+str(np.ndim(roots)))
         
         # This means we have tested <roots_oxidationDegree> samples with different oxidations. 
@@ -762,11 +762,11 @@ def ScenarioOfCrOxideMixture(epsSample, epsOxide=1., epsSubstrate=1., epsEnviron
         for branch in np.arange(0,num_branches):
             roots_in_branch = roots[branch]
             #print("\n")
-            print("Roots in branch #"+str(branch))
+            print(("Roots in branch #"+str(branch)))
             for order in np.arange(0,len(roots_in_branch)):
                 roots_in_branch_order = roots_in_branch[order]
                 #print("\n")
-                print("Order #"+str(order)+": Period="+str(roots_in_branch_order[0])+" Lspp="+str(roots_in_branch_order[1]))
+                print(("Order #"+str(order)+": Period="+str(roots_in_branch_order[0])+" Lspp="+str(roots_in_branch_order[1])))
                 ToBeAdded = [thickness, branch, order, roots_in_branch_order[0], roots_in_branch_order[1], fraction[fraction_index], eps1]
                 if(roots_in_branch[order][0] > 1E-15 and abs(roots_in_branch[order][1]) > 1E-10): 
                     # We remove modes were Lspp < 0.1 nm or period < 0. 
@@ -787,7 +787,7 @@ def ScenarioOfCrOxideMixture(epsSample, epsOxide=1., epsSubstrate=1., epsEnviron
     #exit()
     #return(summary)
     
-    print(Header+"** Preparation of the plots as function of oxide ratio")
+    print((Header+"** Preparation of the plots as function of oxide ratio"))
 
     ExperimentalData_velocity   = np.array([1e-6, 10e-16, 50e-6, 100e-6, 200e-6, 300e-6]) #m/s
     ExperimentalData_LSFL       = np.array([696e-9, 704e-9, 816e-9, 858e-9, -100e0, -100e-9]) #m #better observed for low velocities, i.e., high number of pulses, i.e., largest amounts of oxide
@@ -957,7 +957,7 @@ def ScenarioOfCrOxideMixture(epsSample, epsOxide=1., epsSubstrate=1., epsEnviron
 # Note: Some results exist showing that L_spp < 0. These modes may be physical, and should be discussed 
 # in the frame of the works of P. Berini. 
 def ScenarioOfSimultaneousMixingMG3(epsSample, epsOxide1=1., epsOxide2=1., epsSubstrate=1., fraction_size=60, SampleName='Cr', OxideName1='Cr2O3', OxideName2='CrO2', SubstrateName='BK7', PlotLspp=False, FilterNegativeLspp=False, PlotEpsilons=True, PlotExperimentalData=True):
-    print(Header, "# Info: Considering a mixed fraction of Cr with Cr2O3 and CrO2 with several thicknesses.")
+    print((Header, "# Info: Considering a mixed fraction of Cr with Cr2O3 and CrO2 with several thicknesses."))
     wavelength = 1026e-9
     #fraction_size = 60
     numberofroots = 20
@@ -983,7 +983,7 @@ def ScenarioOfSimultaneousMixingMG3(epsSample, epsOxide1=1., epsOxide2=1., epsSu
     else: 
         plotA=111; 
 
-    print(Header, "The fraction of Cr2O3 over CrO2 is fixed by Raman measurements.")
+    print((Header, "The fraction of Cr2O3 over CrO2 is fixed by Raman measurements."))
     # TODO: we hereby prepare the fraction of Cr2O3 / CrO2 from experimental data
     # FractionA is Cr
     # FractionB is Cr2O3
@@ -995,7 +995,7 @@ def ScenarioOfSimultaneousMixingMG3(epsSample, epsOxide1=1., epsOxide2=1., epsSu
     # Generating the final velocity mesh
     scanning_velocities        = np.linspace(scanning_velocity_min, scanning_velocity_max, fraction_size)
     scanning_velocities_xticks = np.linspace(scanning_velocity_min, scanning_velocity_max, number_of_ticks)
-    print(Header, "Acquisition of the f(scanning_velocity)")
+    print((Header, "Acquisition of the f(scanning_velocity)"))
     Cr2O3overCrO2_ratio_min = np.loadtxt("Dostovalov-Cr/Cr-Cr2O3-CrO2/RatioCr2O3overCrO2-min.csv", delimiter="\t", skiprows=1)
     Cr2O3overCrO2_ratio_max = np.loadtxt("Dostovalov-Cr/Cr-Cr2O3-CrO2/RatioCr2O3overCrO2-min.csv", delimiter="\t", skiprows=1)
     
@@ -1004,17 +1004,17 @@ def ScenarioOfSimultaneousMixingMG3(epsSample, epsOxide1=1., epsOxide2=1., epsSu
     ratio_exp_min = Cr2O3overCrO2_ratio_min[:,1]
     ratio_exp_max = Cr2O3overCrO2_ratio_max[:,1]
     
-    print(Header, "Generating the function interpolation of the f(v) data.") #f_Cr2O3overCrO2_ratio_min are functions
+    print((Header, "Generating the function interpolation of the f(v) data.")) #f_Cr2O3overCrO2_ratio_min are functions
     f_Cr2O3overCrO2_ratio_min = InterpolatedUnivariateSpline(v_exp_min, ratio_exp_min, k=1) #other orders dont work
     f_Cr2O3overCrO2_ratio_max = InterpolatedUnivariateSpline(v_exp_max, ratio_exp_max, k=1)
     
     v_exp_av = 0.5 * (v_exp_min + v_exp_max)
     ratio_exp_av = 0.5*(ratio_exp_min + ratio_exp_max)
     ratio_exp_err = 0.5*(ratio_exp_max - ratio_exp_min)
-    print(Header, "Build the average of interpolated functions") #(f_Cr2O3overCrO2_ratio_av is an array)
+    print((Header, "Build the average of interpolated functions")) #(f_Cr2O3overCrO2_ratio_av is an array)
     f_Cr2O3overCrO2_ratio_av = 0.5*(f_Cr2O3overCrO2_ratio_min(scanning_velocities) + f_Cr2O3overCrO2_ratio_max(scanning_velocities))
     
-    print(Header, "Conclusion of the materials fractions.")
+    print((Header, "Conclusion of the materials fractions."))
     fractionC = np.linspace(fraction_min, fraction_max, fraction_size) #fraction of CrO2 drags all the [0:1] interval
     fractionB = f_Cr2O3overCrO2_ratio_av * fractionC #associating fraction of B with f(v)
     fractionA = 1E0 - f_Cr2O3overCrO2_ratio_av * fractionC - fractionC #Cr fraction
@@ -1022,16 +1022,16 @@ def ScenarioOfSimultaneousMixingMG3(epsSample, epsOxide1=1., epsOxide2=1., epsSu
     fraction_total          = fractionA+fractionB+fractionC
     fraction_total_expected = np.ones(np.shape(fractionA))
     
-    print(Header, "Test: fractionA+fractionB+fractionC: min, max", np.min(fraction_total), np.max(fraction_total))
-    print(Header, "Test: is it equal to expected value everywhere?", np.array_equal(fraction_total, fraction_total_expected)) 
-    print(Header, "Test: max of the differences: ", np.max(np.abs(np.add(fraction_total, np.multiply(-1,fraction_total_expected)))))
+    print((Header, "Test: fractionA+fractionB+fractionC: min, max", np.min(fraction_total), np.max(fraction_total)))
+    print((Header, "Test: is it equal to expected value everywhere?", np.array_equal(fraction_total, fraction_total_expected))) 
+    print((Header, "Test: max of the differences: ", np.max(np.abs(np.add(fraction_total, np.multiply(-1,fraction_total_expected))))))
     
-    print(Header, "Applying the MaxwellGarnett3 routine...")
+    print((Header, "Applying the MaxwellGarnett3 routine..."))
     epsCrCr2O3CrO2_list = MaxwellGarnett3(epsSample, epsOxide1, epsOxide2, fractionA, fractionB, fractionC)
     
-    print(Header, "# Info: size of the fraction matrix: ", fraction_size)
+    print((Header, "# Info: size of the fraction matrix: ", fraction_size))
 
-    print(Header, "# Info: preparation of the root finder.")
+    print((Header, "# Info: preparation of the root finder."))
     fraction = fractionC #we will plot using fractionCrO2 now. 
     
     #results = Parallel(n_jobs=num_cores)(delayed(processInput)(i) for i in inputs)
@@ -1039,7 +1039,7 @@ def ScenarioOfSimultaneousMixingMG3(epsSample, epsOxide1=1., epsOxide2=1., epsSu
     #t = 100E-9 #thickness of the layer in meters
     #thickness = 10e-9
     print("\n")
-    print("# Fraction of CrO2: ", fraction)
+    print(("# Fraction of CrO2: ", fraction))
     summary = np.zeros((0, 7))
     ## Preparation of the thin film modeling for various compositions
     for fraction_index in np.arange(0,fraction_size): #arange excludes the last one, linspace includes it
@@ -1061,9 +1061,9 @@ def ScenarioOfSimultaneousMixingMG3(epsSample, epsOxide1=1., epsOxide2=1., epsSu
                     x_steps, y_steps, numberofroots)
 
         # Preparation of the data for plotting
-        print("\nCrO2 oxide fraction #"+str(fraction_index)+"="+str(fraction[fraction_index]))
+        print(("\nCrO2 oxide fraction #"+str(fraction_index)+"="+str(fraction[fraction_index])))
         num_branches = len(roots) 
-        print("Number of branches: "+str(num_branches)) #number of SPP branches for this sample. 
+        print(("Number of branches: "+str(num_branches))) #number of SPP branches for this sample. 
         #print("ndimn: "+str(np.ndim(roots)))
         
         # This means we have tested <roots_oxidationDegree> samples with different oxidations. 
@@ -1079,11 +1079,11 @@ def ScenarioOfSimultaneousMixingMG3(epsSample, epsOxide1=1., epsOxide2=1., epsSu
         for branch in np.arange(0,num_branches):
             roots_in_branch = roots[branch]
             #print("\n")
-            print("Roots in branch #"+str(branch))
+            print(("Roots in branch #"+str(branch)))
             for order in np.arange(0,len(roots_in_branch)):
                 roots_in_branch_order = roots_in_branch[order]
                 #print("\n")
-                print("Order #"+str(order)+": Period="+str(roots_in_branch_order[0])+" Lspp="+str(roots_in_branch_order[1]))
+                print(("Order #"+str(order)+": Period="+str(roots_in_branch_order[0])+" Lspp="+str(roots_in_branch_order[1])))
                 ToBeAdded = [thickness, branch, order, roots_in_branch_order[0], roots_in_branch_order[1], fraction[fraction_index], eps1]
                 if(abs(roots_in_branch[order][0]) > 1E-15 and abs(roots_in_branch[order][1]) > 1E-10): 
                     # We remove modes were Lspp < 0.1 nm or period < 0. 
@@ -1104,7 +1104,7 @@ def ScenarioOfSimultaneousMixingMG3(epsSample, epsOxide1=1., epsOxide2=1., epsSu
     #exit()
     #return(summary)
     
-    print(Header+"** Preparation of the plots as function of oxide ratio")
+    print((Header+"** Preparation of the plots as function of oxide ratio"))
 
     ExperimentalData_velocity   = np.array([1e-6, 10e-16, 50e-6, 100e-6, 200e-6, 300e-6]) #m/s
     #NOTE: with increasing the scanning velocity, the period of LIPSS increases
@@ -1305,26 +1305,26 @@ def ThinFilmHeating(wavelength, epsCr): #{{{
     spot_diam = 15e-6 #defined at 1/e2 
     experimental_energy = 100e-9 #[J]
 
-    print("INPUT: experimental energy ", experimental_energy, "J")
-    print("INPUT: spot size at 1/e2 ", spot_diam, "m")
+    print(("INPUT: experimental energy ", experimental_energy, "J"))
+    print(("INPUT: spot size at 1/e2 ", spot_diam, "m"))
     r_size = 5000
     rmin = 0; rmax = 10*spot_diam; dr = ( rmax - rmin ) / r_size
     r  = np.arange(rmin, rmax, dr)
     intensity_peak = 97623195435.4045E0
-    print("ESTIMATION: peak intensity: %5.2e" % intensity_peak, "W/m2")
+    print(("ESTIMATION: peak intensity: %5.2e" % intensity_peak, "W/m2"))
 
     intensity_r = intensity_peak * np.exp(-2e0*(r**2/(0.5*spot_diam)**2))
 
     total_power = np.trapz(intensity_r, r, dx=dr)
-    print("total_power: ", total_power, "W")
+    print(("total_power: ", total_power, "W"))
 
     total_energy = tau * total_power * np.sqrt(4e0 * np.log(2E0) / np.pi) #normalization due to Gaussian pulse temporal envelope
-    print("Total energy: ", total_energy, "J")
+    print(("Total energy: ", total_energy, "J"))
     intensity_peak_norm = (total_energy / experimental_energy)**-1
-    print("Normalized intensity peak to: ", intensity_peak_norm)
+    print(("Normalized intensity peak to: ", intensity_peak_norm))
     peak_fluence = intensity_peak * tau * np.sqrt(4e0 * np.log(2E0) / np.pi)
 
-    print("Resulting peak fluence for 1/e2 spot size convention: ", peak_fluence, "J/m2")
+    print(("Resulting peak fluence for 1/e2 spot size convention: ", peak_fluence, "J/m2"))
 
     S = alpha * intensity_peak
     C_l = 0.46E3 * 7.2E3 #Bauerle, Edition 4. 
@@ -1337,14 +1337,14 @@ def ThinFilmHeating(wavelength, epsCr): #{{{
     # Equation: C_l * dT / dt = nabla( kappa \nabla ( T ) ) + S
     dT_t = (1E0 / Length**2 * kappa * dT_x + S) / C_l * dt #increase per dt
 
-    print("Increase of lattice temperature:", dT_t, "K")
+    print(("Increase of lattice temperature:", dT_t, "K"))
 #}}}
 
 ## Compute the SPP modes for mixed oxide ratio using an external set of optical data
 # @param fraction: array of oxide fraction
 # Size of epsSample and fraction should be of the same dimension
 def ScenarioOfCrOxideMixture_ext(epsSample, epsEnvironment=1., epsSubstrate=1., fraction=1, SampleName='CrCompoundOxide', EnvironmentName='Air', SubstrateName='BK7', PlotLspp=False, FilterNegativeLspp=False, PlotEpsilons=True):
-    print(Header, "# Info: Considering a mixed fraction of Cr with Cr2O3 and CrO2 (using external data) with several thicknesses.")
+    print((Header, "# Info: Considering a mixed fraction of Cr with Cr2O3 and CrO2 (using external data) with several thicknesses."))
     wavelength = 1026e-9
     
     fraction_size = len(fraction)
@@ -1369,13 +1369,13 @@ def ScenarioOfCrOxideMixture_ext(epsSample, epsEnvironment=1., epsSubstrate=1., 
 
     #fraction = np.linspace(fraction_min, fraction_max, fraction_size) #fraction of Cr (includes the final value)
     
-    print(Header, "# Info: size of the external fraction matrix: ", fraction_size)
-    print(Header, "# Info: preparation of the root finder.")
+    print((Header, "# Info: size of the external fraction matrix: ", fraction_size))
+    print((Header, "# Info: preparation of the root finder."))
     
     #results = Parallel(n_jobs=num_cores)(delayed(processInput)(i) for i in inputs)
 
     print("\n")
-    print("# Fraction of Cr oxide: ", fraction)
+    print(("# Fraction of Cr oxide: ", fraction))
     summary = np.zeros((0, 7))
     ## Preparation of the thin film modeling for various compositions
     for fraction_index in np.arange(0,fraction_size): #arange excludes the last one, linspace includes it
@@ -1397,9 +1397,9 @@ def ScenarioOfCrOxideMixture_ext(epsSample, epsEnvironment=1., epsSubstrate=1., 
                     x_steps, y_steps, numberofroots)
 
         # Preparation of the data for plotting
-        print("\nOxide fraction #"+str(fraction_index)+"="+str(fraction[fraction_index]))
+        print(("\nOxide fraction #"+str(fraction_index)+"="+str(fraction[fraction_index])))
         num_branches = len(roots) 
-        print("Number of branches: "+str(num_branches)) #number of SPP branches for this sample. 
+        print(("Number of branches: "+str(num_branches))) #number of SPP branches for this sample. 
         #print("ndimn: "+str(np.ndim(roots)))
         
         # This means we have tested <roots_oxidationDegree> samples with different oxidations. 
@@ -1415,11 +1415,11 @@ def ScenarioOfCrOxideMixture_ext(epsSample, epsEnvironment=1., epsSubstrate=1., 
         for branch in np.arange(0, num_branches):
             roots_in_branch = roots[branch]
             #print("\n")
-            print("Roots in branch #"+str(branch))
+            print(("Roots in branch #"+str(branch)))
             for order in np.arange(0,len(roots_in_branch)):
                 roots_in_branch_order = roots_in_branch[order]
                 #print("\n")
-                print("Order #"+str(order)+": Period="+str(roots_in_branch_order[0])+" Lspp="+str(roots_in_branch_order[1]))
+                print(("Order #"+str(order)+": Period="+str(roots_in_branch_order[0])+" Lspp="+str(roots_in_branch_order[1])))
                 ToBeAdded = [thickness, branch, order, roots_in_branch_order[0], roots_in_branch_order[1], fraction[fraction_index], eps1]
                 if(abs(roots_in_branch[order][0]) > 1E-15 and abs(roots_in_branch[order][1]) > 1E-10): 
                     # We remove modes were Lspp < 0.1 nm or period < 0. 
@@ -1440,7 +1440,7 @@ def ScenarioOfCrOxideMixture_ext(epsSample, epsEnvironment=1., epsSubstrate=1., 
     #exit()
     #return(summary)
     
-    print(Header+"** Preparation of the plots as function of oxide ratio")
+    print((Header+"** Preparation of the plots as function of oxide ratio"))
 
     ExperimentalData_velocity   = np.array([1e-6, 10e-16, 50e-6, 100e-6, 200e-6, 300e-6]) #m/s
     ExperimentalData_LSFL       = np.array([696e-9, 704e-9, 816e-9, 858e-9, -100e0, -100e-9]) #m #better observed for low velocities, i.e., high number of pulses, i.e., largest amounts of oxide
@@ -1619,7 +1619,7 @@ def RepeatLisunovMixtureOfOxides(Fraction_size): #{{{
     # (CrO2_o = 2, CrO2_e = 1)
     # Means that Fraction(CrO2_o) = 2/3, Fraction(CrO2_e) = 1/3. 
     epsCrO2_2o1e = MaxwellGarnett2(epsCrO2_o, epsCrO2_e, 1./3.) #This does not strongly affect the optical index of CrO2. 
-    print("Mixing CrO2 (2o+e): ", epsCrO2_2o1e)
+    print(("Mixing CrO2 (2o+e): ", epsCrO2_2o1e))
     
     # NOTE: VALIDATED UNTIL HERE WITH COMPARISON TO SERGEI LISUNOV. 
     
@@ -1633,8 +1633,8 @@ def RepeatLisunovMixtureOfOxides(Fraction_size): #{{{
     # NOTE: if interpreting that Nadya took the ratio for slow velocity instead of fast velocity, it would be 0.65 instead. 
     CrO2_fraction = 1./(1.+RatioCr2O3overCrO2) #analytical solution from ratio to fraction
     #CrO2_fraction = 1.-RatioCr2O3overCrO2 #Could Sergei have done an error for beginners?
-    print("Ratio Cr2O3 / CrO2: ", RatioCr2O3overCrO2)
-    print("Equivalent fraction of CrO2: ", CrO2_fraction)
+    print(("Ratio Cr2O3 / CrO2: ", RatioCr2O3overCrO2))
+    print(("Equivalent fraction of CrO2: ", CrO2_fraction))
     
     #epsCrXOY = MaxwellGarnett2(epsCrO2_2o1e, epsCr2O3, 1.-CrO2_fraction) #NOTE: the good one
     epsCrXOY = MaxwellGarnett2(epsCr2O3, epsCrO2_2o1e, CrO2_fraction) #formula is nicely reversible. One more proof of validity. 
@@ -1644,7 +1644,7 @@ def RepeatLisunovMixtureOfOxides(Fraction_size): #{{{
     
     # 
     #epsCrXOY = MaxwellGarnett2(epsCrO2_2o1e, epsCr2O3, 1.-0.25925) #fraction here refers to medium2
-    print("Mixing CrO2 (mixed) + Cr2O3 gives", epsCrXOY)
+    print(("Mixing CrO2 (mixed) + Cr2O3 gives", epsCrXOY))
     #print("sqrt(ans): ", np.sqrt(epsCrXOY))
     #print("ans**2: ", np.power(epsCrXOY,2))
     fractionOxide    = np.linspace(0, 1, Fraction_size) #0: 100% Cr, 1: 100% oxide

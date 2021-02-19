@@ -39,17 +39,17 @@ def DielectricPermittivity_MoltenSilicon(wavelength):
   return eps
 
 def SPPonFullyMoltenSi(wavelength): 
-    print "SIMPLE SPP MODEL with MOLTEN Si data"
+    print("SIMPLE SPP MODEL with MOLTEN Si data")
     eps_MoltenSi = DielectricPermittivity_MoltenSilicon(wavelength)
     #print eps_MoltenSi
-    print "Dielectric permittivity of molten Si at "+str(1E9*wavelength)+" nm = "+str(eps_MoltenSi)
+    print("Dielectric permittivity of molten Si at "+str(1E9*wavelength)+" nm = "+str(eps_MoltenSi))
     beta = betaSPP(wavelength, 1., eps_MoltenSi) 
-    print "SPP period (nm): "+str(period(beta)*1E9)
-    print "SPP mean-free-path (um): "+str(DecayLengthSPP(beta)*1E6)
+    print("SPP period (nm): "+str(period(beta)*1E9))
+    print("SPP mean-free-path (um): "+str(DecayLengthSPP(beta)*1E6))
 
 
 def MoltenSiLayerOnSi(wavelength): #{{{ 
-    print "MultilayerSPP: computing the possible SPP periods for various thicknesses of molten Si."
+    print("MultilayerSPP: computing the possible SPP periods for various thicknesses of molten Si.")
 
     # Medium 1: thin film. 
     eps1 = eps_MoltenSi        #thin film
@@ -106,13 +106,13 @@ def MoltenSiLayerOnSi(wavelength): #{{{
         for branch in np.arange(0,num_branches):
             roots_in_branch = roots[branch]
             #print("\n")
-            print("Roots in branch #"+str(branch))
+            print(("Roots in branch #"+str(branch)))
             for order in np.arange(0,len(roots_in_branch)):
                 roots_in_branch_order = roots_in_branch[order]
                 #print("\n")
                 fraction = 0e0 #irrelevant in this context
-                print("Thickness:"+str(thickness)+", Order #"+str(order)+": Period="+str(roots_in_branch_order[0])+" Lspp="+str(roots_in_branch_order[1]))
-                print("beta/k0="+str(PeriodToBetaNorm(roots_in_branch_order[0])))
+                print(("Thickness:"+str(thickness)+", Order #"+str(order)+": Period="+str(roots_in_branch_order[0])+" Lspp="+str(roots_in_branch_order[1])))
+                print(("beta/k0="+str(PeriodToBetaNorm(roots_in_branch_order[0]))))
                 ToBeAdded = [thickness, branch, order, roots_in_branch_order[0], roots_in_branch_order[1], fraction, eps1]
                 if(abs(roots_in_branch[order][0]) > 1E-15 and abs(roots_in_branch[order][1]) > 1E-10): 
                     # We remove modes were |Lspp| < 0.1 nm or |period| < 0. 

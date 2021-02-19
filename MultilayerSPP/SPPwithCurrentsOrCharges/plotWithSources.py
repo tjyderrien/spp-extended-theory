@@ -157,10 +157,10 @@ A, B, C, D = result
 
 print('Field amplitudes:')
 print()
-print('A:', A)
-print('C:', C)
-print('D:', D)
-print('B:', B)
+print(('A:', A))
+print(('C:', C))
+print(('D:', D))
+print(('B:', B))
 
 #field functions
 

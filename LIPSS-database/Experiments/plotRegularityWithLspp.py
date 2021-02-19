@@ -3,36 +3,36 @@
 from libSPP import *
 #reset
 
-print "==== Plot the exp. LIPSS regularity as function of theoretical Lspp... ===="
+print("==== Plot the exp. LIPSS regularity as function of theoretical Lspp... ====")
 
-print "| Reading the experimental file..."
+print("| Reading the experimental file...")
 database = "Iaroslav/ExperimentalData_1030nm_GaussianFit.csv"
 ExpData = loadtxt(database, dtype='str', delimiter='\t', skiprows=4)
 
 #print ExpData
-print "" 
+print("") 
 
-print "| Selecting the listed materials..."
+print("| Selecting the listed materials...")
 Materials = ExpData[:,0];
 Sources = ExpData[:,10];
-print "|| Materials = "+str(Materials)
-print "|| Sources = "+str(Sources)
-print "" 
+print("|| Materials = "+str(Materials))
+print("|| Sources = "+str(Sources))
+print("") 
 
 #TODO: make 2 object: (i) Literature (ii) Iaroslav points. 
 
-print "| Extracting the dispersion of available exp. data..."
+print("| Extracting the dispersion of available exp. data...")
 DispersionAngle = np.asfarray(ExpData[:,1]);
 DispersionAngleError = np.asfarray(ExpData[:,2]);
-print DispersionAngle
-print "" 
+print(DispersionAngle)
+print("") 
 
-print "| Selecting the laser wavelengths..."
+print("| Selecting the laser wavelengths...")
 Wavelengths = ExpData[:,3]
-print "|| Wavelengths = "+str(Wavelengths)
-print "" 
+print("|| Wavelengths = "+str(Wavelengths))
+print("") 
 
-print "| Grabbing the available theoretical database..."
+print("| Grabbing the available theoretical database...")
 
 unit = 1E9
 
@@ -55,26 +55,26 @@ for i in np.arange(0, Materials.size, 1):
   wavelength = float(Wavelengths[i])
   material = Materials[i]
   source = Sources[i]
-  print "|| Treating (wavelength, material) = "+str(wavelength)+", "+str(material)+"."
+  print("|| Treating (wavelength, material) = "+str(wavelength)+", "+str(material)+".")
 
   #=====
   #print "|| Selecting the material of interfaces..."
   DataMaterial1 = FilterDatabaseContains(dbarray, "Air", 0)
-  print "** Material1 filtering #"+str(i)+" returned "+str(len(DataMaterial1))+" entries."
+  print("** Material1 filtering #"+str(i)+" returned "+str(len(DataMaterial1))+" entries.")
   
-  print "|| Selecting the wavelength..."
+  print("|| Selecting the wavelength...")
   DataMaterial1 = FilterDatabase(DataMaterial1, str(int(wavelength)), 2)
-  print "** Material1 filtering #"+str(i)+" returned "+str(len(DataMaterial1))+" entries."
-  print DataMaterial1
-  print ""
+  print("** Material1 filtering #"+str(i)+" returned "+str(len(DataMaterial1))+" entries.")
+  print(DataMaterial1)
+  print("")
   
   DataMaterial2 = FilterDatabaseContains(dbarray, str(material), 0)
-  print "** Material2 ("+str(material)+") filtering #"+str(i)+" returned "+str(len(DataMaterial2))+" entries."
+  print("** Material2 ("+str(material)+") filtering #"+str(i)+" returned "+str(len(DataMaterial2))+" entries.")
   #print DataMaterial2
-  print ""
+  print("")
   
   DataMaterial2 = FilterDatabase(DataMaterial2, str(int(wavelength)), 2)
-  print "** Wavelength ("+str(int(wavelength))+") filtering returned "+str(len(DataMaterial2))+" entries."
+  print("** Wavelength ("+str(int(wavelength))+") filtering returned "+str(len(DataMaterial2))+" entries.")
   #print DataMaterial2
   # Check that number of solutions is one for each research. 
   
@@ -85,7 +85,7 @@ for i in np.arange(0, Materials.size, 1):
   
   #print "|| Material 2 data = "+str(DataMaterial2)
 
-  print "|| Extracting epsilons..."
+  print("|| Extracting epsilons...")
   #print DataMaterial1
   Material1=DataMaterial1[0,0]
   BandGap1=DataMaterial1[0,1] 
@@ -111,15 +111,15 @@ for i in np.arange(0, Materials.size, 1):
   NewDeltaLspp = deltaLspp(float(wavelength)/unit, eps1, eps2, 0e0, 0e0, eta, eta)
   Lspp = np.append(Lspp, NewLspp)
   DeltaLspp = np.append(DeltaLspp, NewDeltaLspp)
-  print "[New entry] Material: "+str(Material2)+", eps2="+str(eps2)+", Lspp="+str(NewLspp)+", dLspp="+str(NewDeltaLspp)
+  print("[New entry] Material: "+str(Material2)+", eps2="+str(eps2)+", Lspp="+str(NewLspp)+", dLspp="+str(NewDeltaLspp))
 
-print "" 
-print "====== FINAL RESULTS ======"
-print "Dispersion angle: "+str(DispersionAngle)
-print "Lspp: "+str(Lspp)
-print "dLspp: "+str(DeltaLspp)
-print ""
-print "| Plotting the results..."
+print("") 
+print("====== FINAL RESULTS ======")
+print("Dispersion angle: "+str(DispersionAngle))
+print("Lspp: "+str(Lspp))
+print("dLspp: "+str(DeltaLspp))
+print("")
+print("| Plotting the results...")
 plt.errorbar(1E6*Lspp, DispersionAngle, yerr=DispersionAngleError, fmt='.')
 ###plt.errorbar(1E6*Lspp, DispersionAngle, xerr=1e6*DeltaLspp, yerr=DispersionAngleError, fmt='.')
 ax.set_xscale('log')
@@ -127,4 +127,4 @@ ax.set_xscale('log')
 #ax.set_yscale('log')
 #plt.show()
 plt.savefig('OriginOfRegularity.eps')
-print "Figure OriginOfRegularity.eps was saved successfully."
+print("Figure OriginOfRegularity.eps was saved successfully.")

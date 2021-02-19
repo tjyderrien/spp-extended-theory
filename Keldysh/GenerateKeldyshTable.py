@@ -7,14 +7,14 @@
 # * Generating tables to use directly into simulation codes
 from libKeldysh import *
 
-print ""
-print "** Welcome to SPP-extended-theory suite."
-print "** Author(s): T.J.-Y. Derrien"
-print ""
-print "** Loading Keldysh module [Keldysh, Sov. J. Exp. Th. Phys. 47, 5 (1964)]..."
-print "** Loading Gruzdev formula [Gruzdev, Optical Engineering 53, 122515 (2014)]"
+print("")
+print("** Welcome to SPP-extended-theory suite.")
+print("** Author(s): T.J.-Y. Derrien")
+print("")
+print("** Loading Keldysh module [Keldysh, Sov. J. Exp. Th. Phys. 47, 5 (1964)]...")
+print("** Loading Gruzdev formula [Gruzdev, Optical Engineering 53, 122515 (2014)]")
 
-print "Defining material parameters..."
+print("Defining material parameters...")
 
 #Egap = 2.58e0*e; #LDA band gap of Si: 2.58 eV. #1.12e0*e for indirect band gap; 
 meff=0.18e0; #Effective mass of Si
@@ -55,7 +55,7 @@ PeakField  = np.array(np.transpose( PeakField , (1,2,0) ))
 Database = GenerateKeldyshDatabase(Egap, meff, wavelength, PeakField, order)
 
 # Checking on stdout
-print Database
+print(Database)
 
 # Output to a file
 ExportToTxt(Database, "Keldysh.dat")

@@ -101,14 +101,14 @@ for excitation_index in np.arange(0,np.shape(neTiO2)[0]-1):
         num_thickness = np.shape(t_list) #NOTE: is this used? 
         
         num_branches = len(roots) 
-        print("Number of branches: "+str(num_branches)) #number of SPP branches for this sample. 
+        print(("Number of branches: "+str(num_branches))) #number of SPP branches for this sample. 
         
         for branch in np.arange(0,num_branches):
             roots_in_branch = roots[branch]
-            print("Roots in branch #"+str(branch))
+            print(("Roots in branch #"+str(branch)))
             for order in np.arange(0,len(roots_in_branch)): 
                 roots_in_branch_order = roots_in_branch[order]
-                print("Order #"+str(order)+": Period="+str(roots_in_branch_order[0])+" Lspp="+str(roots_in_branch_order[1]))
+                print(("Order #"+str(order)+": Period="+str(roots_in_branch_order[0])+" Lspp="+str(roots_in_branch_order[1])))
                 ToBeAdded = [thickness, neTiO2[excitation_index], branch, order, roots_in_branch_order[0], roots_in_branch_order[1], eps1]
                 if(roots_in_branch[order][0] > 1E-15 and abs(roots_in_branch[order][1]) > 1E-10): 
                     # We remove modes were Lspp < 0.1 nm or period < 0. 

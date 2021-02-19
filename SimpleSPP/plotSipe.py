@@ -79,7 +79,7 @@ def plotSipe1D_sectionX(wavelength, epsilon, f=0.1e0, s=0.4e0, theta=0e0, filena
     numberofkpoints = 2000 #NOTE: be generous here, otherwise peaks will not be well resolved. 
     #for kappax in meshkappa:
     #ftab = np.arange(0, 1, 0.1)
-    print "Info: Generating the mesh..."
+    print("Info: Generating the mesh...")
     kapparange = np.arange(kappa_min,kappa_max,(kappa_max-kappa_min)/numberofkpoints)
     #for wavelength in wavelengths:
     #for f in ftab:
@@ -108,10 +108,10 @@ def plotSipe1D_sectionX(wavelength, epsilon, f=0.1e0, s=0.4e0, theta=0e0, filena
     plt.ylabel(r'$\eta$')
     #plt.title(r'$\theta=$'+str(int(theta*180./np.pi))+' deg')
     plt.title(r'$s=$'+str(round(s,1)))
-    print kapparange.shape, etaSresult.shape
+    print(kapparange.shape, etaSresult.shape)
     plt.plot(kapparange, etaPresult, '-', label=r'$\eta(\kappa_x; \kappa_y=0)$') #$\eta_P$')
     plt.plot(kapparange, etaSresult, '-', label=r'$\eta(\kappa_y; \kappa_x=0)$')
-    print etaSresult
+    print(etaSresult)
     plt.grid()
     plt.legend(fancybox=True, framealpha=1)
     plt.savefig(filename+'-s'+str(s)+'.eps')
@@ -125,7 +125,7 @@ def plotSipe1D_sectionX(wavelength, epsilon, f=0.1e0, s=0.4e0, theta=0e0, filena
 #query2= 'Mo (Ordal 1988)'
 #query2= 'Cu (Palik)'
 #query2= 'SiO2 (Palik)'
-print "Caution: the values of queries must be exactly the one of MaterialDatabase.csv."
+print("Caution: the values of queries must be exactly the one of MaterialDatabase.csv.")
 
 ## Prepares the classical SipeEfficiencyFactor(kx, ky) for a specific material query2 immersed in Air. 
 # @param wavelength: photon energy given in SI (m)
@@ -136,43 +136,43 @@ print "Caution: the values of queries must be exactly the one of MaterialDatabas
 def plotSipeFromDatabase(select, query2, wavelength, numberofkpoints=100, query='Air', theta=0, f=0.1, s=0.4): #{{{
   ## Generate the database
   SPPdb = GenerateDatabase() #Generate from MaterialDatabase.csv
-  print "SPP database has "+str(len(SPPdb))+" entries."
+  print("SPP database has "+str(len(SPPdb))+" entries.")
 
   #print "Full Database:"
   #print SPPdb
 
   # Select the material of interface 1
   SPPdb = FilterDatabase(SPPdb, query, 0)
-  print "Filter on materials: SPP database has now "+str(len(SPPdb))+" entries."
+  print("Filter on materials: SPP database has now "+str(len(SPPdb))+" entries.")
 
   # Filter database on materials
   try: 
     title = query2
     SPPdb = FilterDatabase(SPPdb, query2, 1)
-    print "Filter on material: SPP database "+title+" has "+str(len(SPPdb))+" entries."
-    print Header+"Check the level of tolerance in libSPP.py."
+    print("Filter on material: SPP database "+title+" has "+str(len(SPPdb))+" entries.")
+    print(Header+"Check the level of tolerance in libSPP.py.")
     #print SPPdb
   except:
-    print "Exception: no optical data is available for "+query+" at "+title+"."
-    print SPPdb
+    print("Exception: no optical data is available for "+query+" at "+title+".")
+    print(SPPdb)
     exit()
 
-  print SPPdb #works well
+  print(SPPdb) #works well
   # Filter database on wavelength
   title = select+' nm'
   try: 
     SPPdb = FilterDatabase(SPPdb, select, 2)
-    print "Filter on wavelength: SPP database "+title+" has "+str(len(SPPdb))+" entries."
+    print("Filter on wavelength: SPP database "+title+" has "+str(len(SPPdb))+" entries.")
   except:
-    print "Exception: no optical data is available for "+query+" at "+title+"."
-    print SPPdb
+    print("Exception: no optical data is available for "+query+" at "+title+".")
+    print(SPPdb)
     exit()
     
 
 
 
   if(len(SPPdb)==0):
-    print "SPP database returned 0 matching result."
+    print("SPP database returned 0 matching result.")
     exit()
     
   # Extract materials from database
@@ -187,7 +187,7 @@ def plotSipeFromDatabase(select, query2, wavelength, numberofkpoints=100, query=
   epsilon1 = np.add(eps1rM,np.multiply(1e0j, eps1cM))
   epsilon2 = np.add(eps2rM,np.multiply(1e0j, eps2cM))
     
-  print "Mesh generation..."
+  print("Mesh generation...")
   
   SipeRanges = 4e0
   kx = np.arange(-SipeRanges,SipeRanges,(2.*SipeRanges)/numberofkpoints)
@@ -196,16 +196,16 @@ def plotSipeFromDatabase(select, query2, wavelength, numberofkpoints=100, query=
 
   # calculating Sipe efficiency for many materials
   
-  print "Calculating efficiency for all (kx, ky) values at wavelength "+title+"."
+  print("Calculating efficiency for all (kx, ky) values at wavelength "+title+".")
 
-  print "kxx shape = "+str(kxx.shape)+"."
+  print("kxx shape = "+str(kxx.shape)+".")
   etaSipe = np.zeros(kxx.shape)
 
   materialIndex = 0
-  print "Preparing 2D figure for material "+str(Material2[materialIndex])
-  print epsilon2[materialIndex]
+  print("Preparing 2D figure for material "+str(Material2[materialIndex]))
+  print(epsilon2[materialIndex])
   matrixsize = kx.size*ky.size
-  print Header+"Size: "+str(matrixsize)
+  print(Header+"Size: "+str(matrixsize))
   index = 0
   for m in np.arange(0,(kx.size),1):
 	  #idy=0
@@ -217,12 +217,12 @@ def plotSipeFromDatabase(select, query2, wavelength, numberofkpoints=100, query=
 		  etaSipe[m,n] = etap(theta, f, s, epsilon2[materialIndex], kappa, kappap, kappam)
 		  #idy=idy+1
 		  index = index + 1
-                  print Header+"** Progress: "+str(round(float(index)/float(matrixsize)*100.))+" percents."
-  print etaSipe
+                  print(Header+"** Progress: "+str(round(float(index)/float(matrixsize)*100.))+" percents.")
+  print(etaSipe)
 
   maximum = np.amax(etaSipe)
-  print maximum
-  print Header+"Plot the graph for one given dielectric permittivity."
+  print(maximum)
+  print(Header+"Plot the graph for one given dielectric permittivity.")
   plt.figure(figsize=(SizeX,SizeY))
   levels = np.arange(0,maximum,maximum/numberlevels)
   CS = plt.contourf(kxx, kyy, etaSipe, levels=levels, cmap=plt.cm.Greys) #plt.cm.Blues #plt.cm.binary
@@ -239,10 +239,10 @@ def plotSipeFromDatabase(select, query2, wavelength, numberofkpoints=100, query=
 ## Prepare a generalized plot2d of the Sipe model for any material at equilibrium. 
 # This could help to localize problems and limitations of the Sipe theory. 
 def plotGenericSipeMaps(kx_value, ky_value, epsilon_precision = 0.05, theta=0., f=0.1, s=0.4, PlotMaterials=False, PlotDrude=False, PlotLegend=False): #{{{
-  print Header+"Plot the kappaX for which maximum efficiency is found as function of dielectric permittivity. "
+  print(Header+"Plot the kappaX for which maximum efficiency is found as function of dielectric permittivity. ")
 
   # Generating kappaX, kappaY meshes. 
-  print "Mesh generation..."
+  print("Mesh generation...")
   #k_precision = 0.5
   
   SipeRanges = 2e0
@@ -277,15 +277,15 @@ def plotGenericSipeMaps(kx_value, ky_value, epsilon_precision = 0.05, theta=0., 
   epsI2, epsR2 = np.meshgrid(epsI, epsR)
   epsilon2 = np.add(epsR2,np.multiply(1e0j, epsI2)) #map of all possible dielectric permittivities
 
-  print "Calculating efficiency for all (kx, ky) values at wavelength "+title+"."
+  print("Calculating efficiency for all (kx, ky) values at wavelength "+title+".")
 
   #print "kxx shape = "+str(kxx.shape)+"."
   number_iterations = len(kx)*len(ky)*len(epsR)*len(epsI)
   etaSipe = np.zeros((len(kx), len(ky), len(epsR), len(epsI)))
-  print Header+"Memory usage: "+str(number_iterations*64./8./1024./1024.)+" MB."
+  print(Header+"Memory usage: "+str(number_iterations*64./8./1024./1024.)+" MB.")
   #print Header+"Memory usage: "+str(len(etaSipe)*64./8./1024.)+" kB."
-  print Header+"Number of iterations: "+str(number_iterations)
-  print Header+"Shape (kx,ky,epsR,epsI)="+str(np.shape(etaSipe))
+  print(Header+"Number of iterations: "+str(number_iterations))
+  print(Header+"Shape (kx,ky,epsR,epsI)="+str(np.shape(etaSipe)))
   iteration_number=0
   # Building the etaSipe(kx,ky) distribution for all values of permittivities and all kappa_x, kappa_y.
   for j in np.arange(0,len(epsR),1):
@@ -300,15 +300,15 @@ def plotGenericSipeMaps(kx_value, ky_value, epsilon_precision = 0.05, theta=0., 
             etaSipe[m,n,j,k] = etap(theta, f, s, epsilon2[j,k], kappa, kappap, kappam)
           except:
             etaSipe[m,n,j,k] = 0.
-            print Header+"** Exception case was met."
+            print(Header+"** Exception case was met.")
           iteration_number = iteration_number + 1
           progress = 100.*iteration_number / number_iterations
-    print Header+"** Progress: "+str(round(progress))+" percents."
+    print(Header+"** Progress: "+str(round(progress))+" percents.")
 
   #print etaSipe
   maximum = np.amax(etaSipe) #finds maximum value of efficiency
 
-  print Header+"** Info: Maximum value of efficacy: "+str(maximum)
+  print(Header+"** Info: Maximum value of efficacy: "+str(maximum))
   #print etaSipe[0,0,:,:]
   # TODO: find the value of kappaX, kappaY and epsilon for which efficiency is maximum. 
 
@@ -323,7 +323,7 @@ def plotGenericSipeMaps(kx_value, ky_value, epsilon_precision = 0.05, theta=0., 
   # ============================== ADDING THE CORRESPONDING MATERIALS TO THE PLOT ====================
   ## Generate the database
   SPPdb = GenerateDatabase()
-  print "** Info: SPP database has "+str(len(SPPdb))+" entries."
+  print("** Info: SPP database has "+str(len(SPPdb))+" entries.")
   
   #print "Full Database:"
   #print SPPdb
@@ -339,21 +339,21 @@ def plotGenericSipeMaps(kx_value, ky_value, epsilon_precision = 0.05, theta=0., 
   if(PlotMaterials==True): 
     try: 
         SPPdb = FilterDatabase(SPPdb, selectWavelength, 2) #BUG: crashes when treating Air
-        print "Filter on wavelength: SPP database "+title+" has "+str(np.shape(SPPdb))+" entries."
+        print("Filter on wavelength: SPP database "+title+" has "+str(np.shape(SPPdb))+" entries.")
         #plotDatabasePeriod(SPPdb, title, 'Period'+niceWavelength+'nm.eps', title, metal)
     except:
-        print "Warning: no optical data is available for "+query+" at "+title+"."
+        print("Warning: no optical data is available for "+query+" at "+title+".")
     
     SPPdbSave = SPPdb
-    print "** Limiting the Re(epsilon) space maximum ..."
+    print("** Limiting the Re(epsilon) space maximum ...")
     try: 
         SPPdb_filtered = FilterDatabaseLowerThan(SPPdb, epsilon_real_max, 15) #Field 16: eps.real
         SPPdb = SPPdb_filtered[0][:][:] #shape is getting one extra dimension for nothing! 
-        print "Filter on wavelength: SPP database "+title+" has "+str(np.shape(SPPdb))+" entries."
-        print SPPdb
+        print("Filter on wavelength: SPP database "+title+" has "+str(np.shape(SPPdb))+" entries.")
+        print(SPPdb)
         #plotDatabasePeriod(SPPdb, title, 'Period'+niceWavelength+'nm.eps', title, metal)
     except:
-        print "Warning: no optical data is available for "+query+" at "+title+"."
+        print("Warning: no optical data is available for "+query+" at "+title+".")
         exit()
     
     #print "** Limiting the Re(epsilon) space minimum ..."
@@ -366,35 +366,35 @@ def plotGenericSipeMaps(kx_value, ky_value, epsilon_precision = 0.05, theta=0., 
     #except:
         #print "Warning: no optical data is available for "+query+" at "+title+"."
         #exit()
-    print "** Limiting the Im(epsilon) space maximum ..."
+    print("** Limiting the Im(epsilon) space maximum ...")
     try: 
         SPPdb_filtered = FilterDatabaseGreaterThan(SPPdb, epsilon_imag_max, 16)
         SPPdb = SPPdb_filtered[0][:][:] #shape is getting one extra dimension for nothing! 
-        print "Filter on wavelength: SPP database "+title+" has "+str(len(SPPdb))+" entries."
+        print("Filter on wavelength: SPP database "+title+" has "+str(len(SPPdb))+" entries.")
         #plotDatabasePeriod(SPPdb, title, 'Period'+niceWavelength+'nm.eps', title, metal)
     except:
-        print "Warning: no optical data is available for "+query+" at "+title+"."
+        print("Warning: no optical data is available for "+query+" at "+title+".")
     
-    print "** Limiting the Im(epsilon) space minimum ..."
+    print("** Limiting the Im(epsilon) space minimum ...")
     try: 
         SPPdb_filtered = FilterDatabaseGreaterThan(SPPdb, epsilon_imag_min, 16)
         SPPdb = SPPdb_filtered[0][:][:] #shape is getting one extra dimension for nothing! 
-        print "Filter on wavelength: SPP database "+title+" has "+str(len(SPPdb))+" entries."
+        print("Filter on wavelength: SPP database "+title+" has "+str(len(SPPdb))+" entries.")
         #plotDatabasePeriod(SPPdb, title, 'Period'+niceWavelength+'nm.eps', title, metal)
     except:
-        print "Warning: no optical data is available for "+query+" at "+title+"."
+        print("Warning: no optical data is available for "+query+" at "+title+".")
     
   
   #SPPdb = FilterDatabase(SPPdb, selectWavelength, 2)
   
-  print "** Filtering materials: SPP database has now "+str(np.shape(SPPdb))+" entries."
+  print("** Filtering materials: SPP database has now "+str(np.shape(SPPdb))+" entries.")
   
   if(len(SPPdb)==0):
-    print "** QUITTING..."
+    print("** QUITTING...")
     exit()
   #print Header+"** Saving the materials database. "
   
-  print Header+"** Preparing the list of materials"
+  print(Header+"** Preparing the list of materials")
   #print SPPdb
   
   Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1rM, eps1cM, eps2rM, eps2cM, k1imag, k2imag, DeltaLsppValue = ExtractDataDb(SPPdb)
@@ -432,7 +432,7 @@ def plotGenericSipeMaps(kx_value, ky_value, epsilon_precision = 0.05, theta=0., 
   plt.xlabel(r'Re($\varepsilon$)')
   plt.ylabel(r'Im($\varepsilon$)')
   filename = "GrafDerrien-GeneralizedSipe-kx-"+str(kx[0])+"-ky-"+str(ky[0])
-  print Header+"** Writing file: "+filename 
+  print(Header+"** Writing file: "+filename) 
   plt.savefig(filename+".eps")
   plt.savefig(filename+".png")
   #plt.show()
@@ -522,7 +522,7 @@ def plotSipeMaps_Dostovalov_Cr(): #{{{
     #plotSipeFromDatabase(request, "Si (Palik)", wavelength, kpointnumber, 'Air', angle, filling, shape)
     epsCr = -0.6721223+24.8657476j
     nCr = np.sqrt(epsCr) #0.5, 1.5, 3.5
-    print nCr
+    print(nCr)
     plotSipe1D_sectionX(1026e-9, nCr**2, filling, shape)
 #}}}
 
@@ -557,9 +557,9 @@ def plotSipeSection_Dostovalov_Cr(): #{{{
     selvedge = 5e-9 #s = l_c / selvedge
     #l_c=[1E-9, 2e-9, 5e-9, 10e-9]
     l_c = [ 0.4 * selvedge ]
-    print "Correlation length = "+str(l_c)
+    print("Correlation length = "+str(l_c))
     shape_factors = np.divide(l_c, selvedge) #this originates from deep details of Sipe paper.
-    print "s numbers: "+str(shape_factors)
+    print("s numbers: "+str(shape_factors))
 
     for s in shape_factors:
         plotSipe1D_sectionX(wavelength, epsilon, f, s, angle)

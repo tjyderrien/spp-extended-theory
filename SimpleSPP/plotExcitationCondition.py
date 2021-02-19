@@ -57,13 +57,13 @@ Material2loc, BandGap, wavelengthLoc, RealEps, ImagEps = ExtractMaterialData(Dat
 RealEps = np.asfarray(RealEps); ImagEps = np.asfarray(ImagEps)
 eps2 = RealEps + 1j * ImagEps
 
-print "** Plotting SPP condition as function of excitation"
+print("** Plotting SPP condition as function of excitation")
 
 LogNe = np.linspace(16.,np.log10(4*5E28),500)
 Ne    = np.power(10., LogNe)
 CollisionRate = 1.1E-15**-1
 OpticalMass   = 0.18e0
-print "** Calculating SPP condition with excitation level..."
+print("** Calculating SPP condition with excitation level...")
 SPPcondition = SPPconditionValue(eps1, Drude(wavelength, Ne, eps2, CollisionRate, OpticalMass))
 
 epsAir = eps1
@@ -80,16 +80,16 @@ plt.tight_layout()
 plt.savefig('Dispersion.eps')
 #plt.show()
 
-print "** Plotting the L_spp as function of excitation"
+print("** Plotting the L_spp as function of excitation")
 
 betaSPP        = np.vectorize(betaSPP)
 DecayLengthSPP = np.vectorize(DecayLengthSPP)
 
-print epsAir.shape, epsSi.shape
+print(epsAir.shape, epsSi.shape)
 beta = betaSPP(wavelength, epsAir, epsSi)
 Lspp = DecayLengthSPP(beta)
 
-print np.shape(Lspp)
+print(np.shape(Lspp))
 
 filenames=Material2.split()[0]+str(round(wavelength*1E9,0))+"-Nexc-"
 

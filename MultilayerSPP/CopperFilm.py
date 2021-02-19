@@ -97,7 +97,7 @@ def Derrien_HRLIPSSonCuFilms(wavelength, thickness_size):
         epsSi       = 30.8542847158+4.300769121j
         epsSiO2     = 2.1614446988
     else: 
-        print(Header,"No optical data were provided for this input.")
+        print((Header,"No optical data were provided for this input."))
         exit()
  
     numberofroots = 10
@@ -138,13 +138,13 @@ def Derrien_HRLIPSSonCuFilms(wavelength, thickness_size):
         for branch in np.arange(0,num_branches):
             roots_in_branch = roots[branch]
             #print("\n")
-            print("Roots in branch #"+str(branch))
+            print(("Roots in branch #"+str(branch)))
             for order in np.arange(0,len(roots_in_branch)):
                 roots_in_branch_order = roots_in_branch[order]
                 #print("\n")
                 fraction = 0e0 #irrelevant in this context
-                print("Thickness:"+str(thickness)+", Order #"+str(order)+": Period="+str(roots_in_branch_order[0])+" Lspp="+str(roots_in_branch_order[1]))
-                print("beta/k0="+str(PeriodToBetaNorm(roots_in_branch_order[0])))
+                print(("Thickness:"+str(thickness)+", Order #"+str(order)+": Period="+str(roots_in_branch_order[0])+" Lspp="+str(roots_in_branch_order[1])))
+                print(("beta/k0="+str(PeriodToBetaNorm(roots_in_branch_order[0]))))
                 ToBeAdded = [thickness, branch, order, roots_in_branch_order[0], roots_in_branch_order[1], fraction, eps1]
                 if(abs(roots_in_branch[order][0]) > 1E-15 and abs(roots_in_branch[order][1]) > 1E-10): 
                     # We remove modes were |Lspp| < 0.1 nm or |period| < 0. 

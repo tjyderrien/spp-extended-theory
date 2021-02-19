@@ -77,7 +77,7 @@ for thickness in t_list:
 
   for branch in np.arange(0,num_branches):
       for root_number in np.arange(0,num_roots): 
-        print(thickness, roots[branch][root_number][0], roots[branch][root_number][1])
+        print((thickness, roots[branch][root_number][0], roots[branch][root_number][1]))
       #print("\n")
 
 ##TODO: from this, we would like to add a layer which will variate eps1 as function of oxide concentration

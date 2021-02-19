@@ -147,20 +147,20 @@ ke3 = (k0**2)*eps3
 
 def prnt(string):
     aux = '[%.1f s]' % (time() - start)
-    print(string+' '*(35-len(string)-len(aux))+aux)
+    print((string+' '*(35-len(string)-len(aux))+aux))
 
 print('Guess rectangle:')
-print('Re(beta) in [%.2e, %.2e]' % (x_min, x_max))
-print('Im(beta) in [%.2e, %.2e]' % (y_min, y_max))
-print('x_steps = %d' % x_steps)
-print('y_steps = %d' % y_steps)
+print(('Re(beta) in [%.2e, %.2e]' % (x_min, x_max)))
+print(('Im(beta) in [%.2e, %.2e]' % (y_min, y_max)))
+print(('x_steps = %d' % x_steps))
+print(('y_steps = %d' % y_steps))
 print()
 print('Data:')
-print('eps1:', eps1)
-print('eps2:', eps2)
-print('eps3:', eps3)
-print('wavelength:', wavelength)
-print('t:', t)
+print(('eps1:', eps1))
+print(('eps2:', eps2))
+print(('eps3:', eps3))
+print(('wavelength:', wavelength))
+print(('t:', t))
 print()
 
 #main algorithm
@@ -168,7 +168,7 @@ branches = []
 for sgn1, sgn2 in product((-1,1), (-1,1)):
     roots = []
     unique = []
-    print('Branch: (%s, %s)' % (('%+d' % sgn1)[0], ('%+d' % sgn2)[0]))
+    print(('Branch: (%s, %s)' % (('%+d' % sgn1)[0], ('%+d' % sgn2)[0])))
     start = time()
     for x in np.linspace(x_min, x_max, num=x_steps):
         for y in np.linspace(y_min, y_max, num=y_steps):

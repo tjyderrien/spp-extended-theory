@@ -33,7 +33,7 @@ from libDatabase import *
 #  http://stackoverflow.com/questions/8850142/matplotlib-overlapping-annotations
 def get_text_positions(x_data, y_data, txt_width, txt_height):
 
-  a = zip(y_data, x_data)
+  a = list(zip(y_data, x_data))
   text_positions = y_data.copy()
   for index, (y, x) in enumerate(a):
     local_text_positions = [i for i in a if i[0] > (y - txt_height) 
@@ -269,7 +269,7 @@ def plotSeveralWavelengths(database1, database2, reverse, metal, query):#{{{
     elif(query=="Ti (Johnson)"):
       plt.axis([0,20,0,900]) ##KEEP 900 please #good for Ti
     else:
-      print "** Error: this query is not a planned case. Query="+query
+      print("** Error: this query is not a planned case. Query="+query)
       #exit()
   else: #non-metal
     plt.axis([-70,0,0,900]) ##KEEP 900 please

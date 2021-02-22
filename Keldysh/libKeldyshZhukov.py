@@ -29,7 +29,8 @@
 import numpy as np
 from numpy import genfromtxt, loadtxt, chararray
 #from scipy.optimize import fsolve, root
-from scipy.special import ellipk, ellipe, dawsn, factorial2, factorial, ellipkm1
+from scipy.special import ellipk, ellipe, dawsn, ellipkm1
+from scipy.misc import factorial2, factorial
 #import cmath
 import matplotlib as mp
 import matplotlib.pyplot as plt

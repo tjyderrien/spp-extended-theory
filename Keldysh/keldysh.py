@@ -125,7 +125,7 @@ def SiliconLDAbandGap(): #{{{
   #def Test():
         
     
-    #print "== USELESS: 2-band 1-photon (4x4) original numerical attempt"
+    #print("== USELESS: 2-band 1-photon (4x4) original numerical attempt")
     #Enumerical_min = Stark2bands1photon_EnergyShift_notcorrected_numerical(Efield_AU, omega_AU, E_gap_AU, DME, 50)
     
     ##Enumerical_max = Stark2bands1photon_EnergyShift_notcorrected_numerical(np.max(Efield_AU), omega_AU, E_gap_AU, DME, 50)
@@ -147,7 +147,7 @@ def SiliconLDAbandGap(): #{{{
     ## For comparison, we compute the 4x4 original. 
     #ENC1, ENC2, ENC3, ENC4, EgapShift_AU = Stark2bands1photon_Cropped_EnergyShift_notcorrected_exact(Efield_AU, omega_AU, E_gap_AU, DME)
     
-    #print "USELESS: 4x4 original - exact values"
+    #print("USELESS: 4x4 original - exact values")
     #print "eV: "
     #print Energy_Hartree_to_eV(ENC1)
     #print Energy_Hartree_to_eV(ENC2)

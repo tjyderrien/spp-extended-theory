@@ -30,7 +30,7 @@ from libKeldyshZhukov import *
 from libKeldyshPulses import *
 
 rc('font', **{'family':'serif', 'serif':['Helvetica'], 'size':'16'})
-rc('text', usetex=False)
+rc('text', usetex=True)
 mp.rcParams['legend.numpoints'] = 1
 
 Header="[libKeldysh] "

@@ -290,7 +290,9 @@ def ComputeFloquetBandStructure(filename, nb_atoms, Z_electrons, kpoints, unocc_
     ## 6. Build then diagonalize the Floquet Hamiltonian. 
     # 6.1:Build the eigenvalued matrix
     H_GS=np.zeros((matrix_side, matrix_side))*1j
-    #print np.size(H_GS[0])
+    print(Header+"** Info: side of the matrix")
+    print(Header+"         "+str(np.size(H_GS[0])))
+    print(Header+"Matrix_side: "+str(matrix_side)+" Z_el: "+str(Z_electrons)+"unocc: "+str(unocc_states))
     for i in np.arange(0,np.size(H_GS[0])):
         H_GS[i,i]=eigenvalues[i]
     if(verbose==1):
@@ -403,8 +405,9 @@ def ComputeFloquetBandStructure(filename, nb_atoms, Z_electrons, kpoints, unocc_
     OmegaCutOff_eV_sorted = np.sort(OmegaCutOff_eV_filtered)
     OmegaCutOff_m_sorted = np.sort(OmegaCutOff_m_filtered)
     
-    print Header+"Ideal photon energies for "+str(Efield_SI*1E-9)+" V/nm: \n"+str(list(set(OmegaCutOff_eV_sorted)))+" (eV)"
-    print Header+"Ideal photon wavelengths for "+str(Efield_SI*1E-9)+" V/nm: \n"+str(list(set(OmegaCutOff_m_sorted)))+" (m)"
+    if(verbose==1):
+        print Header+"Ideal photon energies for "+str(Efield_SI*1E-9)+" V/nm: \n"+str(list(set(OmegaCutOff_eV_sorted)))+" (eV)"
+        print Header+"Ideal photon wavelengths for "+str(Efield_SI*1E-9)+" V/nm: \n"+str(list(set(OmegaCutOff_m_sorted)))+" (m)"
     #  wavelength (m) = h * c / (E(eV) * e)
     #print H_Floquet_mn 
     

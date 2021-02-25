@@ -70,7 +70,7 @@ def PulseSquaredSinTemporalShape(t, tau, PeakField, wavelength, CEP=0., t0=0., P
 # @param PeakField: maximum amplitude of the field (S.I.)
 # @param wavelength: wavelength of the electromagnetic field (m)
 # @param CEP: carrier envelope phase inside the envelope (rad)
-# @param t0: central time of the first pulse
+# @param t0: central time of the pulse
 # @param PulseDelay: adds a delay to the pulse with respect to t0. 
 # @param power: 2 by default. Increase to 4 for low intensities if necessary.
 def PulseSmoothTopHatShape(t, tau, tauRise, PeakField, wavelength, CEP=0., t0=0., PulseDelay=0., power=2.):

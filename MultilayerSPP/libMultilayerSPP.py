@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2019 F. Preucil, T.J.-Y. Derrien
+# Copyright (C) 2019-2020 F. Preucil, T.J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,6 +29,7 @@ from time import time
 import numpy.linalg as LA
 
 def func(betaR, eps1, eps2, eps3, k0, t, sgn1, sgn2):
+    global ke1, ke2, ke3
     beta = betaR[0] + betaR[1]*1.j
     kappa1 = cmath.sqrt(beta**2 - ke1)/eps1
     kappa2 = sgn1*cmath.sqrt(beta**2 - ke2)/eps2

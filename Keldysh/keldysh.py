@@ -83,21 +83,28 @@ def SiliconLDAbandGap(): #{{{
   order=200
   Efield_min      = 0E0 
   Efield_max      = 4E10 #V/m
-  num_fields=300
+  num_fields=1200
   
   LogScale        =False 
   ShowKeldyshStark=False #Keldysh-Stark is not applicable in tunneling regime. Therefore, it is better to remove it, as it is misleading. NMB: the E_eff in Keldysh theory is applicable only from multiphotonic case.
   ShowBandGap     =True  #Add dots on figs to indicate band gap and replicates. 
+  GSpointSize     = 15
   
-  wavelength = 3200e-9 #  
+  wavelength = 800e-9 #
   tau=7e-15; dt = 1E-17; CEP=0e0
   #PeakFluence = 1.0*1E4 #J/cm2 * 1E4 = J/m2
   #PeakField   = np.sqrt(2e0 * PeakFluence / (tau * c * epsilon_0))
-  PeakField = 3E9
+  PeakIntensity = 3.2E14 #Zhukov example at 1.6 um
+  RefractiveIndex = OpticalIndex[wavelength] #1: for far field, # 1.45: for near field in silica
+  PeakField   = np.sqrt(2e0 * PeakIntensity * RefractiveIndex / (c * epsilon_0))
+  #PeakField = 3E9
   
   Test_Keldysh(Egap, meff, PeakField, wavelength, order)
+
   #exit()
   print("===== COMPARING THE EFFECTIVE GAPS using Stark effect ====")
+  exit()
+
   
   print("== Preparing Giovannini et al model... ==")
   DME = 1. #from the paper #-1+2j #arbitrary!
@@ -106,11 +113,6 @@ def SiliconLDAbandGap(): #{{{
       Efield_SI     = np.power(10.,Efield_SI_log)
   else:
       Efield_SI     = np.linspace(Efield_min, Efield_max, num_fields)
-  OpticalIndex={ #data from Palik! 
-        483e-9: 4.4028, 484e-9: 4.3964,
-        800e-9: 3.6924167231905, 1600e-9: 3.4826, 
-        2200e-9: 3.4548, 2600e-9: 3.4457, 3200e-9: 3.43438589865999}
-  RefractiveIndex = OpticalIndex[wavelength] #1: for far field, # 1.45: for near field in silica
   #Efield_SI     = 1e9  
 
   E_gap_SI      = Egap
@@ -251,13 +253,13 @@ def SiliconLDAbandGap(): #{{{
   if(ShowBandGap):
       MPI_number=1 #here
       Intensity_min  = 0.5*c*epsilon_0*Efield_min**2*RefractiveIndex
-      plt.scatter(np.ones(np.size(E_gap_SI/e))*Intensity_min, E_gap_SI/e/2, c="black", s=10, label="Gap")
-      plt.scatter(np.ones(np.size(E_gap_SI/e))*Intensity_min,-E_gap_SI/e/2, c="black", s=10)
+      plt.scatter(np.ones(np.size(E_gap_SI/e))*Intensity_min, E_gap_SI/e/2, c="black", s=GSpointSize, label="Gap")
+      plt.scatter(np.ones(np.size(E_gap_SI/e))*Intensity_min,-E_gap_SI/e/2, c="black", s=GSpointSize)
       for MPI in np.arange(1,MPI_number+1):
-            plt.scatter(np.ones(np.size(E_gap_SI/e))*Intensity_min, np.real(E_gap_SI/e/2.)+MPI*h*c/wavelength/e, c="red",  s=10, label="non-interacting replicates")
-            plt.scatter(np.ones(np.size(E_gap_SI/e))*Intensity_min, np.real(E_gap_SI/e/2.)-MPI*h*c/wavelength/e, c="blue", s=10, label="non-interacting replicates")
-            plt.scatter(np.ones(np.size(-E_gap_SI/e))*Intensity_min, np.real(-E_gap_SI/e/2.)+MPI*h*c/wavelength/e, c="red",  s=10, label="non-interacting replicates")
-            plt.scatter(np.ones(np.size(-E_gap_SI/e))*Intensity_min, np.real(-E_gap_SI/e/2.)-MPI*h*c/wavelength/e, c="blue", s=10, label="non-interacting replicates")
+            plt.scatter(np.ones(np.size(E_gap_SI/e))*Intensity_min, np.real(E_gap_SI/e/2.)+MPI*h*c/wavelength/e, c="red",    s=GSpointSize, label="non-interacting replicates")
+            plt.scatter(np.ones(np.size(E_gap_SI/e))*Intensity_min, np.real(E_gap_SI/e/2.)-MPI*h*c/wavelength/e, c="blue",   s=GSpointSize, label="non-interacting replicates")
+            plt.scatter(np.ones(np.size(-E_gap_SI/e))*Intensity_min, np.real(-E_gap_SI/e/2.)+MPI*h*c/wavelength/e, c="red",  s=GSpointSize, label="non-interacting replicates")
+            plt.scatter(np.ones(np.size(-E_gap_SI/e))*Intensity_min, np.real(-E_gap_SI/e/2.)-MPI*h*c/wavelength/e, c="blue", s=GSpointSize, label="non-interacting replicates")
   plt.title("2 bands, 1 photon transition")
   #plt.legend(loc='best')
   plt.tight_layout()
@@ -292,10 +294,10 @@ def SiliconLDAbandGap(): #{{{
       plt.scatter(np.ones(np.size(E_gap_SI/e))*Intensity_min,-E_gap_SI/e/2, c="black", s=10)
       
       for MPI in np.arange(1,MPI_number+1):
-            plt.scatter(np.ones(np.size(E_gap_SI/e))*Intensity_min, np.real(E_gap_SI/e/2.)+MPI*h*c/wavelength/e, c="red",  s=10, label="non-interacting replicates")
-            plt.scatter(np.ones(np.size(E_gap_SI/e))*Intensity_min, np.real(E_gap_SI/e/2.)-MPI*h*c/wavelength/e, c="blue", s=10, label="non-interacting replicates")
-            plt.scatter(np.ones(np.size(-E_gap_SI/e))*Intensity_min, np.real(-E_gap_SI/e/2.)+MPI*h*c/wavelength/e, c="red",  s=10, label="non-interacting replicates")
-            plt.scatter(np.ones(np.size(-E_gap_SI/e))*Intensity_min, np.real(-E_gap_SI/e/2.)-MPI*h*c/wavelength/e, c="blue", s=10, label="non-interacting replicates")
+            plt.scatter(np.ones(np.size(E_gap_SI/e))*Intensity_min, np.real(E_gap_SI/e/2.)+MPI*h*c/wavelength/e, c="red",    s=GSpointSize, label="non-interacting replicates")
+            plt.scatter(np.ones(np.size(E_gap_SI/e))*Intensity_min, np.real(E_gap_SI/e/2.)-MPI*h*c/wavelength/e, c="blue",   s=GSpointSize, label="non-interacting replicates")
+            plt.scatter(np.ones(np.size(-E_gap_SI/e))*Intensity_min, np.real(-E_gap_SI/e/2.)+MPI*h*c/wavelength/e, c="red",  s=GSpointSize, label="non-interacting replicates")
+            plt.scatter(np.ones(np.size(-E_gap_SI/e))*Intensity_min, np.real(-E_gap_SI/e/2.)-MPI*h*c/wavelength/e, c="blue", s=GSpointSize, label="non-interacting replicates")
   
   plt.title("4 bands (deg. 2), 1 photon transition")
   #plt.legend(loc='best')
@@ -330,10 +332,10 @@ def SiliconLDAbandGap(): #{{{
       plt.scatter(np.ones(np.size(E_gap_SI/e))*Intensity_min, E_gap_SI/e/2, c="black", s=10, label="Gap")
       plt.scatter(np.ones(np.size(E_gap_SI/e))*Intensity_min,-E_gap_SI/e/2, c="black", s=10)
       for MPI in np.arange(1,MPI_number+1):
-          plt.scatter(np.ones(np.size(E_gap_SI/e))*Intensity_min, np.real(E_gap_SI/e/2.)+MPI*h*c/wavelength/e, c="red",  s=10, label="non-interacting replicates")
-          plt.scatter(np.ones(np.size(E_gap_SI/e))*Intensity_min, np.real(E_gap_SI/e/2.)-MPI*h*c/wavelength/e, c="blue", s=10, label="non-interacting replicates")
-          plt.scatter(np.ones(np.size(-E_gap_SI/e))*Intensity_min, np.real(-E_gap_SI/e/2.)+MPI*h*c/wavelength/e, c="red",  s=10, label="non-interacting replicates")
-          plt.scatter(np.ones(np.size(-E_gap_SI/e))*Intensity_min, np.real(-E_gap_SI/e/2.)-MPI*h*c/wavelength/e, c="blue", s=10, label="non-interacting replicates")
+          plt.scatter(np.ones(np.size(E_gap_SI/e))*Intensity_min, np.real(E_gap_SI/e/2.)+MPI*h*c/wavelength/e, c="red",    s=GSpointSize, label="non-interacting replicates")
+          plt.scatter(np.ones(np.size(E_gap_SI/e))*Intensity_min, np.real(E_gap_SI/e/2.)-MPI*h*c/wavelength/e, c="blue",   s=GSpointSize, label="non-interacting replicates")
+          plt.scatter(np.ones(np.size(-E_gap_SI/e))*Intensity_min, np.real(-E_gap_SI/e/2.)+MPI*h*c/wavelength/e, c="red",  s=GSpointSize, label="non-interacting replicates")
+          plt.scatter(np.ones(np.size(-E_gap_SI/e))*Intensity_min, np.real(-E_gap_SI/e/2.)-MPI*h*c/wavelength/e, c="blue", s=GSpointSize, label="non-interacting replicates")
   plt.title("2 bands, 2 photons transition")
   #plt.legend(loc='best')
   plt.tight_layout()

@@ -97,7 +97,16 @@ def VZ_FieldNormalization(Egap, meff, wavelength):
 
 VZ_FieldNormalization = np.vectorize(VZ_FieldNormalization)
 
-
+## Defines the interface to the simulation data provided by VP Zhukov. Format of the data was not systematic, hence we had to define a dictionnary for reading each produced files. In bicolor datasets, fields E1 and E2 were sometimes inverted. 
+# @param FieldEnvelope1: Electric field 1 (SI)
+# @param FieldEnvelope2: Electric field 2 (SI)
+# @param wavelength1: wavelength pulse 1 (SI)
+# @param wavelength2: wavelength pulse 2 (SI)
+# @param CEP1: phase pulse 1 (SI)
+# @param CEP2: phase pulse 2 (SI)
+# @param Egap: band gap (SI) in Joules. 
+# @param meff: effective mass (no unit)
+# @param PathPrefix: string to be added before all employed machine paths
 def VP_ChooseLibrary(FieldEnvelope1, FieldEnvelope2, wavelength1, wavelength2, CEP1, CEP2, Egap=2.56*e, meff=0.2226, PathPrefix=""):
     #print "Path prefix: "+PathPrefix
     Header="[libKeldyshZhukov: VP_ChooseLibrary: ]"
@@ -283,7 +292,7 @@ def VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength1 = 800e-9, w
       #DB_Wpi           = databasecontents[:,Dictionnary['wpi']]           #this is a mapping
       
   
-  if(NumberOfColors == 2):
+  if(NumberOfColors == 2): #{{{
     DB_FieldSquaredNorm1 = databasecontents[:,Dictionnary['FieldSquared1']] #this is a mapping
     DB_FieldSquaredNorm2 = databasecontents[:,Dictionnary['FieldSquared2']] #this is a mapping
   
@@ -343,7 +352,7 @@ def VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength1 = 800e-9, w
   else: 
     print Header+"Number of colors is too high. Keldysh-Zhukov model is made for 2 colors. "
     exit()
-  
+  #}}}
   print Header+"range(w_PI_CGS) = ", w_PI_CGS.min(), w_PI_CGS.max()
   print Header+"dimension(w_PI_CGS) = ", w_PI_CGS.shape
   

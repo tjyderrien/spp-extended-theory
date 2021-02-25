@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>
 
-# Package @MultilayerContourplot helps to visualize electromagnetic fields prepared with solver.py. 
+## Package @MultilayerContourplot enables visualize electromagnetic fields prepared with solver.py. 
 # The formal model is presented in 
 # T.J.-Y. Derrien et al, J. Appl. Phys. 116, 074902 (2014) and references 
 # therein.
@@ -34,7 +34,7 @@ from scipy.constants import c, epsilon_0
 #3 (-, +, +) (+, +, +)
 
 branch_index = 3
-root_index   = 0
+root_index   = 1
 
 #two black lines to show the boundaries
 showlines = True
@@ -53,7 +53,7 @@ SPPperiod = 2.*np.pi/betaR[0]
 SPPlength = .5/betaR[1]
 
 #which field you want to plot
-whichfield = 0
+whichfield = 5
 #0 Hy
 #1 Ex
 #2 Ez
@@ -105,13 +105,13 @@ omegaeps0 = k0*c*epsilon_0
 wavelength = 2.*np.pi/k0
 
 #plotting
-xrange = 10.*min(SPPperiod,SPPlength)
-zrange = wavelength*0.05
+xrange = 10.*wavelength #min(SPPperiod,SPPlength)
+zrange = wavelength*1
 steps = 200
 
 #field amplitude
 A = 1.
-
+LogScale=False
 #setting the branch
 sgn1, sgn2 = list(product((-1,1), (-1,1)))[branch_index]
 k1 = cmath.sqrt(beta**2 - k0**2*eps1)
@@ -213,6 +213,8 @@ if whichfield in (0, 1, 2, 3, 4):
         toplot = abs(field)
 elif whichfield in (5, 6, 7):
     part = 'TotalValue'
+if(LogScale):
+    toplot=np.log10(toplot)
 plt.contourf(x*1E6, z*1E6, toplot, levels, cmap=plt.get_cmap('Blues'))
 
 if showlines:

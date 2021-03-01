@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 # Copyright (C) 2013-2020 T. J.-Y. Derrien
 #
@@ -30,7 +30,7 @@ import numpy as np
 from numpy import genfromtxt, loadtxt, chararray
 #from scipy.optimize import fsolve, root
 from scipy.special import ellipk, ellipe, dawsn, ellipkm1
-from scipy.misc import factorial2, factorial
+#from scipy.misc import factorial2, factorial
 #import cmath
 import matplotlib as mp
 import matplotlib.pyplot as plt

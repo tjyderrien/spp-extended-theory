@@ -7,7 +7,7 @@
 # * Generating tables to use directly into simulation codes
 # * Outputing density in certain conditions. 
 
-from libKeldysh       import * 
+from libKeldysh       import *
 from libKeldyshPulses import *
 from libKeldyshZhukov import *
 from libStark         import *
@@ -15,16 +15,17 @@ from libStark         import *
 
 Header="[keldysh] "
 
-print("")
-print("** Welcome to SPP-extended-theory suite.")
-print("** Author(s): T.J.-Y. Derrien")
-print("")
-print("** Loaded Keldysh module [Keldysh, Sov. J. Exp. Th. Phys. 47, 5 (1964)]...")
-print("** Loaded Gruzdev formula [Gruzdev, Optical Engineering 53, 122515 (2014)]")
-print("** Loading Stark module [De Giovannini, U.; Hubener, H. & Rubio, A., Nano Letters, 16, 7993-7998 (2016)]")
+if __name__ == "__main__":
+    print("")
+    print("** Welcome to SPP-extended-theory suite.")
+    print("** Author(s): T.J.-Y. Derrien")
+    print("")
+    print("** Loaded Keldysh module [Keldysh, Sov. J. Exp. Th. Phys. 47, 5 (1964)]...")
+    print("** Loaded Gruzdev formula [Gruzdev, Optical Engineering 53, 122515 (2014)]")
+    print("** Loading Stark module [De Giovannini, U.; Hubener, H. & Rubio, A., Nano Letters, 16, 7993-7998 (2016)]")
 
-print("** Info: this file contains examples how to use the Keldysh library. ")
-print("         It also contains validation cases of the present theory on Si and known references. ")
+    print("** Info: this file contains examples how to use the Keldysh library. ")
+    print("         It also contains validation cases of the present theory on Si and known references. ")
 
 ## Applies Keldysh model to the solid state parameters passed in argument. 
 def Test_Keldysh(Egap, meff, PeakField, wavelength, order): #{{{
@@ -638,11 +639,11 @@ def SilicaGruzdev2014(): #{{{
 
 #SiliconTunneling()
 
-
-SiliconLDAbandGap()
-#SilicaGulley2012()
-#SilicaGruzdev2014()
-#SilicaGraef2017()
+if __name__ == "__main__":
+    SiliconLDAbandGap()
+    #SilicaGulley2012()
+    #SilicaGruzdev2014()
+    #SilicaGraef2017()
 
 
 ### Build the famous mapping of N_exc(intensity) from Keldysh theory. 

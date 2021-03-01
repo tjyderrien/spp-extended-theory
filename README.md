@@ -17,21 +17,21 @@ The code is now made of 3 branches.
 
 # Main developers
 
-* T.J.-Y. Derrien: developing spp and keldysh theory, programming. 
+* T.J.-Y. Derrien: developing SPP and keldysh theory, programming. 
 
-* F. Preucil: programming the multilayer solver
+* F. Preucil: programming the multilayer solver. Started improvement of multilayer SPP model. 
 
-* Y. Levy: LIPSS database contributor.
+* K. Hlinomaz: a bit of Python maintenance at the moment
 
 * J. Bonse: Provided the tabulated Palik data.
 
-# Current collaborators for this code
-
-* Stephan Gräf (Jena University): user for Sipe theory.
+# Users of the code
 
 * Inam Mirza (Hilase Centre, Prague): user for compound materials
 
 * Aleksander Kovacevic (Bratislava, Serbia): multilayered materials
+
+* Stephan Gräf (Jena University): user for Sipe theory.
 
 # Financial supports
 
@@ -44,6 +44,7 @@ The code is now made of 3 branches.
 # Purpose of this project
 
 You may find a collection of programs aiming to develop control over the transient excitation of Surface Plasmon Polaritons (SPPs) upon laser irradiation. 
+The project has diverged into a number of programs. Refactoring is planned. 
 SPPs can be used with light to enhance local power density, but also to induce Laser-Induced Periodic Surface Structures (LIPSS). 
 
 ## Concept

@@ -1,5 +1,5 @@
 #!/usr/bin/env python2.7
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ## @package libStark
 ## Computes the Stark effect for a energy band structure at the gamma points
 # This module aims at computing the band gap energy as function of the average laser field induced by the Stark effect
@@ -319,7 +319,7 @@ def ComputeFloquetBandStructure(filename, nb_atoms, Z_electrons, kpoints, unocc_
     Efield_AU = Field_SI_to_AU(Efield_SI)
     omega_AU  = Energy_eV_to_Hartree(omega_SI*hbar/e)
     
-    tmin=0.; tmax=2.*pi/omega_AU #NOTE: changing this induces a shift to higher energies. Find out why. 
+    tmin=0.; tmax=2.*pi/omega_AU #NOTE: changing this induces a shift to higher energies. Find out why. It should be phase dependent (2 pi / omega). 
     dt=(tmax-tmin)/num_time_steps
 
     # Initialization for t=0
@@ -398,12 +398,12 @@ def ComputeFloquetBandStructure(filename, nb_atoms, Z_electrons, kpoints, unocc_
         #print sol
         OmegaCutOff_AU.append(sol)
     
-    OmegaCutOff_eV=Energy_Hartree_to_eV(OmegaCutOff_AU)
-    OmegaCutOff_m = h*c/Energy_Hartree_to_eV(OmegaCutOff_AU)/e
-    OmegaCutOff_eV_filtered=(list(set(OmegaCutOff_eV[OmegaCutOff_eV>0.1]))) #0.1 eV
-    OmegaCutOff_m_filtered =(list(set(OmegaCutOff_m[OmegaCutOff_m<5e-6]))) #5 um
-    OmegaCutOff_eV_sorted = np.sort(OmegaCutOff_eV_filtered)
-    OmegaCutOff_m_sorted = np.sort(OmegaCutOff_m_filtered)
+    OmegaCutOff_eV          = Energy_Hartree_to_eV(OmegaCutOff_AU)
+    OmegaCutOff_m           = h*c/Energy_Hartree_to_eV(OmegaCutOff_AU)/e
+    OmegaCutOff_eV_filtered = (list(set(OmegaCutOff_eV[OmegaCutOff_eV>0.1]))) #0.1 eV
+    OmegaCutOff_m_filtered  = (list(set(OmegaCutOff_m[OmegaCutOff_m<5e-6]))) #5 um
+    OmegaCutOff_eV_sorted   = np.sort(OmegaCutOff_eV_filtered)
+    OmegaCutOff_m_sorted    = np.sort(OmegaCutOff_m_filtered)
     
     if(verbose==1):
         print(Header+"Ideal photon energies for "+str(Efield_SI*1E-9)+" V/nm: \n"+str(list(set(OmegaCutOff_eV_sorted)))+" (eV)")

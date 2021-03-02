@@ -25,12 +25,12 @@
 # - Keldysh-Shcheblanov model, improving rigor on the analytical integration [https://arxiv.org/abs/1706.07303]
 # - Keldysh-Corkum model, allowing for analytical treatment of mulltiwavelength fields [Physical Review Letters, 2017, 118, 173601]
 
-from libKeldyshZhukov import *
 #from libKeldyshUlrich import * #NOT READY YET
-from libKeldyshPulses import *
 # from libKeldyshUlrich import * #NOT READY YET
-from libKeldyshPulses import *
-from libKeldyshZhukov import *
+from spp_extended_theory.Keldysh.libKeldyshPulses import *
+from spp_extended_theory.Keldysh.libKeldyshZhukov import *
+from scipy.special import ellipk, ellipe, dawsn, factorial2, factorial, ellipkm1
+from scipy.constants import hbar
 
 rc('font', **{'family':'serif', 'serif':['Helvetica'], 'size':'16'})
 rc('text', usetex=True)

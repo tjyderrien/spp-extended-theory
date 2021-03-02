@@ -67,6 +67,12 @@ For each (material, wavelength), the following theories can be applied.
 
 pip install -e git+https://bitbucket.org/tjyderrien/spp_extended_theory/
 
+or 
+
+git clone login@https://bitbucket.org/tjyderrien/spp_extended_theory/
+git checkout Modules
+pip install -e spp_extended_theory
+
 ## Simple uninstall for beginners
 
 pip uninstall spp_extended_theory

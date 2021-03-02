@@ -17,16 +17,19 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 # @package libMultilayer
-# Module libMultilayer explores the SPP theory at a thin film located 
-# between two semi-infinite media. The formal model is presented in 
-# T.J.-Y. Derrien et al, J. Appl. Phys. 116, 074902 (2014) and references 
-# therein. 
-import math, cmath
-import numpy as np
-from scipy.optimize import root
+# Module libMultilayer explores the SPP theory at a thin film located
+# between two semi-infinite media. The formal model is presented in
+# T.J.-Y. Derrien et al, J. Appl. Phys. 116, 074902 (2014) and references
+# therein.
+import cmath
+import math
 from itertools import product
 from time import time
+
+import numpy as np
 import numpy.linalg as LA
+from scipy.optimize import root
+
 
 def func(betaR, eps1, eps2, eps3, k0, t, sgn1, sgn2):
     global ke1, ke2, ke3

@@ -25,9 +25,10 @@
 # - Interpolating on a wide spectrum to combine several sources (other functions). 
 
 # IMPORT LIBRARIES
-from libSPP import *
+from spp_extended_theory.Libs.libSPP import *
 from libUnits import *
-from libDatabase import *
+from spp_extended_theory.Libs.libDatabase import *
+
 #from libImportOpticalData import *
 
 Header="[importOpticalData] "

@@ -30,7 +30,7 @@ import numpy as np
 from numpy import genfromtxt, loadtxt, chararray
 #from scipy.optimize import fsolve, root
 from scipy.special import ellipk, ellipe, dawsn, ellipkm1
-from scipy.misc import factorial2, factorial
+# from scipy.misc import factorial2, factorial
 #import cmath
 import matplotlib as mp
 import matplotlib.pyplot as plt
@@ -41,9 +41,12 @@ from scipy.constants import c, epsilon_0, mu_0, pi, e, m_e, h, hbar, Avogadro
 #from matplotlib.legend_handler import HandlerLine2D
 #import sys
 
-from libUnits import *
-from libDatabase import *
+import libUnits
+import libDatabase
+import libPlotting
 from libPlotting import plot2dHeatMap
+
+import libAtomicUnits
 
 rc('font',**{'family':'sans-serif','sans-serif':['Helvetica'], 'size':'14'})
 ## for Palatino and other serif fonts use:
@@ -80,11 +83,11 @@ def IntensityToField(intensity, permittivity=1.):
 # @param NormalizedPeakField: normalized field to be obtained in CGS
 def VZ_FieldNormalization(Egap, meff, wavelength):
   # field for which gamma_VZ = 1.  
-  me_CGS = Mass_SI_to_CGS(m_e) * meff #[1 kg    (SI) = 1E3  g      (CGS) ]
-  Eg_CGS = Energy_SI_to_CGS(Egap)     #[1 J     (SI) = 1E7  ergs   (CGS) ]
-  c_CGS  = Velocity_SI_to_CGS(c)      #[1 [m/s] (SI) = 1E2 cm/s   (CGS) ]
-  e_CGS  = electric_charge_SI_to_CGS(e)  #[1 C     (SI) = c_CGS \times statC (CGS) ]
-  wavelength_CGS = Length_SI_to_CGS(wavelength)
+  me_CGS = libUnits.Mass_SI_to_CGS(m_e) * meff #[1 kg    (SI) = 1E3  g      (CGS) ]
+  Eg_CGS = libUnits.Energy_SI_to_CGS(Egap)     #[1 J     (SI) = 1E7  ergs   (CGS) ]
+  c_CGS  = libUnits.Velocity_SI_to_CGS(c)      #[1 [m/s] (SI) = 1E2 cm/s   (CGS) ]
+  e_CGS  = libUnits.electric_charge_SI_to_CGS(e)  #[1 C     (SI) = c_CGS \times statC (CGS) ]
+  wavelength_CGS = libUnits.Length_SI_to_CGS(wavelength)
   omega_CGS = 2.*pi*c_CGS/wavelength_CGS #should be equal to SI
   omega_SI  = 2.*pi*c    /wavelength #SI
   if(omega_CGS != omega_SI):
@@ -236,8 +239,8 @@ def VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength1 = 800e-9, w
   
   # Normalize FieldEnvelope 1,2 in CGS. Vladimir requires normalized field1 and normalized field2 to deliver a W_PI. Note: his formula for gamma is the one for gas and does not account for optical Stark effect (increase of gap with field strength). #TODO: Why ? Stark effect also happens in gas. 
   
-  FieldEnvelope1_CGS = Field_SI_to_CGS(FieldEnvelope1)
-  FieldEnvelope2_CGS = Field_SI_to_CGS(FieldEnvelope2)
+  FieldEnvelope1_CGS = libUnits.Field_SI_to_CGS(FieldEnvelope1)
+  FieldEnvelope2_CGS = libUnits.Field_SI_to_CGS(FieldEnvelope2)
   
   print(Header+"Field1 [CGS] = "+str(np.max(FieldEnvelope1_CGS)))
   print(Header+"Field2 [CGS] = "+str(np.max(FieldEnvelope2_CGS)))

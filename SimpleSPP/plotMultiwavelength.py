@@ -19,9 +19,9 @@
 ## @Packagee plotMultiwavelength 
 # Prepares plots presenting the properties of SPP as function of numerous materials. 
 
+from libMaterials import *
 # IMPORT LIBRARIES
 from libSPP import *
-from libMaterials import *
 
 precision = 1E-10
 # Now, we shall construct database for SPP lifetimes. Actually, SPP lifetime require the knowledge of all spectrum of response to be known. 

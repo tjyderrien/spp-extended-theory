@@ -22,11 +22,10 @@
 # Also, plotting using annotations on each point is also available. 
 # Prepared from source: http://stackoverflow.com/questions/8850142/matplotlib-overlapping-annotations
 
-import numpy as np
 import matplotlib.pyplot as plt
-from numpy.random import *
 
 from libDatabase import *
+
 
 ## Defines text positions for plotting
 #  Original author and descriptinons are given here:

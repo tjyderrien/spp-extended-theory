@@ -29,30 +29,15 @@
 # IMPORT PYTHON LIBRARIES
 
 
-import numpy as np
-from numpy import genfromtxt, loadtxt, chararray
-from scipy.optimize import fsolve, root
-import cmath
-import matplotlib as mp
-import matplotlib.pyplot as plt
-from scipy.interpolate import InterpolatedUnivariateSpline
-from matplotlib import rc, font_manager
 # from pylab import *
-from scipy.constants import c, epsilon_0, mu_0, pi, e, m_e, h
-from matplotlib.legend_handler import HandlerLine2D
-from matplotlib.ticker import MaxNLocator
-import sys
 
 # IMPORT CUSTOM LIBRARIES
 
+from spp_extended_theory.Libs.libPlotting import *
 # from libKeldysh import *
-from libDatabase import *
-from libLaser import *
-from libMaterials import *
-from libMath import *
-from libSPP import *
-from libSipe import *
-from libPlotting import *
+from spp_extended_theory.Libs.libSPP import *
+from spp_extended_theory.Libs.libSipe import *
+
 #from plotGraph import *
 
 Header="[plotSipe.py] "

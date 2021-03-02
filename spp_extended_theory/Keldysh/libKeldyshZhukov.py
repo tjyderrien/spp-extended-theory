@@ -39,8 +39,6 @@ from scipy.constants import epsilon_0, e, m_e
 #from matplotlib.legend_handler import HandlerLine2D
 #import sys
 
-from libUnits import *
-from libDatabase import *
 # from scipy.optimize import fsolve, root
 # from scipy.misc import factorial2, factorial
 # import cmath
@@ -53,8 +51,8 @@ from numpy import loadtxt
 from scipy.constants import epsilon_0, e, m_e
 from scipy.interpolate import interp2d, InterpolatedUnivariateSpline
 
-from libDatabase import *
-from libUnits import *
+from spp_extended_theory.Keldysh.libUnits import *
+from spp_extended_theory.Libs.libDatabase import *
 
 # from matplotlib.legend_handler import HandlerLine2D
 # import sys

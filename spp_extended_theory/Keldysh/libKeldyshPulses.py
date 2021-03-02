@@ -22,7 +22,7 @@
 import numpy as np
 from scipy.constants import c, pi
 
-import libKeldysh
+# import spp_extended_theory.Keldysh.libKeldysh as Keldysh
 
 
 ## Computes a step Heaviside function.

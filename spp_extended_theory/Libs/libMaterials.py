@@ -19,12 +19,13 @@
 ## @package libMaterials 
 # Functions describing materials and their interaction with light. 
 
-import numpy as np
 import cmath
+
 from scipy.constants import Boltzmann
+
 k_b     = Boltzmann
 
-from libLaser import *
+from spp_extended_theory.Libs.libLaser import *
 
 # OPTICAL FUNCTIONS
 

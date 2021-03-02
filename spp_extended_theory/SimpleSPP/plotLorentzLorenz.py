@@ -21,9 +21,9 @@
 # Computes the SPP properties as function of the materials fraction
 
 # IMPORT LIBRARIES
-from libSPP import *
-from libMaterials import *
-from libMultilayerSPP import *
+# from spp_extended_theory.Libs.libSPP import *
+from spp_extended_theory.Libs.libMaterials import *
+from spp_extended_theory.MultilayerSPP.libMultilayerSPP import *
 
 Header="[plotLorentzLorenz] "
 

@@ -22,11 +22,13 @@
 # This allows to perform comparisons of interesting quantities between many 
 # materials, for specific wavelengths. 
 
-# IMPORT LIBRARIES
-from libSPP import *
-from libPlotting import *
-from libDatabase import *
 from matplotlib.ticker import MaxNLocator
+
+from spp_extended_theory.Libs.libDatabase import *
+from spp_extended_theory.Libs.libPlotting import *
+# IMPORT LIBRARIES
+from spp_extended_theory.Libs.libSPP import *
+
 #EpsilonToIndex = np.vectorize(EpsilonToIndex)
 
 #Swap = np.vectorize(Swap)

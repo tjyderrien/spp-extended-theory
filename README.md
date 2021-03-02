@@ -65,16 +65,11 @@ For each (material, wavelength), the following theories can be applied.
 
 ## Simple install for beginners
 
-* Simply click "download" in the repository bar. You can also click here: https://bitbucket.org/tjyderrien/spp_extended_theory/downloads. 
+pip install -e git+https://bitbucket.org/tjyderrien/spp_extended_theory/
 
-* To get the regular updates without loosing your modifications, it is recommended to learn basics of Git. 
+## Simple uninstall for beginners
 
-## For users familiar with Git. 
-
-* For educated users: it is advised to download in HTTP mode using git clone https://tjyderrien@bitbucket.org/tjyderrien/spp_extended_theory.git
-
-* For hardcore users, you may need SSH protocol (key is required, contact me via email) to donwload: 
- git clone git@bitbucket.org:tjyderrien/spp_extended_theory.git
+pip uninstall spp_extended_theory
 
 ## Note to Windows users
 

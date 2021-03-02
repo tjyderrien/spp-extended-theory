@@ -28,6 +28,9 @@
 from libKeldyshZhukov import *
 #from libKeldyshUlrich import * #NOT READY YET
 from libKeldyshPulses import *
+# from libKeldyshUlrich import * #NOT READY YET
+from libKeldyshPulses import *
+from libKeldyshZhukov import *
 
 rc('font', **{'family':'serif', 'serif':['Helvetica'], 'size':'16'})
 rc('text', usetex=True)

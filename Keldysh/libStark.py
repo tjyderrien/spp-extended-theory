@@ -4,20 +4,15 @@
 ## Computes the Stark effect for a energy band structure at the gamma points
 # This module aims at computing the band gap energy as function of the average laser field induced by the Stark effect
 
-import numpy as np
-import numpy.linalg as LA
-import matplotlib.pyplot as plt
-from scipy.constants import c, epsilon_0, mu_0, pi, e, m_e, h, hbar
-from scipy.special import jv as BesselJ
-from scipy.special import jn_zeros as BesselJzeros
-
-import math, cmath
-from scipy.optimize import root
 from time import time
 
-from libAtomicUnits      import *
-from libString           import *
-from libMath             import Swap
+import numpy as np
+import numpy.linalg as LA
+from scipy.constants import c, pi, e, h, hbar
+from scipy.optimize import root
+from scipy.special import jn_zeros as BesselJzeros
+
+
 ## Provides the shift of the quasi electronic levels
 # From simple Floquet Hamiltonian on constant pulse of frequency omega, the shift of 6 bands with the electric field is given. The eigen values have been computed from the Hamiltonian given in the Nano Letters. 
 def Stark2bands1photon_EnergyShift_modified_exact(Efield_AU, omega_AU, E_gap_AU, DME_AU=1): #{{{                                                                                            

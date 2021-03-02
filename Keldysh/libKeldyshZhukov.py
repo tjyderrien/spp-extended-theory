@@ -26,10 +26,8 @@
 # - Keldysh-Corkum model, allowing for analytical treatment of mulltiwavelength fields [Physical Review Letters, 2017, 118, 173601]
 
 # IMPORT LIBRARIES
-import numpy as np
-from numpy import genfromtxt, loadtxt, chararray
+from numpy import loadtxt
 #from scipy.optimize import fsolve, root
-from scipy.special import ellipk, ellipe, dawsn, ellipkm1
 #from scipy.misc import factorial2, factorial
 #import cmath
 import matplotlib as mp
@@ -37,13 +35,29 @@ import matplotlib.pyplot as plt
 from scipy.interpolate import interp2d, InterpolatedUnivariateSpline
 from matplotlib import rc
 # from pylab import *
-from scipy.constants import c, epsilon_0, mu_0, pi, e, m_e, h, hbar, Avogadro
+from scipy.constants import epsilon_0, e, m_e
 #from matplotlib.legend_handler import HandlerLine2D
 #import sys
 
 from libUnits import *
 from libDatabase import *
-from libPlotting import plot2dHeatMap
+# from scipy.optimize import fsolve, root
+# from scipy.misc import factorial2, factorial
+# import cmath
+import matplotlib as mp
+import matplotlib.pyplot as plt
+from matplotlib import rc
+# IMPORT LIBRARIES
+from numpy import loadtxt
+# from pylab import *
+from scipy.constants import epsilon_0, e, m_e
+from scipy.interpolate import interp2d, InterpolatedUnivariateSpline
+
+from libDatabase import *
+from libUnits import *
+
+# from matplotlib.legend_handler import HandlerLine2D
+# import sys
 
 rc('font',**{'family':'sans-serif','sans-serif':['Helvetica'], 'size':'14'})
 ## for Palatino and other serif fonts use:

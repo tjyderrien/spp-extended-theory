@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 #-*- coding: utf-8 -*-
 
 # Copyright (C) 2013-2020 T. J.-Y. Derrien
@@ -28,8 +28,7 @@
 # * max{(n,k)} as function of laser fluence. 
 
 from libKeldysh import *
-from libMaterials import *
-from libDatabase import *
+
 from libSPP import *
 
 # Desired laser parameters

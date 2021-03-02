@@ -19,12 +19,13 @@
 ## @package libKeldyshPulses
 # This module defines various types of laser pulses and belongs to the libKeldysh package. 
 
-from scipy.constants import c, epsilon_0, mu_0, pi, e, m_e, h, hbar
 import numpy as np
+from scipy.constants import c, pi
 
 import libKeldysh
 
-## Computes a step Heaviside function. 
+
+## Computes a step Heaviside function.
 def step(x):
     return 1.0 * (x > 0.0)
 

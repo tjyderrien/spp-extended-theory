@@ -19,13 +19,14 @@
 ## @package libKeldyshUlrich
 # Routines for the semiconductor Bloch equation approach from C. Ulrich and of P. B. Corkum. 
 
-import math, cmath
+import cmath
+import math
+
+import matplotlib.pyplot as plt
 import numpy as np
 from scipy.integrate import ode
 from scipy.integrate import quad
-from scipy.special import erf #for analytic
 from scipy.special import wofz
-import matplotlib.pyplot as plt
 
 #some constants
 log2 = math.log(2)

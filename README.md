@@ -1,6 +1,6 @@
 [![Homepage](https://img.shields.io/badge/Home-quantumlap.eu-green.svg)](http://www.quantumlap.eu)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
-![Bitbucket open issues](https://img.shields.io/bitbucket/issues/tjyderrien/spp-extended-theory?style=plastic)
+![Bitbucket open issues](https://img.shields.io/bitbucket/issues/tjyderrien/spp_extended_theory?style=plastic)
 ![Twitter Follow](https://img.shields.io/twitter/follow/tjyderrien?style=social)
 ![Website](https://img.shields.io/website?down_color=red&down_message=quantumlap.eu%20%5Btemporarily%20down%21%5D&up_color=green&up_message=quantumlap.eu&url=http%3A%2F%2Fwww.quantumlap.eu)
 ![Maintenance](https://img.shields.io/maintenance/yes/2021)
@@ -65,16 +65,16 @@ For each (material, wavelength), the following theories can be applied.
 
 ## Simple install for beginners
 
-* Simply click "download" in the repository bar. You can also click here: https://bitbucket.org/tjyderrien/spp-extended-theory/downloads. 
+* Simply click "download" in the repository bar. You can also click here: https://bitbucket.org/tjyderrien/spp_extended_theory/downloads. 
 
 * To get the regular updates without loosing your modifications, it is recommended to learn basics of Git. 
 
 ## For users familiar with Git. 
 
-* For educated users: it is advised to download in HTTP mode using git clone https://tjyderrien@bitbucket.org/tjyderrien/spp-extended-theory.git
+* For educated users: it is advised to download in HTTP mode using git clone https://tjyderrien@bitbucket.org/tjyderrien/spp_extended_theory.git
 
 * For hardcore users, you may need SSH protocol (key is required, contact me via email) to donwload: 
- git clone git@bitbucket.org:tjyderrien/spp-extended-theory.git
+ git clone git@bitbucket.org:tjyderrien/spp_extended_theory.git
 
 ## Note to Windows users
 
@@ -87,7 +87,7 @@ Most of routines were not tested with Windows, so feel free to address any probl
 
 # How to use ?
 
-* To use the code, install Anaconda on your system (https://www.continuum.io/downloads), and then execute: "git clone git@bitbucket.org:tjyderrien/spp-extended-theory.git" in a terminal. 
+* To use the code, install Anaconda on your system (https://www.continuum.io/downloads), and then execute: "git clone git@bitbucket.org:tjyderrien/spp_extended_theory.git" in a terminal. 
 
 # How to contribute ?
 
@@ -99,7 +99,7 @@ Most of routines were not tested with Windows, so feel free to address any probl
 
 ## Use git to publish your changes. Here are basic commands
 
-* To download the simulation code, type: git clone git@bitbucket.org:tjyderrien/spp-extended-theory.git
+* To download the simulation code, type: git clone git@bitbucket.org:tjyderrien/spp_extended_theory.git
 
 * git pull: download latest changes to your version of the code (no worries, it is non-destructive to your changes!)
 

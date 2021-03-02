@@ -1,7 +1,9 @@
 #!/usr/bin/python2
-from libMaterials import reflectivity, Drude
 import matplotlib.pyplot as plt
 import numpy as np
+
+from libMaterials import reflectivity, Drude
+
 
 def SokolowskiTinten2000():
     #Reflectivity for Sokolowski-Tinten 2000

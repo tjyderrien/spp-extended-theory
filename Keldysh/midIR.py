@@ -19,7 +19,6 @@
 ## @package midIRxp
 # Preparation of results for Prof. Bulgakova mid-IR experiments. 
 
-import numpy as np
 from libKeldysh import *
 
 wavelength = [1600e-9, 1700e-9, 2200e-9, 2600e-9, 3200e-9] #available wavelengths

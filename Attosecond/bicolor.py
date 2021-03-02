@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 #-*- coding: utf-8 -*-
 
 # Copyright (C) 2013-2018 T. J.-Y. Derrien
@@ -20,7 +20,7 @@
 # Module Attosecond explores ways to generate attosecond pulses using fs-laser pulses in solids. 
 
 from libSPP import *
-from libAtomicUnits import *
+from octopus_slabs.Libs.libAtomicUnits import *
 
 wavelength1 = 1030e-9
 wavelength2 = 800e-9

@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 #-*- coding: utf-8 -*-
 
 # Copyright (C) 2013-2020 T. J.-Y. Derrien
@@ -20,7 +20,7 @@
 # Functions to manage the material databases
 
 import numpy as np
-from numpy import genfromtxt, loadtxt, chararray
+
 
 ## Filter the SPP database using query and returns a smaller database
 # /!\ content of query cell should be exact

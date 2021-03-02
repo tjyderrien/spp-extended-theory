@@ -8,7 +8,6 @@
 # * Outputing density in certain conditions. 
 
 from libKeldysh       import *
-from libKeldyshPulses import *
 from libKeldyshZhukov import *
 from libStark         import *
 #from libKeldyshUlrich import *
@@ -17,7 +16,7 @@ Header="[keldysh] "
 
 if __name__ == "__main__":
     print("")
-    print("** Welcome to SPP-extended-theory suite.")
+    print("** Welcome to spp_extended_theory suite.")
     print("** Author(s): T.J.-Y. Derrien")
     print("")
     print("** Loaded Keldysh module [Keldysh, Sov. J. Exp. Th. Phys. 47, 5 (1964)]...")

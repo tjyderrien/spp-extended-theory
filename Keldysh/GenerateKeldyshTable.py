@@ -8,7 +8,7 @@
 from libKeldysh import *
 
 print("")
-print("** Welcome to SPP-extended-theory suite.")
+print("** Welcome to spp_extended_theory suite.")
 print("** Author(s): T.J.-Y. Derrien")
 print("")
 print("** Loading Keldysh module [Keldysh, Sov. J. Exp. Th. Phys. 47, 5 (1964)]...")

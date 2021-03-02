@@ -1,10 +1,11 @@
 #!/usr/bin/env python2
 #-*- coding: utf-8 -*-
 
-from libKeldysh import *
 import matplotlib.pyplot as plt
 import numpy as np
-from scipy.constants import h, hbar, c, e
+from scipy.constants import e
+
+from libKeldysh import *
 
 Efield=np.linspace(1,300E8, 100)
 

@@ -71,7 +71,7 @@ or
 
 git clone login@https://bitbucket.org/tjyderrien/spp_extended_theory/
 git checkout Modules
-pip install -e spp_extended_theory
+pip install -e .
 
 ## Simple uninstall for beginners
 

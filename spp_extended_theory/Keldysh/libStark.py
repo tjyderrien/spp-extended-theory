@@ -11,8 +11,7 @@ import numpy.linalg as LA
 from scipy.constants import c, pi, e, h, hbar
 from scipy.optimize import root
 from scipy.special import jn_zeros as BesselJzeros
-
-
+import octopus_slabs.Libs.libAtomicUnits as au
 ## Provides the shift of the quasi electronic levels
 # From simple Floquet Hamiltonian on constant pulse of frequency omega, the shift of 6 bands with the electric field is given. The eigen values have been computed from the Hamiltonian given in the Nano Letters. 
 def Stark2bands1photon_EnergyShift_modified_exact(Efield_AU, omega_AU, E_gap_AU, DME_AU=1): #{{{                                                                                            
@@ -311,8 +310,8 @@ def ComputeFloquetBandStructure(filename, nb_atoms, Z_electrons, kpoints, unocc_
 
     omega_SI  = 2.*np.pi*c / wavelength_SI #this is in SI...
 
-    Efield_AU = Field_SI_to_AU(Efield_SI)
-    omega_AU  = Energy_eV_to_Hartree(omega_SI*hbar/e)
+    Efield_AU = au.Field_SI_to_AU(Efield_SI)
+    omega_AU  = au.Energy_eV_to_Hartree(omega_SI*hbar/e)
     
     tmin=0.; tmax=2.*pi/omega_AU #NOTE: changing this induces a shift to higher energies. Find out why. It should be phase dependent (2 pi / omega). 
     dt=(tmax-tmin)/num_time_steps
@@ -363,8 +362,8 @@ def ComputeFloquetBandStructure(filename, nb_atoms, Z_electrons, kpoints, unocc_
     
     RabiFloquet_AU_min = np.min(np.min(np.abs(RabiFloquet_AU)))
     RabiFloquet_AU_max = np.max(np.max(np.abs(RabiFloquet_AU)))
-    RabiFloquet_SI_min = Energy_Hartree_to_eV(RabiFloquet_AU_min)
-    RabiFloquet_SI_max = Energy_Hartree_to_eV(RabiFloquet_AU_max)
+    RabiFloquet_SI_min = au.Energy_Hartree_to_eV(RabiFloquet_AU_min)
+    RabiFloquet_SI_max = au.Energy_Hartree_to_eV(RabiFloquet_AU_max)
     
     #print RabiFloquet_AU
     #print Header+"Rabi energy (Ha): ["+ str(RabiFloquet_AU_min) +", "+str(RabiFloquet_AU_max)+"]"
@@ -393,8 +392,8 @@ def ComputeFloquetBandStructure(filename, nb_atoms, Z_electrons, kpoints, unocc_
         #print sol
         OmegaCutOff_AU.append(sol)
     
-    OmegaCutOff_eV          = Energy_Hartree_to_eV(OmegaCutOff_AU)
-    OmegaCutOff_m           = h*c/Energy_Hartree_to_eV(OmegaCutOff_AU)/e
+    OmegaCutOff_eV          = au.Energy_Hartree_to_eV(OmegaCutOff_AU)
+    OmegaCutOff_m           = h*c/au.Energy_Hartree_to_eV(OmegaCutOff_AU)/e
     OmegaCutOff_eV_filtered = (list(set(OmegaCutOff_eV[OmegaCutOff_eV>0.1]))) #0.1 eV
     OmegaCutOff_m_filtered  = (list(set(OmegaCutOff_m[OmegaCutOff_m<5e-6]))) #5 um
     OmegaCutOff_eV_sorted   = np.sort(OmegaCutOff_eV_filtered)

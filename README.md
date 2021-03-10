@@ -65,22 +65,22 @@ For each (material, wavelength), the following theories can be applied.
 
 ## Simple install for beginners and developpers
 
-pip install -e git+https://bitbucket.org/tjyderrien/spp_extended_theory/
+pip install -e git+https://bitbucket.org/tjyderrien/spp-extended-theory/
 
 or
 
-git clone https://bitbucket.org/tjyderrien/spp_extended_theory/
+git clone https://bitbucket.org/tjyderrien/spp-extended-theory/
 git checkout Modules
 conda env create -f environment.yaml #if you want to install a separate conda environment for this code
 
 If this fails, look for your install of Conda ("whereis conda" or "locate conda"). Usually it is practical to introduce this into .bashrc: export PATH=/opt/miniconda3/bin:$PATH
 
-conda activate spp_extended_theory
-pip install -e <folder_with_setup.py> (can be "." or "spp_extended_theory")
+conda activate spp-extended-theory
+pip install -e <folder_with_setup.py> (can be "." or "spp-extended-theory")
 
 ## Simple uninstall for beginners
 
-pip uninstall spp_extended_theory
+pip uninstall spp-extended-theory
 
 ## Note to Windows users
 

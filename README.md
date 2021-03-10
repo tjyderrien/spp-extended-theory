@@ -63,38 +63,33 @@ For each (material, wavelength), the following theories can be applied.
 
 # Installation 
 
-## Simple install for beginners
+## Simple install for beginners and developpers
 
-pip install -e git+https://bitbucket.org/tjyderrien/spp_extended_theory/
+pip install -e git+https://bitbucket.org/tjyderrien/spp-extended-theory/
 
 or
 
-git clone https://bitbucket.org/tjyderrien/spp_extended_theory/
+git clone https://bitbucket.org/tjyderrien/spp-extended-theory/
 git checkout Modules
 conda env create -f environment.yaml #if you want to install a separate conda environment for this code
 
 If this fails, look for your install of Conda ("whereis conda" or "locate conda"). Usually it is practical to introduce this into .bashrc: export PATH=/opt/miniconda3/bin:$PATH
 
-conda activate spp_extended_theory
-pip install -e <folder_with_setup.py> (can be "." or "spp_extended_theory")
-
+conda activate spp-extended-theory
+pip install -e <folder_with_setup.py> (can be "." or "spp-extended-theory")
 
 ## Simple uninstall for beginners
 
-pip uninstall spp_extended_theory
+pip uninstall spp-extended-theory
 
 ## Note to Windows users
 
 The code works with Windows: 
-* Install Anaconda (Python) for Windows (during install: no need for the symbolic linking compatibility). 
-* Download the present repository,  
-* Open/Edit the .py files and enjoy. 
+* Install Anaconda (Python) for Windows (during install: no need for the symbolic linking compatibility).
+* Download the present repository. 
 
-Most of routines were not tested with Windows, so feel free to address any problem to <derrien@fzu.cz.>
+Most of routines were not tested with Windows, so feel free to address any problem to <derrien@fzu.cz>.
 
-# How to use ?
-
-* To use the code, install Anaconda on your system (https://www.continuum.io/downloads), and then execute: "git clone git@bitbucket.org:tjyderrien/spp_extended_theory.git" in a terminal. 
 
 # How to contribute ?
 

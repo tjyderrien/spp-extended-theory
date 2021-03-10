@@ -284,9 +284,10 @@ def ComputeFloquetBandStructure(filename, nb_atoms, Z_electrons, kpoints, unocc_
     ## 6. Build then diagonalize the Floquet Hamiltonian. 
     # 6.1:Build the eigenvalued matrix
     H_GS=np.zeros((matrix_side, matrix_side))*1j
-    print(Header+"** Info: side of the matrix")
-    print(Header+"         "+str(np.size(H_GS[0])))
-    print(Header+"Matrix_side: "+str(matrix_side)+" Z_el: "+str(Z_electrons)+"unocc: "+str(unocc_states))
+    if(verbose==1):
+        print(Header+"** Info: side of the matrix")
+        print(Header+"         "+str(np.size(H_GS[0])))
+        print(Header+"Matrix_side: "+str(matrix_side)+" Z_el: "+str(Z_electrons)+" unocc: "+str(unocc_states))
     for i in np.arange(0,np.size(H_GS[0])):
         H_GS[i,i]=eigenvalues[i]
     if(verbose==1):
@@ -393,7 +394,7 @@ def ComputeFloquetBandStructure(filename, nb_atoms, Z_electrons, kpoints, unocc_
         OmegaCutOff_AU.append(sol)
     
     OmegaCutOff_eV          = au.Energy_Hartree_to_eV(OmegaCutOff_AU)
-    OmegaCutOff_m           = h*c/au.Energy_Hartree_to_eV(OmegaCutOff_AU)/e
+    OmegaCutOff_m           = h*c/au.Energy_Hartree_to_eV(OmegaCutOff_AU)/e #WARNING: divide by 0 if empty
     OmegaCutOff_eV_filtered = (list(set(OmegaCutOff_eV[OmegaCutOff_eV>0.1]))) #0.1 eV
     OmegaCutOff_m_filtered  = (list(set(OmegaCutOff_m[OmegaCutOff_m<5e-6]))) #5 um
     OmegaCutOff_eV_sorted   = np.sort(OmegaCutOff_eV_filtered)

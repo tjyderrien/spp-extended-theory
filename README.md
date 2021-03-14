@@ -28,10 +28,11 @@ Versioning has now been indexed on publications v<X.Y.Z> as follows:
 
 # Structure of the code
 
-The code is now made of 3 branches. 
+The code is now made of 4 main branches. 
 * Branch release: contains the seemingly stable public code for the community.
 * Branch master:  contains a more advanced version of code for the community. 
-* Branch develop: contains the latest code, with non-tested features and possible bugs. 
+* Branch develop: contains the latest code, with non-tested features and possible bugs.
+* Branch Modules: now is possible to install in to integrate in other codes easily.  
 
 # Main developers
 

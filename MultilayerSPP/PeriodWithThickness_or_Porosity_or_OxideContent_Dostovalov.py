@@ -56,6 +56,7 @@ epsSi       = 12.8159503769+0.0114635303918j #1026 nm, Palik
 epsAir      = 1.+0.j          #air
 #epsCu       = -46.6046581932 + 4.7188669976j #1030 nm
 epsCu       = -1.9937293241+4.9290716854j     #355  nm
+epsAu   = -49.5738812793 + 3.8128269897j #Johnson
 
 #meshes the initial guess area, all numbers are from the space of betas
 x_min = -6e7       #-1E10
@@ -85,7 +86,7 @@ def SplitSummaryTable(summary): #{{{
     return thickness_s, fractionOxide_s, epsilonFilm_s, branch_s, root_number_s, period_s, lspp_s
 #}}}
 
-# Scenario proposed by Thibault: an oxide layer grows at the top of the Cr sample, reducing progressively the periodicity by lambda/n. 
+## Scenario proposed by Thibault: an oxide layer grows at the top of the Cr sample, reducing progressively the periodicity by lambda/n. 
 # This function can also be used to generate simple results for verification
 def ScenarioOfOxidePrecipitation(epsMedium, epsSubstrate, epsEnvironment=1.): 
     # Medium 1: thin film.

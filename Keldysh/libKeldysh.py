@@ -25,12 +25,13 @@
 # - Keldysh-Shcheblanov model, improving rigor on the analytical integration [https://arxiv.org/abs/1706.07303]
 # - Keldysh-Corkum model, allowing for analytical treatment of mulltiwavelength fields [Physical Review Letters, 2017, 118, 173601]
 
+# import matplotlib as mp
+# import numpy as np
 from libKeldyshZhukov import *
 #from libKeldyshUlrich import * #NOT READY YET
-from libKeldyshPulses import *
 
-rc('font', **{'family':'serif', 'serif':['Helvetica'], 'size':'16'})
-rc('text', usetex=False)
+mp.rc('font', **{'family':'serif', 'serif':['Helvetica'], 'size':'16'})
+mp.rc('text', usetex=True)
 mp.rcParams['legend.numpoints'] = 1
 
 Header="[libKeldysh] "

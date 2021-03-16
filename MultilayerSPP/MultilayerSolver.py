@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2018 F. Preucil, T.J.-Y. Derrien
+# Copyright (C) 2018-2020 F. Preucil, T.J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,10 +22,12 @@
 # therein. 
 # This routine computes the multiple modes possible in a thin film, from its 
 # dielectric permittivity and thickness. 
-# It was successfully used to explain the experimental results from A. Dostovalov et al., 
-# Proceedings of MetaNano conference, IOP proceedings, 2018. 
+# This file was then functionalized into batch functions that can be found in libMultilayerSPP.py.
+# They were then successfully employed to explain several experimental results: 
+# * A. Dostovalov al., Proceedings of MetaNano conference, IOP proceedings, 2018. 
+# * A. Dostolova, Derrien et al, Applied Surface Science 2020. 
 # 
-# Can be used with contourplots.py to show the structure of the fields. 
+# This routine should be used before MultilayerContourPlot.py to show the spatial distribution of the fields. It is notably useful for computing the field enhancement at interface.  
 # TODO: this version must be merged / compared with libMultilayerSPP
 
 import math, cmath, pickle
@@ -35,7 +37,7 @@ from matplotlib import interactive
 from scipy.optimize import root
 from itertools import product
 from time import time
-from libMultilayerSPP import *
+#from libMultilayerSPP import * #NOTE: this brings troubles. 
 from libMaterials import *
 
 #to show info
@@ -51,6 +53,7 @@ if(wavelength == 1064e-9):
 elif(wavelength==1030e-9):
     epsSiO2 = 2.1026565205
     epsSi   = 12.80259+0.0109j
+    epsAu   = -49.5738812793 + 3.8128269897j #Johnson
 
 epsAir      = 1.+0.j          #air
 
@@ -76,7 +79,7 @@ neSi        = np.power(10., neSiLog)
 ## ScenarioOfCrOxideMixture_ext(eps_CrCrXOY_L[::Every], epsAir, epsBK7, CrCrXOY_fraction[::Every], 'Cr_compounds_oxide', 'Air', 'BK7')
 
 #fractionOfCrO2 = 0.8
-t = 300E-9 #thickness of the layer in meters
+t = 100E-9 #thickness of the layer in meters
 
 # Medium 1: thin film. 
 #fraction_index = 801 #NOTE: line number in the source file [ROUGH METHOD]
@@ -86,11 +89,13 @@ t = 300E-9 #thickness of the layer in meters
 #eps1 = MaxwellGarnett2(epsCr, epsCrO2, fractionOfCrO2)
 #eps1 = MaxwellGarnett3(epsCr, epsCrO2, epsCr2O3, fraction) #TODO: develop Maxwell-Garnett3 in libMaterials.py. 
 
-eps1 = epsSiO2
+# Film
+eps1 = epsAu
 # Medium 2: substrate. 
 eps2 = epsAir       #epsBK7 #environment | substrate
-# Medium 3: environment
-eps3 = Drude(wavelength, neSi[excitation_index], epsSi, 1.1e-15**-1, 0.18)      #environment | substrate
+# Medium 3: environment #NOTE: checked by field amplification consistency
+eps3 = epsSiO2
+# eps3 = Drude(wavelength, neSi[excitation_index], epsSi, 1.1e-15**-1, 0.18)      #environment | substrate
 # Note: Inverting eps2 and eps3 should have no effect on the possible modes, but only on field amplification. 
 
 
@@ -131,17 +136,43 @@ ke3 = (k0**2)*eps3
         #value = 1E99
     #return (value.real, value.imag)
 
-#def norm(vec):
-    #return math.sqrt(vec[0]*vec[0] + vec[1]*vec[1])
 
-#def cntr(inpt):
-    #px = 0
-    #py = 0
-    #ln = len(inpt)
-    #for pt in inpt:
-        #px += pt[0]
-        #py += pt[1]
-    #return (px/ln, py/ln)
+## Plot the hyperbola
+def plothyp(eps, col):
+    radius = k0*k0*eps.imag/2.
+    domain = np.linspace(xmi, min(xma, cmath.sqrt(eps*k0*k0).real), num=1000)
+    plt.plot(domain, radius/domain, col, linewidth=.75)
+
+def plotinvhyp(eps, col):
+    radius = k0*k0*eps.imag/2.
+    if radius != 0:
+        domain = np.linspace(xmi, min(xma, cmath.sqrt(eps*k0*k0).real), num=1000)
+        plt.plot(cx/domain, domain*cy/radius, col, linewidth=.75)
+
+## Dispersion relation for a 3-media 
+def func(betaR, eps1, eps2, eps3, k0, t, sgn1, sgn2):
+    global ke1, ke2, ke3
+    beta = betaR[0] + betaR[1]*1.j
+    kappa1 = cmath.sqrt(beta**2 - ke1)/eps1
+    kappa2 = sgn1*cmath.sqrt(beta**2 - ke2)/eps2
+    kappa3 = sgn2*cmath.sqrt(beta**2 - ke3)/eps3
+    try:
+        value = (kappa1-kappa2)*(kappa1-kappa3)*cmath.exp(-2*kappa1*eps1*t)-(kappa1+kappa2)*(kappa1+kappa3)
+    except:
+        value = 1E99
+    return (value.real, value.imag)
+
+def norm(vec):
+    return math.sqrt(vec[0]*vec[0] + vec[1]*vec[1])
+
+def cntr(inpt):
+    px = 0
+    py = 0
+    ln = len(inpt)
+    for pt in inpt:
+        px += pt[0]
+        py += pt[1]
+    return (px/ln, py/ln)
 
 
 
@@ -164,6 +195,7 @@ print(('t:', t))
 print()
 
 #main algorithm
+
 branches = []
 for sgn1, sgn2 in product((-1,1), (-1,1)):
     roots = []
@@ -172,7 +204,7 @@ for sgn1, sgn2 in product((-1,1), (-1,1)):
     start = time()
     for x in np.linspace(x_min, x_max, num=x_steps):
         for y in np.linspace(y_min, y_max, num=y_steps):
-            nrt = root(func, (x, y), method='hybr')
+            nrt = root(func, (x, y), args=(eps1, eps2, eps3, k0, t, sgn1, sgn2), method='hybr')
             if nrt.success:
                 roots.append(nrt.x)
     prnt('Total (converged): %d' % len(roots))

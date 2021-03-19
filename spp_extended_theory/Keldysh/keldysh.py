@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python
 #-*- coding: utf-8 -*-
 ## @package Keldysh
 ## Computes the Keldysh excitation rate of quasi-free electrons
@@ -7,10 +7,15 @@
 # * Generating tables to use directly into simulation codes
 # * Outputing density in certain conditions. 
 
-from libKeldysh       import *
-from libKeldyshZhukov import *
-from libStark         import *
+from spp_extended_theory.Keldysh import libKeldysh
+from spp_extended_theory.Keldysh import libKeldyshZhukov
+from spp_extended_theory.Keldysh import libStark
+#import octopus_slabs.Libs.libAtomicUnits as au
 #from libKeldyshUlrich import *
+
+from scipy.constants import e, c, epsilon_0
+import numpy as np
+import matplotlib.pyplot as plt
 
 Header="[keldysh] "
 
@@ -362,7 +367,7 @@ def SiliconLDAbandGap(): #{{{
   print("##### PREPARING NUMERICAL INTEGRATION OF KELDYSH CONTOUR by VP Zhukov.")
   plt.figure()
   Intensity_SI  = 0.5*c*epsilon_0*Efield_SI**2*RefractiveIndex
-  wPI_Zhukov = VZ_generateWpiTables(Efield_SI*np.sqrt(RefractiveIndex), 0., wavelength, 800e-9, 0., 0., Egap, meff, Ntotal)
+  wPI_Zhukov = libKeldyshZhukov.VZ_generateWpiTables(Efield_SI*np.sqrt(RefractiveIndex), 0., wavelength, 800e-9, 0., 0., Egap, meff, Ntotal)
   ExportToTxt(wPI_Zhukov, "Zhukov_Wpi"+str(wavelength*1E9)+"nm.csv")
   plt.xlabel(r"Laser intensity (W/m$^2$)")
   plt.ylabel(r"Excitation rate $w_{\mathrm{PI}}$ (m$^{-3}s^{-1}$)")
@@ -378,7 +383,7 @@ def SiliconLDAbandGap(): #{{{
 #}}}
 
 ## Repeats results from Gulley2012, but could not be repeated so far. 
-def KeldyshGulley():
+def KeldyshGulley(): #{{{
 
   #print "==== EXTRAPOLATION TO TEMPORAL ASPECTS ====="
   #t0=0. #defines the instant 0.
@@ -439,7 +444,7 @@ def KeldyshGulley():
   timeKeldysh, N_Keldysh_SI, N_Gruzdev_SI = plotPulseToDensity(Egap, meff, wavelength, tau, FieldEnvelopeTot.real, dt, order, ShowPlot, 0e0, Ntotal)
 
   print(Header+"** Test 3: computing the W_PI values from Vladimir Zhukov tables...")
-  wPI_Zhukov = VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength, wavelength2, CEP, CEP2, Egap, meff)
+  wPI_Zhukov = libKeldyshZhukov.VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength, wavelength2, CEP, CEP2, Egap, meff)
 #}}}
 
 ## Repeats the results obtained in Gulley, Opt. Eng. 51, 121805 (2012). 
@@ -520,10 +525,10 @@ def SilicaGulley2012(): #{{{
   plt.figure()
   plt.xlabel("Intensity (W/cm$^{2}$)")
   plt.ylabel("$w_{PI}$ (cm$^{-3}$ s$^{-1}$)")
-  #plt.loglog(1e-4*FieldToIntensity(PeakField.real), 1e-6*1e-15*wPI,  linestyle="-", color="r", label=r"$w_{PI}$ "+ShortRefKeldysh)
-  plt.loglog(1e-4*FieldToIntensity(PeakField.real), 1e-6*wPI, linestyle="-", color="b", label=r"$w_{PI}$ "+ShortRefGulley)
-  plt.loglog(1e-4*FieldToIntensity(PeakField.real), QGulley, linestyle="-", color="r", label=r"$Q(\gamma,x)$ "+ShortRefGulley)
-  plt.loglog(1e-4*FieldToIntensity(PeakField.real), xGulley, linestyle="--", color="r", label=r"$x$ "+ShortRefGulley)
+  #plt.loglog(1e-4*libKeldyshZhukov.FieldToIntensity(PeakField.real), 1e-6*1e-15*wPI,  linestyle="-", color="r", label=r"$w_{PI}$ "+ShortRefKeldysh)
+  plt.loglog(1e-4*libKeldyshZhukov.FieldToIntensity(PeakField.real), 1e-6*wPI, linestyle="-", color="b", label=r"$w_{PI}$ "+ShortRefGulley)
+  plt.loglog(1e-4*libKeldyshZhukov.FieldToIntensity(PeakField.real), QGulley, linestyle="-", color="r", label=r"$Q(\gamma,x)$ "+ShortRefGulley)
+  plt.loglog(1e-4*libKeldyshZhukov.FieldToIntensity(PeakField.real), xGulley, linestyle="--", color="r", label=r"$x$ "+ShortRefGulley)
   plt.loglog(1e-4*Gulley2012[:,0], 1e-6*Gulley2012[:,1], linestyle="-", color="k", label="Data from "+ShortRefGulley) #JUST FOR VALIDATION. 
   plt.grid()
   plt.legend(loc='best')
@@ -569,7 +574,7 @@ def SilicaGruzdev2014(): #{{{
   meff=0.6e0; #Effective mass of Si
   N_total=1.*5E28
   numpoints = 1000
-  wavelength = 1030e-9;
+  wavelength = 800e-9;
   if(wavelength==800e-9): 
     optical_index = 1.5356 #800nm
   elif (wavelength==1030E-9):
@@ -586,7 +591,8 @@ def SilicaGruzdev2014(): #{{{
   PeakIntensity = np.power(10., PeakIntensity_log)
   PeakField = np.sqrt(2. * PeakIntensity / c / epsilon_0) #I = 0.5 c eps0 E²
   # I_inside_matter = 0.5 c eps0 n0 E**2: in matter, pulse is compressed in space. Therefore, intensity is stronger. As photon energy do not change, the time frequency does not change either.  
-  LocalPeakField = np.sqrt(2. * PeakIntensity / optical_index/ c / epsilon_0) #I = 0.5 c n0 eps0 E²
+  LocalPeakField = np.sqrt(2. * PeakIntensity * optical_index / c / epsilon_0)  #I = 0.5 c n0 eps0 E²
+  LocalPeakFieldDivide = np.sqrt(2. * PeakIntensity / optical_index / c / epsilon_0) #I = 0.5 c eps0 E² / n0
   # NOTE: it looks the field is not affected by the refractive index, but the intensity is. This may originate from the change of cycle durations inside matter. Although the field may not change (without accounting for the induced fields). 
   
   print(Header+"Peak field (min, max): "+str(np.min(PeakField)/1E9)+" V/nm, "+str(np.max(PeakField/1E9))+" V/nm.")
@@ -600,9 +606,8 @@ def SilicaGruzdev2014(): #{{{
 
   print(Header+"** Computing the W_PI values from Keldysh and Gruzdev theories...")
   
-  timeKeldysh, N_Keldysh_SI, N_Gruzdev_SI, gamma, wPI, wPIg, N_excited_Keldysh_trapz, N_excited_Gruzdev_trapz = generateWpiTables(Egap, meff, wavelength, tau, LocalPeakField, dt, order, N_total, t0, False, optical_index)
   
-  #timeKeldysh, N_Keldysh_SI, N_Gruzdev_SI, gamma, wPI, LocalwPIg, N_excited_Keldysh_trapz, N_excited_Gruzdev_trapz = generateWpiTables(Egap, meff, wavelength, tau, LocalPeakField, dt, order, N_total, t0, False)
+  
   
   ### plot w_PI(intensity)
   print(Header+"Importing Gruzdev [2014] data...")
@@ -613,19 +618,32 @@ def SilicaGruzdev2014(): #{{{
   except: 
       print(Header+"** Warning: failed to import Gruzdev2014 data table...")
     
-    
   print(Header+"Plotting as function of laser field intensity ...")
   plt.figure()
-  plt.xlabel("Intensity (W/cm$^{2}$)")
+  plt.xlabel("Intensity $I_{\mathrm out}$ (W/cm$^{2}$)")
   plt.ylabel("$w_{PI}$ (cm$^{-3}$ fs$^{-1}$)")
-  #plt.loglog(1e-4*FieldToIntensity(PeakField.real), 1e-6*1e-15*wPI,  linestyle="-", color="r", label=r"$w_{PI}$ "+ShortRefKeldysh)
-  plt.loglog(1e-4*FieldToIntensity(PeakField.real), 1e-6*1e-15*wPIg, linestyle="-", color="b", label=r"$w_{PI}$ "+ShortRefGruzdev+r", $\lambda=$"+str(wavelength*1E9)+" nm")
-  #plt.loglog(1e-4*FieldToIntensity(PeakField.real), 1e-6*1e-15*wPIg, linestyle="-", color="g", label=r"$w_{PI}$ "+ShortRefGruzdev)
-  #plt.loglog(Gruzdev2014[:,0], Gruzdev2014[:,1], linestyle="--", color="k", label="Data from "+ShortRefGruzdev) #JUST FOR VALIDATION. 
+  
+  plt.loglog(Gruzdev2014[:,0], Gruzdev2014[:,1], linestyle="-", linewidth=1, color="black", label="Data from "+libKeldysh.ShortRefGruzdev) #FOR VALIDATION. 
+  
+  timeKeldysh, N_Keldysh_SI, N_Gruzdev_SI, gamma, wPI, wPIg, N_excited_Keldysh_trapz, N_excited_Gruzdev_trapz = libKeldysh.generateWpiTables(Egap, meff, wavelength, tau, PeakField, dt, order, N_total, t0, False)
+  
+  plt.loglog(1e-4*libKeldyshZhukov.FieldToIntensity(PeakField.real), 1e-6*1e-15*wPI,  linestyle="--", color="grey", label=r"$w_{PI}^{\mathrm{Keldysh}}(I=I_{\mathrm out})$ "+libKeldysh.ShortRefKeldysh)
+  
+  plt.loglog(1e-4*libKeldyshZhukov.FieldToIntensity(PeakField.real), 1e-6*1e-15*wPIg,  linestyle="--", color="r", label=r"$w_{PI}^{KG}(I=I_{\mathrm out})$ "+libKeldysh.ShortRefGruzdev)
+  
+  timeKeldysh, N_Keldysh_SI, N_Gruzdev_SI, gamma, wPI, LocalwPIg, N_excited_Keldysh_trapz, N_excited_Gruzdev_trapz = libKeldysh.generateWpiTables(Egap, meff, wavelength, tau, LocalPeakField, dt, order, N_total, t0, False)
+  
+  plt.loglog(1e-4*libKeldyshZhukov.FieldToIntensity(PeakField.real), 1e-6*1e-15*LocalwPIg, linestyle="--", color="b", label=r"$w_{PI}^{KG}(I=n \times I_{\mathrm out})$ "+libKeldysh.ShortRefGruzdev+" mod.")
+  
+  timeKeldysh, N_Keldysh_SI, N_Gruzdev_SI, gamma, wPI, wPIgDividedByN, N_excited_Keldysh_trapz, N_excited_Gruzdev_trapz = libKeldysh.generateWpiTables(Egap, meff, wavelength, tau, LocalPeakFieldDivide, dt, order, N_total, t0, False)
+  
+  plt.loglog(1e-4*libKeldyshZhukov.FieldToIntensity(PeakField.real), 1e-6*1e-15*wPIgDividedByN, linestyle="--", color="g", label=r"$w_{PI}^{KG}(I=I_{\mathrm out} / n)$ "+libKeldysh.ShortRefGruzdev+" mod.")
+  
   plt.grid()
   plt.legend(loc='best')
   plt.xlim((1E10, 1E14))
   #plt.ylim((1E20*1E6,1E40*1E6))
+  plt.title(r"$\lambda=$"+str(wavelength*1E9)+" nm")
   plt.tight_layout()
   plt.savefig("Keldysh-Intensity-Wpi-Gruzdev2014.eps")
   plt.show()
@@ -639,9 +657,9 @@ def SilicaGruzdev2014(): #{{{
 #SiliconTunneling()
 
 if __name__ == "__main__":
-    SiliconLDAbandGap()
+    # SiliconLDAbandGap()
     #SilicaGulley2012()
-    #SilicaGruzdev2014()
+    SilicaGruzdev2014()
     #SilicaGraef2017()
 
 

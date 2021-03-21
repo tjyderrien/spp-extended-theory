@@ -627,17 +627,17 @@ def SilicaGruzdev2014(): #{{{
   
   timeKeldysh, N_Keldysh_SI, N_Gruzdev_SI, gamma, wPI, wPIg, N_excited_Keldysh_trapz, N_excited_Gruzdev_trapz = libKeldysh.generateWpiTables(Egap, meff, wavelength, tau, PeakField, dt, order, N_total, t0, False)
   
-  plt.loglog(1e-4*libKeldyshZhukov.FieldToIntensity(PeakField.real), 1e-6*1e-15*wPI,  linestyle="--", color="grey", label=r"$w_{PI}^{\mathrm{Keldysh}}(I=I_{\mathrm out})$ "+libKeldysh.ShortRefKeldysh)
+  plt.loglog(1e-4*libKeldyshZhukov.FieldToIntensity(PeakField.real), 1e-6*1e-15*wPI,  linestyle="--", color="grey", label=r"$w_{PI}^{\mathrm{Keldysh}}(E=E_{\mathrm out})$ "+libKeldysh.ShortRefKeldysh)
   
-  plt.loglog(1e-4*libKeldyshZhukov.FieldToIntensity(PeakField.real), 1e-6*1e-15*wPIg,  linestyle="--", color="r", label=r"$w_{PI}^{KG}(I=I_{\mathrm out})$ "+libKeldysh.ShortRefGruzdev)
+  plt.loglog(1e-4*libKeldyshZhukov.FieldToIntensity(PeakField.real), 1e-6*1e-15*wPIg,  linestyle="--", color="r", label=r"$w_{PI}^{KG}(E=E_{\mathrm out})$ "+libKeldysh.ShortRefGruzdev)
   
   timeKeldysh, N_Keldysh_SI, N_Gruzdev_SI, gamma, wPI, LocalwPIg, N_excited_Keldysh_trapz, N_excited_Gruzdev_trapz = libKeldysh.generateWpiTables(Egap, meff, wavelength, tau, LocalPeakField, dt, order, N_total, t0, False)
   
-  plt.loglog(1e-4*libKeldyshZhukov.FieldToIntensity(PeakField.real), 1e-6*1e-15*LocalwPIg, linestyle="--", color="b", label=r"$w_{PI}^{KG}(I=n \times I_{\mathrm out})$ "+libKeldysh.ShortRefGruzdev+" mod.")
+  plt.loglog(1e-4*libKeldyshZhukov.FieldToIntensity(PeakField.real), 1e-6*1e-15*LocalwPIg, linestyle="--", color="b", label=r"$w_{PI}^{KG}(E=E_{\mathrm{in}}=\sqrt{n} \times E_{\mathrm{out}})$"+libKeldysh.ShortRefGruzdev+" mod.")
   
   timeKeldysh, N_Keldysh_SI, N_Gruzdev_SI, gamma, wPI, wPIgDividedByN, N_excited_Keldysh_trapz, N_excited_Gruzdev_trapz = libKeldysh.generateWpiTables(Egap, meff, wavelength, tau, LocalPeakFieldDivide, dt, order, N_total, t0, False)
   
-  plt.loglog(1e-4*libKeldyshZhukov.FieldToIntensity(PeakField.real), 1e-6*1e-15*wPIgDividedByN, linestyle="--", color="g", label=r"$w_{PI}^{KG}(I=I_{\mathrm out} / n)$ "+libKeldysh.ShortRefGruzdev+" mod.")
+  plt.loglog(1e-4*libKeldyshZhukov.FieldToIntensity(PeakField.real), 1e-6*1e-15*wPIgDividedByN, linestyle="--", color="g", label=r"$w_{PI}^{KG}(E=E_{\mathrm{in}}=E_{\mathrm{out}}/\sqrt{n})$ "+libKeldysh.ShortRefGruzdev+" mod.")
   
   plt.grid()
   plt.legend(loc='best')

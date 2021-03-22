@@ -156,6 +156,7 @@ def VP_ChooseLibrary(FieldEnvelope1, FieldEnvelope2, wavelength1, wavelength2, C
             Dictionnary = {'FieldSquaredLog10': 0, 'log10wpi': 1}
         else: 
             print(Header+"** Warning: numerical integration from VP Zhukov is not available. Please use single color Keldysh-Gruzdev model, that is available in this library. ")
+            Dictionnary = {}
     elif((wavelength1 == 800e-9 and wavelength2 == 1030e-9) or (wavelength1 == 1030e-9 and wavelength2 == 800e-9)): #BicolorCase.
         #TODO: the two sets could be inverted! Therefore data should be swept.
         InvertedFields=True
@@ -209,7 +210,8 @@ def VP_ChooseLibrary(FieldEnvelope1, FieldEnvelope2, wavelength1, wavelength2, C
             print(Header+"Fields value are not available for 800x1600 nm.")
             exit()
     else:
-        print(Header+"THIS COMBINATION OF WAVES IS NOT AVAILABLE. Please kindly ask the corresponding data to Prof. Vladimir Zhukov, zukov@ict.nsc.ru.") 
+        print(Header+"THIS COMBINATION OF WAVES IS NOT AVAILABLE. Please kindly ask the corresponding data to Prof. Vladimir Zhukov, zukov@ict.nsc.ru.")
+        Dictionnary={}
         #exit() 
     return VZ_basename, Dictionnary, InvertedFields
 

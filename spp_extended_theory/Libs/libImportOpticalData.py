@@ -26,7 +26,7 @@
 
 # IMPORT LIBRARIES
 from spp_extended_theory.Libs.libSPP import *
-from libUnits import *
+from spp_extended_theory.Keldysh.libUnits import *
 from spp_extended_theory.Libs.libDatabase import *
 
 #from libImportOpticalData import *
@@ -70,11 +70,11 @@ def importFromNKtable(wavelength, folder, filename, plotting=1, unit=1E-6):#{{{
   #Interpolated one optical constants
   try: 
 	#wavelength = 800e-9
-	ni = fni(wavelength); ki = fki(wavelength)
-	epsilon = (ni+1j*ki)**2
-	print(("importFromNKtable: Interpolated permittivity at "+str(wavelength*1e9)+" nm = "+str(epsilon)))
+        ni = fni(wavelength); ki = fki(wavelength)
+        epsilon = (ni+1j*ki)**2
+        print(("importFromNKtable: Interpolated permittivity at "+str(wavelength*1e9)+" nm = "+str(epsilon)))
   except: 
-	  print(("importFromNKtable: Interpolation for "+str(wavelength*1E9)+" nm failed."))
+        print(("importFromNKtable: Interpolation for "+str(wavelength*1E9)+" nm failed."))
 	  
   #try:
 	#wavelength = 532e-9
@@ -426,18 +426,17 @@ def importFromTable(wavelength, folder, filename, plotting): #{{{
   nimesh = fni(wavelengths); kimesh = fki(wavelengths)
 
   if (plotting): 
-	plt.figure()
-	plt.xlabel(r'$\lambda$ (nm)')
-	plt.ylabel('n, k')
-	plt.semilogx(1e9*wavelengths, n, 'bs', label='n Palik')
-	plt.semilogx(1e9*wavelengths, kk, 'rs', label='k Palik')
-	plt.semilogx(1e9*wavelengths, nimesh, 'b-', label='n interp')
-	plt.semilogx(1e9*wavelengths, kimesh, 'r-', label='k interp')
-	plt.grid()
-	plt.legend(loc=2)
-	plt.savefig('PalikData.eps')
-	plt.show()
-	
+        plt.figure()
+        plt.xlabel(r'$\lambda$ (nm)')
+        plt.ylabel('n, k')
+        plt.semilogx(1e9*wavelengths, n, 'bs', label='n Palik')
+        plt.semilogx(1e9*wavelengths, kk, 'rs', label='k Palik')
+        plt.semilogx(1e9*wavelengths, nimesh, 'b-', label='n interp')
+        plt.semilogx(1e9*wavelengths, kimesh, 'r-', label='k interp')
+        plt.grid()
+        plt.legend(loc=2)
+        plt.savefig('PalikData.eps')
+        plt.show()	
   return epsilon
 #}}}
 

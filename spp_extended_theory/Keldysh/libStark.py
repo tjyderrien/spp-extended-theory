@@ -287,15 +287,15 @@ def Kronecker(i,j):
 ## Returns the Floquet band structure at a given k-point assuming <MPI_number> photons transitions. 
 def ComputeFloquetBandStructure(filename, nb_atoms, Z_electrons, kpoints, unocc_states, MPI_number, Efield_SI, wavelength_SI, num_time_steps, eigenvalues, matrixelements, Complex_valued_ME=False, field_polarization_dir=0, spin_occupation=2, verbose=1): #{{{
     Header="[libStark: ComputeFloquetBandStructure(): ] "
-    
+    logger.info("Floquet for wavelength: "+str(wavelength_SI*1E9)+" nm, E = "+str(Efield_SI*1E-9)+" V/nm.")
     matrix_side=Z_electrons+unocc_states
     ## 6. Build then diagonalize the Floquet Hamiltonian. 
     # 6.1:Build the eigenvalued matrix
     H_GS=np.zeros((matrix_side, matrix_side))*1j
     if(verbose==1):
-        logger.info(Header+"** Info: side of the matrix")
-        logger.info(Header+"         "+str(np.size(H_GS[0])))
-        logger.info(Header+"Matrix_side: "+str(matrix_side)+" Z_el: "+str(Z_electrons)+" unocc: "+str(unocc_states))
+        logger.info("** Info: side of the matrix")
+        logger.info("         "+str(np.size(H_GS[0])))
+        logger.info("Matrix_side: "+str(matrix_side)+" Z_el: "+str(Z_electrons)+" unocc: "+str(unocc_states))
     for i in np.arange(0,np.size(H_GS[0])):
         H_GS[i,i]=eigenvalues[i]
     if(verbose==1):
@@ -310,7 +310,7 @@ def ComputeFloquetBandStructure(filename, nb_atoms, Z_electrons, kpoints, unocc_
     ## Returns the Rabi frequency for each possible dipolar transition (atomic units)
     # WARNING: 1/c error may be found (when employed convention is E=-1/c dA/dt). 
     def RabiMatrix_AU(t, omega_AU, Efield_AU, matrixelements):
-        c_AU = 1./137.
+#        c_AU = 1./137.
         #Formula: Efield_AU(t) * d / omega_AU
         RabiMatrix_AU = Efield_AU*np.cos(omega_AU*t)*matrixelements/omega_AU 
         return RabiMatrix_AU
@@ -375,22 +375,22 @@ def ComputeFloquetBandStructure(filename, nb_atoms, Z_electrons, kpoints, unocc_
     RabiFloquet_SI_max = au.Energy_Hartree_to_eV(RabiFloquet_AU_max)
     
     #print RabiFloquet_AU
-    #print Header+"Rabi energy (Ha): ["+ str(RabiFloquet_AU_min) +", "+str(RabiFloquet_AU_max)+"]"
-    logger.info(Header+"Rabi energy (eV): ["+ str(RabiFloquet_SI_min) +", "+str(RabiFloquet_SI_max)+"]")
+    #print "Rabi energy (Ha): ["+ str(RabiFloquet_AU_min) +", "+str(RabiFloquet_AU_max)+"]"
+    logger.info("Rabi energy (eV): ["+ str(RabiFloquet_SI_min) +", "+str(RabiFloquet_SI_max)+"]")
     
     ## Print here the ratio Rabi/Laser and the value of the BesselFunction.
     ArgForBesselJ=np.abs(RabiFloquet_AU)/omega_AU
     
-    #print Header+"x for BesselJ(x): "+str(np.shape(ArgForBesselJ))
-    #print Header+"Rabi/laser (a.u.): ["+str(np.min(ArgForBesselJ))+", "+str(np.max(ArgForBesselJ))+"]"
-    #print Header+"BesselJ(Rabi/laser): "+str(BesselJ(0, RabiFloquet_AU_max/omega_AU))
+    #print "x for BesselJ(x): "+str(np.shape(ArgForBesselJ))
+    #print "Rabi/laser (a.u.): ["+str(np.min(ArgForBesselJ))+", "+str(np.max(ArgForBesselJ))+"]"
+    #print "BesselJ(Rabi/laser): "+str(BesselJ(0, RabiFloquet_AU_max/omega_AU))
     
     ## Returns the optimal omega_AU for disabling tunneling
     # In principle....
     #d e f OmegaCutoff(Efield_AU, dipole, MPI_number, rootnum=1):
         #return np.sqrt( Efield_AU*np.divide( dipole, BesselJzeros( MPI_number, rootnum ) ) )
     
-    #print Header+"Test: BesselJzeros(MPI_number, 1): "+str(BesselJzeros(MPI_number, 1))
+    #print "Test: BesselJzeros(MPI_number, 1): "+str(BesselJzeros(MPI_number, 1))
     
     #root_orders = np.arange(1,5)
     #OmegaCutoff=np.vectorize(OmegaCutoff)
@@ -409,8 +409,8 @@ def ComputeFloquetBandStructure(filename, nb_atoms, Z_electrons, kpoints, unocc_
     OmegaCutOff_m_sorted    = np.sort(OmegaCutOff_m_filtered)
     
     if(verbose==1):
-        logger.info(Header+"Ideal photon energies for "+str(Efield_SI*1E-9)+" V/nm: \n"+str(list(set(OmegaCutOff_eV_sorted)))+" (eV)")
-        logger.info(Header+"Ideal photon wavelengths for "+str(Efield_SI*1E-9)+" V/nm: \n"+str(list(set(OmegaCutOff_m_sorted)))+" (m)")
+        logger.info("Ideal photon energies for "+str(Efield_SI*1E-9)+" V/nm: \n"+str(list(set(OmegaCutOff_eV_sorted)))+" (eV)")
+        logger.info("Ideal photon wavelengths for "+str(Efield_SI*1E-9)+" V/nm: \n"+str(list(set(OmegaCutOff_m_sorted)))+" (m)")
 
     #  wavelength (m) = h * c / (E(eV) * e)
     #print H_Floquet_mn 

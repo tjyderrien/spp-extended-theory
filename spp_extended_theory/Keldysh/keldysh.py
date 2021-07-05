@@ -1,19 +1,21 @@
 #!/usr/bin/env python
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ## @package Keldysh
 ## Computes the Keldysh excitation rate of quasi-free electrons
 # This module aims to calculate the density of excited electrons as function of laser parameters. 
 # Two types of usage are planned :
 # * Generating tables to use directly into simulation codes
-# * Outputing density in certain conditions. 
+# * Outputting density in certain conditions.
 
 from spp_extended_theory.Keldysh import libKeldysh
 from spp_extended_theory.Keldysh import libKeldyshZhukov
+from spp_extended_theory.Libs    import libDatabase
+from octopus_slabs.Libs          import libMaterials
 from spp_extended_theory.Keldysh import libStark
 #import octopus_slabs.Libs.libAtomicUnits as au
 #from libKeldyshUlrich import *
 
-from scipy.constants import e, c, epsilon_0
+from scipy.constants import e, c, epsilon_0, m_e
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -26,53 +28,54 @@ if __name__ == "__main__":
     print("")
     print("** Loaded Keldysh module [Keldysh, Sov. J. Exp. Th. Phys. 47, 5 (1964)]...")
     print("** Loaded Gruzdev formula [Gruzdev, Optical Engineering 53, 122515 (2014)]")
-    print("** Loading Stark module [De Giovannini, U.; Hubener, H. & Rubio, A., Nano Letters, 16, 7993-7998 (2016)]")
+    print("** Loaded Stark module [De Giovannini, U.; Hubener, H. & Rubio, A., Nano Letters, 16, 7993-7998 (2016) "+
+          "corrected by TJY Derrien]")
 
     print("** Info: this file contains examples how to use the Keldysh library. ")
     print("         It also contains validation cases of the present theory on Si and known references. ")
 
 ## Applies Keldysh model to the solid state parameters passed in argument. 
-def Test_Keldysh(Egap, meff, PeakField, wavelength, order): #{{{
+def TestKeldysh(Egap, meff, PeakField, wavelength, order): #{{{
   print(Header+"Peak field ="+str(PeakField/1E9)+" V/nm")
   
   print("=== SIMPLE QUANTITIES ===")
   
-  gamma = gammaKeldysh(Egap, meff, PeakField, wavelength)
+  gamma = libKeldysh.gammaKeldysh(Egap, meff, PeakField, wavelength)
   print("Adiabadicity parameter:"+str(gamma))
   
-  k1 = Keldysh1phi(gamma); k2 = Keldysh2theta(gamma)
+  k1 = libKeldysh.Keldysh1phi(gamma); k2 = libKeldysh.Keldysh2theta(gamma)
   print("Keldysh1 (Keldysh|Gruzdev) phi(gamma)   = "+str(k1))
   print("Keldysh2 (Keldysh|Gruzdev) theta(gamma) = "+str(k2))
   
-  k1Gulley = Keldysh1phiGulley(gamma); k2Gulley = Keldysh2thetaGulley(k1Gulley)
+  k1Gulley = libKeldysh.Keldysh1phiGulley(gamma); k2Gulley = libKeldysh.Keldysh2thetaGulley(k1Gulley)
   print("Keldysh1 (Gulley) phi(gamma)   = "+str(k1Gulley))
   print("Keldysh2 (Gulley) theta(gamma) = "+str(k2Gulley))
   
-  EgapEff       = EffectiveGap(Egap, k1, k2)
+  EgapEff       = libKeldysh.EffectiveGap(Egap, k1, k2)
   print("Effective gap (Keldysh|Gruzdev): "+str(EgapEff/e)+" eV.")
-  EgapEffGulley = EffectiveGapGulley(Egap, PeakField, meff, wavelength)
+  EgapEffGulley = libKeldysh.EffectiveGapGulley(Egap, PeakField, meff, wavelength)
   print("Effective gap (Gulley): "+str(EgapEffGulley/e)+" eV.")
   
-  xGulley = GulleyX(Egap, gamma, k2Gulley, wavelength)
+  xGulley = libKeldysh.GulleyX(Egap, gamma, k2Gulley, wavelength)
   print("Gulley X parameter: "+str(xGulley))
   
   print("Checking Gulley elliptics: ")
-  print(Gulley_Compute_Elliptics(k1Gulley, k2Gulley))
+  print(libKeldysh.Gulley_Compute_Elliptics(k1Gulley, k2Gulley))
   
-  KeldyshFunctionResult = KeldyshFunction( k1, k2, EgapEff, order, wavelength )
+  KeldyshFunctionResult = libKeldysh.KeldyshFunction( k1, k2, EgapEff, order, wavelength )
   print("KeldyshFunction_Keldysh: "+str(KeldyshFunctionResult))
   
-  KeldyshFunctionResultG = KeldyshFunction_Gruzdev( k1, k2, EgapEff, order, wavelength )
+  KeldyshFunctionResultG = libKeldysh.KeldyshFunction_Gruzdev( k1, k2, EgapEff, order, wavelength )
   print("KeldyshFunction_Gruzdev: "+str(KeldyshFunctionResultG))
   
-  KeldyshFunctionResultGulley = KeldyshFunctionGulley(k1Gulley, k2Gulley, xGulley, gamma, order, wavelength)
+  KeldyshFunctionResultGulley = libKeldysh.KeldyshFunctionGulley(k1Gulley, k2Gulley, xGulley, gamma, order, wavelength)
   print("KeldyshFunction_Gulley: "+str(KeldyshFunctionResultGulley))
   
-  wPI = IonizationRate(k1, k2, KeldyshFunctionResult, EgapEff, wavelength, meff)
+  wPI = libKeldysh.IonizationRate(k1, k2, KeldyshFunctionResult, EgapEff, wavelength, meff)
   
-  wPIgulley = IonizationRate_Gulley(k1Gulley, k2Gulley, KeldyshFunctionResultGulley, xGulley, wavelength, meff)
+  wPIgulley = libKeldysh.IonizationRate_Gulley(k1Gulley, k2Gulley, KeldyshFunctionResultGulley, xGulley, wavelength, meff)
   
-  wPIg = IonizationRate_Gruzdev(k1, k2, KeldyshFunctionResultG, EgapEff, wavelength, meff)
+  wPIg = libKeldysh.IonizationRate_Gruzdev(k1, k2, KeldyshFunctionResultG, EgapEff, wavelength, meff)
   print("wPI(Keldysh)="+str(wPI))
   print("wPI(Gruzdev)="+str(wPIg))
   print("wPI(Gulley) ="+str(wPIgulley))
@@ -82,9 +85,11 @@ def Test_Keldysh(Egap, meff, PeakField, wavelength, order): #{{{
 def SiliconLDAbandGap(): #{{{
   print("Defining Si material parameters...")
   unit = 1E-4 #W/m2 to W/cm2.
-  Egap = 2.56*e; #SiO2 #2.56e0*e; #3.4e0*e #LDA band gap of Si: 2.58 eV. #1.12e0*e for indirect band gap; 
-  meff=0.2226e0; #Effective mass of Si
-  Ntotal=1.*5E28
+
+  Egap, meff_opt, OpticalIndex = libMaterials.SiBulkReal300K()
+  # Egap = 2.56*e; #SiO2 #2.56e0*e; #3.4e0*e #LDA band gap of Si: 2.58 eV. #1.12e0*e for indirect band gap;
+  meff=meff_opt; #Just need a unit-less effective mass of Si
+  Ntotal=4.*5E28 #We can have max 4 electrons per atom
   order=200
   Efield_min      = 0E0 
   Efield_max      = 4E10 #V/m
@@ -100,11 +105,12 @@ def SiliconLDAbandGap(): #{{{
   #PeakFluence = 1.0*1E4 #J/cm2 * 1E4 = J/m2
   #PeakField   = np.sqrt(2e0 * PeakFluence / (tau * c * epsilon_0))
   PeakIntensity = 3.2E14 #Zhukov example at 1.6 um
-  RefractiveIndex = OpticalIndex[wavelength] #1: for far field, # 1.45: for near field in silica
+
+  RefractiveIndex = libMaterials.OpticalIndex[wavelength] #1: for far field, # 1.45: for near field in silica
   PeakField   = np.sqrt(2e0 * PeakIntensity * RefractiveIndex / (c * epsilon_0))
   #PeakField = 3E9
   
-  Test_Keldysh(Egap, meff, PeakField, wavelength, order)
+  TestKeldysh(Egap, meff, PeakField, wavelength, order)
 
   #exit()
   print("===== COMPARING THE EFFECTIVE GAPS using Stark effect ====")
@@ -223,9 +229,9 @@ def SiliconLDAbandGap(): #{{{
   print("== Preparing Stark shift as function of field intensity... ==")
   
   ## Keldysh Stark shift, 2 levels, 1 photon. 
-  gamma_t   = gammaKeldysh(E_gap_SI, 1.0, Efield_SI*np.sqrt(RefractiveIndex), wavelength)
-  k1_t      = Keldysh1phi(gamma_t); k2_t = Keldysh2theta(gamma_t)
-  EgapEff_t = EffectiveGap(E_gap_SI, k1_t, k2_t)
+  gamma_t   = libKeldysh.gammaKeldysh(E_gap_SI, 1.0, Efield_SI*np.sqrt(RefractiveIndex), wavelength)
+  k1_t      = libKeldysh.Keldysh1phi(gamma_t); k2_t = libKeldysh.Keldysh2theta(gamma_t)
+  EgapEff_t = libKeldysh.EffectiveGap(E_gap_SI, k1_t, k2_t)
   
   print("Plotting scattered graph...")
   print(np.shape(Efield_AU))
@@ -368,7 +374,7 @@ def SiliconLDAbandGap(): #{{{
   plt.figure()
   Intensity_SI  = 0.5*c*epsilon_0*Efield_SI**2*RefractiveIndex
   wPI_Zhukov = libKeldyshZhukov.VZ_generateWpiTables(Efield_SI*np.sqrt(RefractiveIndex), 0., wavelength, 800e-9, 0., 0., Egap, meff, Ntotal)
-  ExportToTxt(wPI_Zhukov, "Zhukov_Wpi"+str(wavelength*1E9)+"nm.csv")
+  libDatabase.ExportToTxt(wPI_Zhukov, "Zhukov_Wpi"+str(wavelength*1E9)+"nm.csv")
   plt.xlabel(r"Laser intensity (W/m$^2$)")
   plt.ylabel(r"Excitation rate $w_{\mathrm{PI}}$ (m$^{-3}s^{-1}$)")
   plt.loglog(unit * Intensity_SI, wPI_Zhukov,'.', label="Num. int. Keldysh")
@@ -467,7 +473,7 @@ def SilicaGulley2012(): #{{{
   
   #PeakField = 1E9
   
-  Test_Keldysh(Egap, meff, PeakField, wavelength, order)
+  TestKeldysh(Egap, meff, PeakField, wavelength, order)
   #exit()
   
   t0=0. #defines the instant 0.
@@ -548,8 +554,8 @@ def SiliconTunneling(): #{{{
     wavelength=800e-9
     meff=0.226
     Egap = 2.56*e                            
-    wTunnel = KeldyshTunnelingLimit(Egap, meff, wavelength, Efield)
-    gamma = gammaKeldysh(Egap, meff, Efield, wavelength)
+    wTunnel = libKeldysh.KeldyshTunnelingLimit(Egap, meff, wavelength, Efield)
+    gamma = libKeldysh.gammaKeldysh(Egap, meff, Efield, wavelength)
     plt.figure()
     ax1 = plt.subplot(111)
     ax1.loglog(Efield, wTunnel, 'r-+', label=r"$w_{tunnel}$")
@@ -657,9 +663,9 @@ def SilicaGruzdev2014(): #{{{
 #SiliconTunneling()
 
 if __name__ == "__main__":
-    # SiliconLDAbandGap()
+    SiliconLDAbandGap()
     #SilicaGulley2012()
-    SilicaGruzdev2014()
+    #SilicaGruzdev2014()
     #SilicaGraef2017()
 
 

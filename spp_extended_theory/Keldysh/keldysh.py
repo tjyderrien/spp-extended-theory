@@ -106,7 +106,7 @@ def SiliconLDAbandGap(): #{{{
   #PeakField   = np.sqrt(2e0 * PeakFluence / (tau * c * epsilon_0))
   PeakIntensity = 3.2E14 #Zhukov example at 1.6 um
 
-  RefractiveIndex = libMaterials.OpticalIndex[wavelength] #1: for far field, # 1.45: for near field in silica
+  RefractiveIndex = OpticalIndex[wavelength] #1: for far field, # 1.45: for near field in silica
   PeakField   = np.sqrt(2e0 * PeakIntensity * RefractiveIndex / (c * epsilon_0))
   #PeakField = 3E9
   
@@ -116,7 +116,7 @@ def SiliconLDAbandGap(): #{{{
   print("===== COMPARING THE EFFECTIVE GAPS using Stark effect ====")
   exit()
 
-  
+  ## All of code below was transfered to libStark.py
   print("== Preparing Giovannini et al model... ==")
   DME = 1. #from the paper #-1+2j #arbitrary!
   if(LogScale): 
@@ -515,7 +515,7 @@ def SilicaGulley2012(): #{{{
 
   #timeKeldysh, N_Keldysh_SI, N_Gruzdev_SI, gamma, wPI, wPIg, N_excited_Keldysh_trapz, N_excited_Gruzdev_trapz = generateWpiTables(Egap, meff, wavelength, tau, PeakField, dt, order, N_total, t0, False)
   
-  wPI, QGulley, xGulley = GenerateKeldyshGulleyDatabase(Egap, meff, wavelength, PeakField, order)
+  wPI, QGulley, xGulley = libKeldysh.GenerateKeldyshGulleyDatabase(Egap, meff, wavelength, PeakField, order)
   
   ### plot w_PI(intensity)
   print(Header+"Importing Gruzdev [2014] data...")
@@ -555,7 +555,7 @@ def SiliconTunneling(): #{{{
     meff=0.226
     Egap = 2.56*e                            
     wTunnel = libKeldysh.KeldyshTunnelingLimit(Egap, meff, wavelength, Efield)
-    gamma = libKeldysh.gammaKeldysh(Egap, meff, Efield, wavelength)
+    gamma   = libKeldysh.gammaKeldysh(Egap, meff, Efield, wavelength)
     plt.figure()
     ax1 = plt.subplot(111)
     ax1.loglog(Efield, wTunnel, 'r-+', label=r"$w_{tunnel}$")
@@ -595,7 +595,7 @@ def SilicaGruzdev2014(): #{{{
   #PeakField   = np.sqrt(2e0 * PeakFluence / (tau * c * epsilon_0))
   PeakIntensity_log = np.linspace(np.log10(1e14), np.log10(1e18), numpoints)
   PeakIntensity = np.power(10., PeakIntensity_log)
-  PeakField = np.sqrt(2. * PeakIntensity / c / epsilon_0) #I = 0.5 c eps0 E²
+  PeakField     = np.sqrt(2. * PeakIntensity / c / epsilon_0) #I = 0.5 c eps0 E²
   # I_inside_matter = 0.5 c eps0 n0 E**2: in matter, pulse is compressed in space. Therefore, intensity is stronger. As photon energy do not change, the time frequency does not change either.  
   LocalPeakField = np.sqrt(2. * PeakIntensity * optical_index / c / epsilon_0)  #I = 0.5 c n0 eps0 E²
   LocalPeakFieldDivide = np.sqrt(2. * PeakIntensity / optical_index / c / epsilon_0) #I = 0.5 c eps0 E² / n0
@@ -623,6 +623,7 @@ def SilicaGruzdev2014(): #{{{
       #print Gruzdev2014[:,0]
   except: 
       print(Header+"** Warning: failed to import Gruzdev2014 data table...")
+      Gruzdev2014=[]
     
   print(Header+"Plotting as function of laser field intensity ...")
   plt.figure()

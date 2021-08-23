@@ -467,7 +467,7 @@ def importFromTable(wavelength, folder, filename, plotting):  # {{{
 def ImportPalikDatabase_epsilon_fromNK(wavelengths, DataFile="Si-Palik"):  # {{{
     import os
     from scipy.interpolate import InterpolatedUnivariateSpline
-    PathFile=os.environ["HOME"]+"/Documents/spp-extended-theory/spp_extended_theory/SimpleSPP/Database/"
+    PathFile=os.environ["spp_extended_theory"]+"/spp_extended_theory/SimpleSPP/Database/"
     DataFile=PathFile+DataFile
     DataArray = np.loadtxt(DataFile, delimiter="\t", skiprows=4)
     wavelengths_source = DataArray[:, 0]

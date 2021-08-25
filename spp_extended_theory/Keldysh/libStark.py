@@ -304,8 +304,17 @@ def ComputeFloquetBandStructure(filename, nb_atoms, Z_electrons, kpoints, unocc_
     # 6.2: Add the dipolar matrix elements to the eigenvalues
 
     ## Function that returns the light-perturbed GS Hamiltonian for a specific k-point
-    def H_perturb(t, omega_AU, Efield_AU, H_GS, matrixelements):
-        return np.add(H_GS, Efield_AU*np.cos(omega_AU*t)*matrixelements)
+    def H_perturb(t, omega_AU, Efield_AU, H_GS, matrixelements, Enable_A2=False):
+        if Enable_A2: 
+	    for t in np.arange(tmin,tmax,dt):
+	        integral1=Efield_AU**2*np.cos(omega_AU*t)**2*dt
+	        integral1_sum=np.add(integral1_sum, integral1)
+	    for t in np.arange(tmin,tmax,dt):
+	        integral2=integral1_sum*dt
+	        integral2_sum=np.add(integral2_sum, integral2)
+	else:
+	    integral2=0
+        return np.add(np.add(H_GS, Efield_AU*np.cos(omega_AU*t)*matrixelements), integral2_sum)
         
     ## Returns the Rabi frequency for each possible dipolar transition (atomic units)
     # WARNING: 1/c error may be found (when employed convention is E=-1/c dA/dt). 
@@ -346,7 +355,7 @@ def ComputeFloquetBandStructure(filename, nb_atoms, Z_electrons, kpoints, unocc_
             H0=H_perturb(t, omega_AU, Efield_AU, H_GS, matrixelements) #H(t)
             H0_t1=omega_AU/2./np.pi * np.multiply(np.exp(1j*(MPI_number-n)*omega_AU*t), H0)*dt #e( i(m-n) omega t ) H(t)
             H0_sum = np.add(H0_sum, H0_t1) #have to integrate this
-            
+           
         H0_sum = H0_sum + Kronecker(MPI_number,n)*MPI_number*omega_AU
         return H0_sum
     #}}}

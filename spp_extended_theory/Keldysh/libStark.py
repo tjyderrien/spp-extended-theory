@@ -305,15 +305,17 @@ def ComputeFloquetBandStructure(filename, nb_atoms, Z_electrons, kpoints, unocc_
 
     ## Function that returns the light-perturbed GS Hamiltonian for a specific k-point
     def H_perturb(t, omega_AU, Efield_AU, H_GS, matrixelements, Enable_A2=False):
-        if Enable_A2: 
-	    for t in np.arange(tmin,tmax,dt):
-	        integral1=Efield_AU**2*np.cos(omega_AU*t)**2*dt
-	        integral1_sum=np.add(integral1_sum, integral1)
-	    for t in np.arange(tmin,tmax,dt):
-	        integral2=integral1_sum*dt
-	        integral2_sum=np.add(integral2_sum, integral2)
-	else:
-	    integral2=0
+        integral1_sum=0
+        integral2_sum=0
+        if Enable_A2:
+            for t in np.arange(tmin,tmax,dt):
+                integral1=Efield_AU**2*np.cos(omega_AU*t)**2*dt
+                integral1_sum=np.add(integral1_sum, integral1)
+            for t in np.arange(tmin,tmax,dt):
+                integral2=integral1_sum*dt
+                integral2_sum=np.add(integral2_sum, integral2)
+        else:
+            integral2_sum=0
         return np.add(np.add(H_GS, Efield_AU*np.cos(omega_AU*t)*matrixelements), integral2_sum)
         
     ## Returns the Rabi frequency for each possible dipolar transition (atomic units)

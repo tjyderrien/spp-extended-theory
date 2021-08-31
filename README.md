@@ -88,14 +88,15 @@ pip install -e git+https://bitbucket.org/tjyderrien/spp-extended-theory/
 
 or
 
-git clone https://bitbucket.org/tjyderrien/spp-extended-theory/
-git checkout Modules
-conda env create -f environment.yaml #if you want to install a separate conda environment for this code
+1. git clone https://bitbucket.org/tjyderrien/spp-extended-theory/
+2. git checkout Modules
+3. conda env create -f environment.yaml #if you want to install a separate conda environment for this code
 
 If this fails, look for your install of Conda ("whereis conda" or "locate conda"). Usually it is practical to introduce this into .bashrc: export PATH=/opt/miniconda3/bin:$PATH
 
-conda activate spp-extended-theory
-pip install -e <folder_with_setup.py> (can be "." or "spp-extended-theory")
+4. conda activate spp-extended-theory #this name should be present after using Step 3.
+5. pip install -e <folder_with_setup.py> (can be "." or "spp-extended-theory")
+6. Add "export spp_extended_theory=<path to your install>" into ~/.bashrc (looking forward for a better solution).
 
 ## Simple uninstall for beginners
 

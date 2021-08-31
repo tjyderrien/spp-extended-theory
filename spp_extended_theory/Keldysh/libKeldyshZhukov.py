@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2013-2020 T. J.-Y. Derrien
+# Copyright (C) 2013-2021 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -55,7 +55,9 @@ from spp_extended_theory.Keldysh.libUnits import *
 from spp_extended_theory.Libs.libDatabase import *
 
 # from matplotlib.legend_handler import HandlerLine2D
-# import sys
+import os
+
+PathPrefix = os.getcwd() #PathPrefix no longer needs to be defined in octopus-slabs, but is inherent to libKeldyshZhukov. 
 
 rc('font',**{'family':'sans-serif','sans-serif':['Helvetica'], 'size':'14'})
 ## for Palatino and other serif fonts use:

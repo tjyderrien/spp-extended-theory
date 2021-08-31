@@ -12,6 +12,16 @@ from scipy.constants import c, pi, e, h, hbar
 from scipy.optimize import root
 from scipy.special import jn_zeros as BesselJzeros
 import octopus_slabs.Libs.libAtomicUnits as au
+
+# import logging
+from octopus_slabs.Libs.libLogging import init_logger
+
+#Enable_A2=True
+
+logger = init_logger(__name__, verbose=False) #"plotFinalQuantities")
+# logger.basicConfig(format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
+# logger.basicConfig(filename='libStark.log', level=logger.INFO)
+
 ## Provides the shift of the quasi electronic levels
 # From simple Floquet Hamiltonian on constant pulse of frequency omega, the shift of 6 bands with the electric field is given. The eigen values have been computed from the Hamiltonian given in the Nano Letters. 
 def Stark2bands1photon_EnergyShift_modified_exact(Efield_AU, omega_AU, E_gap_AU, DME_AU=1): #{{{                                                                                            
@@ -253,7 +263,7 @@ def TestingNumericalSolver4():
     E_gap_AU  = 1 #Energy_eV_to_Hartree(E_gap_SI/e)
     omega_AU  = E_gap_AU #Energy_eV_to_Hartree(omega_SI*hbar/e)
 
-    print("Attempting numerical solution ...")
+    logger.info("Attempting numerical solution ...")
     roots=[]
     #Eexact=np.zeros((samples,20))
     #index=0
@@ -261,9 +271,9 @@ def TestingNumericalSolver4():
         Eexact= Stark2bands1photon_EnergyShift_notcorrected_numerical(Efield_AU[index], omega_AU, E_gap_AU, DME, 20)
         roots.append(np.unique(Eexact)) #removes numerical degeneracies
 
-    print(np.shape(Efield_AU))
-    print(np.shape(roots))
-    print(roots[0][:])
+    logger.info(np.shape(Efield_AU))
+    logger.info(np.shape(roots))
+    logger.info(roots[0][:])
     return roots
 
 ## Kronecker of two numbers
@@ -277,32 +287,43 @@ def Kronecker(i,j):
 
 
 ## Returns the Floquet band structure at a given k-point assuming <MPI_number> photons transitions. 
-def ComputeFloquetBandStructure(filename, nb_atoms, Z_electrons, kpoints, unocc_states, MPI_number, Efield_SI, wavelength_SI, num_time_steps, eigenvalues, matrixelements, Complex_valued_ME=False, field_polarization_dir=0, spin_occupation=2, verbose=1): #{{{
+def ComputeFloquetBandStructure(filename, nb_atoms, Z_electrons, kpoints, unocc_states, MPI_number, Efield_SI, wavelength_SI, num_time_steps, eigenvalues, matrixelements, Complex_valued_ME=False, field_polarization_dir=0, spin_occupation=2, verbose=1, Enable_A2=False): #{{{
     Header="[libStark: ComputeFloquetBandStructure(): ] "
-    
+    logger.info("Floquet for wavelength: "+str(wavelength_SI*1E9)+" nm, E = "+str(Efield_SI*1E-9)+" V/nm.")
     matrix_side=Z_electrons+unocc_states
     ## 6. Build then diagonalize the Floquet Hamiltonian. 
     # 6.1:Build the eigenvalued matrix
     H_GS=np.zeros((matrix_side, matrix_side))*1j
     if(verbose==1):
-        print(Header+"** Info: side of the matrix")
-        print(Header+"         "+str(np.size(H_GS[0])))
-        print(Header+"Matrix_side: "+str(matrix_side)+" Z_el: "+str(Z_electrons)+" unocc: "+str(unocc_states))
+        logger.info("** Info: side of the matrix")
+        logger.info("         "+str(np.size(H_GS[0])))
+        logger.info("Matrix_side: "+str(matrix_side)+" Z_el: "+str(Z_electrons)+" unocc: "+str(unocc_states))
     for i in np.arange(0,np.size(H_GS[0])):
         H_GS[i,i]=eigenvalues[i]
     if(verbose==1):
-        print("Info: matrix of eigenvalues for the selected k-point. Matrix shape is "+str(np.shape(H_GS)))
+        logger.debug("Info: matrix of eigenvalues for the selected k-point. Matrix shape is "+str(np.shape(H_GS)))
 
     # 6.2: Add the dipolar matrix elements to the eigenvalues
 
     ## Function that returns the light-perturbed GS Hamiltonian for a specific k-point
-    def H_perturb(t, omega_AU, Efield_AU, H_GS, matrixelements):
-        return np.add(H_GS, Efield_AU*np.cos(omega_AU*t)*matrixelements)
+    def H_perturb(t, omega_AU, Efield_AU, H_GS, matrixelements, Enable_A2=False):
+        integral1_sum=0
+        integral2_sum=0
+        if Enable_A2:
+            for t in np.arange(tmin,tmax,dt):
+                integral1=Efield_AU**2*np.cos(omega_AU*t)**2*dt
+                integral1_sum=np.add(integral1_sum, integral1)
+            for t in np.arange(tmin,tmax,dt):
+                integral2=integral1_sum*dt
+                integral2_sum=np.add(integral2_sum, integral2)
+        else:
+            integral2_sum=0
+        return np.add(np.add(H_GS, Efield_AU*np.cos(omega_AU*t)*matrixelements), integral2_sum)
         
     ## Returns the Rabi frequency for each possible dipolar transition (atomic units)
     # WARNING: 1/c error may be found (when employed convention is E=-1/c dA/dt). 
     def RabiMatrix_AU(t, omega_AU, Efield_AU, matrixelements):
-        c_AU = 1./137.
+#        c_AU = 1./137.
         #Formula: Efield_AU(t) * d / omega_AU
         RabiMatrix_AU = Efield_AU*np.cos(omega_AU*t)*matrixelements/omega_AU 
         return RabiMatrix_AU
@@ -319,26 +340,26 @@ def ComputeFloquetBandStructure(filename, nb_atoms, Z_electrons, kpoints, unocc_
 
     # Initialization for t=0
     if(verbose==1):
-        print("Info: H(t)=H_GS + dipolar_matrix * Efield(t)")
-        print("Info: shape of H_GS: "+str(np.shape(H_GS)))
-        print("Info: shape of matrixelements: "+str(np.shape(matrixelements)))
+        logger.info("Info: H(t)=H_GS + dipolar_matrix * Efield(t)")
+        logger.info("Info: shape of H_GS: "+str(np.shape(H_GS)))
+        logger.info("Info: shape of matrixelements: "+str(np.shape(matrixelements)))
     
     # Only cosmetic!
-    H0=H_perturb(tmin, omega_AU, Efield_AU, H_GS, matrixelements) #this gives max of RabiFreq. Spanning fields will give the rest. 
+    H0=H_perturb(tmin, omega_AU, Efield_AU, H_GS, matrixelements, Enable_A2=False) #this gives max of RabiFreq. Spanning fields will give the rest. 
     Rabi0=RabiMatrix_AU(tmin, omega_AU, Efield_AU, matrixelements)
     if(verbose==1):
-        print("Info: shape of H(t): "+str(np.shape(H0)))
-        print("Info: shape of RabiFreq(t): "+str(np.shape(Rabi0)))
+        logger.info("Info: shape of H(t): "+str(np.shape(H0)))
+        logger.info("Info: shape of RabiFreq(t): "+str(np.shape(Rabi0)))
 
     ## Temporal integration of H_Floquet^{m,n}
-    def H_Floquet_mn_func(tmin, tmax, dt, omega_AU, MPI_number, n, Efield_AU, H_GS, matrixelements): #{{{
-        H0_init = H_perturb(tmin, omega_AU, Efield_AU, H_GS, matrixelements) #just to initialize
+    def H_Floquet_mn_func(tmin, tmax, dt, omega_AU, MPI_number, n, Efield_AU, H_GS, matrixelements, Enable_A2=False): #{{{
+        H0_init = H_perturb(tmin, omega_AU, Efield_AU, H_GS, matrixelements, Enable_A2=False) #just to initialize
         H0_sum = np.zeros(np.shape(H0_init))*0j #initialization
         for t in np.arange(tmin,tmax,dt): #integral
-            H0=H_perturb(t, omega_AU, Efield_AU, H_GS, matrixelements) #H(t)
+            H0=H_perturb(t, omega_AU, Efield_AU, H_GS, matrixelements, Enable_A2=False) #H(t)
             H0_t1=omega_AU/2./np.pi * np.multiply(np.exp(1j*(MPI_number-n)*omega_AU*t), H0)*dt #e( i(m-n) omega t ) H(t)
             H0_sum = np.add(H0_sum, H0_t1) #have to integrate this
-            
+           
         H0_sum = H0_sum + Kronecker(MPI_number,n)*MPI_number*omega_AU
         return H0_sum
     #}}}
@@ -367,22 +388,22 @@ def ComputeFloquetBandStructure(filename, nb_atoms, Z_electrons, kpoints, unocc_
     RabiFloquet_SI_max = au.Energy_Hartree_to_eV(RabiFloquet_AU_max)
     
     #print RabiFloquet_AU
-    #print Header+"Rabi energy (Ha): ["+ str(RabiFloquet_AU_min) +", "+str(RabiFloquet_AU_max)+"]"
-    print(Header+"Rabi energy (eV): ["+ str(RabiFloquet_SI_min) +", "+str(RabiFloquet_SI_max)+"]")
+    #print "Rabi energy (Ha): ["+ str(RabiFloquet_AU_min) +", "+str(RabiFloquet_AU_max)+"]"
+    logger.info("Rabi energy (eV): ["+ str(RabiFloquet_SI_min) +", "+str(RabiFloquet_SI_max)+"]")
     
     ## Print here the ratio Rabi/Laser and the value of the BesselFunction.
     ArgForBesselJ=np.abs(RabiFloquet_AU)/omega_AU
     
-    #print Header+"x for BesselJ(x): "+str(np.shape(ArgForBesselJ))
-    #print Header+"Rabi/laser (a.u.): ["+str(np.min(ArgForBesselJ))+", "+str(np.max(ArgForBesselJ))+"]"
-    #print Header+"BesselJ(Rabi/laser): "+str(BesselJ(0, RabiFloquet_AU_max/omega_AU))
+    #print "x for BesselJ(x): "+str(np.shape(ArgForBesselJ))
+    #print "Rabi/laser (a.u.): ["+str(np.min(ArgForBesselJ))+", "+str(np.max(ArgForBesselJ))+"]"
+    #print "BesselJ(Rabi/laser): "+str(BesselJ(0, RabiFloquet_AU_max/omega_AU))
     
     ## Returns the optimal omega_AU for disabling tunneling
     # In principle....
     #d e f OmegaCutoff(Efield_AU, dipole, MPI_number, rootnum=1):
         #return np.sqrt( Efield_AU*np.divide( dipole, BesselJzeros( MPI_number, rootnum ) ) )
     
-    #print Header+"Test: BesselJzeros(MPI_number, 1): "+str(BesselJzeros(MPI_number, 1))
+    #print "Test: BesselJzeros(MPI_number, 1): "+str(BesselJzeros(MPI_number, 1))
     
     #root_orders = np.arange(1,5)
     #OmegaCutoff=np.vectorize(OmegaCutoff)
@@ -401,24 +422,24 @@ def ComputeFloquetBandStructure(filename, nb_atoms, Z_electrons, kpoints, unocc_
     OmegaCutOff_m_sorted    = np.sort(OmegaCutOff_m_filtered)
     
     if(verbose==1):
-        print(Header+"Ideal photon energies for "+str(Efield_SI*1E-9)+" V/nm: \n"+str(list(set(OmegaCutOff_eV_sorted)))+" (eV)")
-        print(Header+"Ideal photon wavelengths for "+str(Efield_SI*1E-9)+" V/nm: \n"+str(list(set(OmegaCutOff_m_sorted)))+" (m)")
+        logger.info("Ideal photon energies for "+str(Efield_SI*1E-9)+" V/nm: \n"+str(list(set(OmegaCutOff_eV_sorted)))+" (eV)")
+        logger.info("Ideal photon wavelengths for "+str(Efield_SI*1E-9)+" V/nm: \n"+str(list(set(OmegaCutOff_m_sorted)))+" (m)")
 
     #  wavelength (m) = h * c / (E(eV) * e)
     #print H_Floquet_mn 
     
     if(verbose==1):
-        print("Info: element (m,n) of Floquet matrix constructed with success.")
-        print("Info: Now, one has to write the full matrix.")
+        logger.info("Info: element (m,n) of Floquet matrix constructed with success.")
+        logger.info("Info: Now, one has to write the full matrix.")
 
     if(verbose==1):
-        print("Info: shape of element [m,n] of the matrix we want to write: "+str(np.shape(H_Floquet_mn)))
+        logger.info("Info: shape of element [m,n] of the matrix we want to write: "+str(np.shape(H_Floquet_mn)))
     H_Floquet_shape = (MPI_number*2+1) * (matrix_side)
     H_Floquet=np.zeros((H_Floquet_shape, H_Floquet_shape))*1j
     if(verbose==1): 
-        print("Info: shape of the complete Floquet matrix")
-        print(H_Floquet_shape, H_Floquet_shape)
-        print(np.shape(H_Floquet))
+        logger.info("Info: shape of the complete Floquet matrix")
+        logger.info(H_Floquet_shape, H_Floquet_shape)
+        logger.info(np.shape(H_Floquet))
     for m in np.arange(-MPI_number,MPI_number+1,1):
         for n in np.arange(-MPI_number,MPI_number+1,1):
             H_Floquet_mn=H_Floquet_mn_func(tmin, tmax, dt, omega_AU, m, n, Efield_AU, H_GS, matrixelements) #tensor of 4th order...

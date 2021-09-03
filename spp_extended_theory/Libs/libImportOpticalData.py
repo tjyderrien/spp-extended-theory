@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2013-2020 T. J.-Y. Derrien
+# Copyright (C) 2013-2021 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -463,7 +463,7 @@ def importFromTable(wavelength, folder, filename, plotting):  # {{{
 # }}}
 
 ## Imports the optical data from Palik database
-# Returns the spectrum (in Re(eps), Im(eps)) of a material on the given grid of wavelengths
+# Returns the spectrum (in Re(eps), Im(eps)) interpolate of a material interpolated on the given grid of wavelengths
 def ImportPalikDatabase_epsilon_fromNK(wavelengths, DataFile="Si-Palik"):  # {{{
     import os
     from scipy.interpolate import InterpolatedUnivariateSpline

@@ -285,7 +285,10 @@ def Kronecker(i,j):
 
 
 ## Returns the Floquet band structure at a given k-point assuming <MPI_number> photons transitions. 
-def ComputeFloquetBandStructure(filename, nb_atoms, Z_electrons, kpoints, unocc_states, MPI_number, Efield_SI, wavelength_SI, num_time_steps, eigenvalues, matrixelements, Complex_valued_ME=False, field_polarization_dir=0, spin_occupation=2, verbose=1): #{{{
+def ComputeFloquetBandStructure(filename, nb_atoms, Z_electrons, kpoints, unocc_states, MPI_number, Efield_SI,
+                                wavelength_SI, num_time_steps, eigenvalues, matrixelements,
+                                Complex_valued_ME=False, field_polarization_dir=0,
+                                spin_occupation=2, verbose=1, Enable_A2=0): #{{{
     Header="[libStark: ComputeFloquetBandStructure(): ] "
     logger.info("Floquet for wavelength: "+str(wavelength_SI*1E9)+" nm, E = "+str(Efield_SI*1E-9)+" V/nm.")
     matrix_side=Z_electrons+unocc_states
@@ -376,7 +379,8 @@ def ComputeFloquetBandStructure(filename, nb_atoms, Z_electrons, kpoints, unocc_
     
     #print RabiFloquet_AU
     #print "Rabi energy (Ha): ["+ str(RabiFloquet_AU_min) +", "+str(RabiFloquet_AU_max)+"]"
-    logger.info("Rabi energy (eV): ["+ str(RabiFloquet_SI_min) +", "+str(RabiFloquet_SI_max)+"]")
+    if(verbose==1):
+        logger.info("Rabi energy (eV): ["+ str(RabiFloquet_SI_min) +", "+str(RabiFloquet_SI_max)+"]")
     
     ## Print here the ratio Rabi/Laser and the value of the BesselFunction.
     ArgForBesselJ=np.abs(RabiFloquet_AU)/omega_AU

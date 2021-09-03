@@ -16,6 +16,8 @@ import octopus_slabs.Libs.libAtomicUnits as au
 # import logging
 from octopus_slabs.Libs.libLogging import init_logger
 
+#Enable_A2=True
+
 logger = init_logger(__name__, verbose=False) #"plotFinalQuantities")
 # logger.basicConfig(format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 # logger.basicConfig(filename='libStark.log', level=logger.INFO)
@@ -288,7 +290,7 @@ def Kronecker(i,j):
 def ComputeFloquetBandStructure(filename, nb_atoms, Z_electrons, kpoints, unocc_states, MPI_number, Efield_SI,
                                 wavelength_SI, num_time_steps, eigenvalues, matrixelements,
                                 Complex_valued_ME=False, field_polarization_dir=0,
-                                spin_occupation=2, verbose=1, Enable_A2=0): #{{{
+                                spin_occupation=2, verbose=1, Enable_A2=False): #{{{
     Header="[libStark: ComputeFloquetBandStructure(): ] "
     logger.info("Floquet for wavelength: "+str(wavelength_SI*1E9)+" nm, E = "+str(Efield_SI*1E-9)+" V/nm.")
     matrix_side=Z_electrons+unocc_states
@@ -307,8 +309,19 @@ def ComputeFloquetBandStructure(filename, nb_atoms, Z_electrons, kpoints, unocc_
     # 6.2: Add the dipolar matrix elements to the eigenvalues
 
     ## Function that returns the light-perturbed GS Hamiltonian for a specific k-point
-    def H_perturb(t, omega_AU, Efield_AU, H_GS, matrixelements):
-        return np.add(H_GS, Efield_AU*np.cos(omega_AU*t)*matrixelements)
+    def H_perturb(t, omega_AU, Efield_AU, H_GS, matrixelements, Enable_A2=False):
+        integral1_sum=0
+        integral2_sum=0
+        if Enable_A2:
+            for t in np.arange(tmin,tmax,dt):
+                integral1=Efield_AU**2*np.cos(omega_AU*t)**2*dt
+                integral1_sum=np.add(integral1_sum, integral1)
+            for t in np.arange(tmin,tmax,dt):
+                integral2=integral1_sum*dt
+                integral2_sum=np.add(integral2_sum, integral2)
+        else:
+            integral2_sum=0
+        return np.add(np.add(H_GS, Efield_AU*np.cos(omega_AU*t)*matrixelements), integral2_sum)
         
     ## Returns the Rabi frequency for each possible dipolar transition (atomic units)
     # WARNING: 1/c error may be found (when employed convention is E=-1/c dA/dt). 
@@ -335,21 +348,21 @@ def ComputeFloquetBandStructure(filename, nb_atoms, Z_electrons, kpoints, unocc_
         logger.info("Info: shape of matrixelements: "+str(np.shape(matrixelements)))
     
     # Only cosmetic!
-    H0=H_perturb(tmin, omega_AU, Efield_AU, H_GS, matrixelements) #this gives max of RabiFreq. Spanning fields will give the rest. 
+    H0=H_perturb(tmin, omega_AU, Efield_AU, H_GS, matrixelements, Enable_A2=False) #this gives max of RabiFreq. Spanning fields will give the rest. 
     Rabi0=RabiMatrix_AU(tmin, omega_AU, Efield_AU, matrixelements)
     if(verbose==1):
         logger.info("Info: shape of H(t): "+str(np.shape(H0)))
         logger.info("Info: shape of RabiFreq(t): "+str(np.shape(Rabi0)))
 
     ## Temporal integration of H_Floquet^{m,n}
-    def H_Floquet_mn_func(tmin, tmax, dt, omega_AU, MPI_number, n, Efield_AU, H_GS, matrixelements): #{{{
-        H0_init = H_perturb(tmin, omega_AU, Efield_AU, H_GS, matrixelements) #just to initialize
+    def H_Floquet_mn_func(tmin, tmax, dt, omega_AU, MPI_number, n, Efield_AU, H_GS, matrixelements, Enable_A2=False): #{{{
+        H0_init = H_perturb(tmin, omega_AU, Efield_AU, H_GS, matrixelements, Enable_A2=False) #just to initialize
         H0_sum = np.zeros(np.shape(H0_init))*0j #initialization
         for t in np.arange(tmin,tmax,dt): #integral
-            H0=H_perturb(t, omega_AU, Efield_AU, H_GS, matrixelements) #H(t)
+            H0=H_perturb(t, omega_AU, Efield_AU, H_GS, matrixelements, Enable_A2=False) #H(t)
             H0_t1=omega_AU/2./np.pi * np.multiply(np.exp(1j*(MPI_number-n)*omega_AU*t), H0)*dt #e( i(m-n) omega t ) H(t)
             H0_sum = np.add(H0_sum, H0_t1) #have to integrate this
-            
+           
         H0_sum = H0_sum + Kronecker(MPI_number,n)*MPI_number*omega_AU
         return H0_sum
     #}}}

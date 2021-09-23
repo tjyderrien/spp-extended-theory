@@ -20,7 +20,7 @@
 # Functions to describe the laser pulse
 
 import numpy as np
-from scipy.constants import c, epsilon_0, mu_0, pi, e, m_e, h, e
+from scipy.constants import c, pi, h, e
 
 ## calculate laser frequency (Hz) from wavelength (m)
 def omega(wavelength):#{{{

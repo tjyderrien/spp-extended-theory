@@ -96,6 +96,7 @@ If this fails, look for your install of Conda ("whereis conda" or "locate conda"
 
 4. conda activate spp-extended-theory #this name should be present after using Step 3.
 5. pip install -e <folder_with_setup.py> (can be "." or "spp-extended-theory")
+6. Add "export spp_extended_theory=<path to your install>" into ~/.bashrc (looking forward for a better solution).
 
 ## Simple uninstall for beginners
 

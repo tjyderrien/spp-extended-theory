@@ -5,8 +5,10 @@
 # the Sipe model given in [Sipe, J. E. et al. Phys. Rev. B 27, 1141-1154 (1983)]
 # NOTE: module was only validated for normal incidence. 
 
-from scipy.constants import c, epsilon_0, mu_0, pi, e, m_e, h
 import cmath
+
+from scipy.constants import pi
+
 
 def G(s): #validated on Bonse et al 2005.
 	return 0.5*(cmath.sqrt(s**2+4e0)+s)-cmath.sqrt(s**2+1e0)

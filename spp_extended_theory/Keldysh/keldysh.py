@@ -11,11 +11,12 @@ from spp_extended_theory.Keldysh import libKeldysh
 from spp_extended_theory.Keldysh import libKeldyshZhukov
 from spp_extended_theory.Libs    import libDatabase
 from octopus_slabs.Libs          import libMaterials
+
 from spp_extended_theory.Keldysh import libStark
-#import octopus_slabs.Libs.libAtomicUnits as au
+import octopus_slabs.Libs.libAtomicUnits as au
 #from libKeldyshUlrich import *
 
-from scipy.constants import e, c, epsilon_0, m_e
+from scipy.constants import e, c, epsilon_0, m_e, hbar, h
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -114,7 +115,7 @@ def SiliconLDAbandGap(): #{{{
 
   #exit()
   print("===== COMPARING THE EFFECTIVE GAPS using Stark effect ====")
-  exit()
+  # exit()
 
   ## All of code below was transfered to libStark.py
   print("== Preparing Giovannini et al model... ==")
@@ -131,9 +132,9 @@ def SiliconLDAbandGap(): #{{{
 
   print("Replicas energy shifts (eV): "+str(omega_SI*hbar/e))
 
-  Efield_AU = Field_SI_to_AU(Efield_SI)
-  E_gap_AU  = Energy_eV_to_Hartree(E_gap_SI/e)
-  omega_AU  = Energy_eV_to_Hartree(omega_SI*hbar/e)
+  Efield_AU = au.Field_SI_to_AU(Efield_SI)
+  E_gap_AU  = au.Energy_eV_to_Hartree(E_gap_SI/e)
+  omega_AU  = au.Energy_eV_to_Hartree(omega_SI*hbar/e)
   
   #def Test():
         
@@ -149,9 +150,9 @@ def SiliconLDAbandGap(): #{{{
     ##Enumerical_max = np.round(Enumerical_max, 8)
     ##Enumerical_max_set = set(Enumerical_max.flatten())
     
-    #Enumerical_min_eV = np.round(Energy_Hartree_to_eV(Enumerical_min), 8)
+    #Enumerical_min_eV = np.round(au.Energy_Hartree_to_eV(Enumerical_min), 8)
     #Enumerical_min_set_eV = set(Enumerical_min_eV.flatten())
-    ##Enumerical_max_eV = np.round(Energy_Hartree_to_eV(Enumerical_max), 8)
+    ##Enumerical_max_eV = np.round(au.Energy_Hartree_to_eV(Enumerical_max), 8)
     ##Enumerical_max_set_eV = set(Enumerical_max_eV.flatten())
     
     ##Enumerical_min_set = [set(v) for v in Enumerical_min]
@@ -162,10 +163,10 @@ def SiliconLDAbandGap(): #{{{
     
     #print("USELESS: 4x4 original - exact values")
     #print "eV: "
-    #print Energy_Hartree_to_eV(ENC1)
-    #print Energy_Hartree_to_eV(ENC2)
-    #print Energy_Hartree_to_eV(ENC3)
-    #print Energy_Hartree_to_eV(ENC4)
+    #print au.Energy_Hartree_to_eV(ENC1)
+    #print au.Energy_Hartree_to_eV(ENC2)
+    #print au.Energy_Hartree_to_eV(ENC3)
+    #print au.Energy_Hartree_to_eV(ENC4)
     #print ""
     #print "USELESS: 4x4 original - numerical attempt"
     #print "eV:"
@@ -179,12 +180,12 @@ def SiliconLDAbandGap(): #{{{
     #print ""
     #print "VALID: 2 BANDS - 1 PHOTON - 6x6 modified exact"
     #print "eV: "
-    #print Energy_Hartree_to_eV(E1)
-    #print Energy_Hartree_to_eV(E2)
-    #print Energy_Hartree_to_eV(E3)
-    #print Energy_Hartree_to_eV(E4)
-    #print Energy_Hartree_to_eV(E5)
-    #print Energy_Hartree_to_eV(E6)
+    #print au.Energy_Hartree_to_eV(E1)
+    #print au.Energy_Hartree_to_eV(E2)
+    #print au.Energy_Hartree_to_eV(E3)
+    #print au.Energy_Hartree_to_eV(E4)
+    #print au.Energy_Hartree_to_eV(E5)
+    #print au.Energy_Hartree_to_eV(E6)
     
     ### Let's go for 12x12 matrix, only numerical. 
     #print ""
@@ -199,9 +200,9 @@ def SiliconLDAbandGap(): #{{{
     ##Enumerical_max = np.round(Enumerical_max, 8)
     ##Enumerical_max_set = set(Enumerical_max.flatten())
     
-    #FourBandsOnePhoton_E_round_eV = np.round(Energy_Hartree_to_eV(FourBandsOnePhoton_E_round), 5)
+    #FourBandsOnePhoton_E_round_eV = np.round(au.Energy_Hartree_to_eV(FourBandsOnePhoton_E_round), 5)
     #FourBandsOnePhoton_E_round_set_eV = set(FourBandsOnePhoton_E_round_eV.flatten())
-    #FourBandsOnePhoton_Eigen_round_eV = np.round(Energy_Hartree_to_eV(FourBandsOnePhoton_Eigen_round), 5)
+    #FourBandsOnePhoton_Eigen_round_eV = np.round(au.Energy_Hartree_to_eV(FourBandsOnePhoton_Eigen_round), 5)
     #FourBandsOnePhoton_Eigen_round_set_eV = set(FourBandsOnePhoton_Eigen_round_eV.flatten())
     
     #print "eV:"
@@ -212,20 +213,20 @@ def SiliconLDAbandGap(): #{{{
     #print ""
     #print "2 BANDS - 2 PHOTONS - 10x10 numerical (eigen solver)"
     #TwoBandsTwoPhotons_Eigen       = Stark2bands2photons_EnergyShift_eigen(Efield_AU, omega_AU, E_gap_AU, DME)
-    #TwoBandsTwoPhotons_Eigen_eV    = Energy_Hartree_to_eV(TwoBandsTwoPhotons_Eigen)
+    #TwoBandsTwoPhotons_Eigen_eV    = au.Energy_Hartree_to_eV(TwoBandsTwoPhotons_Eigen)
     #TwoBandsTwoPhotons_Eigen_round     = np.round(TwoBandsTwoPhotons_Eigen, 8)
     #TwoBandsTwoPhotons_Eigen_round_set = set(TwoBandsTwoPhotons_Eigen_round.flatten())
-    #TwoBandsTwoPhotons_Eigen_round_eV = np.round(Energy_Hartree_to_eV(TwoBandsTwoPhotons_Eigen_round), 5)
+    #TwoBandsTwoPhotons_Eigen_round_eV = np.round(au.Energy_Hartree_to_eV(TwoBandsTwoPhotons_Eigen_round), 5)
     #TwoBandsTwoPhotons_Eigen_round_set_eV = set(TwoBandsTwoPhotons_Eigen_round_eV.flatten())
     
     #print "eV: eigensolver: "
-    #print Energy_Hartree_to_eV(TwoBandsTwoPhotons_Eigen)
+    #print au.Energy_Hartree_to_eV(TwoBandsTwoPhotons_Eigen)
     ##print TwoBandsTwoPhotons_Eigen_round_eV.flatten()
     #print np.shape(TwoBandsTwoPhotons_Eigen_round_eV)
   
   ##exit()
 
-## Generalizing to many fields
+  ## Generalizing to many fields
   print("== Preparing Stark shift as function of field intensity... ==")
   
   ## Keldysh Stark shift, 2 levels, 1 photon. 
@@ -247,14 +248,26 @@ def SiliconLDAbandGap(): #{{{
   # Preparing the 2-levels 2-photon, and 4-levels 1-photon Stark shifts. 
   for element in Efield_SI:
       print(element)
-      E1, E2, E3, E4, E5, E6         = Stark2bands1photon_EnergyShift_modified_exact(Field_SI_to_AU(element*np.sqrt(RefractiveIndex)), omega_AU, E_gap_AU, DME)
+
+      # Eigenvalues from exact solution without A2 terms
+      E1, E2, E3, E4, E5, E6         = libStark.Stark2bands1photon_EnergyShift_modified_exact(au.Field_SI_to_AU(element*np.sqrt(RefractiveIndex)), omega_AU, E_gap_AU, DME)
       TwoBandsOnePhoton_Eigen        = [E1, E2, E3, E4, E5, E6]
-      TwoBandsOnePhoton_Eigen_eV    = Energy_Hartree_to_eV(TwoBandsOnePhoton_Eigen)
+      TwoBandsOnePhoton_Eigen_eV    = au.Energy_Hartree_to_eV(TwoBandsOnePhoton_Eigen)
       print(TwoBandsOnePhoton_Eigen_eV)
-      Intensity_el  = 0.5*c*epsilon_0*element**2*RefractiveIndex
+
+      # Eigenvalue from numerical solution with A2 terms
+      TwoBandsOnePhoton_Eigen_A2 = libStark.Stark2bands1photons_EnergyShift_eigen_A2(au.Field_SI_to_AU(element*np.sqrt(RefractiveIndex)), omega_AU, E_gap_AU, DME)
+      TwoBandsOnePhoton_Eigen_A2_eV = au.Energy_Hartree_to_eV(TwoBandsOnePhoton_Eigen_A2)
+      print(TwoBandsOnePhoton_Eigen_A2_eV)
+      Intensity_el = 0.5 * c * epsilon_0 * element ** 2 * RefractiveIndex
+      # plt.scatter(np.ones(np.size(TwoBandsTwoPhotons_Eigen_eV))*element, TwoBandsTwoPhotons_Eigen_eV, c="black", s=1)
+      plt.scatter(unit * np.ones(np.size(TwoBandsOnePhoton_Eigen_A2_eV)) * Intensity_el, TwoBandsOnePhoton_Eigen_A2_eV,
+                  c="grey", s=1)
+
+
       #plt.scatter(np.ones(np.size(TwoBandsOnePhoton_Eigen_eV))*element, TwoBandsOnePhoton_Eigen_eV, c="black", s=1)
       ## THIS IS THE MOST IMPORTANT PART.
-      plt.scatter(unit * np.ones(np.size(TwoBandsOnePhoton_Eigen_eV))*Intensity_el, TwoBandsOnePhoton_Eigen_eV, c="black", s=1)
+      plt.scatter(unit * np.ones(np.size(TwoBandsOnePhoton_Eigen_A2_eV))*Intensity_el, TwoBandsOnePhoton_Eigen_eV, c="black", s=1)
   Intensity_SI  = unit * 0.5*c*epsilon_0*Efield_SI**2*RefractiveIndex
   if(ShowKeldyshStark):
     plt.plot(Efield_SI,  0.5*EgapEff_t/e, 'r-',    label=r'$E_g^{eff}$, Keldysh-Stark (1964)')
@@ -286,8 +299,8 @@ def SiliconLDAbandGap(): #{{{
   
   for element in Efield_SI:
       print(element)
-      FourBandsOnePhoton_Eigen       = Stark4bands1photon_EnergyShift_eigen(Field_SI_to_AU(element*np.sqrt(RefractiveIndex)), omega_AU, E_gap_AU, DME)
-      FourBandsOnePhoton_Eigen_eV    = Energy_Hartree_to_eV(FourBandsOnePhoton_Eigen)
+      FourBandsOnePhoton_Eigen       = libStark.Stark4bands1photon_EnergyShift_eigen(au.Field_SI_to_AU(element*np.sqrt(RefractiveIndex)), omega_AU, E_gap_AU, DME)
+      FourBandsOnePhoton_Eigen_eV    = au.Energy_Hartree_to_eV(FourBandsOnePhoton_Eigen)
       print(FourBandsOnePhoton_Eigen_eV)
       Intensity_el  = 0.5*c*epsilon_0*element**2*RefractiveIndex
       #plt.scatter(np.ones(np.size(FourBandsOnePhoton_Eigen_eV))*element, FourBandsOnePhoton_Eigen_eV, c="black", s=1)
@@ -324,8 +337,8 @@ def SiliconLDAbandGap(): #{{{
   #print Efield_SI
   for element in Efield_SI: 
       print(element)
-      TwoBandsTwoPhotons_Eigen       = Stark2bands2photons_EnergyShift_eigen(Field_SI_to_AU(element*np.sqrt(RefractiveIndex)), omega_AU, E_gap_AU, DME)
-      TwoBandsTwoPhotons_Eigen_eV    = Energy_Hartree_to_eV(TwoBandsTwoPhotons_Eigen)
+      TwoBandsTwoPhotons_Eigen       = libStark.Stark2bands2photons_EnergyShift_eigen(au.Field_SI_to_AU(element*np.sqrt(RefractiveIndex)), omega_AU, E_gap_AU, DME)
+      TwoBandsTwoPhotons_Eigen_eV    = au.Energy_Hartree_to_eV(TwoBandsTwoPhotons_Eigen)
       print(TwoBandsTwoPhotons_Eigen_eV)
       Intensity_el  = 0.5*c*epsilon_0*element**2*RefractiveIndex
       #plt.scatter(np.ones(np.size(TwoBandsTwoPhotons_Eigen_eV))*element, TwoBandsTwoPhotons_Eigen_eV, c="black", s=1)
@@ -354,21 +367,21 @@ def SiliconLDAbandGap(): #{{{
   plt.savefig(filename+"_TwoBandsTwoPhotons.eps")
   plt.show()
   
-  #plt.semilogx(Efield_SI, Energy_Hartree_to_eV(EgapShift_AU), 'b-', label=r'Floquet $E_g$ (2016)')
-  #plt.semilogx(Efield_SI, Energy_Hartree_to_eV(E1-E2), 'b-', label=r"$E_g + \Delta E_{Stark}=E_1-E_2$")
+  #plt.semilogx(Efield_SI, au.Energy_Hartree_to_eV(EgapShift_AU), 'b-', label=r'Floquet $E_g$ (2016)')
+  #plt.semilogx(Efield_SI, au.Energy_Hartree_to_eV(E1-E2), 'b-', label=r"$E_g + \Delta E_{Stark}=E_1-E_2$")
   
   
-  #plt.semilogx(Efield_SI, Energy_Hartree_to_eV(E1), 'k--', label="Floquet bands")
-  #plt.semilogx(Efield_SI, Energy_Hartree_to_eV(E2), 'k--')
-  #plt.semilogx(Efield_SI, Energy_Hartree_to_eV(E3), 'k--')
-  #plt.semilogx(Efield_SI, Energy_Hartree_to_eV(E4), 'k--')
-  #plt.semilogx(Efield_SI, Energy_Hartree_to_eV(E5), 'k--')
-  #plt.semilogx(Efield_SI, Energy_Hartree_to_eV(E6), 'k--')
+  #plt.semilogx(Efield_SI, au.Energy_Hartree_to_eV(E1), 'k--', label="Floquet bands")
+  #plt.semilogx(Efield_SI, au.Energy_Hartree_to_eV(E2), 'k--')
+  #plt.semilogx(Efield_SI, au.Energy_Hartree_to_eV(E3), 'k--')
+  #plt.semilogx(Efield_SI, au.Energy_Hartree_to_eV(E4), 'k--')
+  #plt.semilogx(Efield_SI, au.Energy_Hartree_to_eV(E5), 'k--')
+  #plt.semilogx(Efield_SI, au.Energy_Hartree_to_eV(E6), 'k--')
   
-  #plt.semilogx(Efield_SI, Energy_Hartree_to_eV(ENC1), 'b--', label="Floquet bands")
-  #plt.semilogx(Efield_SI, Energy_Hartree_to_eV(ENC2), 'b--')
-  #plt.semilogx(Efield_SI, Energy_Hartree_to_eV(ENC3), 'b--')
-  #plt.semilogx(Efield_SI, Energy_Hartree_to_eV(ENC4), 'b--')
+  #plt.semilogx(Efield_SI, au.Energy_Hartree_to_eV(ENC1), 'b--', label="Floquet bands")
+  #plt.semilogx(Efield_SI, au.Energy_Hartree_to_eV(ENC2), 'b--')
+  #plt.semilogx(Efield_SI, au.Energy_Hartree_to_eV(ENC3), 'b--')
+  #plt.semilogx(Efield_SI, au.Energy_Hartree_to_eV(ENC4), 'b--')
   
   print("##### PREPARING NUMERICAL INTEGRATION OF KELDYSH CONTOUR by VP Zhukov.")
   plt.figure()

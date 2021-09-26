@@ -309,7 +309,7 @@ def Stark2bands1photons_EnergyShift_eigen_A2(Efield_AU, omega_AU, E_gap_AU, DME_
         [[E_gap_AU / 2. - omega_AU + A2over4, -omega_AU + A2over4, 0, AMover2, Efield_AU**2/4., Efield_AU**2/4.],
          [- omega_AU + A2over4, -E_gap_AU / 2. - omega_AU + A2over4, AMover2c, 0, Efield_AU**2/4., Efield_AU**2/4.],
 
-         [0, AMover2, E_gap_AU / 2. + 2*A2over4, A2over4, 0, AMover2],
+         [0, AMover2, E_gap_AU / 2. + A2over4, A2over4, 0, AMover2],
          [AMover2c, 0, A2over4, -0.5 * E_gap_AU + A2over4, AMover2c, 0],
 
          [Efield_AU**2/4., Efield_AU**2/4., 0, AMover2, 0.5 * E_gap_AU + omega_AU + A2over4, omega_AU + A2over4],

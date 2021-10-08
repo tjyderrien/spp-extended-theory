@@ -1,7 +1,7 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2013-2019 T. J.-Y. Derrien
+# Copyright (C) 2013-2021 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -33,10 +33,13 @@
 
 # IMPORT CUSTOM LIBRARIES
 
-from spp_extended_theory.Libs.libPlotting import *
+import numpy as np
+import matplotlib.pyplot as plt
+import cmath
+from spp_extended_theory.Libs import libPlotting
 # from libKeldysh import *
-from spp_extended_theory.Libs.libSPP import *
-from spp_extended_theory.Libs.libSipe import *
+from spp_extended_theory.Libs import libSPP
+from spp_extended_theory.Libs import libSipe
 
 #from plotGraph import *
 
@@ -80,8 +83,8 @@ def plotSipe1D_sectionX(wavelength, epsilon, f=0.1e0, s=0.4e0, theta=0e0, filena
 
         #print "kappax = "+str(kappax)
         #print idtab
-        etaPresult[idtab] = etap(theta, f, s, epsilon, kappa, kappap, kappam)
-        etaSresult[idtab] = etas(theta, f, s, epsilon, kappa, kappap, kappam)
+        etaPresult[idtab] = libSipe.etap(theta, f, s, epsilon, kappa, kappap, kappam)
+        etaSresult[idtab] = libSipe.etas(theta, f, s, epsilon, kappa, kappap, kappam)
         #print etaresult[idtab]
         #print "eta = "+str(etaresult)
         idtab = idtab+1
@@ -92,7 +95,7 @@ def plotSipe1D_sectionX(wavelength, epsilon, f=0.1e0, s=0.4e0, theta=0e0, filena
     plt.xlabel(r'$\kappa$')
     plt.ylabel(r'$\eta$')
     #plt.title(r'$\theta=$'+str(int(theta*180./np.pi))+' deg')
-    plt.title(r'$s=$'+str(round(s,1)))
+    plt.title(r'$\lambda=$'+str(int(round(wavelength*1E9,0)))+r' nm, $s=$'+str(round(s,1)))
     print(kapparange.shape, etaSresult.shape)
     plt.plot(kapparange, etaPresult, '-', label=r'$\eta(\kappa_x; \kappa_y=0)$') #$\eta_P$')
     plt.plot(kapparange, etaSresult, '-', label=r'$\eta(\kappa_y; \kappa_x=0)$')
@@ -100,6 +103,7 @@ def plotSipe1D_sectionX(wavelength, epsilon, f=0.1e0, s=0.4e0, theta=0e0, filena
     plt.grid()
     plt.legend(fancybox=True, framealpha=1)
     plt.savefig(filename+'-s'+str(s)+'.eps')
+    plt.savefig(filename + '-s' + str(s) + '.png')
     plt.show()
     #exit()
 #}}}
@@ -193,16 +197,16 @@ def plotSipeFromDatabase(select, query2, wavelength, numberofkpoints=100, query=
   print(Header+"Size: "+str(matrixsize))
   index = 0
   for m in np.arange(0,(kx.size),1):
-	  #idy=0
-	  for n in np.arange(0,ky.size,1):
-		  #print "[Debug]"+str(m)+", "+str(n)
-		  kappa = np.array([kx[m], ky[n]])
-		  kappai = np.array([-cmath.sin(theta), 0])
-		  kappap = kappai + kappa; kappam = kappai - kappa
-		  etaSipe[m,n] = etap(theta, f, s, epsilon2[materialIndex], kappa, kappap, kappam)
-		  #idy=idy+1
-		  index = index + 1
-                  print(Header+"** Progress: "+str(round(float(index)/float(matrixsize)*100.))+" percents.")
+    #idy=0
+    for n in np.arange(0,ky.size,1):
+        #print "[Debug]"+str(m)+", "+str(n)
+        kappa = np.array([kx[m], ky[n]])
+        kappai = np.array([-cmath.sin(theta), 0])
+        kappap = kappai + kappa; kappam = kappai - kappa
+        etaSipe[m,n] = libSipe.etap(theta, f, s, epsilon2[materialIndex], kappa, kappap, kappam)
+        #idy=idy+1
+        index = index + 1
+        print(Header+"** Progress: "+str(round(float(index)/float(matrixsize)*100.))+" percents.")
   print(etaSipe)
 
   maximum = np.amax(etaSipe)
@@ -282,7 +286,7 @@ def plotGenericSipeMaps(kx_value, ky_value, epsilon_precision = 0.05, theta=0., 
           kappai = np.array([-cmath.sin(theta), 0.])
           kappap = kappai + kappa; kappam = kappai - kappa
           try:
-            etaSipe[m,n,j,k] = etap(theta, f, s, epsilon2[j,k], kappa, kappap, kappam)
+            etaSipe[m,n,j,k] = libSipe.etap(theta, f, s, epsilon2[j,k], kappa, kappap, kappam)
           except:
             etaSipe[m,n,j,k] = 0.
             print(Header+"** Exception case was met.")
@@ -568,31 +572,56 @@ def plotSipeMaps_KovaricekSi_fs(wavelength=1030e-9, epsSi0=12.80259+0.0109j, Nex
     EpsSiExc = Drude(wavelength, Nexc, epsSi0, nu, meff)
     #print nCr
     plotSipe1D_sectionX(wavelength, EpsSiExc, filling, shape, angle, filename)
+
+def Kovaricek2019figures(): 
+    ## One needs: 
+    ## - Period(Si0, N_exc, 1030e-9) #Done by hand. 
+    plotSipeMaps_KovaricekSi_fs(1030e-9, 12.80259+0.0109j, 0E27, 1.0e-15, "Kovaricek_Si_1030nm")
+    ### - Period(l-Si, 0, 1030e-9)    # 
+    plotSipeMaps_KovaricekSi_fs(1030e-9, -16.90553111+60.8265925j, 0E27, 1.0e-15, "Kovaricek_LiquidSi_1030nm")
+
+    ## - Period(Si0, N_exc, 1064e-9) # TODO 
+    plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 0E27, 1.0e-15, "Kovaricek_Si_1064nm")
+    ### - Period(l-Si, 0, 1064e-9)
+    #plotSipeMaps_KovaricekSi_fs(1064e-9, -16.92943996+62.91836213j, 0E27, 1.0e-15, "Kovaricek_LiquidSi_1064nm")
+
+    plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 1E26, 1.0e-15, "Kovaricek_Si_1064nm_Ne1E26")
+    plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 1E27, 1.0e-15, "Kovaricek_Si_1064nm_Ne1E27")
+    plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 1.5E27, 1.0e-15, "Kovaricek_Si_1064nm_Ne1.5E27")
+    plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 2E27  , 1.0e-15, "Kovaricek_Si_1064nm_Ne2E27")
+    plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 2.5E27  , 1.0e-15, "Kovaricek_Si_1064nm_Ne2.5E27")
+    plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 2.75E27  , 1.0e-15, "Kovaricek_Si_1064nm_Ne2.75E27")
+    plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 3E27  , 1.0e-15, "Kovaricek_Si_1064nm_Ne3E27")
+    plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 3.5E27  , 1.0e-15, "Kovaricek_Si_1064nm_Ne3.5E27")
+    plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 3.75E27  , 1.0e-15, "Kovaricek_Si_1064nm_Ne3.75E27")
+    plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 4E27  , 1.0e-15, "Kovaricek_Si_1064nm_Ne4E27")
+    plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 4.5E27  , 1.0e-15, "Kovaricek_Si_1064nm_Ne4.5E27")
+    plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 5E27  , 1.0e-15, "Kovaricek_Si_1064nm_Ne5E27")
+    plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 5.5E27  , 1.0e-15, "Kovaricek_Si_1064nm_Ne5.5E27")
+    plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 6E27  , 1.0e-15, "Kovaricek_Si_1064nm_Ne6E27")
+    plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 7E27  , 1.0e-15, "Kovaricek_Si_1064nm_Ne7E27")
+    plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 1E28  , 1.0e-15, "Kovaricek_Si_1064nm_Ne1E28")
+
+def plotSladek2021_Si(wavelength=1030e-9, filename="Sladek-Sipe-Si-1030nm-"):
+    unit = 1E-9
+    #wavelength = 1030E-9
+    wavelength_nm = wavelength * 1E9 # 1026.0 #1064.0
+    select = str(int(wavelength_nm))
+    request = select+".0"
+    kpointnumber = 500
+    filling = 0.1
+    shape = 0.4
+    angle = 0.
+    #epsSi0 = 
+    #nu=CollFreqTime**-1
+    #meff=0.18
+    #EpsSiExc = Drude(wavelength, Nexc, epsSi0, nu, meff)
+    #print nCr
+    eps_a_Si=13.0522658011+0.j
+    eps_Si=12.80259+0.0109j
+    plotSipe1D_sectionX(wavelength, eps_a_Si, filling, shape, angle, filename+"a-Si")
+    plotSipe1D_sectionX(wavelength, eps_Si, filling, shape, angle, filename+"c-Si")
+
+plotSladek2021_Si()
     
-## One needs: 
-## - Period(Si0, N_exc, 1030e-9) #Done by hand. 
-plotSipeMaps_KovaricekSi_fs(1030e-9, 12.80259+0.0109j, 0E27, 1.0e-15, "Kovaricek_Si_1030nm")
-### - Period(l-Si, 0, 1030e-9)    # 
-plotSipeMaps_KovaricekSi_fs(1030e-9, -16.90553111+60.8265925j, 0E27, 1.0e-15, "Kovaricek_LiquidSi_1030nm")
-
-## - Period(Si0, N_exc, 1064e-9) # TODO 
-plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 0E27, 1.0e-15, "Kovaricek_Si_1064nm")
-### - Period(l-Si, 0, 1064e-9)
-#plotSipeMaps_KovaricekSi_fs(1064e-9, -16.92943996+62.91836213j, 0E27, 1.0e-15, "Kovaricek_LiquidSi_1064nm")
-
-plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 1E26, 1.0e-15, "Kovaricek_Si_1064nm_Ne1E26")
-plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 1E27, 1.0e-15, "Kovaricek_Si_1064nm_Ne1E27")
-plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 1.5E27, 1.0e-15, "Kovaricek_Si_1064nm_Ne1.5E27")
-plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 2E27  , 1.0e-15, "Kovaricek_Si_1064nm_Ne2E27")
-plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 2.5E27  , 1.0e-15, "Kovaricek_Si_1064nm_Ne2.5E27")
-plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 2.75E27  , 1.0e-15, "Kovaricek_Si_1064nm_Ne2.75E27")
-plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 3E27  , 1.0e-15, "Kovaricek_Si_1064nm_Ne3E27")
-plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 3.5E27  , 1.0e-15, "Kovaricek_Si_1064nm_Ne3.5E27")
-plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 3.75E27  , 1.0e-15, "Kovaricek_Si_1064nm_Ne3.75E27")
-plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 4E27  , 1.0e-15, "Kovaricek_Si_1064nm_Ne4E27")
-plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 4.5E27  , 1.0e-15, "Kovaricek_Si_1064nm_Ne4.5E27")
-plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 5E27  , 1.0e-15, "Kovaricek_Si_1064nm_Ne5E27")
-plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 5.5E27  , 1.0e-15, "Kovaricek_Si_1064nm_Ne5.5E27")
-plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 6E27  , 1.0e-15, "Kovaricek_Si_1064nm_Ne6E27")
-plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 7E27  , 1.0e-15, "Kovaricek_Si_1064nm_Ne7E27")
-plotSipeMaps_KovaricekSi_fs(1064e-9, 12.6893281+0.0067935529j, 1E28  , 1.0e-15, "Kovaricek_Si_1064nm_Ne1E28")
+    

@@ -247,26 +247,28 @@ def Stark4bands1photon_EnergyShift_notcorrected_numerical(Efield_AU, omega_AU, E
     return np.unique(roots)
 
 # We call a linear algebra library instead of using Filip solver.
-def Stark4bands1photon_EnergyShift_eigen(Efield_AU, omega_AU, E_gap_AU, DME_AU=1):
+def Stark4bands1photon_EnergyShift_eigen(Efield_AU, omega_AU, E_gap_AU, DME_AU=1, Enable_A2=False):
     M         = DME_AU
     Mbar      = np.conj(DME_AU)
     AMover2=Efield_AU*M/2.
     AMover2c=Efield_AU*Mbar/2.
+    A2over4 = Efield_AU ** 2 * omega_AU / 4 / pi
     matrix = np.array(
-        [[E_gap_AU/2.-omega_AU, -omega_AU, -omega_AU, -omega_AU, 0, AMover2, AMover2,AMover2,0,0,0,0], 
-         [-omega_AU, E_gap_AU/2.-omega_AU,-omega_AU, -omega_AU, AMover2c, 0, AMover2, AMover2, 0, 0, 0, 0], 
-         [-omega_AU, -omega_AU, -E_gap_AU/2.-omega_AU, -omega_AU, AMover2c, AMover2c, 0.,AMover2, 0, 0, 0, 0], 
-         [-omega_AU, -omega_AU, -0.5*E_gap_AU-omega_AU, -omega_AU, AMover2c, AMover2c, AMover2c, 0, 0, 0, 0, 0], 
-         [0, AMover2, AMover2, AMover2, E_gap_AU/2., 0, 0, 0, 0, AMover2, AMover2, AMover2],
-         [AMover2c, 0, AMover2, AMover2, 0, 0.5*E_gap_AU, 0, 0, AMover2c, 0, AMover2, AMover2], 
-         [AMover2c, AMover2c, 0, AMover2, 0, 0, -0.5*E_gap_AU, 0, AMover2c, AMover2c, 0, AMover2],
-         [AMover2c, AMover2c, AMover2c, 0, 0, 0, 0, -0.5*E_gap_AU, AMover2c, AMover2c, AMover2c, 0],
-         [0, 0, 0, 0, 0, AMover2, AMover2, AMover2, 0.5*E_gap_AU+omega_AU, omega_AU, omega_AU, omega_AU], 
-         [0, 0, 0, 0, AMover2c, 0, AMover2, AMover2, omega_AU, 0.5*E_gap_AU+omega_AU, omega_AU, omega_AU], 
-         [0, 0, 0, 0, AMover2c, AMover2c, 0, AMover2, omega_AU, omega_AU, -0.5*E_gap_AU+omega_AU, omega_AU], 
-         [0, 0, 0, 0, AMover2c, AMover2c, AMover2c, 0, omega_AU, omega_AU, omega_AU, -0.5*E_gap_AU+omega_AU]])
-    
+        [[E_gap_AU / 2. - omega_AU + A2over4, -omega_AU + A2over4, -omega_AU + A2over4, -omega_AU + A2over4, 0, AMover2, AMover2, AMover2, A2over4, A2over4, A2over4, A2over4], 
+         [-omega_AU + A2over4, E_gap_AU/2.-omega_AU + A2over4,-omega_AU + A2over4, -omega_AU + A2over4, AMover2c, 0, AMover2, AMover2, A2over4, A2over4, A2over4, A2over4], 
+         [-omega_AU + A2over4, -omega_AU + A2over4, -E_gap_AU/2.-omega_AU + A2over4, -omega_AU + A2over4, AMover2c, AMover2c, 0.,AMover2, A2over4, A2over4, A2over4, A2over4], 
+         [-omega_AU + A2over4, -omega_AU + A2over4, -0.5*E_gap_AU-omega_AU + A2over4, -omega_AU + A2over4, AMover2c, AMover2c, AMover2c, 0, A2over4, A2over4, A2over4, A2over4], 
+         [0, AMover2, AMover2, AMover2, E_gap_AU/2. + A2over4, A2over4, A2over4, A2over4, 0, AMover2, AMover2, AMover2],
+         [AMover2c, 0, AMover2, AMover2, A2over4, 0.5*E_gap_AU + A2over4, A2over4, A2over4, AMover2c, 0, AMover2, AMover2], 
+         [AMover2c, AMover2c, 0, AMover2, A2over4, A2over4, -0.5*E_gap_AU + A2over4, A2over4, AMover2c, AMover2c, 0, AMover2],
+         [AMover2c, AMover2c, AMover2c, 0, A2over4, A2over4, A2over4, -0.5*E_gap_AU + A2over4, AMover2c, AMover2c, AMover2c, 0],
+         [A2over4, A2over4, A2over4, A2over4, 0, AMover2, AMover2, AMover2, 0.5*E_gap_AU + omega_AU + A2over4, omega_AU + A2over4, omega_AU + A2over4, omega_AU + A2over4], 
+         [A2over4, A2over4, A2over4, A2over4, AMover2c, 0, AMover2, AMover2, omega_AU + A2over4, 0.5*E_gap_AU + omega_AU + A2over4, omega_AU + A2over4, omega_AU + A2over4], 
+         [A2over4, A2over4, A2over4, A2over4, AMover2c, AMover2c, 0, AMover2, omega_AU + A2over4, omega_AU + A2over4, -0.5*E_gap_AU+omega_AU + A2over4, omega_AU + A2over4], 
+         [A2over4, A2over4, A2over4, A2over4, AMover2c, AMover2c, AMover2c, 0, omega_AU + A2over4, omega_AU + A2over4, omega_AU + A2over4, -0.5*E_gap_AU+omega_AU + A2over4]])
+    # TODO: validation by - determinant of diagonalized matrix should be 0
     #print np.size(matrix)
+   
     
     w, v = LA.eig(matrix)
     return w

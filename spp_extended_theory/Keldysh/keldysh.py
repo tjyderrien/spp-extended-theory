@@ -83,7 +83,7 @@ def TestKeldysh(Egap, meff, PeakField, wavelength, order): #{{{
 #}}}
 
 ## Test the Keldysh model using silicon band gap given by the LDA functionals. Also plots Stark shift as function of the laser intensity. 
-def SiliconLDAbandGap(): #{{{
+def SiliconLDAbandGap(Enable_A2=False): #{{{
   print("Defining Si material parameters...")
   unit = 1E-4 #W/m2 to W/cm2.
 
@@ -94,7 +94,7 @@ def SiliconLDAbandGap(): #{{{
   order=200
   Efield_min      = 0E0 
   Efield_max      = 4E10 #V/m
-  num_fields=1200
+  num_fields=100
   
   LogScale        =False 
   ShowKeldyshStark=False #Keldysh-Stark is not applicable in tunneling regime. Therefore, it is better to remove it, as it is misleading. NMB: the E_eff in Keldysh theory is applicable only from multiphotonic case.
@@ -259,7 +259,8 @@ def SiliconLDAbandGap(): #{{{
       TwoBandsOnePhoton_Eigen_A2 = libStark.Stark2bands1photons_EnergyShift_eigen_A2(au.Field_SI_to_AU(element*np.sqrt(RefractiveIndex)), omega_AU, E_gap_AU, DME)
       TwoBandsOnePhoton_Eigen_A2_eV = au.Energy_Hartree_to_eV(TwoBandsOnePhoton_Eigen_A2)
       print(TwoBandsOnePhoton_Eigen_A2_eV)
-      Intensity_el = 0.5 * c * epsilon_0 * element ** 2 * RefractiveIndex
+
+      Intensity_el = 0.5 * c * epsilon_0 * element ** 2 * RefractiveIndex #TODO: internal field vs external intensity warning!
       # plt.scatter(np.ones(np.size(TwoBandsTwoPhotons_Eigen_eV))*element, TwoBandsTwoPhotons_Eigen_eV, c="black", s=1)
       plt.scatter(unit * np.ones(np.size(TwoBandsOnePhoton_Eigen_A2_eV)) * Intensity_el, TwoBandsOnePhoton_Eigen_A2_eV,
                   c="grey", s=1)
@@ -299,12 +300,18 @@ def SiliconLDAbandGap(): #{{{
   
   for element in Efield_SI:
       print(element)
-      FourBandsOnePhoton_Eigen       = libStark.Stark4bands1photon_EnergyShift_eigen(au.Field_SI_to_AU(element*np.sqrt(RefractiveIndex)), omega_AU, E_gap_AU, DME)
+      FourBandsOnePhoton_Eigen       = libStark.Stark4bands1photon_EnergyShift_eigen(au.Field_SI_to_AU(element*np.sqrt(RefractiveIndex)), omega_AU, E_gap_AU, DME, Enable_A2=False)
       FourBandsOnePhoton_Eigen_eV    = au.Energy_Hartree_to_eV(FourBandsOnePhoton_Eigen)
       print(FourBandsOnePhoton_Eigen_eV)
-      Intensity_el  = 0.5*c*epsilon_0*element**2*RefractiveIndex
       #plt.scatter(np.ones(np.size(FourBandsOnePhoton_Eigen_eV))*element, FourBandsOnePhoton_Eigen_eV, c="black", s=1)
+      Intensity_el  = 0.5*c*epsilon_0*element**2*RefractiveIndex
       plt.scatter(unit * np.ones(np.size(FourBandsOnePhoton_Eigen_eV))*Intensity_el, FourBandsOnePhoton_Eigen_eV, c="black", s=1)
+
+      FourBandsOnePhoton_Eigen = libStark.Stark4bands1photon_EnergyShift_eigen(
+          au.Field_SI_to_AU(element * np.sqrt(RefractiveIndex)), omega_AU, E_gap_AU, DME, Enable_A2=True)
+      FourBandsOnePhoton_Eigen_eV = au.Energy_Hartree_to_eV(FourBandsOnePhoton_Eigen)
+      plt.scatter(unit * np.ones(np.size(FourBandsOnePhoton_Eigen_eV)) * Intensity_el, FourBandsOnePhoton_Eigen_eV,
+                  c="grey", s=1)
   Intensity_SI  = unit * 0.5*c*epsilon_0*Efield_SI**2*RefractiveIndex
   #plt.plot(Efield_SI, 0.5*EgapEff_t/e, 'r-', label=r'$E_g^{eff}$, Keldysh-Stark (1964)')
   #plt.plot(Efield_SI, -0.5*EgapEff_t/e, 'r-')
@@ -322,11 +329,18 @@ def SiliconLDAbandGap(): #{{{
             plt.scatter(np.ones(np.size(E_gap_SI/e))*Intensity_min, np.real(E_gap_SI/e/2.)-MPI*h*c/wavelength/e, c="blue",   s=GSpointSize, label="non-interacting replicates")
             plt.scatter(np.ones(np.size(-E_gap_SI/e))*Intensity_min, np.real(-E_gap_SI/e/2.)+MPI*h*c/wavelength/e, c="red",  s=GSpointSize, label="non-interacting replicates")
             plt.scatter(np.ones(np.size(-E_gap_SI/e))*Intensity_min, np.real(-E_gap_SI/e/2.)-MPI*h*c/wavelength/e, c="blue", s=GSpointSize, label="non-interacting replicates")
-  
-  plt.title("4 bands (deg. 2), 1 photon transition")
+
+  if(Enable_A2):
+      Enabled_A2_string=r", $A^2$ ON"
+      Enable_A2_filename = "A2"
+  else:
+      Enable_A2_string=0.
+      Enable_A2_filename = ""
+  plt.title("4 bands (deg. 2), 1 photon transition"+Enabled_A2_string)
   #plt.legend(loc='best')
   plt.tight_layout()
-  plt.savefig(filename+"_FourBandsOnePhoton.eps")
+
+  plt.savefig(filename+"_FourBandsOnePhoton"+Enable_A2_filename+".eps")
   #plt.show()
   
   # PLOTTING THE 2-bands 2-photon Stark effect
@@ -677,7 +691,7 @@ def SilicaGruzdev2014(): #{{{
 #SiliconTunneling()
 
 if __name__ == "__main__":
-    SiliconLDAbandGap()
+    SiliconLDAbandGap(Enable_A2=True)
     #SilicaGulley2012()
     #SilicaGruzdev2014()
     #SilicaGraef2017()

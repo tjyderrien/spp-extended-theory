@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2016-2021 T. J.-Y. Derrien
+# Copyright (C) 2016-2021 T. J.-Y. Derrien, K. Gazdova
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -252,7 +252,10 @@ def Stark4bands1photon_EnergyShift_eigen(Efield_AU, omega_AU, E_gap_AU, DME_AU=1
     Mbar      = np.conj(DME_AU)
     AMover2=Efield_AU*M/2.
     AMover2c=Efield_AU*Mbar/2.
-    A2over4 = Efield_AU ** 2 * omega_AU / 4 / pi
+    if(Enable_A2):
+        A2over4 = Efield_AU ** 2 * omega_AU / 4 / pi
+    else:
+        A2over4 = 0.
     matrix = np.array(
         [[E_gap_AU / 2. - omega_AU + A2over4, -omega_AU + A2over4, -omega_AU + A2over4, -omega_AU + A2over4, 0, AMover2, AMover2, AMover2, A2over4, A2over4, A2over4, A2over4], 
          [-omega_AU + A2over4, E_gap_AU/2.-omega_AU + A2over4,-omega_AU + A2over4, -omega_AU + A2over4, AMover2c, 0, AMover2, AMover2, A2over4, A2over4, A2over4, A2over4], 

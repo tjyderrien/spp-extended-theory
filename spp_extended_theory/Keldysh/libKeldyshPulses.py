@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2013-2020 T. J.-Y. Derrien
+# Copyright (C) 2013-2021 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -54,12 +54,12 @@ def PulseGaussianTemporalShape(t, tau, PeakIntensity, t0=0.):
 # @param PeakField: peak of the electric field envelope (V/m) (scalar only)
 # @param t0: central instant for the laser pulse (t0=0 by default)
 # @param PulseDelay: temporal delay between 2 pulses (in seconds)
-def PulseSquaredSinTemporalShape(t, tau, PeakField, wavelength, CEP=0., t0=0., PulseDelay=0.):
+def PulseSquaredSinTemporalShape(t, tau, PeakField, wavelength, CEP=0., t0=0., PulseDelay=0., power=2):
   t1 = t0 + PulseDelay
   omega = 2e0*pi*c/wavelength
   H1 = step(t - t1 + tau) #! theer could be a mistake in pulse duration here!
   H2 = step(t - t1 - tau)
-  Envelope = PeakField*np.sin(pi*(t-t1-tau)/(2e0*tau))**2 * H1 * (1.-H2)
+  Envelope = PeakField*np.sin(pi*(t-t1-tau)/(2e0*tau))**power * H1 * (1.-H2)
   Phase = np.exp(1e0j*(omega*t+CEP))
   Field = Envelope * Phase
   return Envelope, Field

@@ -28,7 +28,8 @@
 #from libSPP import *
 #from libUnits import *
 #from libDatabase import *
-from libImportOpticalData import *
+from spp_extended_theory.Libs.libImportOpticalData import *
+import sys
 
 #==============================
 

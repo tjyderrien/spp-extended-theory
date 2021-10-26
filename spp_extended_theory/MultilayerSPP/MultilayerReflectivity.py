@@ -1,9 +1,9 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 #-*- coding: utf-8 -*-
 ## @package MultilayerReflectivity 
 # Three-layer reflectivity, transmission and absorptivity
 
-# Copyright (C) 2013-2020 T. J.-Y. Derrien
+# Copyright (C) 2013-2021 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,20 +18,21 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>
 
-from libMaterials import *
+from spp_extended_theory.Libs.libMaterials import *
 import matplotlib.pyplot as plt
 
 ## EXAMPLE OF USAGE 
-wavelength=1064e-9
+wavelength=1030e-9
 
 ## TODO: replace this by a function taking data in MaterialOpticalData.csv !
 epsAir=1.;
 if(wavelength == 1064e-9): 
     epsMo=-14.083065233570098+20.789041764340013j; epsSiO2=1.4496**2; epsSLG = 2.2889 + 0.000014899j
 elif(wavelength == 800e-9): 
-    epsMo=2.08+24.52j; epsSiO2=1.4533**2; epsSLG = 2.3018 + 0.0000075160j
+    epsMo=2.08+24.52j; epsSiO2=1.4533**2; epsSLG = 2.3018 + 0.0000075160j; epsAu = -26.154188586+1.8503881331j; epsBK7=(1.5108+9.2656e-9j)**2
 elif(wavelength==1030e-9):
     epsSi   = 12.80259+0.0109j
+    epsSiamorphous=13.0522658011
     epsSiO2 = 2.1026565205
     epsTi   = -4.2656+27.277j
     epsMo   = -11.6291789477+20.6107572133j
@@ -40,33 +41,34 @@ elif(wavelength==400e-9):
     epsSiO2=2.1614446988; #epsSLG = 2.2889 + 0.000014899j
 
 # Medium 1: External medium. 
-eps1 = epsAir        #thin film
+eps1 = epsAir
 # Medium 2: Thin film. 
-eps2 = epsMo # | epsSiO2       #epsBK7 #environment | substrate
+eps2 = epsSiamorphous # | epsSiO2       #epsBK7 #environment | substrate
 # Medium 3: Substrate
-eps3 = epsSLG       #environment | substrate
+eps3 = epsSi       #environment | substrate
 # Note: Inverting eps2 and eps3 should have no effect on the possible modes, but only on field amplification. 
-
 
 #if(wavelength == 1064e-9): 
     #eps2=-14.083065233570098+20.789041764340013j; eps3=1.4496**2
 #elif(wavelength == 800e-9): 
     #eps2=2.08+24.52j; eps3=1.4533**2
-thickness_log = np.linspace(-9, np.log10(250e-9), 1000)
+thickness_log = np.linspace(np.log10(1E-9), np.log10(500e-9), 10000)
 thickness2 = np.power(10., thickness_log)
 
 R = BiLayerReflectivity(wavelength, eps1, eps2, eps3, thickness2)
 T = BiLayerTransmission(wavelength, eps1, eps2, eps3, thickness2)
 A = 1.-R-T
-filename = "Air-Si-Air-"+str(int(1E9*wavelength))+"-Reflectivity"
+filename = "Air-aSi-cSi-"+str(int(1E9*wavelength))+"-Reflectivity"
 
 plt.figure()
 plt.xlabel("Film thickness (nm)")
 plt.ylabel("Reflectivity")
-plt.plot(1E9*thickness2, R, label="R")
-plt.plot(1E9*thickness2, T, label="T")
-plt.plot(1E9*thickness2, A, label="A")
+plt.semilogx(1E9*thickness2, R, label="R")
+plt.semilogx(1E9*thickness2, T, label="T")
+# plt.semilogx(1E9*thickness2, A, label="A")
 plt.legend(loc="best")
 plt.grid()
 plt.savefig(filename+".eps")
+plt.savefig(filename+".png")
+plt.tight_layout()
 plt.show()

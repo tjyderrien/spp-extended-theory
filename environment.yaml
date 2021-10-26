@@ -8,6 +8,7 @@ dependencies:
   - python=3.6
   - numpy=1.19.4
   - scipy
+  - xarray
 # for interactive work
   - ipython
   - jupyter>=1.0.0

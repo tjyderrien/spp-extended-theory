@@ -386,7 +386,7 @@ def ComputeFloquetBandStructure(filename, nb_atoms, Z_electrons, kpoints, unocc_
     def H_perturb(t, omega_AU, Efield_AU, H_GS, matrixelements, Enable_A2=False):
         integral1_sum=0
         integral2_sum=0
-        assert (Enable_A2)
+#        assert (Enable_A2)
         if Enable_A2:
 #            integral1_sum=(np.add(H_GS, Efield_AU*np.cos(0.95*omega_AU*t)*matrixelements))
             for t in np.arange(tmin,tmax,dt):

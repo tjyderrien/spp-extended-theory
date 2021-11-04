@@ -26,16 +26,11 @@
 # - Keldysh-Corkum model, allowing for analytical treatment of mulltiwavelength fields [Physical Review Letters, 2017, 118, 173601]
 
 # IMPORT LIBRARIES
-from numpy import loadtxt
+# from numpy import loadtxt
 #from scipy.optimize import fsolve, root
 #from scipy.misc import factorial2, factorial
 #import cmath
-import matplotlib as mp
-import matplotlib.pyplot as plt
-from scipy.interpolate import interp2d, InterpolatedUnivariateSpline
-from matplotlib import rc
-# from pylab import *
-from scipy.constants import epsilon_0, e, m_e
+
 #from matplotlib.legend_handler import HandlerLine2D
 #import sys
 
@@ -53,11 +48,18 @@ from scipy.interpolate import interp2d, InterpolatedUnivariateSpline
 
 from spp_extended_theory.Keldysh.libUnits import *
 from spp_extended_theory.Libs.libDatabase import *
+from   octopus_slabs.Libs.libLogging         import init_logger
+logger = init_logger(__name__, verbose=True) #"plotFinalQuantities")
 
 # from matplotlib.legend_handler import HandlerLine2D
 import os
 
-PathPrefix = os.getcwd() #PathPrefix no longer needs to be defined in octopus-slabs, but is inherent to libKeldyshZhukov. 
+OctopusData=os.environ["QuantumLaPruns"]
+OctopusSources=os.environ["QuantumLaPsources"]
+sppextendedtheory=os.environ["spp_extended_theory"]
+
+PathPrefix = sppextendedtheory+"/spp_extended_theory/Keldysh/" #PathPrefix no longer needs to be defined in octopus-slabs, but is inherent to libKeldyshZhukov.
+logger.debug("Path prefix="+PathPrefix)
 
 rc('font',**{'family':'sans-serif','sans-serif':['Helvetica'], 'size':'14'})
 ## for Palatino and other serif fonts use:
@@ -227,7 +229,8 @@ def VP_ChooseLibrary(FieldEnvelope1, FieldEnvelope2, wavelength1, wavelength2, C
 # @param CEP2: can change to simple values (pi/2, pi/3, pi/4)
 # @param Egap: value in Joules
 # @param meff: effective mass (no dimension)
-def VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength1 = 800e-9, wavelength2 = 800e-9, CEP1=0., CEP2=0., Egap=2.56*e, meff=0.2226, crystal_density=5E28, PathPrefix=""): #{{{
+def VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength1 = 800e-9, wavelength2 = 800e-9, CEP1=0., CEP2=0.,
+                         Egap=2.56*e, meff=0.2226, crystal_density=5E28, PathPrefix=PathPrefix): #{{{
   Header="[libKeldyshZhukov] VZ_generateWpiTables: "
   
   # Printing info on the pulses
@@ -276,9 +279,10 @@ def VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength1 = 800e-9, w
 
   # 1. Choosing the right data file
   print(Header+"** Selecting the right VP Zhukov datafile...")
-  VZ_basename, Dictionnary, InvertedFields=VP_ChooseLibrary(FieldEnvelope1, FieldEnvelope2, wavelength1, wavelength2, CEP1, CEP2, 2.56*e, 0.2226, PathPrefix)
+  VZ_basename, Dictionnary, InvertedFields=VP_ChooseLibrary(FieldEnvelope1, FieldEnvelope2, wavelength1, wavelength2,
+                                                            CEP1, CEP2, 2.56*e, 0.2226, PathPrefix)
   
-  print(Header+"Path: "+VZ_basename)
+  logger.debug("Path: "+VZ_basename)
   #IndexWpi           = Dictionnary['wpi']
   #IndexLogWpi        = Dictionnary['log10wpi']
   #IndexFieldSquared1 = Dictionnary['FieldSquared1'] 

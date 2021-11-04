@@ -386,16 +386,19 @@ def ComputeFloquetBandStructure(filename, nb_atoms, Z_electrons, kpoints, unocc_
     def H_perturb(t, omega_AU, Efield_AU, H_GS, matrixelements, Enable_A2=False):
         integral1_sum=0
         integral2_sum=0
+#        assert (Enable_A2)
         if Enable_A2:
+#            integral1_sum=(np.add(H_GS, Efield_AU*np.cos(0.95*omega_AU*t)*matrixelements))
             for t in np.arange(tmin,tmax,dt):
                 integral1=Efield_AU**2*np.cos(omega_AU*t)**2*dt
                 integral1_sum=np.add(integral1_sum, integral1)
-            for t in np.arange(tmin,tmax,dt):
-                integral2=integral1_sum*dt
-                integral2_sum=np.add(integral2_sum, integral2)
+#           for t in np.arange(tmin,tmax,dt):
+#                integral2=integral1_sum*dt
+#                integral2_sum=np.add(integral2_sum, integral2)
         else:
-            integral2_sum=0
-        return np.add(np.add(H_GS, Efield_AU*np.cos(omega_AU*t)*matrixelements), integral2_sum)
+            integral1_sum=0
+#            integral2_sum=0
+        return np.add(np.add(H_GS, Efield_AU*np.cos(omega_AU*t)*matrixelements), integral1_sum)
         
     ## Returns the Rabi frequency for each possible dipolar transition (atomic units)
     # WARNING: 1/c error may be found (when employed convention is E=-1/c dA/dt). 
@@ -422,7 +425,7 @@ def ComputeFloquetBandStructure(filename, nb_atoms, Z_electrons, kpoints, unocc_
         logger.info("Info: shape of matrixelements: "+str(np.shape(matrixelements)))
     
     # Only cosmetic!
-    H0=H_perturb(tmin, omega_AU, Efield_AU, H_GS, matrixelements, Enable_A2=False) #this gives max of RabiFreq. Spanning fields will give the rest. 
+    H0=H_perturb(tmin, omega_AU, Efield_AU, H_GS, matrixelements, Enable_A2) #this gives max of RabiFreq. Spanning fields will give the rest.
     Rabi0=RabiMatrix_AU(tmin, omega_AU, Efield_AU, matrixelements)
     if(verbose==1):
         logger.info("Info: shape of H(t): "+str(np.shape(H0)))
@@ -430,10 +433,10 @@ def ComputeFloquetBandStructure(filename, nb_atoms, Z_electrons, kpoints, unocc_
 
     ## Temporal integration of H_Floquet^{m,n}
     def H_Floquet_mn_func(tmin, tmax, dt, omega_AU, MPI_number, n, Efield_AU, H_GS, matrixelements, Enable_A2=False): #{{{
-        H0_init = H_perturb(tmin, omega_AU, Efield_AU, H_GS, matrixelements, Enable_A2=False) #just to initialize
+        H0_init = H_perturb(tmin, omega_AU, Efield_AU, H_GS, matrixelements, Enable_A2) #just to initialize
         H0_sum = np.zeros(np.shape(H0_init))*0j #initialization
         for t in np.arange(tmin,tmax,dt): #integral
-            H0=H_perturb(t, omega_AU, Efield_AU, H_GS, matrixelements, Enable_A2=False) #H(t)
+            H0=H_perturb(t, omega_AU, Efield_AU, H_GS, matrixelements, Enable_A2) #H(t)
             H0_t1=omega_AU/2./np.pi * np.multiply(np.exp(1j*(MPI_number-n)*omega_AU*t), H0)*dt #e( i(m-n) omega t ) H(t)
             H0_sum = np.add(H0_sum, H0_t1) #have to integrate this
            
@@ -453,7 +456,7 @@ def ComputeFloquetBandStructure(filename, nb_atoms, Z_electrons, kpoints, unocc_
         #return np.min(np.min(Rabi_t)), np.max(np.max(Rabi_t))
             
 
-    H_Floquet_mn=H_Floquet_mn_func(tmin, tmax, dt, omega_AU, MPI_number, MPI_number, Efield_AU, H_GS, matrixelements)
+    H_Floquet_mn=H_Floquet_mn_func(tmin, tmax, dt, omega_AU, MPI_number, MPI_number, Efield_AU, H_GS, matrixelements, Enable_A2)
     
     #Rabi0=RabiMatrix_AU(tmin, omega_AU, Efield_AU, matrixelements) #Rabi(t) #This gives the maximum Rabi frequencies already. Spanning in field will give the right set of values. No need to span in time. 
     #RabiFloquet_AU_min, RabiFloquet_AU_max = Rabi_extrema(tmin, tmax, dt, omega_AU, Efield_AU, matrixelements)
@@ -520,7 +523,7 @@ def ComputeFloquetBandStructure(filename, nb_atoms, Z_electrons, kpoints, unocc_
         logger.info(np.shape(H_Floquet))
     for m in np.arange(-MPI_number,MPI_number+1,1):
         for n in np.arange(-MPI_number,MPI_number+1,1):
-            H_Floquet_mn=H_Floquet_mn_func(tmin, tmax, dt, omega_AU, m, n, Efield_AU, H_GS, matrixelements) #tensor of 4th order...
+            H_Floquet_mn=H_Floquet_mn_func(tmin, tmax, dt, omega_AU, m, n, Efield_AU, H_GS, matrixelements, Enable_A2) #tensor of 4th order...
             #print "m="+str(m)
             #print "m+MPI_number="+str(m+MPI_number)
             #print "n="+str(n)

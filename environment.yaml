@@ -7,6 +7,7 @@ dependencies:
 # use specific Python version to avoid possible incompatibilities
   - python=3.6
   - numpy=1.19.4
+  - scipy
   - xarray
 # for interactive work
   - ipython

@@ -322,7 +322,8 @@ def Stark2bands1photons_EnergyShift_eigen_A2(Efield_AU, omega_AU, E_gap_AU, DME_
     )
     # print np.size(matrix)
 
-    w, v = LA.eig(matrix)
+    # w, v = LA.eig(matrix)
+    w = LA.eigvalsh(matrix)
     return w
 
 def TestingNumericalSolver4():
@@ -536,7 +537,8 @@ def ComputeFloquetBandStructure(filename, nb_atoms, Z_electrons, kpoints, unocc_
     #print H_Floquet
 
     # 6.4: Diagonalize the Floquet matrix
-    replicas, v = LA.eig(H_Floquet)
+    # replicas, v = LA.eig(H_Floquet)
+    replicas = LA.eigvalsh(H_Floquet)
     #print replicas
     
     return eigenvalues, replicas, matrixelements

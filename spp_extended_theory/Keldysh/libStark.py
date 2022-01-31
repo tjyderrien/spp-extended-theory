@@ -390,8 +390,8 @@ def ComputeFloquetBandStructure(filename, nb_atoms, Z_electrons, kpoints, unocc_
 #        assert (Enable_A2)
         if Enable_A2:
 #            integral1_sum=(np.add(H_GS, Efield_AU*np.cos(0.95*omega_AU*t)*matrixelements))
-            for t in np.arange(tmin,tmax,dt):
-                integral1=Efield_AU**2*np.cos(omega_AU*t)**2*dt
+            for tprime in np.arange(tmin,tmax,dt):
+                integral1=Efield_AU**2*np.cos(omega_AU*tprime)**2*dt
                 integral1_sum=np.add(integral1_sum, integral1)
 #           for t in np.arange(tmin,tmax,dt):
 #                integral2=integral1_sum*dt

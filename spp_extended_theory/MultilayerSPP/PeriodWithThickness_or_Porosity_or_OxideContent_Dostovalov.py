@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2018-2019 T.J.-Y. Derrien
+# Copyright (C) 2018-2022 T.J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -543,7 +543,7 @@ def Burke_SymmetricModes(thickness_size):
     #elif(wavelength==400e-9):
         #epsSi = 30.8542847158+4.300769121j; epsAu = -23.3869252676+4.7651285889j
 
-def Derrien_HRLIPSSonMoFilms(wavelength, thickness_size): 
+def Derrien_HRLIPSSonAuFilms(wavelength, thickness_size):
     #wavelength=800e-9 #1030e-9
     if(wavelength==1030e-9): 
         epsSi = 12.80259+0.0109j; epsAu = -11.6291789477+20.6107572133j #Palik

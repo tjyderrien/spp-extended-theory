@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2018-2020 F. Preucil, T.J.-Y. Derrien
+# Copyright (C) 2018-2022 F. Preucil, T.J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ from scipy.optimize import root
 from itertools import product
 from time import time
 #from libMultilayerSPP import * #NOTE: this brings troubles. 
-from libMaterials import *
+from spp_extended_theory.Libs import libMaterials
 
 #to show info
 showinfo = True
@@ -54,6 +54,7 @@ elif(wavelength==1030e-9):
     epsSiO2 = 2.1026565205
     epsSi   = 12.80259+0.0109j
     epsAu   = -49.5738812793 + 3.8128269897j #Johnson
+    epsMo   = -11.6291789477 + 20.6107572133j #Palik
 
 epsAir      = 1.+0.j          #air
 
@@ -90,7 +91,7 @@ t = 100E-9 #thickness of the layer in meters
 #eps1 = MaxwellGarnett3(epsCr, epsCrO2, epsCr2O3, fraction) #TODO: develop Maxwell-Garnett3 in libMaterials.py. 
 
 # Film
-eps1 = epsAu
+eps1 = epsMo
 # Medium 2: substrate. 
 eps2 = epsAir       #epsBK7 #environment | substrate
 # Medium 3: environment #NOTE: checked by field amplification consistency

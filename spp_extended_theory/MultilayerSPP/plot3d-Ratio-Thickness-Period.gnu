@@ -1,3 +1,4 @@
+#!gnuplot
 reset
 set output 'plot3dPeriod.eps'
 set terminal postscript eps enhanced color font "Helvetica, 24"

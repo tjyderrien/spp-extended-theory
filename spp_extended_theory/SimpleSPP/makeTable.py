@@ -49,10 +49,6 @@ f.write("#1:Material1\t2:Material2\t3:Wavelength\t4:OldSPPactiveBool\t5:NewSPPac
 f.close()
 print("Exported. Please open file "+SppOutput+".")
 
-deltaBetaSPP = np.vectorize(deltaBetaSPP)
-deltaPeriodSPP = np.vectorize(deltaPeriodSPP)
-deltaLspp = np.vectorize(deltaLspp)
-
 ##  plot precision of Lambda over precision of epsilon
 
 #eta = np.arange(1e-3, 1e0, 1e-3)

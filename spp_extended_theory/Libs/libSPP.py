@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2013-2020 T. J.-Y. Derrien
+# Copyright (C) 2013-2022 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -676,7 +676,7 @@ def GenerateDatabase():
   database="MaterialOpticalDatabaseForPlasmonics.csv"
 
   # Build database array for choosing which material can be of interest to irradiate
-  dbarray = loadtxt(database, dtype='str', delimiter='\t')
+  dbarray = np.loadtxt(database, dtype='str', delimiter='\t')
 
   # To calculate symmetric SPP compatible interfaces, use the following line
   SPPactiveInterfacesArray = SPPactiveInterfaces(dbarray, '')
@@ -739,3 +739,6 @@ kzSPP = np.vectorize(kzSPP)
 DecayDepth = np.vectorize(DecayDepth)
 EffectiveIndex = np.vectorize(EffectiveIndex)
 #omega = np.vectorize(omega) 
+deltaBetaSPP = np.vectorize(deltaBetaSPP)
+deltaPeriodSPP = np.vectorize(deltaPeriodSPP)
+deltaLspp = np.vectorize(deltaLspp)

@@ -1,7 +1,7 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2013-2017 T. J.-Y. Derrien
+# Copyright (C) 2013-2022 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,7 +20,9 @@
 # Generates the table of SPP-active interfaces. 
 
 # IMPORT LIBRARIES
-from libSPP import *
+from spp_extended_theory.Libs import libSPP #libSPP import *
+from spp_extended_theory.Libs import libDatabase
+import numpy as np
 #from plotGraph import *
 
 # PHYSICAL INPUT
@@ -35,12 +37,12 @@ from libSPP import *
 #print example
 
 print("Generating SPP database...")
-SPPdb = GenerateDatabase()
+SPPdb = libSPP.GenerateDatabase()
 
 SppOutput = 'SPPactiveInterfaces.dat'
 print("Exporting to "+SppOutput+"...")
 print() 
-ExportToTxt(SPPdb, SppOutput)
+libDatabase.ExportToTxt(SPPdb, SppOutput)
 # Writing table caption
 f=open(SppOutput, "a")
 f.write("#1:Material1\t2:Material2\t3:Wavelength\t4:OldSPPactiveBool\t5:NewSPPactiveBool\t6:SPPperiod\t7:SPPperiodError\t8:SPPdecayDepth1\t9:SPPdecayDepth2\t10:Reflectivity\t11:OpticalPenetration1\t12:OpticalPenetration2\t13:SPPdecayLength\t14:eps1.real\t15:eps1.imag\t16:eps2.real\t17:eps2.imag\t18:SPPdepthImagk1\t19:SPPdepthImagk2")

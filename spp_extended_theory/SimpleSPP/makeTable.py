@@ -23,6 +23,7 @@
 from spp_extended_theory.Libs import libSPP #libSPP import *
 from spp_extended_theory.Libs import libDatabase
 import numpy as np
+import pandas as pd
 #from plotGraph import *
 
 # PHYSICAL INPUT
@@ -42,11 +43,22 @@ SPPdb = libSPP.GenerateDatabase()
 SppOutput = 'SPPactiveInterfaces.dat'
 print("Exporting to "+SppOutput+"...")
 print() 
-libDatabase.ExportToTxt(SPPdb, SppOutput)
+# libDatabase.ExportToTxt(SPPdb, SppOutput)
+
 # Writing table caption
-f=open(SppOutput, "a")
-f.write("#1:Material1\t2:Material2\t3:Wavelength\t4:OldSPPactiveBool\t5:NewSPPactiveBool\t6:SPPperiod\t7:SPPperiodError\t8:SPPdecayDepth1\t9:SPPdecayDepth2\t10:Reflectivity\t11:OpticalPenetration1\t12:OpticalPenetration2\t13:SPPdecayLength\t14:eps1.real\t15:eps1.imag\t16:eps2.real\t17:eps2.imag\t18:SPPdepthImagk1\t19:SPPdepthImagk2")
-f.close()
+# f=open(SppOutput, "a")
+
+data=pd.DataFrame(SPPdb)
+data=data.rename(columns={0: "Material1", 1: "Material2", 2: "Wavelength", 3: "OldSPPactiveBool", 
+                         4: "NewSPPactiveBool", 5: "SPPperiod", 6: "SPPperiodError", 7: "SPPdecayDepth1", 
+                         8: "SPPdecayDepth2", 9: "Reflectivity", 10: "OpticalPenetrationDepth1", 11: "OpticalPenetrationDepth2", 
+                         12: "SPPdecayLength", 13: "eps1.real", 14: "eps1.imag", 15: "eps2.real", 16: "eps2.imag", 
+                         17: "SPPdepthImagK1", 18: "SPPdepthImagK2"})
+
+print("Exported. Please open file "+SppOutput+".")
+data.to_csv(SppOutput)
+
+# Writing table caption
 print("Exported. Please open file "+SppOutput+".")
 
 ##  plot precision of Lambda over precision of epsilon

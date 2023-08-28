@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
-
 # Copyright (C) 2013-2023 T. J.-Y. Derrien
-#
+
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -768,3 +767,6 @@ kzSPP = np.vectorize(kzSPP)
 DecayDepth = np.vectorize(DecayDepth)
 EffectiveIndex = np.vectorize(EffectiveIndex)
 #omega = np.vectorize(omega) 
+deltaBetaSPP = np.vectorize(deltaBetaSPP)
+deltaPeriodSPP = np.vectorize(deltaPeriodSPP)
+deltaLspp = np.vectorize(deltaLspp)

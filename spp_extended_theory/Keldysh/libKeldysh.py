@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2013-2021 T. J.-Y. Derrien
+# Copyright (C) 2013-2023 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -211,6 +211,7 @@ def KeldyshFunction(Keldysh1phi, Keldysh2theta, Ueff, nmax, wavelength): #{{{
   distant_to_unity = np.float128(1E0) - Keldysh1phi2_128
   if (distant_to_unity < 1E-320): #then it gonna crash for sure. 
     print("** Error on ellipk: argument 1 is singular. Distance to unit = "+str(distant_to_unity)+"Please increase precision on Keldysh1phi or use ellipkm1 function (careful, argument IS not the same).")
+    EllipticK1_phi = 0 #dull value
   elif(distant_to_unity < 1E-10): 
     #threshold where functions ellipk and ellipkm1 give different values
     EllipticK1_phi = ellipkm1( np.float64(distant_to_unity) )
@@ -315,6 +316,7 @@ def KeldyshFunction_Gruzdev(Keldysh1phi, Keldysh2theta, Ueff, nmax, wavelength):
   distant_to_unity = 1E0 - Keldysh1phi2_128
   if (distant_to_unity < 1E-320): #then it gonna crash for sure. 
     print("** Error on ellipk: argument 1 is singular. Distance to unit = "+str(distant_to_unity)+"Please increase precision on Keldysh1phi or use ellipkm1 function (careful, argument IS not the same).")
+    EllipticK1_phi = 0 #dull value
   elif(distant_to_unity < 1E-10):
     #threshold where functions ellipk and ellipkm1 give different values
     EllipticK1_phi = ellipkm1( np.float64(distant_to_unity) )

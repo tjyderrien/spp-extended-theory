@@ -1,7 +1,7 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2013-2021 T. J.-Y. Derrien
+# Copyright (C) 2013-2023 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,12 +20,11 @@
 # Functions describing materials and their interaction with light. 
 
 import cmath
-
-from scipy.constants import Boltzmann
+from scipy.constants import Boltzmann, m_e, epsilon_0, e, pi, c
+import spp_extended_theory.Libs.libLaser as libLaser
+import numpy as np
 
 k_b     = Boltzmann
-
-from spp_extended_theory.Libs.libLaser import *
 
 # OPTICAL FUNCTIONS
 
@@ -38,7 +37,8 @@ from spp_extended_theory.Libs.libLaser import *
 # @param nu (float): collision frequency
 # Output: complex-valued dielectric permittivity
 def Drude(wavelength, ne, epsilon, nu, meff=1.0):#{{{
-  omegap2=ne * e**2 / (m_e * meff * epsilon_0)
+  # from scipy.constants import m_e, epsilon_0, e
+  omegap2 = ne * e**2 / (m_e * meff * epsilon_0)
   omega=2.0*pi*c/wavelength
   return epsilon - omegap2/(omega*omega) * 1e0/(1e0+1e0j*nu/omega)
 #}}}

@@ -1,7 +1,7 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2013-2020 T. J.-Y. Derrien
+# Copyright (C) 2013-2023 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,14 +24,18 @@
 # IMPORT PYTHON LIBRARIES
 import matplotlib as mp
 from matplotlib import rc, font_manager
-
+import cmath
+import numpy as np
 # IMPORT CUSTOM LIBRARIES
 # from libKeldysh import *
-from spp_extended_theory.Libs.libDatabase import *
-from spp_extended_theory.Libs.libMaterials import *
-from spp_extended_theory.Libs.libMath import *
+# import spp_extended_theory.Libs.libDatabase as libDatabase
+import spp_extended_theory.Libs.libMaterials as libMaterials
+# import spp_extended_theory.Libs.libMath as libMath
 
+from scipy.constants import pi, c, e, h
 # from pylab import *
+
+Header="[libSPP] "
 
 lengthunit = 1e-9
 eta = 0.1 #assumed precision error on the dielectric permittivity
@@ -59,9 +63,9 @@ rc('text', usetex=UsingTeX)
 mp.rcParams['legend.numpoints'] = 1
 
 ## basic wave function
-#def omega(wavelength):#{{{
-    #return 2.0*pi*c/wavelength
-##}}}
+def omega(wavelength):#{{{
+    return 2.0*pi*c/wavelength
+#}}}
 
 # SPP BASIC FUNCTIONS
 
@@ -134,6 +138,26 @@ def OldSPPcondition(eps1, eps2):#{{{
   # Let's use its generalization which is actually symmetric. 
   condition2 = (eps1.real * eps2.real / (eps1.real + eps2.real) > 0e0)
   return (condition1 and condition2)
+#}}}
+
+## Returns Faraday number from a nanoparticle surrounded by another medium
+# Lalisse, A.; Tessier, G.; Plain, J. & Baffou, G.
+# Quantifying the Efficiency of Plasmonic Materials for Near-Field Enhancement and Photothermal Conversion
+# The Journal of Physical Chemistry C, 2015, 119, 25518-25528
+def FaradayNumber(epsilon, epsilon_surrounding): #{{{
+    result = 9*np.abs(epsilon/(epsilon+2*epsilon_surrounding))**2
+    return result
+#}}}
+
+## Returns Joule number of a nanoparticle surrounded by another medium
+# Lalisse, A.; Tessier, G.; Plain, J. & Baffou, G.
+# Quantifying the Efficiency of Plasmonic Materials for Near-Field Enhancement and Photothermal Conversion
+# The Journal of Physical Chemistry C, 2015, 119, 25518-25528
+def JouleNumber(wavelength, epsilon, epsilon_surround): #{{{
+    omega_eV = 2*pi*h*c/wavelength/e #energy in eV, but treated as non-dimensional (see paper)
+    n_surround = np.sqrt(epsilon).real
+    result = 9*omega_eV*epsilon.imag/n_surround*np.abs(epsilon_surround/(epsilon+2*epsilon_surround))**2
+    return result
 #}}}
 
 ## Returns the period of the light-SPP field at a given interface
@@ -366,7 +390,7 @@ def SPPactiveInterfaces(dbarray, comment):#{{{
   #sizeOfArray = sizeDatabase**2
   #print sizeOfArray	
 
-  SPParray = np.empty((0,20)) #, dtype='|S30')
+  SPParray = np.empty((0,22)) #, dtype='|S30')
   
   # double loop to test all configurations (brute-forcing...)
   for i in dbarray:
@@ -401,24 +425,24 @@ def SPPactiveInterfaces(dbarray, comment):#{{{
         Absorption2 = (2e0*omega(wavelength2) / c) * (eps2)**0.5
         # Calculate optical penetration depth. -1 means infinite. 			
         if (Absorption1.imag == 0e0): 
-	        OpticalPenetration1 = -1
+            OpticalPenetration1 = -1
         else: 
-	        OpticalPenetration1 = 1e9 * 1e0/Absorption1.imag
+            OpticalPenetration1 = 1e9 * 1e0/Absorption1.imag
 	        
         if (Absorption2.imag == 0e0): 
-	        OpticalPenetration2 = -1
+            OpticalPenetration2 = -1
         else:
-	        OpticalPenetration2 = 1e9 * 1e0/Absorption2.imag
+            OpticalPenetration2 = 1e9 * 1e0/Absorption2.imag
         # SPP activitivity condition with Perfect Medium Approximation ? 
         OldSPPactiveBool=''; 
         if (OldSPPcondition(eps1, eps2)): 
-	        OldSPPactiveBool='Yes'
+            OldSPPactiveBool='Yes'
         else: 
-	        OldSPPactiveBool='No'
+            OldSPPactiveBool='No'
         if (SPPcondition(eps1, eps2)): 
-	        NewSPPactiveBool='Yes'
+            NewSPPactiveBool='Yes'
         else: 
-	        NewSPPactiveBool='No'
+            NewSPPactiveBool='No'
 
         # If new or old SPP active condition is true, then show	
         # TODO: this condition should consider several levels of accuracy. 
@@ -454,7 +478,7 @@ def SPPactiveInterfaces(dbarray, comment):#{{{
 	        SPPdepthImagk2=0
 	        PeriodError=0
         
-        Reflectivity=(reflectivity(eps1, eps2))
+        Reflectivity=(libMaterials.reflectivity(eps1, eps2))
         deltaLsppValues=deltaLspp(wavelength1,eps1,eps2,eta,eta,eta,eta)/lengthunit
         
         # Print only the experimentally possible cases: SPP active depth must be smaller than absorption depth. 
@@ -479,14 +503,19 @@ def SPPactiveInterfaces(dbarray, comment):#{{{
           Condition = ExperimentalAchievable and (Period!=0)
         else: #super permissive case
           Condition = True
-		
+        if(Condition):
+          Fa = FaradayNumber(eps1, eps2)
+          Jo = JouleNumber(wavelength1, eps1, eps2)
+        else:
+          Fa = 0; Jo=0
+
         if(Condition):
           counter=counter+1
           #print SPParray.shape
           SPParray = np.vstack((SPParray, [Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, 
 	Period, PeriodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, #10 
 	OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1.real, eps1.imag, #15
-	eps2.real, eps2.imag, SPPdepthImagk1, SPPdepthImagk2, deltaLsppValues.real]))
+	eps2.real, eps2.imag, SPPdepthImagk1, SPPdepthImagk2, deltaLsppValues.real, Fa, Jo]))
           
   return SPParray
 #}}}
@@ -676,7 +705,7 @@ def GenerateDatabase():
   database="MaterialOpticalDatabaseForPlasmonics.csv"
 
   # Build database array for choosing which material can be of interest to irradiate
-  dbarray = loadtxt(database, dtype='str', delimiter='\t')
+  dbarray = np.loadtxt(database, dtype='str', delimiter='\t')
 
   # To calculate symmetric SPP compatible interfaces, use the following line
   SPPactiveInterfacesArray = SPPactiveInterfaces(dbarray, '')

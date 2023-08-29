@@ -57,8 +57,8 @@ def text_plotter(x_data, y_data, text_content, text_positions, axis,txt_width,tx
     for x,y,s,t in zip(x_data, y_data, text_content, text_positions):
         axis.text(x - txt_width, 1.01*t, s, rotation=0, color=color)
         if y != t:
-            axis.arrow(x, t, 0, y-t, color='grey', alpha=0.3, width=0.01,
-                       head_width=0.2, head_length=txt_width*0.5, 
+            axis.arrow(x, t, 0, y-t, color='grey', alpha=0.3, width=5*0.01,
+                       head_width=3*0.2, head_length=0.05*txt_width*0.5,
                        zorder=0, length_includes_head=True)
 
 ## Generate a plot with text labels on each point. 

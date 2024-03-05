@@ -132,7 +132,7 @@ def ExtractDataDb(SPPdbFiltered):
 ## Export an SPP array to a CSV file
 # SPP array must be produced with one of the SPPactiveInterfaces functions
 #
-def ExportToTxt(dbarray, filename, header="", fmt="%10.5f"):
+def ExportToTxt(dbarray, filename, header="", fmt="%15.8e"):
   
 
   np.savetxt(filename, dbarray, fmt=fmt, delimiter='\t', header=header, newline='\n',comments='#')

@@ -31,7 +31,7 @@ import octopus_slabs.Libs.libAtomicUnits as au
 
 # import logging
 from octopus_slabs.Libs.libLogging import init_logger
-
+import sys
 #Enable_A2=True
 
 logger = init_logger(__name__, verbose=False) #"plotFinalQuantities")
@@ -546,7 +546,7 @@ def ComputeFloquetBandStructure(filename, nb_atoms, Z_electrons, kpoints, unocc_
 
 
 
-#exit()
+#sys.exit()
 
 #E1, E2, E3, E4, E5, E6 = Stark2bands1photon_EnergyShift_modified_exact(Efield_AU, omega_AU, E_gap_AU, DME)
 #ENC1, ENC2, ENC3, ENC4, EgapShift_AU = Stark2bands1photon_Cropped_EnergyShift_notcorrected_exact(Efield_AU, omega_AU, E_gap_AU, DME)

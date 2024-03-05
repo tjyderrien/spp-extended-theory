@@ -26,7 +26,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import spp_extended_theory.Libs.libDatabase as libDatabase
 import spp_extended_theory.Libs.libMaterials as libMaterials
-
+import sys
 
 ## Defines text positions for plotting
 #  Original author and descriptinons are given here:
@@ -270,7 +270,7 @@ def plotSeveralWavelengths(database1, database2, reverse, metal, query):#{{{
       plt.axis([0,20,0,900]) ##KEEP 900 please #good for Ti
     else:
       print("** Error: this query is not a planned case. Query="+query)
-      #exit()
+      #sys.exit()
   else: #non-metal
     plt.axis([-70,0,0,900]) ##KEEP 900 please
     
@@ -285,7 +285,7 @@ def plotSeveralWavelengths(database1, database2, reverse, metal, query):#{{{
       plt.legend(loc=2) #Good for SiO_2
     else:
       #print "** Error: this query is not a planned case. Query="+query
-      exit()
+      sys.exit()
   else: #metal case
     plt.legend(loc=1)
   #plt.legend(handler_map={line1: HandlerLine2D(numpoints=1)})

@@ -33,6 +33,7 @@ import spp_extended_theory.Libs.libMaterials as libMaterials
 
 from scipy.constants import pi, c, e, h
 # from pylab import *
+import sys
 
 Header="[libSPP] "
 
@@ -456,7 +457,7 @@ def SPPactiveInterfaces(dbarray, comment):#{{{
             Condition=RegularLIPSScondition
         else: 
             print(Header+"** Error: level of tolerance over SPP conditions is not well indicated. See libSPP.py: LevelOfSPPaccuracy.")
-            exit()
+            sys.exit()
         if(Condition):
 	        Period=(period(betaSPP(wavelength1,eps1, eps2))/lengthunit)
 	        SPPdecayDepth1=(DecayDepth(kzSPP(wavelength1, eps1, eps2))/lengthunit)

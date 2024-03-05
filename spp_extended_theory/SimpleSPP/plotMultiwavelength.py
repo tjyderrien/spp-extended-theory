@@ -19,8 +19,9 @@
 ## @Packagee plotMultiwavelength 
 # Prepares plots presenting the properties of SPP as function of numerous materials. 
 
-from libMaterials import *
 # IMPORT LIBRARIES
+from libMaterials import *
+import sys
 from libSPP import *
 
 precision = 1E-10
@@ -34,7 +35,7 @@ if(len(sys.argv)<=2):
   print("    [<precision>: 1E-9 by default>] \ ")
   print("    [--no-show]")
   print("Example: ./plotMultiwavelength.py Au Johnson")
-  exit()
+  sys.exit()
 
 #============ Manage the command line input =================
 query = sys.argv[1]
@@ -116,7 +117,7 @@ except:
 		print("Success.")
 	except:
 		print("** Error: Also failed reading of database... Exiting.")
-		exit()
+		sys.exit()
 		
 #wavelengths2 = MaterialArray2[:,0]
 nlines, ncols = MaterialArray2.shape
@@ -168,7 +169,7 @@ print("Checking if wavelength range is reasonable...")
 if (wavelengths.size > 1E6 ):
   print("** Error: interpolation may be very long to perform...")
   print("**        Reduce precision.")
-  exit()
+  sys.exit()
 
 order=1
 feps1r=InterpolatedUnivariateSpline(wavelengths1, eps1.real, k=order)

@@ -25,6 +25,7 @@
 
 from libMultilayerSPP import *
 from libMaterials     import *
+import sys
 # import libDatabase
 #from joblib import Parallel, delayed
 #import multiprocessing
@@ -220,7 +221,7 @@ def PeriodsAsFunctionOfTemperature(epsSample, epsSubstrate=1., epsEnvironment=1.
                     #if(roots[branch][root_number][0] != 0e0): 
                         #
     #print(summary)
-    #exit()
+    #sys.exit()
     #return(summary)
     
     print((Header+"** Preparation of the plots as function of oxide ratio"))
@@ -785,7 +786,7 @@ def ScenarioOfCrOxideMixture(epsSample, epsOxide=1., epsSubstrate=1., epsEnviron
                     #if(roots[branch][root_number][0] != 0e0): 
                         #
     #print(summary)
-    #exit()
+    #sys.exit()
     #return(summary)
     
     print((Header+"** Preparation of the plots as function of oxide ratio"))
@@ -1102,7 +1103,7 @@ def ScenarioOfSimultaneousMixingMG3(epsSample, epsOxide1=1., epsOxide2=1., epsSu
                     #if(roots[branch][root_number][0] != 0e0): 
                         #
     #print(summary)
-    #exit()
+    #sys.exit()
     #return(summary)
     
     print((Header+"** Preparation of the plots as function of oxide ratio"))
@@ -1438,7 +1439,7 @@ def ScenarioOfCrOxideMixture_ext(epsSample, epsEnvironment=1., epsSubstrate=1., 
                     #if(roots[branch][root_number][0] != 0e0): 
                         #
     #print(summary)
-    #exit()
+    #sys.exit()
     #return(summary)
     
     print((Header+"** Preparation of the plots as function of oxide ratio"))
@@ -1742,7 +1743,7 @@ thickness_size = 60 #Fraction_size
 #Derrien_HRLIPSSonMoFilms(800e-9, thickness_size)
 Derrien_HRLIPSSonMoFilms(515e-9, thickness_size)
 #Derrien_HRLIPSSonMoFilms(400e-9, thickness_size)
-exit()
+sys.exit()
 #ScenarioOfCrOxideMixture(epsCr, epsCr2O3, epsBK7, epsAir, Fraction_size, 'Cr', 'Cr2O3')
 #ScenarioOfCrOxideMixture(epsCr, epsCrO2, epsBK7, epsAir, Fraction_size,  'Cr', 'CrO2')
 #ScenarioOfSimultaneousMixingMG3(epsCr, epsCr2O3, epsCrO2, epsBK7, Fraction_size, 'Cr', 'Cr2O3', 'CrO2')

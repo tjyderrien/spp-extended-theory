@@ -53,6 +53,7 @@ logger = init_logger(__name__, verbose=True) #"plotFinalQuantities")
 
 # from matplotlib.legend_handler import HandlerLine2D
 import os
+import sys
 
 OctopusData=os.environ["QuantumLaPruns"]
 OctopusSources=os.environ["QuantumLaPsources"]
@@ -105,7 +106,7 @@ def VZ_FieldNormalization(Egap, meff, wavelength):
   omega_SI  = 2.*pi*c    /wavelength #SI
   if(omega_CGS != omega_SI):
     print("Error on omega_CGS")
-    exit()
+    sys.exit()
   EfieldStar_VZ_CGS = np.sqrt(2. * omega_CGS**2 / e_CGS**2 * me_CGS * Eg_CGS) #gas formula for Keldysh parameter
   EfieldStar_VZ_SI  = np.sqrt(2. * omega_SI**2 / e**2 * m_e * meff * Egap)
   #print EfieldStar_VZ_SI
@@ -177,9 +178,9 @@ def VP_ChooseLibrary(FieldEnvelope1, FieldEnvelope2, wavelength1, wavelength2, C
             VZ_basename = DataFolder+DataFileName['phi=pi/4']
         else: 
             print(Header+"Fields value are not available for 800x1600 nm.")
-            exit()
+            sys.exit()
         print("THIS SET IS BROKEN. Waiting for the input of Vladimir Zhukov.")
-        exit()
+        sys.exit()
         
     elif((wavelength1 == 400e-9 and wavelength2 == 2*wavelength1) or (wavelength1 == 800e-9 and wavelength2 == wavelength1/2.)):
         #TODO: the two sets could be inverted! 
@@ -195,7 +196,7 @@ def VP_ChooseLibrary(FieldEnvelope1, FieldEnvelope2, wavelength1, wavelength2, C
             VZ_basename = DataFolder+DataFileName['phi=0']
         else: 
             print(Header+"Fields value are not available for the specified particular case of 400x800 nm.")
-            exit()
+            sys.exit()
     elif((wavelength1 == 800e-9 and wavelength2 == 2.*wavelength1) or (wavelength1 == 800e-9 and wavelength2 == wavelength1*2.)):
         #TODO: the two sets could be inverted! 
         InvertedFields=False
@@ -212,11 +213,11 @@ def VP_ChooseLibrary(FieldEnvelope1, FieldEnvelope2, wavelength1, wavelength2, C
             VZ_basename = DataFolder+DataFileName['phi=pi/4']
         else: 
             print(Header+"Fields value are not available for 800x1600 nm.")
-            exit()
+            sys.exit()
     else:
         print(Header+"THIS COMBINATION OF WAVES IS NOT AVAILABLE. Please kindly ask the corresponding data to Prof. Vladimir Zhukov, zukov@ict.nsc.ru.")
         Dictionnary={}
-        #exit() 
+        #sys.exit()
     return VZ_basename, Dictionnary, InvertedFields
 
 ## Provide bicolor tables of V. Zhukov bicolor Keldysh model for the selected wavelengths
@@ -372,7 +373,7 @@ def VZ_generateWpiTables(FieldEnvelope1, FieldEnvelope2, wavelength1 = 800e-9, w
     
   else: 
     print(Header+"Number of colors is too high. Keldysh-Zhukov model is made for 2 colors. ")
-    exit()
+    sys.exit()
   #}}}
   print(Header+"range(w_PI_CGS) = ", w_PI_CGS.min(), w_PI_CGS.max())
   print(Header+"dimension(w_PI_CGS) = ", w_PI_CGS.shape)

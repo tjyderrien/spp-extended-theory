@@ -23,6 +23,7 @@ import cmath
 from scipy.constants import Boltzmann, m_e, epsilon_0, e, pi, c
 import spp_extended_theory.Libs.libLaser as libLaser
 import numpy as np
+import sys
 
 k_b     = Boltzmann
 
@@ -122,7 +123,7 @@ def reflectivity(eps1, eps2, angle=0, pola="S"):#{{{
       R=abs(((term1-term2)/(term1+term2))**2)
   else: 
       print("Error. Choose pola=S or P, nothing else.")
-      exit()
+      sys.exit()
   return R
 #}}}
 

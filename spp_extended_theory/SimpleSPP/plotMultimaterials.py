@@ -48,7 +48,7 @@ if(len(sys.argv)<=1):
   #print "MODE 2:  Multi-substrate - multi film, based on a given list."
   #print "Usage:   ./plotMultimaterials.py <FileName.dat> <Wavelength (nm)>"
   #print "Example: ./plotMultimaterials.py OxideList.dat"
-  exit()
+  sys.exit()
 
 # FROM THIS POINT, WE KNOW THAT USER USED A COMMAND LINE ARGUMENTS. 
 
@@ -72,7 +72,7 @@ try:
   wavelength = 1E-9*float(sys.argv[2])
 except: 
   print("** Error: Please indicate the light wavelength.")
-  exit()
+  sys.exit()
   
 
 ## Choose a wavelength
@@ -114,7 +114,7 @@ print("** Filtering materials: SPP database has now "+str(len(SPPdb))+" entries.
 
 if(len(SPPdb)==0):
   print("** QUITTING...")
-  exit()
+  sys.exit()
   
 #print "Filtering Material 1"
 #print SPPdb
@@ -194,7 +194,7 @@ print("DeltaBetaSPP = "+str(deltaBetaSPP(wavelength, 1e0+0e0j, -49.5738812793e0+
 print("Decay Length SPP = "+str(DecayLengthSPP(betaSPP(wavelength, 1e0+0e0j, -49.5738812793e0+3.81282698968e0j)))+" m")
 print("DeltaPeriodSPP = "+str(deltaPeriodSPP(wavelength, 1e0+0e0j, -49.5738812793e0+3.81282698968e0j, 0e0, 0e0, noise, noise))+" m")
 print("DeltaLspp = "+str(deltaLspp(wavelength, 1e0+0e0j, -49.5738812793e0+3.81282698968e0j, 0e0, 0e0, noise, noise))+" m")
-#exit()
+#sys.exit()
 print("== Knowledge over dielectric permittivity: +/- "+str(noise)+".")
 
 print("Mesh generation...")

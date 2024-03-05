@@ -475,7 +475,7 @@ def ImportPalikDatabase_epsilon_fromNK(wavelengths, DataFile="Si-Palik"):  # {{{
         logger.warning(
             Header + "Error in wavelengths_source. Careful! Palik book combines different optical data, hence there can be overlap, sometimes! It must be removed to be imported properly here. ")
         # print np.diff(wavelengths_source)
-        exit()
+        sys.exit()
     OpticalN = DataArray[:, 1]
     OpticalK = DataArray[:, 2]
     order = 1

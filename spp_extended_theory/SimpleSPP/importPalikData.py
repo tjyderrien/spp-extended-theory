@@ -36,14 +36,14 @@ import sys
 if(len(sys.argv)<=2):
   print("Usage: ./importPalikData.py <Name of the material (Be, Au, ...)> <wavelength (nm)> <Source for data: Palik or name of the 1st author>")
   print("Example: ./importPalikData.py Au 800 Palik")
-  exit()
+  sys.exit()
  
 material = sys.argv[1]
 try:
   wavelength = float(sys.argv[2])
 except: 
   print("** Error: command line must have the hape: <Material symbol> <Wavelength (nm)> <Publication author>")
-  exit()
+  sys.exit()
   
 try:
   source = sys.argv[3]
@@ -203,7 +203,7 @@ try: #TODO: should we select by author? Or by units?
         importFromNKtable(wavelength*1e-6, folder, filename) #BUG: error in 
       except:
         print("Failed even using importFromNKtable(). Call that damn developer. ")
-        exit()
+        sys.exit()
     print(epsilon)
     print("You can add the following directly inside 'MaterialOpticalDatabaseForPlasmonics.csv'")
     print((filename+"\t"+"?"+"\t"+str(int(wavelength))+"\t"+str(epsilon.real)+"\t"+str(epsilon.imag)+"\t?\t?\t?\t?\t?"))

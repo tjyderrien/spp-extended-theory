@@ -23,6 +23,7 @@
 # Prepared from source: http://stackoverflow.com/questions/8850142/matplotlib-overlapping-annotations
 
 import matplotlib.pyplot as plt
+import matplotlib.backends.backend_ps
 import numpy as np
 import spp_extended_theory.Libs.libDatabase as libDatabase
 import spp_extended_theory.Libs.libMaterials as libMaterials

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2013-2023 T. J.-Y. Derrien
+# Copyright (C) 2013-2024 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -1146,3 +1146,19 @@ def BiLayerTransmission(wavelength, eps1, eps2, eps3, thickness2): #{{{
 BiLayerReflectivity = np.vectorize(BiLayerReflectivity)
 BiLayerTransmission = np.vectorize(BiLayerTransmission)
 
+## Compute Reflectivity in 4-material system: (env 1 | film 2 | film 3 | substrate 4)
+def TriLayerReflectivity(wavelength, eps1, eps2, eps3, eps4, h2, h3):
+	r_complex = (
+ComplexReflectivity(eps1,eps2) + (
+ComplexReflectivity(eps2,eps3) + ComplexReflectivity(eps3,eps4) * np.exp((4j) * np.pi * h3 * np.sqrt(eps3) / wavelength))
+* np.exp((4j) * np.pi * h2 * np.sqrt(eps2) / wavelength)
+/
+(1 + ComplexReflectivity(eps2,eps3) * ComplexReflectivity(eps3,eps4) * np.exp((4j) * np.pi * h3 * np.sqrt(eps3) / wavelength))
+) / (1 + ComplexReflectivity(eps1,eps2) * (ComplexReflectivity(eps2,eps3) + ComplexReflectivity(eps3,eps4) * np.exp((4j) * np.pi * h3 * np.sqrt(eps3) / wavelength)) * np.exp((4j) * np.pi * h2 * np.sqrt(eps2) / wavelength)
+/
+(1 + ComplexReflectivity(eps2,eps3) * ComplexReflectivity(eps3,eps4) * np.exp((4j) * np.pi * h3 * np.sqrt(eps3) / wavelength))
+)
+	
+	return (r_complex * np.conj(r_complex)).real
+
+TriLayerReflectivity = np.vectorize(TriLayerReflectivity)

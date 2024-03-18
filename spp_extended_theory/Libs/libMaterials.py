@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2013-2023 T. J.-Y. Derrien
+# Copyright (C) 2013-2024 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -1126,6 +1126,24 @@ def BiLayerReflectivity(wavelength, eps1, eps2, eps3, thickness2): #{{{
   r13  = (r12 + r23*np.exp(2.j*phi2)) / (1.+r12*r23*np.exp(2.j*phi2))
   return r13*np.conjugate(r13)
 #}}}
+
+## Computes Reflectivity in a 4-layer material (env 1 | film2 of thickness h2 | film3 of thickness h3 | bulk substrate 4) material. 
+def TriLayerReflectivity(wavelength, eps1, eps2, eps3, eps4, h2, h3):
+    r_complex = (
+ComplexReflectivity(eps1,eps2) + (
+ComplexReflectivity(eps2,eps3) + ComplexReflectivity(eps3,eps4) * np.exp((4*j) * pi * h3 * sqrt(eps3) / wavelength))
+* np.exp((4*j) * pi * h2 * sqrt(eps2) / wavelength) 
+/ 
+(1 + ComplexReflectivity(eps2,eps3) * ComplexReflectivity(eps3,eps4) * np.exp((4*j) * pi * h3 * sqrt(eps3) / wavelength))
+) 
+/ 
+(1 + ComplexReflectivity(eps1,eps2) * (ComplexReflectivity(eps2,eps3) + ComplexReflectivity(eps3,eps4) * np.exp((4*j) * pi * h3 * sqrt(eps3) / wavelength)) * np.exp((4*j) * pi * h2 * sqrt(eps2) / wavelength) 
+/ 
+(1 + ComplexReflectivity(eps2,eps3) * ComplexReflectivity(eps3,eps4) * np.exp((4*j) * pi * h3 * sqrt(eps3) / wavelength))
+);
+    return r_complex*np.conj(r_complex)
+
+
 
 ## Compute transmission from a 3-material thin film configuration, where media 1 and 3 are semi-infinite. Formula originates from Stenzel book, page 108. Warning: formula from Born and Wolf may contain mistakes. It could not be validated for perfect dielectrics. 
 # @param wavelength: wavelength (in meters) of the indicent photon

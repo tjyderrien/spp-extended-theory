@@ -29,6 +29,7 @@ from spp_extended_theory.Libs.libPlotting import *
 # IMPORT LIBRARIES
 from spp_extended_theory.Libs.libSPP import *
 import sys
+import argparse
 
 #EpsilonToIndex = np.vectorize(EpsilonToIndex)
 
@@ -41,7 +42,9 @@ if(len(sys.argv)<=1):
   print("Usage:  ./plotMultimaterials.py           \ ")
   print("        <Name ONE substrate (Air, Be, Au, ...)> \ ")
   print("        <ONE wavelength (nm)>                          \ ")
-  print("        <Select source for data: Palik | Name of the 1st author + Year>")
+  print("        <Select source for data: Palik | Name of the 1st author + Year> \ ")
+  print("        -R: reverses the materials \ ")
+  print("        -M: indicate if material is a metal. \ ")
   print("Example: ./plotMultimaterials.py Au 800 \"Johnson 1974\"")
   #TODO: DISABLED PART FOR NOW.
   #print ""
@@ -50,30 +53,48 @@ if(len(sys.argv)<=1):
   #print "Example: ./plotMultimaterials.py OxideList.dat"
   sys.exit()
 
-# FROM THIS POINT, WE KNOW THAT USER USED A COMMAND LINE ARGUMENTS. 
+parser = argparse.ArgumentParser(description='SPP-ext-th: plotMultimaterials module')
+parser.add_argument('--material', type=str, help='Material name (needs to match with the CSV file')
+parser.add_argument('--wavelength', type=float, help='Wavelength (nm)')
+# parser.add_argument('--filter', type=int, help='0: no filter. 1: soft filtering, 2: period != 0 filter, 3: opt. pen. depth filter')
+parser.add_argument('--metal', action='store_true', help='Indicates a metallic medium')
+parser.add_argument('--reverse', action='store_true', help='Invert medium and substrate')
 
-if any("dat" in s for s in sys.argv):
-  print("** Detected USAGE 2.")
-else: 
-  #(len(sys.argv[3]) > 0):
-  print("** Detected USAGE 1.")
-  query = sys.argv[1]
+args = parser.parse_args()
+
+query = args.material
+wavelength = 1E-9*args.wavelength
+reverse = args.reverse
+metal = args.metal
+# LevelOfSPPaccuracy = args.filter
+
+""" OLD INTERFACE
+# FROM THIS POINT, WE KNOW THAT USER USED A COMMAND LINE ARGUMENTS.
+query = sys.argv[1] #Name of medium
+if any("-I" in s for s in sys.argv):
+  print("** Detected USAGE with DAT file.")
   try:
     source = " ("+sys.argv[3]+")"
   except:
     source = ""
   query = query+source
+else:
+  #(len(sys.argv[3]) > 0):
+  print("** Detected USAGE using CSV file.")
+
+
   print("Selected substrate = "+query+".")
 #else:
   #print "** Error: not planned case."
 
 # Valid for any case
-try: 
+try:
+  print("Second argument is a ", type(float(sys.argv[2])))
   wavelength = 1E-9*float(sys.argv[2])
 except: 
   print("** Error: Please indicate the light wavelength.")
   sys.exit()
-  
+"""
 
 ## Choose a wavelength
 print("Operating wavelength = "+str(wavelength*1E9)+"nm.")
@@ -87,10 +108,22 @@ print("Operating wavelength = "+str(wavelength*1E9)+"nm.")
 #query = 'TiO2 (Devore 1951, e)'
 #query = 'SiO2 (Palik)'
 
-# TODO: THIS VARIABLE MUST BE NOT DEFINED BY HAND !!! O_O
-reverse = False #reverse eps1 and eps2 for plotting
-metal = False
+"""if any("-R" in s for s in sys.argv):
+    reverse = True #reverse eps1 and eps2 for plotting
+    print("Info: material inversion detected. ")
+else:
+    reverse = False
+    print("Info: if no result, try -R. ")
 
+
+if any("-M" in s for s in sys.argv):
+    metal = True
+    print("Info: Metal mode detected.  ")
+else:
+    metal = False
+    print("Info: Dielectric mode detected. \ ")
+    print("      If no result, try -M.")
+"""
 thickness=500e-9
 print("Interface 1: "+query)
 

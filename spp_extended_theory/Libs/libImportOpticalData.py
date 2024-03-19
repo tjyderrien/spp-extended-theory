@@ -1,7 +1,7 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2013-2021 T. J.-Y. Derrien
+# Copyright (C) 2013-2024 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -34,6 +34,12 @@ from spp_extended_theory.Libs.libDatabase import *
 
 Header = "[importOpticalData] "
 
+## Imports 2 files: one for N, one for K. Does the interpolation of wavelength mesh, then returns table of complex epsilon.
+# @param wavelength: wavelength in meters
+# @param folder: location of optical data
+# @param filename: filename before -n and -k.csv.
+# @param plotting=1: show plot?
+# @param unit=1E-6: basic unit is in um.
 def importFromNKtable(wavelength, folder, filename, plotting=1, unit=1E-6):  # {{{
     nfile = folder + filename + "-n.csv"
     kfile = folder + filename + "-k.csv"
@@ -116,7 +122,7 @@ def importFromNKtable(wavelength, folder, filename, plotting=1, unit=1E-6):  # {
 
 # }}}
 
-## Imports optical data of type (wavelength, n,k) from different wavelength meshes. 
+## Imports optical data of type (wavelength, n,k) from different wavelength meshes. Return (n+k*1j)
 #  Such data can be captured using a software like Engauge Digitizer. 
 #  This leads to obtain (n,k) discretized on DIFFERENT MESHES. 
 #  
@@ -464,6 +470,8 @@ def importFromTable(wavelength, folder, filename, plotting):  # {{{
 
 ## Imports the optical data from Palik database
 # Returns the spectrum (in Re(eps), Im(eps)) interpolate of a material interpolated on the given grid of wavelengths
+# @param wavelengths: vector of wavelengths
+# @param DataFile="Si-Palik": filename from Palik book, where data files are in Angstroms, n, k form.
 def ImportPalikDatabase_epsilon_fromNK(wavelengths, DataFile="Si-Palik"):  # {{{
     import os
     from scipy.interpolate import InterpolatedUnivariateSpline

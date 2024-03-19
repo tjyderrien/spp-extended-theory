@@ -1129,11 +1129,11 @@ def BiLayerReflectivity(wavelength, eps1, eps2, eps3, thickness2): #{{{
 
 ## Computes Reflectivity in a 4-layer material (env 1 | film2 of thickness h2 | film3 of thickness h3 | bulk substrate 4) material. 
 def TriLayerReflectivity(wavelength, eps1, eps2, eps3, eps4, h2, h3):
-    r_complex = (
-ComplexReflectivity(eps1,eps2) + (ComplexReflectivity(eps2,eps3) + ComplexReflectivity(eps3,eps4) * np.exp((4*j) * pi * h3 * sqrt(eps3) / wavelength))
-* np.exp((4*j) * pi * h2 * sqrt(eps2) / wavelength) /(1 + ComplexReflectivity(eps2,eps3) * ComplexReflectivity(eps3,eps4) * np.exp((4*j) * pi * h3 * sqrt(eps3) / wavelength))
-)/(1 + ComplexReflectivity(eps1,eps2) * (ComplexReflectivity(eps2,eps3) + ComplexReflectivity(eps3,eps4) * np.exp((4*j) * pi * h3 * sqrt(eps3) / wavelength)) * np.exp((4*j) * pi * h2 * sqrt(eps2) / wavelength)
-/(1 + ComplexReflectivity(eps2,eps3) * ComplexReflectivity(eps3,eps4) * np.exp((4*j) * pi * h3 * sqrt(eps3) / wavelength))
+    r_complex = ( \
+ComplexReflectivity(eps1,eps2) + (ComplexReflectivity(eps2,eps3) + ComplexReflectivity(eps3,eps4) * np.exp((4*j) * pi * h3 * sqrt(eps3) / wavelength)) \
+* np.exp((4*j) * pi * h2 * sqrt(eps2) / wavelength) /(1 + ComplexReflectivity(eps2,eps3) * ComplexReflectivity(eps3,eps4) * np.exp((4*j) * pi * h3 * sqrt(eps3) / wavelength)) \
+)/(1 + ComplexReflectivity(eps1,eps2) * (ComplexReflectivity(eps2,eps3) + ComplexReflectivity(eps3,eps4) * np.exp((4*j) * pi * h3 * sqrt(eps3) / wavelength)) * np.exp((4*j) * pi * h2 * sqrt(eps2) / wavelength) \
+/(1 + ComplexReflectivity(eps2,eps3) * ComplexReflectivity(eps3,eps4) * np.exp((4*j) * pi * h3 * sqrt(eps3) / wavelength)) \
 )
     return r_complex*np.conj(r_complex)
 

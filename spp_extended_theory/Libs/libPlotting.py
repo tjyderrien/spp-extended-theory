@@ -24,6 +24,7 @@
 
 import matplotlib.pyplot as plt
 import matplotlib.backends.backend_ps
+import matplotlib.backends.backend_svg
 import numpy as np
 import spp_extended_theory.Libs.libDatabase as libDatabase
 import spp_extended_theory.Libs.libMaterials as libMaterials

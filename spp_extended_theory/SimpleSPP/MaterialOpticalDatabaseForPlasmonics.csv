@@ -1,5 +1,5 @@
-# Database of dielectric index for different materials for plasmonic applications						Make tables for these combinations							
-# 1	2	3	4	5	6	7	8	9	10	11	12	13	14	15	16
+# Database of dielectric index for different materials for plasmonic applications						Make tables for these combinations
+
 # Material	Bandgap(eV)/EF	wavelength	Real(eps)	Imag(eps)	MainProperty	SPPdecayDeptAir	SPPdecayLength	Lifetime	AtomicMass(uma)	MeltingTemperature	BoilingTemperature	CriticalPoint[VE_Fortov_ThePhysicsOfNon-idealPlasma]	HeatConductivity300K(W/m/K)
 Air	10?	3200	1	0	-	?	?	?	?	?	?	?	?
 Air	10?	3100	1	0	-	?	?	?	?	?	?	?	?
@@ -158,8 +158,8 @@ Graphite (Palik, o)	1000	800	5.950607352	11.5750444	?	?	?	?	?	?	?	?	?
 Graphite (Palik, o)	1000	400	5.2003	6.7596	?	?	?	?	?	?	?	?	?
 #Graphite (Djurisic 1999, o)	1000	400	5.5286	6.4867	?	?	?	?	12.0107	?	?	?	?
 Graphite (Djurisic 1999, e)	1000	400	2.3475	0.053571	?	?	?	?	12.0107	?	?	?	?
-# Graphene	0?	800	5.8342	8.9076	?	?	?	?	12.0107	?	?	?	?
-# Graphene	0?	400	6.0921	6.1229	?	?	?	?	12.0107	?	?	?	?
+# Graphene	-4	800	5.8342	8.9076	?	?	?	?	12.0107	?	?	?	?
+# Graphene	-4	400	6.0921	6.1229	?	?	?	?	12.0107	?	?	?	?
 H2O (Palik)	6.5	1030	1.74608259	5.40E-006	?	?	?	?	?	?	?	?	?
 H2O (Palik)	6.5	1026	1.746296068877563	5.734966490718008e-06	?	?	?	?	?	?	?	?	?
 H2O (Palik)	6.5	800	1.75837	3.32E-007	Temperature	?	?	?	18.01528	?	?	?	?

@@ -1,7 +1,7 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2013-2021 T. J.-Y. Derrien
+# Copyright (C) 2013-2024 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,12 +20,12 @@
 # Functions describing materials and their interaction with light. 
 
 import cmath
-
-from scipy.constants import Boltzmann
+from scipy.constants import Boltzmann, m_e, epsilon_0, e, pi, c
+import spp_extended_theory.Libs.libLaser as libLaser
+import numpy as np
+import sys
 
 k_b     = Boltzmann
-
-from spp_extended_theory.Libs.libLaser import *
 
 # OPTICAL FUNCTIONS
 
@@ -38,7 +38,8 @@ from spp_extended_theory.Libs.libLaser import *
 # @param nu (float): collision frequency
 # Output: complex-valued dielectric permittivity
 def Drude(wavelength, ne, epsilon, nu, meff=1.0):#{{{
-  omegap2=ne * e**2 / (m_e * meff * epsilon_0)
+  # from scipy.constants import m_e, epsilon_0, e
+  omegap2 = ne * e**2 / (m_e * meff * epsilon_0)
   omega=2.0*pi*c/wavelength
   return epsilon - omegap2/(omega*omega) * 1e0/(1e0+1e0j*nu/omega)
 #}}}
@@ -122,7 +123,7 @@ def reflectivity(eps1, eps2, angle=0, pola="S"):#{{{
       R=abs(((term1-term2)/(term1+term2))**2)
   else: 
       print("Error. Choose pola=S or P, nothing else.")
-      exit()
+      sys.exit()
   return R
 #}}}
 
@@ -1126,6 +1127,18 @@ def BiLayerReflectivity(wavelength, eps1, eps2, eps3, thickness2): #{{{
   return r13*np.conjugate(r13)
 #}}}
 
+## Computes Reflectivity in a 4-layer material (env 1 | film2 of thickness h2 | film3 of thickness h3 | bulk substrate 4) material. 
+def TriLayerReflectivity(wavelength, eps1, eps2, eps3, eps4, h2, h3):
+    r_complex = ( \
+ComplexReflectivity(eps1,eps2) + (ComplexReflectivity(eps2,eps3) + ComplexReflectivity(eps3,eps4) * np.exp((4*j) * pi * h3 * sqrt(eps3) / wavelength)) \
+* np.exp((4*j) * pi * h2 * sqrt(eps2) / wavelength) /(1 + ComplexReflectivity(eps2,eps3) * ComplexReflectivity(eps3,eps4) * np.exp((4*j) * pi * h3 * sqrt(eps3) / wavelength)) \
+)/(1 + ComplexReflectivity(eps1,eps2) * (ComplexReflectivity(eps2,eps3) + ComplexReflectivity(eps3,eps4) * np.exp((4*j) * pi * h3 * sqrt(eps3) / wavelength)) * np.exp((4*j) * pi * h2 * sqrt(eps2) / wavelength) \
+/(1 + ComplexReflectivity(eps2,eps3) * ComplexReflectivity(eps3,eps4) * np.exp((4*j) * pi * h3 * sqrt(eps3) / wavelength)) \
+)
+    return r_complex*np.conj(r_complex)
+
+
+
 ## Compute transmission from a 3-material thin film configuration, where media 1 and 3 are semi-infinite. Formula originates from Stenzel book, page 108. Warning: formula from Born and Wolf may contain mistakes. It could not be validated for perfect dielectrics. 
 # @param wavelength: wavelength (in meters) of the indicent photon
 # @param eps123: complex dielectric permittivity of media 1 2 and 3
@@ -1145,3 +1158,19 @@ def BiLayerTransmission(wavelength, eps1, eps2, eps3, thickness2): #{{{
 BiLayerReflectivity = np.vectorize(BiLayerReflectivity)
 BiLayerTransmission = np.vectorize(BiLayerTransmission)
 
+## Compute Reflectivity in 4-material system: (env 1 | film 2 | film 3 | substrate 4)
+def TriLayerReflectivity(wavelength, eps1, eps2, eps3, eps4, h2, h3):
+	r_complex = (
+ComplexReflectivity(eps1,eps2) + (
+ComplexReflectivity(eps2,eps3) + ComplexReflectivity(eps3,eps4) * np.exp((4j) * np.pi * h3 * np.sqrt(eps3) / wavelength))
+* np.exp((4j) * np.pi * h2 * np.sqrt(eps2) / wavelength)
+/
+(1 + ComplexReflectivity(eps2,eps3) * ComplexReflectivity(eps3,eps4) * np.exp((4j) * np.pi * h3 * np.sqrt(eps3) / wavelength))
+) / (1 + ComplexReflectivity(eps1,eps2) * (ComplexReflectivity(eps2,eps3) + ComplexReflectivity(eps3,eps4) * np.exp((4j) * np.pi * h3 * np.sqrt(eps3) / wavelength)) * np.exp((4j) * np.pi * h2 * np.sqrt(eps2) / wavelength)
+/
+(1 + ComplexReflectivity(eps2,eps3) * ComplexReflectivity(eps3,eps4) * np.exp((4j) * np.pi * h3 * np.sqrt(eps3) / wavelength))
+)
+	
+	return (r_complex * np.conj(r_complex)).real
+
+TriLayerReflectivity = np.vectorize(TriLayerReflectivity)

@@ -24,6 +24,7 @@
 # therein. 
 
 from libMultilayerSPP import *
+import sys
 from libMaterials     import *
 # import libDatabase
 #from joblib import Parallel, delayed
@@ -432,7 +433,7 @@ ExcitationOfSiLayer(wavelength, thickness_size) #good, but it may occur that Si 
 
 #EffectofSiMoltenThickness()
 
-exit()
+sys.exit()
 #ScenarioOfCrOxideMixture(epsCr, epsCr2O3, epsBK7, epsAir, Fraction_size, 'Cr', 'Cr2O3')
 #ScenarioOfCrOxideMixture(epsCr, epsCrO2, epsBK7, epsAir, Fraction_size,  'Cr', 'CrO2')
 #ScenarioOfSimultaneousMixingMG3(epsCr, epsCr2O3, epsCrO2, epsBK7, Fraction_size, 'Cr', 'Cr2O3', 'CrO2')

@@ -33,6 +33,7 @@ from spp_extended_theory.Libs import libMaterials  as lmat
 #num_cores = multiprocessing.cpu_count()
 
 import numpy as np
+import sys
 import matplotlib.pyplot as plt
 from spp_extended_theory.MultilayerSPP import libMultilayerSPP as lml
 from scipy.interpolate import InterpolatedUnivariateSpline
@@ -99,7 +100,7 @@ def Derrien_HRLIPSSonMoFilms(wavelength, thickness_size):
         epsSiO2     = 2.1614446988
     else: 
         print((Header,"No optical data were provided for this input."))
-        exit()
+        sys.exit()
  
     numberofroots = 10
     # Medium 1: thin film.
@@ -269,5 +270,5 @@ Derrien_HRLIPSSonMoFilms(1030e-9, thickness_size)
 
 # Derrien_HRLIPSSonCuFilms(wavelength, thickness_size)
 
-exit()
+sys.exit()
 

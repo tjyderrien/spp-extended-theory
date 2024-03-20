@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2013-2020 T. J.-Y. Derrien
+# Copyright (C) 2013-2023 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ def omega(wavelength):#{{{
 # @param Energy (eV)
 # Output: corresponding photon wavelength (m)
 def Energy_to_Wavelength(energy):
-  wavelength = h * c / Energy / e
+  wavelength = h * c / energy / e
   return wavelength
 
 ## Converts photon wavelength (m) to a band gap energy (eV)

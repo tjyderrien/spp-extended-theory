@@ -34,6 +34,7 @@
 # IMPORT CUSTOM LIBRARIES
 
 import numpy as np
+import sys
 import matplotlib.pyplot as plt
 import cmath
 from spp_extended_theory.Libs import libPlotting
@@ -105,7 +106,7 @@ def plotSipe1D_sectionX(wavelength, epsilon, f=0.1e0, s=0.4e0, theta=0e0, filena
     plt.savefig(filename+'-s'+str(s)+'.eps')
     plt.savefig(filename + '-s' + str(s) + '.png')
     plt.show()
-    #exit()
+    #sys.exit()
 #}}}
 
 #=========== 2D plot
@@ -144,7 +145,7 @@ def plotSipeFromDatabase(select, query2, wavelength, numberofkpoints=100, query=
   except:
     print("Exception: no optical data is available for "+query+" at "+title+".")
     print(SPPdb)
-    exit()
+    sys.exit()
 
   print(SPPdb) #works well
   # Filter database on wavelength
@@ -155,14 +156,14 @@ def plotSipeFromDatabase(select, query2, wavelength, numberofkpoints=100, query=
   except:
     print("Exception: no optical data is available for "+query+" at "+title+".")
     print(SPPdb)
-    exit()
+    sys.exit()
     
 
 
 
   if(len(SPPdb)==0):
     print("SPP database returned 0 matching result.")
-    exit()
+    sys.exit()
     
   # Extract materials from database
   Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1rM, eps1cM, eps2rM, eps2cM, k1imag, k2imag, DeltaLsppValue = ExtractDataDb(SPPdb)
@@ -343,7 +344,7 @@ def plotGenericSipeMaps(kx_value, ky_value, epsilon_precision = 0.05, theta=0., 
         #plotDatabasePeriod(SPPdb, title, 'Period'+niceWavelength+'nm.eps', title, metal)
     except:
         print("Warning: no optical data is available for "+query+" at "+title+".")
-        exit()
+        sys.exit()
     
     #print "** Limiting the Re(epsilon) space minimum ..."
     #try: 
@@ -354,7 +355,7 @@ def plotGenericSipeMaps(kx_value, ky_value, epsilon_precision = 0.05, theta=0., 
         ##plotDatabasePeriod(SPPdb, title, 'Period'+niceWavelength+'nm.eps', title, metal)
     #except:
         #print "Warning: no optical data is available for "+query+" at "+title+"."
-        #exit()
+        #sys.exit()
     print("** Limiting the Im(epsilon) space maximum ...")
     try: 
         SPPdb_filtered = FilterDatabaseGreaterThan(SPPdb, epsilon_imag_max, 16)
@@ -380,7 +381,7 @@ def plotGenericSipeMaps(kx_value, ky_value, epsilon_precision = 0.05, theta=0., 
   
   if(len(SPPdb)==0):
     print("** QUITTING...")
-    exit()
+    sys.exit()
   #print Header+"** Saving the materials database. "
   
   print(Header+"** Preparing the list of materials")

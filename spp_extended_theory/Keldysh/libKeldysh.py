@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2013-2021 T. J.-Y. Derrien
+# Copyright (C) 2013-2023 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@ from spp_extended_theory.Keldysh.libKeldyshPulses import *
 from spp_extended_theory.Keldysh.libKeldyshZhukov import *
 from scipy.special import ellipk, ellipe, dawsn, factorial2, factorial, ellipkm1
 from scipy.constants import hbar
+import sys
 
 rc('font', **{'family':'serif', 'serif':['Helvetica'], 'size':'16'})
 rc('text', usetex=True)
@@ -64,7 +65,7 @@ def gammaKeldysh(Egap, meff, Efield, wavelength, RefractiveIndex=1.): #{{{
     #TODO: this flow should be redirected to an error file. Stdout also goes into the variables. 
     ErrorMessage=ErrorMessage+"** Validity range error: the Keldysh model is not valid for linear absorption. INVALID RESULT...\n"
     ErrorMessage=ErrorMessage+"** Error details: "+str(int(wavelength*1E9))+" nm wavelength is too small for the gap "+str(float(Egap)/e)+".\n"
-    #exit() #Avoid to quit, so that octopus still compare its results. 
+    #sys.exit() #Avoid to quit, so that octopus still compare its results.
   if (Efield > 1e-1): #if vectorial, then abs changed its meaning
     result = omegaLaser*np.sqrt(m_e*meff*Egap)/e/Efield #Efield must not be ponderated by the optical index in adiabadicity coefficient. Everywhere else, it must be. 
     #print Efield, result
@@ -92,7 +93,7 @@ def gammaKeldysh_Atoms(Egap, meff, Efield, wavelength, RefractiveIndex=1.): #{{{
     #TODO: this flow should be redirected to an error file. Stdout also goes into the variables. 
     ErrorMessage=ErrorMessage+"** Validity range error: the Keldysh model is not valid for linear absorption. INVALID RESULT...\n"
     ErrorMessage=ErrorMessage+"** Error details: "+str(int(wavelength*1E9))+" nm wavelength is too small for the gap "+str(float(Egap)/e)+".\n"
-    #exit() #Avoid to quit, so that octopus still compare its results. 
+    #sys.exit() #Avoid to quit, so that octopus still compare its results.
   if (Efield > 1e-1): #if vectorial, then abs changed its meaning
     result = omegaLaser*np.sqrt(RecoverSolidGamma*2.*m_e*meff*Egap)/e/(Efield) #NOTE: no dependence to optical index for adiabadicity coefficient
     #print Efield, result
@@ -211,6 +212,7 @@ def KeldyshFunction(Keldysh1phi, Keldysh2theta, Ueff, nmax, wavelength): #{{{
   distant_to_unity = np.float128(1E0) - Keldysh1phi2_128
   if (distant_to_unity < 1E-320): #then it gonna crash for sure. 
     print("** Error on ellipk: argument 1 is singular. Distance to unit = "+str(distant_to_unity)+"Please increase precision on Keldysh1phi or use ellipkm1 function (careful, argument IS not the same).")
+    EllipticK1_phi = 0 #dull value
   elif(distant_to_unity < 1E-10): 
     #threshold where functions ellipk and ellipkm1 give different values
     EllipticK1_phi = ellipkm1( np.float64(distant_to_unity) )
@@ -315,6 +317,7 @@ def KeldyshFunction_Gruzdev(Keldysh1phi, Keldysh2theta, Ueff, nmax, wavelength):
   distant_to_unity = 1E0 - Keldysh1phi2_128
   if (distant_to_unity < 1E-320): #then it gonna crash for sure. 
     print("** Error on ellipk: argument 1 is singular. Distance to unit = "+str(distant_to_unity)+"Please increase precision on Keldysh1phi or use ellipkm1 function (careful, argument IS not the same).")
+    EllipticK1_phi = 0 #dull value
   elif(distant_to_unity < 1E-10):
     #threshold where functions ellipk and ellipkm1 give different values
     EllipticK1_phi = ellipkm1( np.float64(distant_to_unity) )
@@ -591,7 +594,7 @@ def generateWpiTables(Egap = 2.56e0*e, meff = 0.2226e0, wavelength = 800e-9, tau
   print(Header+"w_PI (Gruzdev) until order "+str(order)+" (min,max) = ", np.min(wPIg), np.max(wPIg))
 
   #print "Developing: exporting the table..."
-  #exit()
+  #sys.exit()
   print("")
   
   if(TemporalIntegration): #{{{

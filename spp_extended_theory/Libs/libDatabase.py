@@ -1,7 +1,7 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2013-2021 T. J.-Y. Derrien
+# Copyright (C) 2013-2024 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -132,10 +132,10 @@ def ExtractDataDb(SPPdbFiltered):
 ## Export an SPP array to a CSV file
 # SPP array must be produced with one of the SPPactiveInterfaces functions
 #
-def ExportToTxt(dbarray, filename, header=""):
+def ExportToTxt(dbarray, filename, header="", fmt="%15.8e"):
   
 
-  np.savetxt(filename, dbarray, fmt="%10.5f", delimiter='\t', header=header, newline='\n',comments='#')
+  np.savetxt(filename, dbarray, fmt=fmt, delimiter='\t', header=header, newline='\n',comments='#')
   out = 0
   #except:
   #  print("Could not write database into a file.")

@@ -79,7 +79,7 @@ def SplitSummaryTable(summary): #{{{
 # Thin film of metal is deposited at the surface of a dielectric substrate in air atmosphere
 # and irradiated by wavelength. 
 def Derrien_HRLIPSSonMoFilms(wavelength, thickness_size):
-    Header="[CopperFilm: Derrien_HRLIPSSonCuFilms: ]"
+    Header="[Mo Film: Derrien_HRLIPSSonMoFilms: ]"
     if( wavelength==1030E-9):
         epsCu       = -46.6046581932+4.7188669976j #Palik
         epsSi       = 12.80259+0.0109j #Palik
@@ -113,7 +113,8 @@ def Derrien_HRLIPSSonMoFilms(wavelength, thickness_size):
     #thickness_size = 20
     thickness_min  = 0.1e-9
     thickness_max  = 300e-9
-    t_list = np.linspace(thickness_min, thickness_max, thickness_size, endpoint=True)
+    t_list_log = np.linspace(np.log10(thickness_min), np.log10(thickness_max), thickness_size, endpoint=True)
+    t_list = np.power(10., t_list_log)
     
     summary = np.zeros((0, 7))
     for thickness in t_list:
@@ -192,7 +193,7 @@ def Derrien_HRLIPSSonMoFilms(wavelength, thickness_size):
     fig, (ax1, ax2) = plt.subplots(2, sharex=True)
     plt.xlabel(r'Thickness (nm)')
     ax1.set_ylabel(r'SPP period $\Lambda$ (nm)')
-    #ax1.set_yscale('log')
+    # ax1.set_yscale('log')
     plot110, = ax1.plot(np.multiply(1e9,thickness0), np.multiply(1e9,period0), 'r+', label=r'SPP period $\Lambda$, branch (-,-)')
     plot111, = ax1.plot(np.multiply(1e9,thickness1), np.multiply(1e9,period1), 'k+', label=r'SPP period $\Lambda$, branch (-,+)')
     plot112, = ax1.plot(np.multiply(1e9,thickness2), np.multiply(1e9,period2), 'b+', label=r'SPP period $\Lambda$, branch (+,-)')
@@ -208,6 +209,7 @@ def Derrien_HRLIPSSonMoFilms(wavelength, thickness_size):
     plot112, = ax2.plot(np.multiply(1e9,thickness2), np.multiply(1e0,np.abs(lspp2)), 'b+', label=r'SPP period $\Lambda$, branch (+,-)')
     plot113, = ax2.plot(np.multiply(1e9,thickness3), np.multiply(1e0,np.abs(lspp3)), 'g+', label=r'SPP period $\Lambda$, branch ( +,+)')
     ax2.set_ylim((20E-9,1E-3))
+    ax2.set_xscale('log')
     ax2.set_yscale('log')
     
     #plot12,  = ax1.plot(np.multiply(1e9, thickness), np.multiply(1e9,wavelength*np.ones(np.shape(fractionOxide))), 'k-', linewidth=0.5, label=r'Laser wavelength $\lambda$')

@@ -3,7 +3,7 @@
 ## @package MultilayerReflectivity 
 # Three-layer reflectivity, transmission and absorptivity
 
-# Copyright (C) 2013-2021 T. J.-Y. Derrien
+# Copyright (C) 2013-2022 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -43,9 +43,9 @@ elif(wavelength==400e-9):
 # Medium 1: External medium. 
 eps1 = epsAir
 # Medium 2: Thin film. 
-eps2 = epsSiamorphous # | epsSiO2       #epsBK7 #environment | substrate
+eps2 = epsMo # | epsSiO2       #epsBK7 #environment | substrate
 # Medium 3: Substrate
-eps3 = epsSi       #environment | substrate
+eps3 = epsSiO2 # epsSi       #environment | substrate
 # Note: Inverting eps2 and eps3 should have no effect on the possible modes, but only on field amplification. 
 
 #if(wavelength == 1064e-9): 
@@ -58,14 +58,14 @@ thickness2 = np.power(10., thickness_log)
 R = BiLayerReflectivity(wavelength, eps1, eps2, eps3, thickness2)
 T = BiLayerTransmission(wavelength, eps1, eps2, eps3, thickness2)
 A = 1.-R-T
-filename = "Air-aSi-cSi-"+str(int(1E9*wavelength))+"-Reflectivity"
+filename = "Air-Mo-SiO2-"+str(int(1E9*wavelength))+"-Reflectivity"
 
 plt.figure()
 plt.xlabel("Film thickness (nm)")
 plt.ylabel("Reflectivity")
 plt.semilogx(1E9*thickness2, R, label="R")
 plt.semilogx(1E9*thickness2, T, label="T")
-# plt.semilogx(1E9*thickness2, A, label="A")
+plt.semilogx(1E9*thickness2, A, label="A")
 plt.legend(loc="best")
 plt.grid()
 plt.savefig(filename+".eps")

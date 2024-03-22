@@ -1128,14 +1128,14 @@ def BiLayerReflectivity(wavelength, eps1, eps2, eps3, thickness2): #{{{
 #}}}
 
 ## Computes Reflectivity in a 4-layer material (env 1 | film2 of thickness h2 | film3 of thickness h3 | bulk substrate 4) material. 
-def TriLayerReflectivity(wavelength, eps1, eps2, eps3, eps4, h2, h3):
+"""def TriLayerReflectivity(wavelength, eps1, eps2, eps3, eps4, h2, h3):
     r_complex = ( \
 ComplexReflectivity(eps1,eps2) + (ComplexReflectivity(eps2,eps3) + ComplexReflectivity(eps3,eps4) * np.exp((4*j) * pi * h3 * sqrt(eps3) / wavelength)) \
 * np.exp((4*j) * pi * h2 * sqrt(eps2) / wavelength) /(1 + ComplexReflectivity(eps2,eps3) * ComplexReflectivity(eps3,eps4) * np.exp((4*j) * pi * h3 * sqrt(eps3) / wavelength)) \
 )/(1 + ComplexReflectivity(eps1,eps2) * (ComplexReflectivity(eps2,eps3) + ComplexReflectivity(eps3,eps4) * np.exp((4*j) * pi * h3 * sqrt(eps3) / wavelength)) * np.exp((4*j) * pi * h2 * sqrt(eps2) / wavelength) \
 /(1 + ComplexReflectivity(eps2,eps3) * ComplexReflectivity(eps3,eps4) * np.exp((4*j) * pi * h3 * sqrt(eps3) / wavelength)) \
 )
-    return r_complex*np.conj(r_complex)
+    return r_complex*np.conj(r_complex)"""
 
 
 
@@ -1159,18 +1159,71 @@ BiLayerReflectivity = np.vectorize(BiLayerReflectivity)
 BiLayerTransmission = np.vectorize(BiLayerTransmission)
 
 ## Compute Reflectivity in 4-material system: (env 1 | film 2 | film 3 | substrate 4)
-def TriLayerReflectivity(wavelength, eps1, eps2, eps3, eps4, h2, h3):
-	r_complex = (
-ComplexReflectivity(eps1,eps2) + (
-ComplexReflectivity(eps2,eps3) + ComplexReflectivity(eps3,eps4) * np.exp((4j) * np.pi * h3 * np.sqrt(eps3) / wavelength))
-* np.exp((4j) * np.pi * h2 * np.sqrt(eps2) / wavelength)
-/
-(1 + ComplexReflectivity(eps2,eps3) * ComplexReflectivity(eps3,eps4) * np.exp((4j) * np.pi * h3 * np.sqrt(eps3) / wavelength))
-) / (1 + ComplexReflectivity(eps1,eps2) * (ComplexReflectivity(eps2,eps3) + ComplexReflectivity(eps3,eps4) * np.exp((4j) * np.pi * h3 * np.sqrt(eps3) / wavelength)) * np.exp((4j) * np.pi * h2 * np.sqrt(eps2) / wavelength)
-/
-(1 + ComplexReflectivity(eps2,eps3) * ComplexReflectivity(eps3,eps4) * np.exp((4j) * np.pi * h3 * np.sqrt(eps3) / wavelength))
-)
-	
-	return (r_complex * np.conj(r_complex)).real
+# Warning: conventions on indices are different than in the multilayer routine.
+def TriLayerReflectivity(wavelength, eps1, eps2, eps3, eps4, thickness2, thickness3, PhaseSign=1):
+    r34 = ComplexReflectivity(eps3, eps4)
+
+    r23 = ComplexReflectivity(eps2, eps3)
+    ExpTerm = np.exp(PhaseSign*4*1j*np.pi/wavelength * np.sqrt(eps3) * thickness3)
+    r24 = (r23 + r34  * ExpTerm) / ( 1 + r23 * r34 * ExpTerm)
+    del ExpTerm
+    
+    r12 = ComplexReflectivity(eps1, eps2)
+    ExpTerm = np.exp(PhaseSign*4*1j*np.pi/wavelength * np.sqrt(eps2) * thickness2)
+    r14 = (r12 + r24 * ExpTerm) / (1 + r12 * r24 * ExpTerm)
+    r_complex = r14
+    return (r_complex * np.conj(r_complex)).real
 
 TriLayerReflectivity = np.vectorize(TriLayerReflectivity)
+
+## Explicit formuation of reflectivity for a high number of layers
+# @param wavelength (m): wavelength in meters
+# @param dielectric: complex permittivity as fonction of depth Z.
+# @param mesh: 1D mesh Z from 0 to depth (in meters). 
+# @param epsOut: dielectric permittivity outside the 1st layer
+# @param PhaseSign: +1 or -1. Some papers give +1, some -1. 
+# @param FresnelSign: this is to invert order of layers
+def MultilayerReflectance(wavelength, dielectric, mesh, epsOut=1., PhaseSign=1, FresnelSign=1):
+    NumCellsZ=np.shape(mesh)[0]-1 #C counting of tables
+    print("NumCellsZ=", NumCellsZ) #2
+    # Fresnel reflectance of last layer (r_N-1,N = r(Z_N))
+    # reflection = (FresnelSign * (np.sqrt(dielectric[NumCellsZ-1]) - np.sqrt(
+    #    dielectric[NumCellsZ])) / (np.sqrt(dielectric[NumCellsZ]) + np.sqrt(dielectric[NumCellsZ - 1])))
+    reflection = ComplexReflectivity(dielectric[NumCellsZ-1],dielectric[NumCellsZ]) #For 3 cells, it computes r12
+
+    # Fresnel reflectance from bottom to top (r(Z_k)=r(Z_k-1,Z_k))
+    for i in list(range(NumCellsZ-1, 0, -1)): #{{{ #goes from NumCellsZ-1 to 1. Layer at z0 is made manually using external diel permittivity.
+        print("Layer ", i)
+        # explicit definition (better than recursivity)
+
+        ExpTerm = np.exp(PhaseSign * 4e0 * 1j * np.pi / wavelength * np.sqrt(dielectric[i]) * np.abs(mesh[i + 1] - mesh[i]))
+        r01=ComplexReflectivity(dielectric[i-1], dielectric[i])
+        reflectionNew=( r01 + reflection * ExpTerm ) / ( 1E0 + r01 * reflection * ExpTerm )
+        
+        # Block to avoid weird Python-induced references
+        del reflection
+        reflection = reflectionNew
+        del reflectionNew, ExpTerm
+    #}}}
+    
+    # calculation between vacuum and the whole sample
+    rOutZero = ComplexReflectivity(epsOut, dielectric[0])
+    ExpTerm = np.exp(PhaseSign * 4e0 * 1j * np.pi / wavelength * np.sqrt(dielectric[0]) * np.abs(mesh[1]-mesh[0]))
+    reflectionNew = ( rOutZero + (reflection) * ExpTerm ) / ( 1e0 + rOutZero * reflection * ExpTerm )
+
+    reflection = reflectionNew
+    del reflectionNew, ExpTerm
+    return (reflection * np.conj(reflection)).real;
+
+# MultilayerReflectance = np.vectorize(MultilayerReflectance)
+
+"""## Returns reflectivity of a high number of layers
+def MultiLayerReflectivity(wavelength, epsOut, epsFilm2, epsFilm3, epsSubstrate, ThicknessFilm2, ThicknessFilm3):
+    # Generate mesh
+    # Affect the dielectric permittivities
+    # Compute complex reflectivity of the whole system
+    if(k==j+1):
+        result = ComplexReflectivity(eps1, eps2)
+    else:
+        result = MultiLayerReflectivity(wavelength, epsOut, epsFilm2, epsFilm3, epsSubstrate, ThicknessFilm2, ThicknessFilm3)
+    return result"""

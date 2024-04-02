@@ -28,6 +28,7 @@ from libNonDimensionalNumbers import *
 
 from cycler import cycler
 import matplotlib as mpl
+import sys
 
 #============== THESE ROUTINES ARE MESSY AND DONT EXACTLY FOLLOW THE SIMPLEST FORMULATION GIVEN IN ORIGINAL PAPER. 
 def Term1(T, k, depth, dynamic_viscosity, density, surface_tension):
@@ -161,7 +162,7 @@ def plotThermoConvectiveInstability(wavelength, fluence, pulseFWHM, thickness, T
 
     #if( T < MeltingTemperature() ): 
     #print Header+"** Absurd: silica should reach melting temperature. "
-    #exit()
+    #sys.exit()
     
     Absorptivity = 1. #total
     laser_intensity = laser_fluence / laser_FWHM

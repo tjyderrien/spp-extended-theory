@@ -48,7 +48,7 @@ try:
   print(MaterialDB)
 except: 
   print("** Error: Material is not contained into Materials database. ")
-  exit()
+  sys.exit()
   
 query = str(int(wavelength*1E9))
 try:

@@ -5,7 +5,11 @@
 # This module aims to calculate the density of excited electrons as function of laser parameters. 
 # Two types of usage are planned :
 # * Generating tables to use directly into simulation codes
-from libKeldysh import *
+import libKeldysh
+from libKeldyshZhukov import IntensityToField
+from spp_extended_theory.Libs.libDatabase import ExportToTxt
+import numpy as np
+from scipy.constants import pi, e
 
 print("")
 print("** Welcome to spp_extended_theory suite.")
@@ -52,7 +56,7 @@ PeakField  = np.array(np.transpose( PeakField , (1,2,0) ))
 #print Egap.shape
 
 # Computation
-Database = GenerateKeldyshDatabase(Egap, meff, wavelength, PeakField, order)
+Database = libKeldysh.GenerateKeldyshDatabase(Egap, meff, wavelength, PeakField, order)
 
 # Checking on stdout
 print(Database)

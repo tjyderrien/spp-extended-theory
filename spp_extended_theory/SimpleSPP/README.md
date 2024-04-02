@@ -1,6 +1,6 @@
-# README #
+# README
 
-Symbolic change. 
+This file details the spp_extended_theory code. 
 
 # Concept
 

@@ -19,6 +19,7 @@ import octopus_slabs.Libs.libAtomicUnits as au
 from scipy.constants import e, c, epsilon_0, m_e, hbar, h
 import numpy as np
 import matplotlib.pyplot as plt
+import sys
 
 Header="[keldysh] "
 
@@ -115,7 +116,7 @@ def SiliconLDAbandGap(Enable_A2=False): #{{{
 
   #exit()
   print("===== COMPARING THE EFFECTIVE GAPS using Stark effect ====")
-  # exit()
+  # sys.exit()
 
   ## All of code below was transfered to libStark.py
   print("== Preparing Giovannini et al model... ==")
@@ -224,7 +225,7 @@ def SiliconLDAbandGap(Enable_A2=False): #{{{
     ##print TwoBandsTwoPhotons_Eigen_round_eV.flatten()
     #print np.shape(TwoBandsTwoPhotons_Eigen_round_eV)
   
-  ##exit()
+  ##sys.exit()
 
   ## Generalizing to many fields
   print("== Preparing Stark shift as function of field intensity... ==")
@@ -412,7 +413,7 @@ def SiliconLDAbandGap(Enable_A2=False): #{{{
   plt.savefig(filename)
   print(Header+"** Info:"+filename+"was created.")
   plt.show()
-  exit()
+  sys.exit()
 #}}}
 
 ## Repeats results from Gulley2012, but could not be repeated so far. 
@@ -501,7 +502,7 @@ def SilicaGulley2012(): #{{{
   #PeakField = 1E9
   
   TestKeldysh(Egap, meff, PeakField, wavelength, order)
-  #exit()
+  #sys.exit()
   
   t0=0. #defines the instant 0.
   Delay = 0. #delay between maxima of the pulses

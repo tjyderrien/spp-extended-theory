@@ -29,6 +29,9 @@ from spp_extended_theory.Libs.libSPP import *
 # from spp_extended_theory.Keldysh.libUnits import *
 import spp_extended_theory.Keldysh.libUnits as libUnits
 from spp_extended_theory.Libs.libDatabase import *
+import numpy as np
+from scipy.interpolate import InterpolatedUnivariateSpline
+import matplotlib.pyplot as plt
 
 # from libImportOpticalData import *
 
@@ -44,8 +47,8 @@ def importFromNKtable(wavelength, folder, filename, plotting=1, unit=1E-6):  # {
     nfile = folder + filename + "-n.csv"
     kfile = folder + filename + "-k.csv"
 
-    narray = loadtxt(nfile, delimiter="\t", skiprows=1)
-    karray = loadtxt(kfile, delimiter="\t", skiprows=1)
+    narray = np.loadtxt(nfile, delimiter="\t", skiprows=1)
+    karray = np.loadtxt(kfile, delimiter="\t", skiprows=1)
 
     # unit = 1E-6
 
@@ -132,8 +135,8 @@ def importFromNKtable_batch(folder, filename, plotting=1, unit=1E-6):  # {{{
     nfile = folder + filename + "-n.csv"
     kfile = folder + filename + "-k.csv"
 
-    narray = loadtxt(nfile, delimiter="\t", skiprows=1)
-    karray = loadtxt(kfile, delimiter="\t", skiprows=1)
+    narray = np.loadtxt(nfile, delimiter="\t", skiprows=1)
+    karray = np.loadtxt(kfile, delimiter="\t", skiprows=1)
 
     # unit = 1E-6
 
@@ -172,7 +175,7 @@ def importFromNKtable_batch(folder, filename, plotting=1, unit=1E-6):  # {{{
 
     if (plotting == 1):
         plt.figure()
-        plt.xlabel(r'$\mathcal{R}e(\varepsilon)$ (nm)')
+        plt.xlabel(r'$\lambda$ (nm)')
         plt.ylabel('n, k')
         plt.semilogx(wavelength1 * 1e9, n, 'bs', label='n Palik')
         plt.semilogx(wavelength2 * 1e9, k, 'rs', label='k Palik')
@@ -205,8 +208,8 @@ def importFromEpsilonTable(wavelength, folder, filename, plotting=True, unit=1E-
     kfile = folder + filename + "-epsC.csv"  # TODO: rename kfile to ImEpsFile
 
     print(("** Info: opening " + nfile + " and " + kfile + "."))
-    narray = loadtxt(nfile, delimiter="\t", skiprows=1)
-    karray = loadtxt(kfile, delimiter="\t", skiprows=1)
+    narray = np.loadtxt(nfile, delimiter="\t", skiprows=1)
+    karray = np.loadtxt(kfile, delimiter="\t", skiprows=1)
 
     # unit = 1E-10 #Unit of the wavelength found in databases <nfile> and <kfile>.
 
@@ -281,8 +284,8 @@ def importFromEpsilonTable_batch(folder, filename, plotting=True, unit=1E-10):  
     kfile = folder + filename + "-epsC.csv"  # TODO: rename kfile to ImEpsFile
 
     print(("** Info: opening " + nfile + " and " + kfile + "."))
-    narray = loadtxt(nfile, delimiter="\t", skiprows=1)
-    karray = loadtxt(kfile, delimiter="\t", skiprows=1)
+    narray = np.loadtxt(nfile, delimiter="\t", skiprows=1)
+    karray = np.loadtxt(kfile, delimiter="\t", skiprows=1)
 
     # unit = 1E-10 #Unit of the wavelength found in databases <nfile> and <kfile>.
 
@@ -350,7 +353,7 @@ def importFromEpsilonTable_batch(folder, filename, plotting=True, unit=1E-10):  
 #  This method gives a precision worst then 1E0. Then, it is only in case we have no other data. 
 def importFromAbsorptionData(wavelength, folder, filename, plotting):  # {{{
     absfile = folder + filename + ".csv"
-    narray = loadtxt(absfile, delimiter="\t", skiprows=1)
+    narray = np.loadtxt(absfile, delimiter="\t", skiprows=1)
     unit = 1E9
 
     # import wavelength, alpha from spectroscopic data
@@ -422,10 +425,10 @@ def importFromTable(wavelength, folder, filename, plotting):  # {{{
     # Fetch data
     DataFile = folder + filename
     try:
-        DataArray = loadtxt(DataFile, delimiter="\t", skiprows=4)
+        DataArray = np.loadtxt(DataFile, delimiter="\t", skiprows=4)
         wavelengths = DataArray[:, 0] * unit1;
     except:
-        DataArray = loadtxt(DataFile, delimiter=" ", skiprows=4)
+        DataArray = np.loadtxt(DataFile, delimiter=" ", skiprows=4)
         wavelengths = DataArray[:, 0] * unit1
 
     n = DataArray[:, 1];

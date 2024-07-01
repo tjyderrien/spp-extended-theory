@@ -37,6 +37,7 @@ import sys
 
 Header="[libSPP] "
 
+# if(__name__=="__main__"):
 lengthunit = 1e-9
 eta = 0.1 #assumed precision error on the dielectric permittivity
 UsingTeX=True #TODO: set to False for Windows or linux cluster users
@@ -46,6 +47,7 @@ UsingTeX=True #TODO: set to False for Windows or linux cluster users
 ## 2: Period != 0 is necessary for a material to be listed in results
 ## 3: Extreme level: use ExperimentallyAchievable() to verify possibility of decay depth > optical penetration depth
 LevelOfSPPaccuracy=0
+# global LevelOfSPPaccuracy
 
 # Settings for matplotlib: taken from https://stackoverflow.com/questions/12322738/how-do-i-change-the-axis-tick-font-in-a-matplotlib-plot-when-rendering-using-lat
 sizeOfFont = 14
@@ -74,7 +76,6 @@ def omega(wavelength):#{{{
 # @param eps1 (complex), 
 # @param eps2 (complex)
 def betaSPP(wavelength, eps1, eps2):#{{{
-
     omega = 2.0*pi*c/wavelength
     try:
         value = omega/c * cmath.sqrt(eps1 * eps2 / (eps1 + eps2))

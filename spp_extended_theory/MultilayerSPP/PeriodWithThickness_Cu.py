@@ -95,7 +95,7 @@ def Derrien_HRLIPSSonCuFilms(wavelength, thickness_size):
         epsSiO2     = 2.1614446988
     else: 
         print((Header,"No optical data were provided for this input."))
-        exit()
+        sys.exit()
  
     numberofroots = 10
     # Medium 1: thin film.
@@ -258,5 +258,5 @@ thickness_size = 60 #Fraction_size
 
 Derrien_HRLIPSSonCuFilms(wavelength, thickness_size)
 
-exit()
+sys.exit()
 

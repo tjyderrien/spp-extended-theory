@@ -27,10 +27,10 @@ def gammat(epsilon, f, s): #validated on Bonse et al 2005
 	return 0.25*(epsilon-1e0)/pi/(1e0+0.5e0*(1e0-f)*(epsilon-1.)*(F(s)-R(epsilon)*G(s)))
 
 def tz(epsilon, theta): #validated on Bonse et al 2005
-	return 2e0*cmath.sin(theta)/(epsilon*abs(cmath.cos(theta))+(epsilon-cmath.sin(theta)**2)**(0.5))
+	return 2e0*cmath.sin(theta)*abs(cmath.cos(theta))/(epsilon*abs(cmath.cos(theta))+(epsilon-cmath.sin(theta)**2)**(0.5))
 
 def tx(epsilon, theta): #validated on Bonse et al 2005
-	return 2e0*(epsilon-cmath.sin(theta)**2)**(0.5e0)/(epsilon*abs(cmath.cos(theta))+(epsilon-cmath.sin(theta)**2)**(0.5))
+	return 2e0*(epsilon-cmath.sin(theta)**2)**(0.5e0)*abs(cmath.cos(theta))/(epsilon*abs(cmath.cos(theta))+(epsilon-cmath.sin(theta)**2)**(0.5))
 
 def ts(epsilon, theta): #validated on Bonse et al 2005
 	return 2e0*abs(cmath.cos(theta))/(abs(cmath.cos(theta))+(epsilon-cmath.sin(theta)**2)**(0.5))

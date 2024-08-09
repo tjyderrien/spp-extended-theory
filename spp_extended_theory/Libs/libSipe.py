@@ -1,14 +1,13 @@
 ## @package libSipe
 # Module libSipe provides the basic functions to describe coupling efficiency factor as function of wavenumber kappa. 
 # The system is a semi-infinite medium described by an homogeneous complex-valued dielectric permittivity. 
-# The model was strictly taken from [Bonse, J. et al, J. Appl. Phys. 97, 013538 (2005)], which is clever summary of 
-# the Sipe model given in [Sipe, J. E. et al. Phys. Rev. B 27, 1141-1154 (1983)]
+# The model was strictly taken from [Bonse, J. et al, J. Appl. Phys. 97, 013538 (2005)], which summarizes
+# the Sipe model given in [Sipe, J. E. et al. Phys. Rev. B 27, 1141-1154 (1983)].
 # NOTE: module was only validated for normal incidence. 
 
 import cmath
 
 from scipy.constants import pi
-
 
 def G(s): #validated on Bonse et al 2005.
 	return 0.5*(cmath.sqrt(s**2+4e0)+s)-cmath.sqrt(s**2+1e0)
@@ -26,11 +25,11 @@ def gammaz(epsilon, f, s): #validated on Bonse et al 2005
 def gammat(epsilon, f, s): #validated on Bonse et al 2005
 	return 0.25*(epsilon-1e0)/pi/(1e0+0.5e0*(1e0-f)*(epsilon-1.)*(F(s)-R(epsilon)*G(s)))
 
-def tz(epsilon, theta): #validated on Bonse et al 2005
-	return 2e0*cmath.sin(theta)/(epsilon*abs(cmath.cos(theta))+(epsilon-cmath.sin(theta)**2)**(0.5))
+def tz(epsilon, theta): #validated on Bonse et al 2005 - ERRATUM 2024.
+	return 2e0*cmath.sin(theta)*abs(cmath.cos(theta))/(epsilon*abs(cmath.cos(theta))+(epsilon-cmath.sin(theta)**2)**(0.5))
 
-def tx(epsilon, theta): #validated on Bonse et al 2005
-	return 2e0*(epsilon-cmath.sin(theta)**2)**(0.5e0)/(epsilon*abs(cmath.cos(theta))+(epsilon-cmath.sin(theta)**2)**(0.5))
+def tx(epsilon, theta): #validated on Bonse et al 2005 - ERRATUM 2024.
+	return 2e0*(epsilon-cmath.sin(theta)**2)**(0.5e0) * abs(cmath.cos(theta)) / (epsilon*abs(cmath.cos(theta))+(epsilon-cmath.sin(theta)**2)**(0.5))
 
 def ts(epsilon, theta): #validated on Bonse et al 2005
 	return 2e0*abs(cmath.cos(theta))/(abs(cmath.cos(theta))+(epsilon-cmath.sin(theta)**2)**(0.5))
@@ -44,8 +43,8 @@ def hzk(epsilon, kappa): #validated on Bonse et al 2005
 def hkz(epsilon, kappa): #validated on Bonse et al 2005
 	return (2.*1j)*kappa*cmath.sqrt(epsilon-kappa**2)/(epsilon*cmath.sqrt(1.-kappa**2)+cmath.sqrt(epsilon-kappa**2))
 
-def hkk(epsilon, kappa): #validated on Bonse et al 2005
-	return (2.*1j)*cmath.sqrt((epsilon-kappa**2)*(1.-kappa**2))/(epsilon*cmath.sqrt(1.-kappa**2)+cmath.sqrt(epsilon-kappa**2))
+def hkk(epsilon, kappa): #validated on Bonse et al 2005 - ERRATUM 2024.
+	return (2.*1j)*cmath.sqrt(epsilon-kappa**2)*cmath.sqrt(1.-kappa**2)/(epsilon*cmath.sqrt(1.-kappa**2)+cmath.sqrt(epsilon-kappa**2))
 
 def hss(epsilon, kappa): #validated on Bonse et al 2005
 	return (2.*1j)/(cmath.sqrt(1.-kappa**2)+cmath.sqrt(epsilon-kappa**2))
@@ -66,12 +65,12 @@ def kpDotX(kappa): #validated on Bonse et al 2005
 	return kappa[0]/kappapn(kappa)
 
 def kmDotX(kappa): #validated on Bonse et al 2005
-	return kappa[0]/kappamn(kappa)
+	return -kappa[0]/kappamn(kappa)
 
-def kpn(kappap): #what is kpn?  [MAIN DOUBT MAY BE LOCATED HERE]
+def kpn(kappap):
 	return cmath.sqrt(kappap[0]**2+kappap[1]**2)
 
-def kmn(kappam): #what is kmn? [MAIN DOUBT MAY BE LOCATED HERE]
+def kmn(kappam):
 	return cmath.sqrt(kappam[0]**2+kappam[1]**2)
 
 def vsp(theta, f, s, epsilon, kappa, kappap): #validated on Bonse et al 2005
@@ -81,10 +80,17 @@ def vsm(theta, f, s, epsilon, kappa, kappam): #validated on Bonse et al 2005
 	return (hss(epsilon, kmn(kappam)) * kmDotY(theta, kappa)**2 + hkk(epsilon, kmn(kappam))*kmDotX(kappa)**2) *gammat(epsilon, f, s)*abs(ts(epsilon, theta))**2
 
 def vpp(theta, f, s, epsilon, kappa, kappap): #validated on Bonse et al 2005
-	return (hss(epsilon, kpn(kappap))*kpDotX(kappa)**2+hkk(epsilon, kpn(kappap))*kpDotY(theta, kappa)**2)*gammat(epsilon, f, s)*abs(tx(epsilon, theta))**2+hkz(epsilon, kpn(kappa))*kpDotY(theta, kappa)*gammaz(epsilon, f, s)*epsilon*(tx(epsilon, theta).conjugate())*tz(epsilon, theta)+hzk(epsilon, kpn(kappap))*kpDotY(theta, kappa)*gammat(epsilon, f, s)*tx(epsilon, theta)*(tz(epsilon, theta).conjugate())+hzz(epsilon, kpn(kappap))*gammaz(epsilon, f, s)*epsilon*abs(tz(epsilon, theta))**2
+	return (hss(epsilon, kpn(kappap))*kpDotX(kappa)**2+hkk(epsilon, kpn(kappap))*kpDotY(theta, kappa)**2)*gammat(epsilon, f, s)\
+		   *abs(tx(epsilon, theta))**2\
+		   +hkz(epsilon, kpn(kappap))*kpDotY(theta, kappa)*gammaz(epsilon, f, s)*epsilon*(tx(epsilon, theta).conjugate())*tz(epsilon, theta)\
+		   +hzk(epsilon, kpn(kappap))*kpDotY(theta, kappa)*gammat(epsilon, f, s)*tx(epsilon, theta)*(tz(epsilon, theta).conjugate())\
+		   +hzz(epsilon, kpn(kappap))*gammaz(epsilon, f, s)*epsilon*abs(tz(epsilon, theta))**2
 
 def vpm(theta, f, s, epsilon, kappa, kappam): #validated on Bonse et al 2005
-	return (hss(epsilon, kmn(kappam))*kmDotX(kappa)**2+hkk(epsilon, kmn(kappam))*kmDotY(theta, kappa)**2)*gammat(epsilon, f, s)*abs(tx(epsilon, theta))**2+hkz(epsilon, kmn(kappam))*kmDotY(theta, kappa)*gammaz(epsilon, f, s)*epsilon*(tx(epsilon, theta).conjugate())*tz(epsilon, theta)+hzk(epsilon, kmn(kappam))*kmDotY(theta, kappa)*gammat(epsilon, f, s)*tx(epsilon, theta)*(tz(epsilon, theta).conjugate())+hzz(epsilon, kmn(kappam))*gammaz(epsilon, f, s)*epsilon*abs(tz(epsilon, theta))**2
+	return (hss(epsilon, kmn(kappam))*kmDotX(kappa)**2+hkk(epsilon, kmn(kappam))*kmDotY(theta, kappa)**2)*gammat(epsilon, f, s)*abs(tx(epsilon, theta))**2\
+		   +hkz(epsilon, kmn(kappam))*kmDotY(theta, kappa)*gammaz(epsilon, f, s)*epsilon*(tx(epsilon, theta).conjugate())*tz(epsilon, theta)\
+		   +hzk(epsilon, kmn(kappam))*kmDotY(theta, kappa)*gammat(epsilon, f, s)*tx(epsilon, theta)*(tz(epsilon, theta).conjugate())\
+		   +hzz(epsilon, kmn(kappam))*gammaz(epsilon, f, s)*epsilon*abs(tz(epsilon, theta))**2
 
 def etas(theta, f, s, epsilon, kappa, kappap, kappam): #validated on Bonse et al 2005
 	return 2.*pi*abs(vsp(theta, f, s, epsilon, kappa, kappap)+(vsm(theta, f, s, epsilon, kappa, kappam).conjugate()))

@@ -207,7 +207,7 @@ betaSPP = np.vectorize(betaSPP)
 omega = np.vectorize(omega)
 
 kspp = betaSPP(wavelengths, eps1new, eps2new)
-omegaspp = omega(wavelengths)
+omegaspp = omega(wavelengths) #we here set resonance omega_spp = omega_laser
 #omegaspp = np.sort(omegaspp)
 
 plt.figure()

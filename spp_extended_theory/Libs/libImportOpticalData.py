@@ -32,6 +32,9 @@ from spp_extended_theory.Libs.libDatabase import *
 import numpy as np
 from scipy.interpolate import InterpolatedUnivariateSpline
 import matplotlib.pyplot as plt
+from octopus_slabs.Libs import libLogging
+
+logger = libLogging.init_logger(__name__, verbose=True)
 
 # from libImportOpticalData import *
 
@@ -347,23 +350,31 @@ def importFromEpsilonTable_batch(folder, filename, plotting=True, unit=1E-10):  
 
 # }}}
 
-## Mere function? Generates (ReEps, ImEps) from absorption data (given in m^{-1}). 
+## Mere function? Generates (ReEps, ImEps) from absorption data (given in m^{-1}). HOW?
 #  This routine is made to import data captured using sofware such as Engauge Digitized. 
 #  Be very careful! The data produced by this method are very unprecise. SPP spectroscopy requires precision to 1E-3. 
-#  This method gives a precision worst then 1E0. Then, it is only in case we have no other data. 
-def importFromAbsorptionData(wavelength, folder, filename, plotting):  # {{{
+#  This method gives a precision worst then 1E0. Then, it is only in case we have no other data.
+# @param wavelength: range to express data onto
+# @param folder: location of the data
+# @param filename: ".CSV" will be added to the name
+# @param plotting: True|False
+# @param unit: unit of the wavelength (nm by default)
+def importFromAbsorptionData(folder, filename, energyAxis=False, plotting=True, unit1=1E9, unit2=1E-2):  # {{{
     absfile = folder + filename + ".csv"
     narray = np.loadtxt(absfile, delimiter="\t", skiprows=1)
-    unit = 1E9
+    #unit = 1E9
 
     # import wavelength, alpha from spectroscopic data
-    wavelength1 = h * c / (narray[::-1, 0] * e)
+    if(energyAxis):
+        wavelength1 = h * c / (narray[::-1, 0] * e)
+    else:
+        wavelength1 = narray[::, 0] / unit1
     print(wavelength1)
-    n = 1e2 * narray[::-1, 1]
-    print(n)
+    absorptivity = narray[::, 1] / unit2
+    print(absorptivity)
     numrows = 10000
     base = 10
-    # interpolate n and k on new wavelength mesh
+    # interpolate absorptivity k on new wavelength mesh
     order = 1
     # wavelengths = np.arange(np.amin(wavelength2),np.amax(wavelength2), precision) #regular mesh, AWFUL for memory
     print(("Generating new wavelength mesh: (" + str(np.amin(wavelength1)) + ", " + str(np.amax(wavelength1)) + ")"))
@@ -373,30 +384,30 @@ def importFromAbsorptionData(wavelength, folder, filename, plotting):  # {{{
     print(("New wavelength mesh has " + str(numrows) + " rows."))
     # print wavelengths
 
-    fni = InterpolatedUnivariateSpline(wavelength1, n, k=order)
+    fni = InterpolatedUnivariateSpline(wavelength1, absorptivity, k=order)
 
     # Interpolated one optical constants
     try:
-        absnew = fni(wavelength)
-        print(("Interpolated absorptivity at " + str(wavelength * unit) + " nm = " + str(absnew)))
+        absnew = fni(wavelengths)
+        print(("Interpolated absorptivity at " + str(wavelengths * unit1) + " nm = " + str(absnew)))
     except:
-        print(("Interpolation for " + str(wavelength * unit) + " nm failed."))
+        print(("Interpolation for " + str(wavelengths * unit1) + " nm failed."))
 
-    # defining the new n and k on a common mesh
-    ni = fni(wavelengths)
+    # defining k on a common mesh
+    absorptivity_new = fni(wavelengths)
 
     if (plotting):
         plt.figure()
         plt.xlabel(r'Wavelength $\lambda$ (nm)')
         plt.ylabel(r'$\alpha$ (m$^{-1}$)')
-        plt.loglog(wavelength1 * unit, n, 'bs', label=r'$\alpha$ data')
-        plt.loglog(wavelengths * unit, ni, 'b-', label=r'$\alpha$ interp')
+        plt.loglog(wavelength1 * unit1, absorptivity, 'bs', label=r'$\alpha$ data')
+        plt.loglog(wavelengths * unit1, absorptivity_new, 'b-', label=r'$\alpha$ interp')
         plt.grid()
         plt.legend(loc=1)
         plt.show()
-        plt.savefig('SpectroscopicData.eps')
+        plt.savefig('Absorptivity.eps')
 
-    return 0
+    return wavelengths, absorptivity_new * wavelengths / 4. / np.pi
     # plt.show()
 
 

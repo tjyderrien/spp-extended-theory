@@ -48,7 +48,17 @@ libDatabase.ExportToTxt(SPPdb, SppOutput)
 # Writing table caption
 f=open(SppOutput, "a")
 
-f.write("#Material1\tMaterial2\tWavelength\tOldSPPactiveBool\tNewSPPactiveBool\tSPPperiod\tSPPperiodError\tSPPdecayDepth1\tSPPdecayDepth2\tReflectivity\tOpticalPenetration1\tOpticalPenetration2\tSPPdecayLength\teps1real\teps1imag\teps2real\teps2imag\tSPPdepthImagk1\tSPPdepthImagk2\tFaradayNumber\tJouleNumber")
+#Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, #5
+#Period, PeriodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, #10
+#OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1.real, eps1.imag, #15
+#eps2.real, eps2.imag, SPPdepthImagk1, SPPdepthImagk2, deltaLsppValues.real, #20
+#Fa, Jo, LifeTime
+
+f.write("#Material1\tMaterial2\tWavelength\tOldSPPactiveBool\tNewSPPactiveBool"
+        "\tSPPperiod\tSPPperiodError\tSPPdecayDepth1\tSPPdecayDepth2\tReflectivity"
+        "\tOpticalPenetration1\tOpticalPenetration2\tSPPdecayLength\teps1real\teps1imag"
+        "\teps2real\teps2imag\tSPPdepthImagk1\tSPPdepthImagk2\tDeltaLsppValues"
+        "\tFaradayNumber\tJouleNumber\tLifetimeRaether")
 f.close()
 print() 
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2013-2021 T. J.-Y. Derrien
+# Copyright (C) 2013-2024 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -101,11 +101,21 @@ def makePlot(x_data, y_data, tags, filename, plottitle, labelx, labely, function
 #  @param query:      
 def plotDatabaseMaterials(database, legend, outputfile, query, metal): #{{{
 
+  # Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool,  # 5
+  # SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity,  # 10
+  # OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c,  # 15
+  # eps2r, eps2c, k1imag, k2imag, deltaLsppValues,  # 20
+  # Fa, Jo, LifeTime
+
   # Unfold the data from database
   if (not metal):
-    Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, k1imag, k2imag, DeltaLsppValue = libDatabase.ExtractDataDb(database)
+    Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, \
+    SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, \
+    k1imag, k2imag, DeltaLsppValue, Fa, Jo, LifeTime = libDatabase.ExtractDataDb(database)
   else: 
-    Material2, Material1, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps2r, eps2c, eps1r, eps1c, k1imag, k2imag, DeltaLsppValue = libDatabase.ExtractDataDb(database)
+    Material2, Material1, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, \
+    SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps2r, eps2c, eps1r, eps1c, \
+    k1imag, k2imag, DeltaLsppValue, Fa, Jo, LifeTime = libDatabase.ExtractDataDb(database)
   
   # Clean the first field
   Material2clean = libDatabase.CleanStrArray(Material2)
@@ -120,10 +130,21 @@ def plotDatabaseMaterials(database, legend, outputfile, query, metal): #{{{
 ## Plots the SPP-period for interfaces given in the database, for a given wavelength. 
 def plotDatabasePeriod(database, legend, outputfile, query, metal): #{{{
   # Unfold data from database
+
+  # Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool,  # 5
+  # SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity,  # 10
+  # OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c,  # 15
+  # eps2r, eps2c, k1imag, k2imag, deltaLsppValues,  # 20
+  # Fa, Jo, LifeTime
+
   if (not metal):
-    Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, k1imag, k2imag, DeltaLsppValue = libDatabase.ExtractDataDb(database)
+    Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, \
+    SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, \
+    k1imag, k2imag, DeltaLsppValue, Fa, Jo, LifeTime = libDatabase.ExtractDataDb(database)
   else: 
-    Material2, Material1, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps2r, eps2c, eps1r, eps1c, k1imag, k2imag, DeltaLsppValue = libDatabase.ExtractDataDb(database)
+    Material2, Material1, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, \
+    SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps2r, eps2c, eps1r, eps1c, \
+    k1imag, k2imag, DeltaLsppValue, Fa, Jo, LifeTime = libDatabase.ExtractDataDb(database)
   
   # Clean the first field	
   Material2clean = libDatabase.CleanStrArray(Material2)
@@ -134,15 +155,54 @@ def plotDatabasePeriod(database, legend, outputfile, query, metal): #{{{
   return 0
 #}}}
 
+## Plots the SPP-period for interfaces given in the database, for a given wavelength.
+def plotDatabaseLifetimeRaether(database, legend, outputfile, query, metal):  # {{{
+  # Unfold data from database
+  if (not metal):
+
+    #Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool,  # 5
+    #SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity,  # 10
+    #OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c,  # 15
+    #eps2r, eps2c, k1imag, k2imag, deltaLsppValues,  # 20
+    #Fa, Jo, LifeTime
+
+    Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, \
+    SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, \
+    OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, \
+    eps2r, eps2c, k1imag, k2imag, DeltaLsppValue, \
+    Fa, Jo, LifeTime = libDatabase.ExtractDataDb(database)
+
+  else:
+    Material2, Material1, Wavelength, OldSPPactiveBool, NewSPPactiveBool, \
+    SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, \
+    OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps2r, eps2c, \
+    eps1r, eps1c, k1imag, k2imag, DeltaLsppValue, \
+    Fa, Jo, LifeTime = libDatabase.ExtractDataDb(database)
+
+  # Clean the first field
+  Material2clean = libDatabase.CleanStrArray(Material2)
+
+  # Prepare plot with arrows and text (but single wavelength)
+  makePlot(eps2r, LifeTime, Material2clean, outputfile, query, r'$Re(\varepsilon)$', 'Lifetime Raether (s)', legend, 'r')
+
+  return 0
+
+
+# }}}
+
 ## Plots the SPP decay length L_{SPP} at various interfaces contained in a database
 # This should be restricted to a single wavelength for clarity. 
 def plotDatabaseLspp(database, legend, outputfile, query, metal): #{{{
   
   # Unfolding data from database
   if (not metal):
-    Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, k1imag, k2imag, DeltaLsppValue = libDatabase.ExtractDataDb(database)
+    Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, \
+    SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, \
+    k1imag, k2imag, DeltaLsppValue, Fa, Jo, LifeTime = libDatabase.ExtractDataDb(database)
   else: 
-    Material2, Material1, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps2r, eps2c, eps1r, eps1c, k1imag, k2imag, DeltaLsppValue = libDatabase.ExtractDataDb(database)
+    Material2, Material1, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, \
+    SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps2r, eps2c, eps1r, eps1c, \
+    k1imag, k2imag, DeltaLsppValue, Fa, Jo, LifeTime = libDatabase.ExtractDataDb(database)
   
   # CLean the first field	
   Material2clean = libDatabase.CleanStrArray(Material2)
@@ -157,9 +217,13 @@ def plotDatabaseLspp(database, legend, outputfile, query, metal): #{{{
 # For clarity, it is advised to reduce database to single wavelength. 
 def plotDatabaseDeltaLspp(database, legend, outputfile, query, metal): #{{{
   if (not metal):
-    Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, k1imag, k2imag, deltaLsppValue  = libDatabase.ExtractDataDb(database)
+    Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, \
+    SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, \
+    k1imag, k2imag, deltaLsppValue, Fa, Jo, LifeTime = libDatabase.ExtractDataDb(database)
   else: 
-    Material2, Material1, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps2r, eps2c, eps1r, eps1c, k1imag, k2imag, deltaLsppValue = libDatabase.ExtractDataDb(database)
+    Material2, Material1, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, \
+    SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps2r, eps2c, eps1r, eps1c, \
+    k1imag, k2imag, deltaLsppValue, Fa, Jo, LifeTime  = libDatabase.ExtractDataDb(database)
   # CLean the first field	
   Material2clean = libDatabase.CleanStrArray(Material2)
   
@@ -178,12 +242,18 @@ def plotDatabaseDeltaLspp(database, legend, outputfile, query, metal): #{{{
 # Reverse mode: invert the material indices from the SPP database. Useful some metallic materials. 
 def plotSeveralWavelengths(database1, database2, reverse, metal, query):#{{{
   # Extract data for 800 nm
-  Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, k1imag, k2imag, DeltaLsppValue = libDatabase.ExtractDataDb(database1)
+  Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, \
+  SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, \
+  k1imag, k2imag, DeltaLsppValue, Fa, Jo, LifeTime = libDatabase.ExtractDataDb(database1)
   
   if(metal): #swap eps1 and eps2
-    Material2, Material1, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth2, SPPdecayDepth1, Reflectivity, OpticalPenetration2, OpticalPenetration1, SPPdecayLength, eps2r, eps2c, eps1r, eps1c, k2imag, k1imag, DeltaLsppValue = libDatabase.ExtractDataDb(database1)
+    Material2, Material1, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth2, \
+    SPPdecayDepth1, Reflectivity, OpticalPenetration2, OpticalPenetration1, SPPdecayLength, eps2r, eps2c, eps1r, eps1c, \
+    k2imag, k1imag, DeltaLsppValue, Fa, Jo, LifeTime  = libDatabase.ExtractDataDb(database1)
   else: 
-    Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, k1imag, k2imag, DeltaLsppValue = libDatabase.ExtractDataDb(database1)
+    Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, \
+    SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, \
+    k1imag, k2imag, DeltaLsppValue, Fa, Jo, LifeTime  = libDatabase.ExtractDataDb(database1)
     
   # Calculation of refractive index array
   eps1r=np.asfarray(eps1r)
@@ -225,9 +295,13 @@ def plotSeveralWavelengths(database1, database2, reverse, metal, query):#{{{
   # Extract (again) for 400 nm
   #TODO: use a function here! code is repeated! 
   if(metal): #swap eps1 and eps2
-    Material2, Material1, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth2, SPPdecayDepth1, Reflectivity, OpticalPenetration2, OpticalPenetration1, SPPdecayLength, eps2r, eps2c, eps1r, eps1c, k2imag, k1imag, DeltaLsppValue = libDatabase.ExtractDataDb(database2)
+    Material2, Material1, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth2, \
+    SPPdecayDepth1, Reflectivity, OpticalPenetration2, OpticalPenetration1, SPPdecayLength, eps2r, eps2c, eps1r, eps1c, \
+    k2imag, k1imag, DeltaLsppValue, Fa, Jo, LifeTime  = libDatabase.ExtractDataDb(database2)
   else: 
-    Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, k1imag, k2imag, DeltaLsppValue = libDatabase.ExtractDataDb(database2)
+    Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, SPPperiod, SPPperiodError, SPPdecayDepth1, \
+    SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, \
+    k1imag, k2imag, DeltaLsppValue, Fa, Jo, LifeTime  = libDatabase.ExtractDataDb(database2)
   
   # Calculation of refractive index
   eps1r=np.asfarray(eps1r)

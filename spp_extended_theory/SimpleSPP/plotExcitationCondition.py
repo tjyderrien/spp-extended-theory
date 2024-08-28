@@ -1,7 +1,7 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2013-2020 T. J.-Y. Derrien
+# Copyright (C) 2013-2024 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,8 +20,11 @@
 # Plots the excitation conditions and properties of SPP as function of Drude excitation of band gap materials. 
 
 # IMPORT LIBRARIES
-from libSPP import *
-
+from spp_extended_theory.Libs.libSPP import *
+from spp_extended_theory.Libs.libDatabase import FilterDatabase, ExtractMaterialData
+from spp_extended_theory.Libs.libMaterials import Drude
+import numpy as np
+import matplotlib.pyplot as plt
 #folder = "Database/"
 
 Material1 = 'Air' #'ZnO (Bond 1965, o)'
@@ -35,7 +38,7 @@ unit = 1E9
 database="MaterialOpticalDatabaseForPlasmonics.csv"
 
 # Build database array for choosing which material can be of interest to irradiate
-dbarray = loadtxt(database, dtype='str', delimiter='\t')
+dbarray = np.loadtxt(database, dtype='str', delimiter='\t')
 
 # Select the material of interface 1
 DataMaterial1 = FilterDatabase(dbarray, Material1, 0)
@@ -72,7 +75,7 @@ epsSi  = Drude(wavelength, Ne, eps2, CollisionRate, OpticalMass)
 plt.figure()
 plt.xlabel(r'$N_{e-h}$ (m$^{-3}$)')
 plt.ylabel(r'$F_{spp}$')
-plt.loglog(Ne, SPPcondition, 'r', label='SPP forbidden')
+plt.loglog(Ne,  SPPcondition, 'r', label='SPP forbidden')
 plt.loglog(Ne, -SPPcondition, 'b', label='SPP allowed')
 plt.title('SPP condition '+str(Material1loc[0])+'/'+str(Material2loc[0]))
 plt.legend(loc='best')
@@ -103,13 +106,31 @@ plt.tight_layout()
 plt.savefig(filenames+'BetaSPP.eps')
 #plt.show()
 
+print("Let's clean Lspp using SPP excitation condition.")
+
+
+
 plt.figure()
 plt.xlabel(r'Excited electron density $n_{\mathrm{exc}}$ (m$^{-3}$)')
 plt.ylabel(r'$L_{SPP}$ (m)')
-plt.loglog(Ne, Lspp,  label = r'$L_{SPP}^{+}$')
-#plt.plot(Ne, -Lspp, label = r'$L_{SPP}^{-}$')
+plt.loglog(Ne,  Lspp, label = r'$L_{SPP}$')
+# plt.loglog(Ne, -Lspp, label = r'$L_{SPP}^{-}$')
 plt.legend(loc='best')
 plt.tight_layout()
 plt.grid()
 plt.savefig(filenames+'Lspp.eps')
+plt.show()
+
+Lspp_filtered = Lspp[SPPcondition<0]
+Ne_filtered   = Ne[SPPcondition<0]
+
+plt.figure()
+plt.xlabel(r'Excited electron density $n_{\mathrm{exc}}$ (m$^{-3}$)')
+plt.ylabel(r'$L_{\textrm{SPP}}$ (m)')
+plt.loglog(Ne_filtered,  Lspp_filtered, label = r'$L_{\mathrm{SPP}}$')
+# plt.loglog(Ne, -Lspp, label = r'$L_{SPP}^{-}$')
+plt.legend(loc='best')
+plt.tight_layout()
+# plt.grid()
+plt.savefig(filenames+'Lspp-SPPconditioned.eps')
 plt.show()

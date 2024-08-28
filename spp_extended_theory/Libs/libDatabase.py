@@ -106,7 +106,10 @@ def ExtractDataDb(SPPdbFiltered):
   Reflectivity = SPPdbFiltered[:, 9]; OpticalPenetration1 = SPPdbFiltered[:,10]; OpticalPenetration2 = SPPdbFiltered[:,10]; SPPdecayLength = SPPdbFiltered[:,12]
   eps1r = SPPdbFiltered[:, 13]; eps1c = SPPdbFiltered[:,14]; eps2r = SPPdbFiltered[:,15]; eps2c = SPPdbFiltered[:,16]; k1imag = SPPdbFiltered[:,17]; 
   k2imag = SPPdbFiltered[:,18]
-  DeltaLsppValue = SPPdbFiltered[:,19]
+  DeltaLsppValue = SPPdbFiltered[:,19],
+  Fa = SPPdbFiltered[:,20],
+  Jo = SPPdbFiltered[:,21],
+  LifeTime = SPPdbFiltered[:,22]
   
   #Converts strings to floats
   Wavelength = np.asfarray(Wavelength)
@@ -125,8 +128,13 @@ def ExtractDataDb(SPPdbFiltered):
   k1imag = np.asfarray(k1imag)
   k2imag = np.asfarray(k2imag)
   DeltaLsppValue = np.asfarray(DeltaLsppValue)
+  Fa = np.asfarray(Fa)
+  Jo = np.asfarray(Jo)
+  LifeTime = np.asfarray(LifeTime)
 
-  return Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, RealEps, RealEpsError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, eps2c, k1imag, k2imag, DeltaLsppValue
+  return Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, RealEps, RealEpsError, SPPdecayDepth1, \
+         SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength, eps1r, eps1c, eps2r, \
+         eps2c, k1imag, k2imag, DeltaLsppValue, Fa, Jo, LifeTime
 
 
 ## Export an SPP array to a CSV file

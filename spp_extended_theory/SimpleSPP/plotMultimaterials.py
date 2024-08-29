@@ -171,7 +171,7 @@ try:
   logger.info("Plotting PERIOD...")
   plotDatabasePeriod(SPPdb, title, 'Period'+niceWavelength+'nm.eps', title, metal)
   logger.info("Plotting LIFETIME RAETHER...")
-  plotDatabaseLifetimeRaether(SPPdb, title, 'Lifetime_Rather' + niceWavelength + 's.eps', title, metal)
+  plotDatabaseLifetimeRaether(SPPdb, title, 'Lifetime_Rather' + niceWavelength + 's.eps', title, metal=True)
 except:
   logger.warning("Warning: no optical data is available for "+query+" at "+title+".")
 

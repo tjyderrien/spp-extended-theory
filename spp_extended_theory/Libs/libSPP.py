@@ -753,7 +753,7 @@ def LifeTimeRaether(beta, eps2, eps1):
   omegasppimag=beta.real * c * eps1.imag/(2e0*eps1.real**2) * (eps1.real * eps2.real)/(eps1.real + eps2.real)
   #lifetime=2e0*pi/omegasppimag #Raether original formula
   #lifetime=2e0/omegasppimag #Raether modified formula, we just dropped the pi.
-  if(omegasppimag !=0):
+  if(omegasppimag != 0):
     lifetime=0.5e0/omegasppimag #modified Raether formula to match with complex group velocity approach
   else:
     lifetime=0
@@ -787,3 +787,4 @@ EffectiveIndex = np.vectorize(EffectiveIndex)
 deltaBetaSPP = np.vectorize(deltaBetaSPP)
 deltaPeriodSPP = np.vectorize(deltaPeriodSPP)
 deltaLspp = np.vectorize(deltaLspp)
+LifeTimeRaether = np.vectorize(LifeTimeRaether)

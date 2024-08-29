@@ -157,6 +157,7 @@ def plotDatabasePeriod(database, legend, outputfile, query, metal): #{{{
 
 ## Plots the SPP-period for interfaces given in the database, for a given wavelength.
 def plotDatabaseLifetimeRaether(database, legend, outputfile, query, metal):  # {{{
+  import numpy as np
   # Unfold data from database
   if (not metal):
 
@@ -183,7 +184,7 @@ def plotDatabaseLifetimeRaether(database, legend, outputfile, query, metal):  # 
   Material2clean = libDatabase.CleanStrArray(Material2)
 
   # Prepare plot with arrows and text (but single wavelength)
-  makePlot(eps2r, LifeTime, Material2clean, outputfile, query, r'$Re(\varepsilon)$', 'Lifetime Raether (s)', legend, 'r')
+  makePlot(eps2r, np.log10(LifeTime), Material2clean, outputfile, query, r'$Re(\varepsilon)$', 'Lifetime Raether (s)', legend, 'r')
 
   return 0
 

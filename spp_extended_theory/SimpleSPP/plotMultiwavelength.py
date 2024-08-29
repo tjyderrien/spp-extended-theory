@@ -1,7 +1,7 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2013-2020 T. J.-Y. Derrien
+# Copyright (C) 2013-2024 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,15 +20,25 @@
 # Prepares plots presenting the properties of SPP as function of numerous materials. 
 
 # IMPORT LIBRARIES
-from libMaterials import *
+from spp_extended_theory.Libs.libMaterials import *
 import sys
-from libSPP import *
+from spp_extended_theory.Libs.libSPP import *
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.interpolate import InterpolatedUnivariateSpline, interp1d
 
-precision = 1E-10
-# Now, we shall construct database for SPP lifetimes. Actually, SPP lifetime require the knowledge of all spectrum of response to be known. 
+precision = 1E-6
+interpolation_method_list={0: "spline linear",
+                           1: "interp1d nearest", #works well on a small interval
+                           2: "interp1d linear", #works well on a small interval
+                           3: "interp1d cubic", #works well on a small interval
+                           4: "spline cubic" #can generates singularities on wide spectral range"spline cubic", #can generates singularities on wide spectral range
+                           }
+interpolation_method = interpolation_method_list[0]
+# Now, we shall construct database for SPP lifetimes. Actually, SPP lifetime require the knowledge of all spectrum of response to be known.
 
 # =======================================================
-if(len(sys.argv)<=2):
+if(len(sys.argv)<=1):
   print("Usage: ./plotMultiwavelength.py           \ ")
   print("    <Name of the substrate (Air, Be, Au, ...)> \ ")
   print("    <Source for data: Palik or name of the 1st author> \ ")
@@ -59,7 +69,6 @@ try:
 except: 
   print("** Warning: No-show command was not defined.")
   ShowPictures = True
-    
 
 MaterialFile2 = query+source
 
@@ -107,17 +116,17 @@ else:
   UnitMat2=1e6
 
 #================ Loading Material dielectric complex permittivity into arrays ====================
-try: 
-	MaterialArray2 = loadtxt(MaterialFolder+'/'+MaterialFile2, delimiter='\t', skiprows=4)
-except: 
+# try:
+MaterialArray2 = np.loadtxt(MaterialFolder+'/'+MaterialFile2, delimiter='\t', skiprows=4)
+"""except: 
 	print(("** Warning: Could not read "+MaterialFile2+" database."))
 	print("** Warning: Attempting second method...")
 	try:
-		MaterialArray2 = loadtxt(MaterialFolder+'/'+MaterialFile2, delimiter=' ', skiprows=4)
+		MaterialArray2 = np.loadtxt(MaterialFolder+'/'+MaterialFile2, delimiter=' ', skiprows=4)
 		print("Success.")
 	except:
 		print("** Error: Also failed reading of database... Exiting.")
-		sys.exit()
+		sys.exit()"""
 		
 #wavelengths2 = MaterialArray2[:,0]
 nlines, ncols = MaterialArray2.shape
@@ -125,10 +134,10 @@ nlines, ncols = MaterialArray2.shape
 #print nlines, ncols
 
 try:
-  MaterialArray1 = loadtxt(MaterialFolder+'/'+MaterialFile1, delimiter='\t', skiprows=4)
+  MaterialArray1 = np.loadtxt(MaterialFolder+'/'+MaterialFile1, delimiter='\t', skiprows=4)
 except:
   try:
-    MaterialArray1 = loadtxt(MaterialFolder+'/'+MaterialFile1, delimiter=' ', skiprows=4)
+    MaterialArray1 = np.loadtxt(MaterialFolder+'/'+MaterialFile1, delimiter=' ', skiprows=4)
   except:
     print(("** Warning: Material 1 ("+MaterialFile1+") was not found in "+MaterialFolder+"."))
     print("** Warning: Material 1 was replaced by Air.")
@@ -151,6 +160,7 @@ del n, k
 wavelengths2=MaterialArray2[:,0]
 wavelengths2=np.multiply(wavelengths2,UnitMat2**(-1)) #converting wavelength to meters
 n=MaterialArray2[:,1]; k=MaterialArray2[:,2]
+
 if(source=="-GoriAndBond"):
   eps2=np.add(n,np.multiply(1j, k)) #the value read in the file is ALREADY an epsilon!
 else: 
@@ -164,18 +174,73 @@ print(("Wavelength mesh size 2="+str(eps2.size)))
 
 # dense mesh generation
 # TODO: Error on results when taking Palik data on wide spectrum! 
-wavelengths = np.arange(np.amin(wavelengths2),np.amax(wavelengths2),precision)
-print("Checking if wavelength range is reasonable...")
-if (wavelengths.size > 1E6 ):
-  print("** Error: interpolation may be very long to perform...")
-  print("**        Reduce precision.")
-  sys.exit()
+# wavelengths = np.arange(,,precision)
 
-order=1
-feps1r=InterpolatedUnivariateSpline(wavelengths1, eps1.real, k=order)
-feps1i=InterpolatedUnivariateSpline(wavelengths1, eps1.imag, k=order)
-feps2r=InterpolatedUnivariateSpline(wavelengths2, eps2.real, k=order)
-feps2i=InterpolatedUnivariateSpline(wavelengths2, eps2.imag, k=order)
+# Si - laser
+# wavelengths_min = 0.21E-6 #np.amin(wavelengths2)
+# wavelengths_max = 0.8E-6  #np.amax(wavelengths2)
+
+# Water - laser
+# wavelengths_min = 70e-9 #np.amin(wavelengths2)
+# wavelengths_max = 2E-6  #np.amax(wavelengths2)
+
+# Water - micro-waves
+wavelengths_min = 1E-3 #np.amin(wavelengths2)
+wavelengths_max = 0.1E0  #1E0  #0.8E-6  #np.amax(wavelengths2)
+
+try:
+  wavelengths = np.arange( wavelengths_min, wavelengths_max, 1e-10)
+except MemoryError:
+  wavelengths = np.linspace( wavelengths_min, wavelengths_max, 1_000_000)
+print(wavelengths)
+print("Checking if wavelength range is reasonable...")
+if(wavelengths.size > 1E5 ):
+  print("** Warning: interpolation may be very long to perform...")
+  print("**        Attempting logscale.")
+  wavelengths_log = np.arange(
+    np.log10(wavelengths_min),
+    np.log10(wavelengths_max),
+    10)
+  wavelengths     = np.power(10,wavelengths_log)
+# sys.exit()"""
+
+
+# if(interpolation_method in interpolation_method_list):
+if(interpolation_method=="spline linear"):
+  order=1
+  print("** INFO: selected spline linear interpolation")
+  feps1r=InterpolatedUnivariateSpline(wavelengths1, eps1.real, k=order)
+  feps1i=InterpolatedUnivariateSpline(wavelengths1, eps1.imag, k=order)
+  feps2r=InterpolatedUnivariateSpline(wavelengths2, eps2.real, k=order)
+  feps2i=InterpolatedUnivariateSpline(wavelengths2, eps2.imag, k=order)
+elif(interpolation_method=="spline cubic"):
+  order=2
+  print("** INFO: selected spline cubic interpolation")
+  feps1r=InterpolatedUnivariateSpline(wavelengths1, eps1.real, k=order)
+  feps1i=InterpolatedUnivariateSpline(wavelengths1, eps1.imag, k=order)
+  feps2r=InterpolatedUnivariateSpline(wavelengths2, eps2.real, k=order)
+  feps2i=InterpolatedUnivariateSpline(wavelengths2, eps2.imag, k=order)
+elif(interpolation_method=="interp1d nearest"):
+  print("** INFO: selected interp1d nearest interpolation")
+  feps1r = interp1d(wavelengths1, eps1.real, kind="nearest") #, k=order)
+  feps1i = interp1d(wavelengths1, eps1.imag, kind="nearest") #, k=order)
+  feps2r = interp1d(wavelengths2, eps2.real, kind="nearest") #, k=order)
+  feps2i = interp1d(wavelengths2, eps2.imag, kind="nearest") #, k=order)
+elif(interpolation_method=="interp1d linear"):
+  print("** INFO: selected interp1d linear interpolation")
+  feps1r = interp1d(wavelengths1, eps1.real, kind="linear") #, k=order)
+  feps1i = interp1d(wavelengths1, eps1.imag, kind="linear") #, k=order)
+  feps2r = interp1d(wavelengths2, eps2.real, kind="linear") #, k=order)
+  feps2i = interp1d(wavelengths2, eps2.imag, kind="linear") #, k=order)
+elif(interpolation_method=="interp1d cubic"):
+  print("** INFO: selected interp1d cubic interpolation")
+  feps1r = interp1d(wavelengths1, eps1.real, kind="cubic") #, k=order)
+  feps1i = interp1d(wavelengths1, eps1.imag, kind="cubic") #, k=order)
+  feps2r = interp1d(wavelengths2, eps2.real, kind="cubic") #, k=order)
+  feps2i = interp1d(wavelengths2, eps2.imag, kind="cubic") #, k=order)
+"""else:
+  print("** Error: interpolation method "+str(interpolation_method)+" is not taken into account. ")
+  sys.exit()"""
 
 print(("Interpolating on Wavelength mesh size = "+str(wavelengths.size)))
 
@@ -186,16 +251,16 @@ eps2new=np.add(feps2r(wavelengths),np.multiply(1.0j, feps2i(wavelengths)))
 
 print("Checking quality of interpolation for the dielectric function...")
 plt.figure()
-plt.xlabel('Wavelength (nm)')
+plt.xlabel('Wavelength (m)')
 plt.ylabel('epsilon')
-plt.semilogx(1e9*wavelengths1, eps1.real, 'b+', label=r'Re('+MaterialFile1+')')
-plt.semilogx(1e9*wavelengths, eps1new.real, 'b-', label='interp Re('+MaterialFile1+')')
-plt.semilogx(1e9*wavelengths1, eps1.imag, 'k+', label='Im('+MaterialFile1+')')
-plt.semilogx(1e9*wavelengths, eps1new.imag, 'k-', label='interp Im('+MaterialFile1+')')
-plt.semilogx(1e9*wavelengths2, eps2.real, 'r+', label='Re('+MaterialFile2+')')
-plt.semilogx(1e9*wavelengths, eps2new.real, 'r-', label='interp Re('+MaterialFile2+')')
-plt.semilogx(1e9*wavelengths2, eps2.imag, 'g+', label='Im('+MaterialFile2+')')
-plt.semilogx(1e9*wavelengths, eps2new.imag, 'g-', label='interp Im('+MaterialFile2+')')
+plt.semilogx(wavelengths1, eps1.real, 'b+', label=r'Re('+MaterialFile1+')')
+plt.semilogx(wavelengths, eps1new.real, 'b-', label='interp Re('+MaterialFile1+')')
+plt.semilogx(wavelengths1, eps1.imag, 'k+', label='Im('+MaterialFile1+')')
+plt.semilogx(wavelengths, eps1new.imag, 'k-', label='interp Im('+MaterialFile1+')')
+plt.semilogx(wavelengths2, eps2.real, 'r+', label='Re('+MaterialFile2+')')
+plt.semilogx(wavelengths, eps2new.real, 'r-', label='interp Re('+MaterialFile2+')')
+plt.semilogx(wavelengths2, eps2.imag, 'g+', label='Im('+MaterialFile2+')')
+plt.semilogx(wavelengths, eps2new.imag, 'g-', label='interp Im('+MaterialFile2+')')
 plt.legend(loc=2)
 plt.title(r'$\varepsilon(\lambda)$')
 plt.savefig(MaterialFile1+MaterialFile2+'epsilon.png')
@@ -248,7 +313,7 @@ plt.plot(1e9*wavelengths, 1e6 * (0.5E0/kspp.imag), label=MaterialFile1+'/'+Mater
 plt.savefig(MaterialFile1+MaterialFile2+'MeanFreePath-LogLog.eps')
 
 print("Plot the lifetime with wavelength...")
-#RealDerivativeByComplex = np.vectorize(RealDerivativeByComplex)
+# RealDerivativeByComplex = np.vectorize(RealDerivativeByComplex)
 SPPgroupVelocity = RealDerivativeByComplex(omegaspp, kspp)
 SPPphaseVelocity = np.divide(omegaspp,kspp)
 
@@ -263,24 +328,24 @@ SPPgroupVelocityPlot = np.clip(SPPgroupVelocity.real, 0, 1000E8)
 SPPgroupVelocityHohenau = np.clip(SPPgroupVelocityHohenau, 0, 1000E8)
 
 #print SPPgroupVelocity.real
-#TODO: Group velocity can be negative, and it designates another regime of propagation! 
+#TODO: Group velocity can be negative, it may designates gain medium?
 #See [Hohenau and JR Krenn, PRB 78, 155405 (2008)]
 plt.figure()
-plt.xlabel(r'Wavelength $\lambda$ (nm)')
-plt.ylabel(r'Velocity $v$ ($\mu$m/ps)')
-plt.plot(1e9*2*pi*c/omegaspp[1:], 1E-6*SPPgroupVelocityPlot, 'b-', label=r'$Re(v_g)$')
-plt.plot(1e9*2*pi*c/omegaspp[1:], 1E-6*SPPgroupVelocityHohenau, 'k-', label=r'$v_g[Re(\beta)]$')
-plt.plot(1e9*2*pi*c/omegaspp, 1E-6*SPPphaseVelocity, 'r--', label=r'$v_{\phi}$')
+plt.xlabel(r'Wavelength $\lambda$ (m)')
+plt.ylabel(r'Velocity $v$ (m/s)')
+plt.semilogx(2*pi*c/omegaspp[1:], SPPgroupVelocityPlot, 'b-', label=r'$Re(v_g)$')
+plt.semilogx(2*pi*c/omegaspp[1:], SPPgroupVelocityHohenau, 'k-', label=r'$v_g[Re(\beta)]$')
+plt.semilogx(2*pi*c/omegaspp, SPPphaseVelocity, 'r--', label=r'$v_{\phi}$')
 #plt.plot(1e9*2*pi*c/omegaspp, c, label=r'$c$')
 #plt.plot(omega(wavelengths)/c, omega(wavelengths), label='Light line')
 #plt.plot(omega(wavelengths)/c, omega(np.add(np.multiply(wavelengths,0e0), SpecialWavelength)), label=r'$c$')
-#plt.title(MaterialFile1+'/'+MaterialFile2+' interface')
+plt.title(MaterialFile1+'/'+MaterialFile2+' interface')
 plt.legend(loc=4)
-plt.xticks(np.arange(0, 3500, 500))
-plt.axis([xmin,xmax,-300,300])
+# plt.xticks(np.arange(0, 3500, 500))
+# plt.axis([xmin,xmax,-300,300])
 plt.savefig(MaterialFile1+MaterialFile2+'Velocities.eps')
 plt.savefig(MaterialFile1+MaterialFile2+'Velocities.png')
-#plt.show()
+plt.show()
 
 print("Plot SPP lifetime with wavelength...")
 LifeTimeOld = LifeTimeRaether(kspp[1:], eps1new[1:], eps2new[1:])
@@ -303,18 +368,18 @@ LifeTimeApprox = np.clip(LifeTimeApprox, 0, 1)
 HohenauLabel="Hohenau formula"#17
 RaetherLabel="Raether formula" #18
 plt.figure()
-plt.xlabel('Wavelength $\lambda$ (nm)')
-plt.ylabel(r'SPP lifetime $\tau_{\textrm{SPP}}$ (ps)')
-line2,=plt.plot(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeRe, 'r--', label=r'$\omega$ real, $k$ complex')
-line1,=plt.plot(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeOld, 'k-', label=r'$\omega$ complex, $k$ real')
+plt.xlabel('Wavelength $\lambda$ (m)')
+plt.ylabel(r'SPP lifetime $\tau_{\textrm{SPP}}$ (s)')
+line2,=plt.loglog(2*pi*c/omegaspp[1:], LifeTimeRe, 'r--', label=r'$\omega$ real, $k$ complex')
+line1,=plt.loglog(2*pi*c/omegaspp[1:], LifeTimeOld, 'k-', label=r'$\omega$ complex, $k$ real')
 #line3,=plt.plot(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimeNew, 'r--', label=r'$\tau_{SPP}=L_{SPP}/v_g$, Eq. (Wirtinger), $\omega \in \mathbb{R}$, $\beta \in \mathbb{C}$')
 #plt.plot(1e9*2*pi*c/omegaspp[1:], 1E12*LifeTimePhase, 'r--', label=r'Phase, real $\omega$, complex $\beta$')
 #plt.plot(1e9*2*pi*c/omegaspp, 1E12*LifeTimeApprox, 'b--', label=r'Phase, approx.')
 #plt.title(MaterialFile1+'/'+MaterialFile2+' interface')
 # change style of lines
 plt.setp(line1, linewidth=3); plt.setp(line2, linewidth=3); #plt.setp(line3, linewidth=3); 
-plt.legend(loc=2)
-plt.xticks(np.arange(0, 3500, 500))
+plt.legend(loc="best")
+#plt.xticks(np.linspace(0, 3500e-9, 500))
 if(query == "Ti"): #used only for changing the visual scale!
   maxLifeTime=0.05
 elif (query == "Ag"):
@@ -323,10 +388,11 @@ elif (query == "Au"):
   maxLifeTime=10
 else:
   maxLifeTime=10
-plt.axis([xmin,xmax,0,maxLifeTime])
+#plt.axis([xmin,xmax,0,maxLifeTime])
+plt.tight_layout()
 plt.savefig(MaterialFile1+MaterialFile2+'Lifetime.eps')
 plt.savefig(MaterialFile1+MaterialFile2+'Lifetime.png')
-#plt.show()
+plt.show()
 
 
 # 

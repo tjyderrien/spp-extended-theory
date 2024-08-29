@@ -106,9 +106,9 @@ def ExtractDataDb(SPPdbFiltered):
   Reflectivity = SPPdbFiltered[:, 9]; OpticalPenetration1 = SPPdbFiltered[:,10]; OpticalPenetration2 = SPPdbFiltered[:,10]; SPPdecayLength = SPPdbFiltered[:,12]
   eps1r = SPPdbFiltered[:, 13]; eps1c = SPPdbFiltered[:,14]; eps2r = SPPdbFiltered[:,15]; eps2c = SPPdbFiltered[:,16]; k1imag = SPPdbFiltered[:,17]; 
   k2imag = SPPdbFiltered[:,18]
-  DeltaLsppValue = SPPdbFiltered[:,19],
-  Fa = SPPdbFiltered[:,20],
-  Jo = SPPdbFiltered[:,21],
+  DeltaLsppValue = SPPdbFiltered[:,19]
+  Fa = SPPdbFiltered[:,20]
+  Jo = SPPdbFiltered[:,21]
   LifeTime = SPPdbFiltered[:,22]
   
   #Converts strings to floats

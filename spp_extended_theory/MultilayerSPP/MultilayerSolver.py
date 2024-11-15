@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2018-2022 F. Preucil, T.J.-Y. Derrien
+# Copyright (C) 2018-2024 F. Preucil, T.J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@ showinfo = True
 excitation_index = 1
 
 #data
-wavelength = 1030e-9 # 633e-9 #1550e-9 #1026e-9 #355e-9 #1030E-9 #1026
+wavelength = 1030E-9 #1030e-9 # 633e-9 #1550e-9 #1026e-9 #355e-9 #1030E-9 #1026
 
 if(wavelength == 1064e-9): 
     epsSiO2=1.4496**2; 
@@ -55,6 +55,13 @@ elif(wavelength==1030e-9):
     epsSi   = 12.80259+0.0109j
     epsAu   = -49.5738812793 + 3.8128269897j #Johnson
     epsMo   = -11.6291789477 + 20.6107572133j #Palik
+    epsAl2O3=3.0806583323350774 + 0j #Palik 1026 nm
+    epsAl   =-97.5934562074 + 25.2698472743j
+    epsTi = (3.4135+3.9912j)**2
+    epsSi3N4 = 1.9870**2
+elif(wavelength==1240E-6):
+    epsAl=(1120+1160j)**2
+    epsAl2O3=(3.3302+0.010620j)**2
 
 epsAir      = 1.+0.j          #air
 
@@ -80,7 +87,7 @@ neSi        = np.power(10., neSiLog)
 ## ScenarioOfCrOxideMixture_ext(eps_CrCrXOY_L[::Every], epsAir, epsBK7, CrCrXOY_fraction[::Every], 'Cr_compounds_oxide', 'Air', 'BK7')
 
 #fractionOfCrO2 = 0.8
-t = 100E-9 #thickness of the layer in meters
+t = 4E-9 #thickness of the layer in meters
 
 # Medium 1: thin film. 
 #fraction_index = 801 #NOTE: line number in the source file [ROUGH METHOD]
@@ -91,11 +98,11 @@ t = 100E-9 #thickness of the layer in meters
 #eps1 = MaxwellGarnett3(epsCr, epsCrO2, epsCr2O3, fraction) #TODO: develop Maxwell-Garnett3 in libMaterials.py. 
 
 # Film
-eps1 = epsMo
+eps1 = epsTi
 # Medium 2: substrate. 
 eps2 = epsAir       #epsBK7 #environment | substrate
 # Medium 3: environment #NOTE: checked by field amplification consistency
-eps3 = epsSiO2
+eps3 = epsSi3N4
 # eps3 = Drude(wavelength, neSi[excitation_index], epsSi, 1.1e-15**-1, 0.18)      #environment | substrate
 # Note: Inverting eps2 and eps3 should have no effect on the possible modes, but only on field amplification. 
 
@@ -107,8 +114,8 @@ eps3 = epsSiO2
 #3 (-, +, +) (+, +, +)
 
 #meshes the initial guess area, all numbers are from the space of betas
-x_min = -1E10
-x_max = 1E10
+x_min = -1E9
+x_max = 1E9
 
 y_min = -1E9
 y_max = 1E9

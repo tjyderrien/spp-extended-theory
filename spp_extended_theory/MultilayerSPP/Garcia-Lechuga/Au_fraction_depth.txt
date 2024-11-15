@@ -1,4 +1,4 @@
-Depth (nm)	Au_fraction
+# Depth (nm)	Au_fraction
 322.123437701327	0
 347.893312717433	9e-05
 373.66318773354	9.5e-05

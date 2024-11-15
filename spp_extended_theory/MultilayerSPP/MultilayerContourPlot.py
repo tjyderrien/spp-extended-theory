@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2017-2020 F. Preucil, T.J.-Y. Derrien
+# Copyright (C) 2017-2024 F. Preucil, T.J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,9 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>
 
-## Package @MultilayerContourplot enables visualize electromagnetic fields prepared with solver.py. 
-# The formal model is presented in 
-# T.J.-Y. Derrien et al, J. Appl. Phys. 116, 074902 (2014) and references 
+## Package @MultilayerContourplot enables visualize electromagnetic fields prepared with solver.py.
+# The formal model is presented in
+# T.J.-Y. Derrien et al, J. Appl. Phys. 116, 074902 (2014) and references
 # therein.
 
 import matplotlib.pyplot as plt
@@ -33,7 +33,7 @@ from scipy.constants import c, epsilon_0
 #2 (-, +, -) (+, +, -)
 #3 (-, +, +) (+, +, +)
 
-branch_index = 3
+branch_index = 2
 root_index   = 1
 
 #two black lines to show the boundaries
@@ -105,9 +105,9 @@ omegaeps0 = k0*c*epsilon_0
 wavelength = 2.*np.pi/k0
 
 #plotting
-xrange = 10.*wavelength #min(SPPperiod,SPPlength)
-zrange = wavelength*1
-steps = 200
+xrange = 1.*wavelength #min(SPPperiod,SPPlength)
+zrange = wavelength*0.001
+steps = 1000
 
 #field amplitude
 A = 1.

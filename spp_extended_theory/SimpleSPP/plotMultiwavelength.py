@@ -79,8 +79,8 @@ xmin=0   #nm
 xmax=2E3 #nm
 MaterialFolder="Database"
 
-MaterialFile1="Air"
-#MaterialFile1="Al2O3-Palik"
+# MaterialFile1="Air"
+MaterialFile1="Al-Palik"
 #MaterialFile1="SiO2-Palik"
 #MaterialFile1="TiO2-Palik"
 #MaterialFile1="Si-Palik"
@@ -176,7 +176,11 @@ print(("Wavelength mesh size 2="+str(eps2.size)))
 # TODO: Error on results when taking Palik data on wide spectrum! 
 # wavelengths = np.arange(,,precision)
 
-# Si - laser
+# Cu Palik - laser # works well
+wavelengths_min = 300E-9 #np.amin(wavelengths2)
+wavelengths_max = 2000E-9 #np.amax(wavelengths2)
+
+# Si Palik - laser
 # wavelengths_min = 0.21E-6 #np.amin(wavelengths2)
 # wavelengths_max = 0.8E-6  #np.amax(wavelengths2)
 
@@ -185,8 +189,8 @@ print(("Wavelength mesh size 2="+str(eps2.size)))
 # wavelengths_max = 2E-6  #np.amax(wavelengths2)
 
 # Water - micro-waves
-wavelengths_min = 1E-3 #np.amin(wavelengths2)
-wavelengths_max = 0.1E0  #1E0  #0.8E-6  #np.amax(wavelengths2)
+# wavelengths_min = 12e-6 #np.amin(wavelengths2)
+# wavelengths_max = 37e-6 #np.amax(wavelengths2)
 
 try:
   wavelengths = np.arange( wavelengths_min, wavelengths_max, 1e-10)
@@ -247,6 +251,8 @@ print(("Interpolating on Wavelength mesh size = "+str(wavelengths.size)))
 eps1new=np.add(feps1r(wavelengths),np.multiply(1.0j, feps1i(wavelengths)))
 eps2new=np.add(feps2r(wavelengths),np.multiply(1.0j, feps2i(wavelengths)))
 
+
+
 #========= Multiwavelength data: DATA ARE NOW READY ======
 
 print("Checking quality of interpolation for the dielectric function...")
@@ -265,6 +271,15 @@ plt.legend(loc=2)
 plt.title(r'$\varepsilon(\lambda)$')
 plt.savefig(MaterialFile1+MaterialFile2+'epsilon.png')
 plt.show()
+
+#========= Check if interpolation worked out =====
+
+try:
+  assert(len(eps2new)!=1)
+except AssertionError:
+  print("** ERROR: interpolation may have failed. ")
+  sys.exit(-1)
+
 
 print("Plot the SPP dispersion relation...")
 
@@ -301,16 +316,17 @@ plt.savefig(MaterialFile1+MaterialFile2+'Period.eps')
 print("Plot the SPP mean-free path with wavelength...")
 
 plt.figure()
-plt.xlabel(r'Wavelength $\lambda$ $(nm)$')
-plt.ylabel(r'SPP mean-free-path $L_{\mbox{SPP}}$ (\mbox{$\mu$m})')
-plt.plot(1e9*wavelengths, 1e6 * (0.5E0/kspp.imag)) #label=MaterialFile1+'/'+MaterialFile2
+plt.xlabel(r'Wavelength $\lambda$ $(m)$')
+plt.ylabel(r'SPP mean-free-path $L_{\mbox{SPP}}$ (m)')
+plt.plot(wavelengths, (0.5E0/kspp.imag)) #label=MaterialFile1+'/'+MaterialFile2
 #plt.title('Period of field at $'+MaterialFile1+'$/$'+MaterialFile2+'$ interface')
 plt.legend(loc=2)
 plt.grid(True)
 plt.savefig(MaterialFile1+MaterialFile2+'MeanFreePath.svg')
 #plt.show()
-plt.plot(1e9*wavelengths, 1e6 * (0.5E0/kspp.imag), label=MaterialFile1+'/'+MaterialFile2)
+plt.loglog(wavelengths, (0.5E0/kspp.imag), label=MaterialFile1+'/'+MaterialFile2)
 plt.savefig(MaterialFile1+MaterialFile2+'MeanFreePath-LogLog.eps')
+plt.show()
 
 print("Plot the lifetime with wavelength...")
 # RealDerivativeByComplex = np.vectorize(RealDerivativeByComplex)

@@ -33,7 +33,7 @@ from scipy.constants import c, epsilon_0
 #2 (-, +, -) (+, +, -)
 #3 (-, +, +) (+, +, +)
 
-branch_index = 2
+branch_index = 3
 root_index   = 1
 
 #two black lines to show the boundaries

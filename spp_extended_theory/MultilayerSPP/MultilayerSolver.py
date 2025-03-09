@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2018-2024 F. Preucil, T.J.-Y. Derrien
+# Copyright (C) 2018-2025 F. Preucil, T.J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@ showinfo = True
 excitation_index = 1
 
 #data
-wavelength = 1030E-9 #1030e-9 # 633e-9 #1550e-9 #1026e-9 #355e-9 #1030E-9 #1026
+wavelength = 800E-9 #1030e-9 # 633e-9 #1550e-9 #1026e-9 #355e-9 #1030E-9 #1026
 
 if(wavelength == 1064e-9): 
     epsSiO2=1.4496**2; 
@@ -62,6 +62,10 @@ elif(wavelength==1030e-9):
 elif(wavelength==1240E-6):
     epsAl=(1120+1160j)**2
     epsAl2O3=(3.3302+0.010620j)**2
+elif(wavelength==800e-9):
+    epsTi=(3.1422+4.01j)**2
+    epsSi3N4=(4.03928675321649+0j)**2
+
 
 epsAir      = 1.+0.j          #air
 
@@ -87,7 +91,7 @@ neSi        = np.power(10., neSiLog)
 ## ScenarioOfCrOxideMixture_ext(eps_CrCrXOY_L[::Every], epsAir, epsBK7, CrCrXOY_fraction[::Every], 'Cr_compounds_oxide', 'Air', 'BK7')
 
 #fractionOfCrO2 = 0.8
-t = 4E-9 #thickness of the layer in meters
+t = 50E-9 #thickness of the layer in meters
 
 # Medium 1: thin film. 
 #fraction_index = 801 #NOTE: line number in the source file [ROUGH METHOD]

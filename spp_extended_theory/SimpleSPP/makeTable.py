@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
-# Copyright (C) 2013-2023 T. J.-Y. Derrien
+# Copyright (C) 2013-2025 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -43,7 +43,8 @@ SppOutput = 'SPPactiveInterfaces.dat'
 print("Exporting to "+SppOutput+"...")
 
 print()
-libDatabase.ExportToTxt(SPPdb, SppOutput)
+SPPdb_export=np.vectorize(lambda x: float(x) if x.replace(".", "", 1).isdigit() else np.nan)(SPPdb)
+libDatabase.ExportToTxt(SPPdb_export, SppOutput)
 
 # Writing table caption
 f=open(SppOutput, "a")

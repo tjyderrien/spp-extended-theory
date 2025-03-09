@@ -42,12 +42,20 @@ SPPdb = libSPP.GenerateDatabase()
 SppOutput = 'SPPactiveInterfaces.dat'
 print("Exporting to "+SppOutput+"...")
 
+header = "\t".join([
+    "Material1", "Material2", "Wavelength", "OldSPPactiveBool", "NewSPPactiveBool",
+    "SPPperiod", "SPPperiodError", "SPPdecayDepth1", "SPPdecayDepth2", "Reflectivity",
+    "OpticalPenetration1", "OpticalPenetration2", "SPPdecayLength", "eps1real", "eps1imag",
+    "eps2real", "eps2imag", "SPPdepthImagk1", "SPPdepthImagk2", "DeltaLsppValues",
+    "FaradayNumber", "JouleNumber", "LifetimeRaether"
+])
+
 print()
 # SPPdb_export=np.vectorize(lambda x: float(x) if x.replace(".", "", 1).isdigit() else np.nan)(SPPdb)
-libDatabase.ExportToTxt(SPPdb, SppOutput)
+libDatabase.ExportToTxt(SPPdb, SppOutput, header=header)
 
 # Writing table caption
-f=open(SppOutput, "a")
+# f=open(SppOutput, "a")
 
 #Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, #5
 #Period, PeriodError, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, #10
@@ -55,12 +63,10 @@ f=open(SppOutput, "a")
 #eps2.real, eps2.imag, SPPdepthImagk1, SPPdepthImagk2, deltaLsppValues.real, #20
 #Fa, Jo, LifeTime
 
-f.write("#Material1\tMaterial2\tWavelength\tOldSPPactiveBool\tNewSPPactiveBool"
-        "\tSPPperiod\tSPPperiodError\tSPPdecayDepth1\tSPPdecayDepth2\tReflectivity"
-        "\tOpticalPenetration1\tOpticalPenetration2\tSPPdecayLength\teps1real\teps1imag"
-        "\teps2real\teps2imag\tSPPdepthImagk1\tSPPdepthImagk2\tDeltaLsppValues"
-        "\tFaradayNumber\tJouleNumber\tLifetimeRaether")
-f.close()
+
+
+# f.write(header)
+# f.close()
 print() 
 
 # Writing table caption

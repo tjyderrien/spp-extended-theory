@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #-*- coding: utf-8 -*-
-# Copyright (C) 2013-2024 T. J.-Y. Derrien
+# Copyright (C) 2013-2025 T. J.-Y. Derrien
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -40,9 +40,9 @@ Header="[libSPP] "
 # if(__name__=="__main__"):
 lengthunit = 1e-9
 eta = 0.1 #assumed precision error on the dielectric permittivity
-UsingTeX=True #TODO: set to False for Windows or linux cluster users
+UsingTeX=False #TODO: set to False for Windows or linux cluster users
 
-## 0: all permisive, no verification on SPP excitation condition
+## 0: all permissive, no verification on SPP excitation condition
 ## 1: use the RegularLIPSScondition, softer than pure SPP excitation condition
 ## 2: Period != 0 is necessary for a material to be listed in results
 ## 3: Extreme level: use ExperimentallyAchievable() to verify possibility of decay depth > optical penetration depth

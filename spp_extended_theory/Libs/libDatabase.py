@@ -32,7 +32,7 @@ def CleanStrArray(Material2): #{{{
     fields = line.strip().split() 
     Material2clean[linenum] = fields[0] #here is the first word, to replace the whole line. How to access id of line ?
     linenum = linenum + 1
-  return(Material2clean)
+  return Material2clean
 #}}}
 #print Material2clean
 
@@ -44,21 +44,50 @@ def FilterDatabase(SPPdb, query, FieldIndex):
   SPPdbFiltered = np.array(SPPdb[SPPdb[:,FieldIndex]==query,:]) #uses a table of booleans to select
   return SPPdbFiltered
 
-## Removes the matching entries from the database. Query is working with field <index>. 
+## Removes the matching entries from the database. Query is working with field <index>.
 # @param SPPdb: a numpy array of strings | integers | reals | complex
-# @param query: a string | integer | real | complex to compare with. 
+# @param query: a string | integer | real | complex to compare with.
 # @param FieldIndex: number of the field of interest
 def FilterDatabaseRemove(SPPdb, query, FieldIndex):
   SPPdbFiltered = np.array(SPPdb[SPPdb[:,FieldIndex]!=query,:])
   return SPPdbFiltered
 
-## Filter for the SPP database using a string <query> which should be *contained* in field of nmuber <index>. 
+## Filter for the SPP database using a string <query> which should be *contained* in field of nmuber <index>.
 # @param SPPdb: a numpy array of strings
 # @param query: a string to compare with
 # @param FieldIndex: number of the field of interest #TODO: change for a dictionnary of fields
-def FilterDatabaseContains(SPPdb, query, FieldIndex):
+"""def FilterDatabaseContains(SPPdb, query, FieldIndex):
   SPPdbFiltered = SPPdb[np.array(np.core.defchararray.find(SPPdb[:,FieldIndex], query)==0),:]
-  return SPPdbFiltered
+  return SPPdbFiltered"""
+
+
+def FilterDatabaseContains(SPPdb: np.ndarray, query: str, field_index: int) -> np.ndarray:
+  """
+  Filters a NumPy database (2D array) to include only rows where the specified column contains the query string.
+
+  Parameters:
+  - SPPdb (np.ndarray): The input database as a 2D NumPy array (strings).
+  - query (str): The substring to search for in the specified column.
+  - field_index (int): The column index where the search is performed.
+
+  Returns:
+  - np.ndarray: A filtered NumPy array containing only matching rows.
+  """
+  # Validate input types
+  if not isinstance(SPPdb, np.ndarray):
+    raise TypeError("SPPdb must be a NumPy array.")
+  if not isinstance(query, str):
+    raise TypeError("Query must be a string.")
+  if not isinstance(field_index, int):
+    raise TypeError("Field index must be an integer.")
+
+  # Ensure field_index is within bounds
+  if field_index < 0 or field_index >= SPPdb.shape[1]:
+    raise IndexError("Field index out of range.")
+
+  # Perform filtering: keep rows where the field contains the query
+  mask = np.char.find(SPPdb[:, field_index], query) >= 0
+  return SPPdb[mask]
 
 ## Filter the SPP database via comparing value(FieldIndex) < query and returns the matching database
 # /!\ content of query cell should be exact
@@ -81,9 +110,9 @@ def FilterDatabaseStrictlyGreaterThan(SPPdb, query, FieldIndex):
 
 ## Unfold data from database of materials (5 columns)
 def ExtractMaterialData(Database): #TODO: Think how to take data from continuous database directly instead of the ponctual file.
-  Material1 = Database[:, 0]; BandGap = Database[:,1]; 
-  Wavelength = Database[:, 2]; 
-  RealEps = Database[:,3]; ImagEps = Database[:,4]; 
+  Material1 = Database[:, 0]; BandGap = Database[:,1]
+  Wavelength = Database[:, 2]
+  RealEps = Database[:,3]; ImagEps = Database[:,4]
   
   #Converts strings to floats
   #Material1 = np.asfarray(Material1)
@@ -97,13 +126,13 @@ def ExtractMaterialData(Database): #TODO: Think how to take data from continuous
 ## Defines the interface with SPPactiveInterfaces.dat
 def ExtractDataDb(SPPdbFiltered):
   # Extract data from database
-  Material1 = SPPdbFiltered[:, 0]; Material2 = SPPdbFiltered[:,1]; 
-  Wavelength = SPPdbFiltered[:, 2]; 
-  OldSPPactiveBool = SPPdbFiltered[:,3]; NewSPPactiveBool = SPPdbFiltered[:,4]; 
-  RealEps = SPPdbFiltered[:,5]; RealEpsError = SPPdbFiltered[:,6];
-  SPPdecayDepth1 = SPPdbFiltered[:,7]; SPPdecayDepth2 = SPPdbFiltered[:,8]; 
+  Material1 = SPPdbFiltered[:, 0]; Material2 = SPPdbFiltered[:,1]
+  Wavelength = SPPdbFiltered[:, 2]
+  OldSPPactiveBool = SPPdbFiltered[:,3]; NewSPPactiveBool = SPPdbFiltered[:,4]
+  RealEps = SPPdbFiltered[:,5]; RealEpsError = SPPdbFiltered[:,6]
+  SPPdecayDepth1 = SPPdbFiltered[:,7]; SPPdecayDepth2 = SPPdbFiltered[:,8]
   Reflectivity = SPPdbFiltered[:, 9]; OpticalPenetration1 = SPPdbFiltered[:,10]; OpticalPenetration2 = SPPdbFiltered[:,10]; SPPdecayLength = SPPdbFiltered[:,12]
-  eps1r = SPPdbFiltered[:, 13]; eps1c = SPPdbFiltered[:,14]; eps2r = SPPdbFiltered[:,15]; eps2c = SPPdbFiltered[:,16]; k1imag = SPPdbFiltered[:,17]; 
+  eps1r = SPPdbFiltered[:, 13]; eps1c = SPPdbFiltered[:,14]; eps2r = SPPdbFiltered[:,15]; eps2c = SPPdbFiltered[:,16]; k1imag = SPPdbFiltered[:,17]
   k2imag = SPPdbFiltered[:,18]
   DeltaLsppValue = SPPdbFiltered[:,19]
   Fa = SPPdbFiltered[:,20]
@@ -179,7 +208,8 @@ def ExportToTxt(dbarray: np.ndarray, filename: str, header: str = "", fmt: str =
   """
   dbarray = np.vectorize(lambda x: float(x) if x.replace(".", "", 1).isdigit() else np.nan)(dbarray)
   try:
-    np.savetxt(filename, dbarray, fmt=fmt, delimiter='\t', header=header, newline='\n', comments='#')
+    np.savetxt(filename, dbarray, fmt=fmt, delimiter='\t', header=header, newline='\n', comments='# ')
+    # np.savetxt(filename, dbarray, fmt=fmt, delimiter="\t", header=header, comments="# ")
     return True
   except Exception as e:
     print(f"Error: Could not write database to file '{filename}'. Exception: {e}")

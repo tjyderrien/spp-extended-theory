@@ -43,8 +43,8 @@ SppOutput = 'SPPactiveInterfaces.dat'
 print("Exporting to "+SppOutput+"...")
 
 print()
-SPPdb_export=np.vectorize(lambda x: float(x) if x.replace(".", "", 1).isdigit() else np.nan)(SPPdb)
-libDatabase.ExportToTxt(SPPdb_export, SppOutput)
+# SPPdb_export=np.vectorize(lambda x: float(x) if x.replace(".", "", 1).isdigit() else np.nan)(SPPdb)
+libDatabase.ExportToTxt(SPPdb, SppOutput)
 
 # Writing table caption
 f=open(SppOutput, "a")

@@ -1,7 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2013-2024 T. J.-Y. Derrien
+# Copyright (C) 2013-2025 T. J.-Y. Derrien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,7 +20,6 @@
 # Functions to manage the material databases
 
 import numpy as np
-
 
 ## Filter the SPP database using query and returns a smaller database
 # /!\ content of query cell should be exact
@@ -140,11 +139,11 @@ def ExtractDataDb(SPPdbFiltered):
 ## Export an SPP array to a CSV file
 # SPP array must be produced with one of the SPPactiveInterfaces functions
 #
-def ExportToTxt(dbarray, filename, header="", fmt="%15.8e"):
+# def ExportToTxt(dbarray, filename, header="", fmt="%15.8e"):
   
 
-  np.savetxt(filename, dbarray, fmt=fmt, delimiter='\t', header=header, newline='\n',comments='#')
-  out = 0
+#  np.savetxt(filename, dbarray, fmt=fmt, delimiter='\t', header=header, newline='\n',comments='#')
+#  out = 0
   #except:
   #  print("Could not write database into a file.")
   #  out = 1
@@ -162,4 +161,26 @@ def ExportToTxt(dbarray, filename, header="", fmt="%15.8e"):
       #counter=counter+1
   #print Material1
       #print '{0:30s} {1:30s} {2:15f} {3:12s} {4:12s} {5:11f} {6:16f} {7:16f} {8:12f}  {9:19f} {10:19f} {11:15f}'.format(Material1, Material2, Wavelength, OldSPPactiveBool, NewSPPactiveBool, RealEps, SPPdecayDepth1, SPPdecayDepth2, Reflectivity, OpticalPenetration1, OpticalPenetration2, SPPdecayLength)
-  return out
+#  return out
+
+
+def ExportToTxt(dbarray: np.ndarray, filename: str, header: str = "", fmt: str = "%15.8e") -> bool:
+  """
+    Exports a NumPy array to a tab-delimited text file.
+
+    Parameters:
+    - dbarray (np.ndarray): The data array to be saved.
+    - filename (str): The name of the output text file.
+    - header (str, optional): Header string for the file. Default is an empty string.
+    - fmt (str, optional): Format string for saving values. Default is "%15.8e".
+
+    Returns:
+    - bool: True if successful, False otherwise.
+  """
+  dbarray = np.vectorize(lambda x: float(x) if x.replace(".", "", 1).isdigit() else np.nan)(dbarray)
+  try:
+    np.savetxt(filename, dbarray, fmt=fmt, delimiter='\t', header=header, newline='\n', comments='#')
+    return True
+  except Exception as e:
+    print(f"Error: Could not write database to file '{filename}'. Exception: {e}")
+    return False

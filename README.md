@@ -1,37 +1,56 @@
 [![Homepage](https://img.shields.io/badge/Home-quantumlap.eu-green.svg)](http://www.quantumlap.eu)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
-![Bitbucket open issues](https://img.shields.io/bitbucket/issues/tjyderrien/spp-extended-theory?style=plastic)
+![Bitbucket open issues](https://img.shields.io/bitbucket/issues/tjyderrien/spp_extended_theory?style=plastic)
 ![Twitter Follow](https://img.shields.io/twitter/follow/tjyderrien?style=social)
 ![Website](https://img.shields.io/website?down_color=red&down_message=quantumlap.eu%20%5Btemporarily%20down%21%5D&up_color=green&up_message=quantumlap.eu&url=http%3A%2F%2Fwww.quantumlap.eu)
 ![Maintenance](https://img.shields.io/maintenance/yes/2021)
 
 
-# README #
+# Scientific publications related to this repository
+
+This repository has generated several publications, wherein it was cited. As a result, it is necessary to keep the 
+integrity of its repository link, and to ensure active response to requests received by email. 
+
+Publications generated using this codes are (most recent at the top):   
+1. [Appl. Surf. Sci. 2019] LIPSS on thin metallic films: New insights from multiplicity of laser-excited electromagnetic modes and efficiency of metal oxidation, https://www.sciencedirect.com/science/article/abs/pii/S0169433219314795
+1. [Materials 2018] Femtosecond Laser-Induced Periodic Surface Structures on Fused Silica: The Impact of the Initial Substrate Temperature, https://www.mdpi.com/1996-1944/11/8/1340
+1. [Sci-Rep 2017] High-speed manufacturing of highly regular femtosecond laser-induced periodic surface structures: physical origin of regularity, https://www.nature.com/articles/s41598-017-08788-z
+1. [Appl. Surf. Sci. 2017] Wavelength dependence of picosecond laser-induced periodic surface structures on copper, https://www.sciencedirect.com/science/article/abs/pii/S0169433217304191
+1. [J. Opt. 2016] Properties of surface plasmon polaritons on lossy materials: lifetimes, periods and excitation conditions, https://iopscience.iop.org/article/10.1088/2040-8978/18/11/115007/meta
+
+# Versions
+
+While the repository is a mixture of several separated routines, we index versions on the publications. This will enable to have capacity to revert to versions that were employed for genereating publication figures.
+Versioning has now been indexed on publications v<X.Y.Z> as follows: 
+* X: v1: JOpt2016, ..., v5: ApplSurfSci2019. 
+* Y: number of full months since latest publication. 
+* Z: revision number since creation of the repository (see https://bitbucket.org/tjyderrien/spp-extended-theory/commits/?page=44).  
 
 # Structure of the code
 
-The code is now made of 3 branches. 
+The code is now made of 4 main branches. 
 * Branch release: contains the seemingly stable public code for the community.
 * Branch master:  contains a more advanced version of code for the community. 
-* Branch develop: contains the latest code, with non-tested features and possible bugs. 
+* Branch develop: contains the latest code, with non-tested features and possible bugs.
+* Branch Modules: now is possible to install in to integrate in other codes easily.  
 
 # Main developers
 
-* T.J.-Y. Derrien: developing spp and keldysh theory, programming. 
+* T.J.-Y. Derrien: developing SPP and keldysh theory, programming. 
 
-* F. Preucil: programming the multilayer solver
+* F. Preucil: programming the multilayer solver. Started improvement of multilayer SPP model. 
 
-* Y. Levy: LIPSS database contributor.
+* K. Hlinomaz: a bit of Python maintenance at the moment
 
 * J. Bonse: Provided the tabulated Palik data.
 
-# Current collaborators for this code
-
-* Stephan Gräf (Jena University): user for Sipe theory.
+# Users of the code
 
 * Inam Mirza (Hilase Centre, Prague): user for compound materials
 
 * Aleksander Kovacevic (Bratislava, Serbia): multilayered materials
+
+* Stephan Gräf (Jena University): user for Sipe theory.
 
 # Financial supports
 
@@ -44,6 +63,7 @@ The code is now made of 3 branches.
 # Purpose of this project
 
 You may find a collection of programs aiming to develop control over the transient excitation of Surface Plasmon Polaritons (SPPs) upon laser irradiation. 
+The project has diverged into a number of programs. Refactoring is planned. 
 SPPs can be used with light to enhance local power density, but also to induce Laser-Induced Periodic Surface Structures (LIPSS). 
 
 ## Concept
@@ -62,31 +82,34 @@ For each (material, wavelength), the following theories can be applied.
 
 # Installation 
 
-## Simple install for beginners
+## Simple install for beginners and developpers
 
-* Simply click "download" in the repository bar. You can also click here: https://bitbucket.org/tjyderrien/spp-extended-theory/downloads. 
+pip install -e git+https://bitbucket.org/tjyderrien/spp-extended-theory/
 
-* To get the regular updates without loosing your modifications, it is recommended to learn basics of Git. 
+or
 
-## For users familiar with Git. 
+1. git clone https://bitbucket.org/tjyderrien/spp-extended-theory/
+2. git checkout Modules
+3. conda env create -f environment.yaml #if you want to install a separate conda environment for this code
 
-* For educated users: it is advised to download in HTTP mode using git clone https://tjyderrien@bitbucket.org/tjyderrien/spp-extended-theory.git
+If this fails, look for your install of Conda ("whereis conda" or "locate conda"). Usually it is practical to introduce this into .bashrc: export PATH=/opt/miniconda3/bin:$PATH
 
-* For hardcore users, you may need SSH protocol (key is required, contact me via email) to donwload: 
- git clone git@bitbucket.org:tjyderrien/spp-extended-theory.git
+4. conda activate spp-extended-theory #this name should be present after using Step 3.
+5. pip install -e <folder_with_setup.py> (can be "." or "spp-extended-theory")
+6. Add "export spp_extended_theory=<path to your install>" into ~/.bashrc (looking forward for a better solution).
+
+## Simple uninstall for beginners
+
+pip uninstall spp-extended-theory
 
 ## Note to Windows users
 
 The code works with Windows: 
-* Install Anaconda (Python) for Windows (during install: no need for the symbolic linking compatibility). 
-* Download the present repository,  
-* Open/Edit the .py files and enjoy. 
+* Install Anaconda (Python) for Windows (during install: no need for the symbolic linking compatibility).
+* Download the present repository. 
 
-Most of routines were not tested with Windows, so feel free to address any problem to <derrien@fzu.cz.>
+Most of routines were not tested with Windows, so feel free to address any problem to <derrien@fzu.cz>.
 
-# How to use ?
-
-* To use the code, install Anaconda on your system (https://www.continuum.io/downloads), and then execute: "git clone git@bitbucket.org:tjyderrien/spp-extended-theory.git" in a terminal. 
 
 # How to contribute ?
 
@@ -98,7 +121,7 @@ Most of routines were not tested with Windows, so feel free to address any probl
 
 ## Use git to publish your changes. Here are basic commands
 
-* To download the simulation code, type: git clone git@bitbucket.org:tjyderrien/spp-extended-theory.git
+* To download the simulation code, type: git clone git@bitbucket.org:tjyderrien/spp_extended_theory.git
 
 * git pull: download latest changes to your version of the code (no worries, it is non-destructive to your changes!)
 

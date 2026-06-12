@@ -56,43 +56,43 @@ def Liquid_VolumicMass():
 def Liquid_ThermalConductivity(T):
   Tm = MeltingTemperature()
   if(T<Tm):
-      print "** Warning: K_lSi is used beyond its boundaries."
+      print("** Warning: K_lSi is used beyond its boundaries.")
   return 1E2*(0.5+29.3E-5*(T-Tm))
 
 def Liquid_HeatCapacity(T):
     Tm = MeltingTemperature()
     if(T<Tm):
-        print Header+"** Warning: HeatDiffusivity is used beyond its boundaries."
+        print(Header+"** Warning: HeatDiffusivity is used beyond its boundaries.")
     return 1045*Liquid_Density()
 
 def Liquid_HeatDiffusivity(T):
     Tm = MeltingTemperature()
     if(T<Tm):
-        print Header+"** Warning: HeatDiffusivity is used beyond its boundaries."
+        print(Header+"** Warning: HeatDiffusivity is used beyond its boundaries.")
     return np.sqrt(np.divide(Liquid_ThermalConductivity(T), Liquid_HeatCapacity(T)))
 
 def Solid_HeatConductivity(T):
     Tm = MeltingTemperature()
     if(T>Tm):
-        print Header+"** Warning: HeatDiffusivity is used beyond its boundaries."
+        print(Header+"** Warning: HeatDiffusivity is used beyond its boundaries.")
     return 1E2*(1585*np.power(T, -1.23))
 
 def Solid_HeatCapacity(T):
     Tm = MeltingTemperature()
     if(T>Tm):
-        print Header+"** Warning: HeatDiffusivity is used beyond its boundaries."
+        print(Header+"** Warning: HeatDiffusivity is used beyond its boundaries.")
     return 1E6*(1.978+3.54E-4*T-3.68*T**-2)
 
 def SolidHeat_Diffusivity(T):
     Tm = MeltingTemperature()
     if(T>Tm):
-        print Header+"** Warning: HeatDiffusivity is used beyond its boundaries."
+        print(Header+"** Warning: HeatDiffusivity is used beyond its boundaries.")
     return np.sqrt(np.divide(SolidHeatConductivity(T),SolidHeatCapacity(T)))
 
 def Liquid_SurfaceTension(T):
     Tm = MeltingTemperature()
     if(T<Tm):
-        print Header+"** Warning: HeatDiffusivity is used beyond its boundaries."
+        print(Header+"** Warning: HeatDiffusivity is used beyond its boundaries.")
     return 0.885-0.28e-3*(T-Tm), 0. #N/m
 
 ## Dynamic viscosity of fused silica (in Pa.s)
@@ -102,7 +102,7 @@ def DynamicViscosity(T):
   Tm   = MeltingTemperature() #K
   Tmax = 2000e0 #K [arbitrary?]
   if(T < Tm or T>Tmax):
-    print Header+"** Warning: dynamic viscosity was taken out of range (materials temperature must be liquid). "
+    print(Header+"** Warning: dynamic viscosity was taken out of range (materials temperature must be liquid). ")
     result = 0e0
   else: 
     Volume = np.power(Liquid_Density()*N_Av/Liquid_MolarMass(),-1)

@@ -1,0 +1,5 @@
+setuptools>=49.6.0
+matplotlib>=3.3.4
+numpy>=1.19.4
+scipy>=1.5.3
+cycler>=0.10.0

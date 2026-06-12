@@ -39,7 +39,8 @@ logger = init_logger(__name__, verbose=False) #"plotFinalQuantities")
 # logger.basicConfig(filename='libStark.log', level=logger.INFO)
 
 ## Provides the shift of the quasi electronic levels
-# From simple Floquet Hamiltonian on constant pulse of frequency omega, the shift of 6 bands with the electric field is given. The eigen values have been computed from the Hamiltonian given in the Nano Letters. 
+## TODO the non-diagonal terms should not carry omega. To be corrected.
+# From simple Floquet Hamiltonian on constant pulse of frequency omega, the shift of 6 bands with the electric field is given. The eigen values have been computed from the Hamiltonian given in the Nano Letters.
 def Stark2bands1photon_EnergyShift_modified_exact(Efield_AU, omega_AU, E_gap_AU, DME_AU=1): #{{{                                                                                            
     M         = DME_AU
     Mbar      = np.conj(DME_AU)
@@ -66,7 +67,8 @@ def Stark2bands1photon_EnergyShift_modified_exact(Efield_AU, omega_AU, E_gap_AU,
     return E1, E2, E3, E4, E5, E6
 #}}}
 
-### Solves the characteristic polynom for the eigen values of band gap modification    
+### Solves the characteristic polynom for the eigen values of band gap modification
+## TODO the non-diagonal terms should not carry omega. To be corrected.
 def Stark2bands1photon_EnergyShift_polynom_numerical(eigen, Efield_AU, omega_AU, E_gap_AU, DME_AU=1):
     M         = DME_AU
     Mbar      = np.conj(DME_AU)
@@ -123,7 +125,8 @@ def Stark2bands1photon_Cropped_EnergyShift_notcorrected_exact(Efield_AU, omega_A
     return E1, E2, E3, E4, EgapShift_AU
 #}}}   
 
-### Solves the characteristic polynom for the eigen values of band gap modification    
+### Solves the characteristic polynom for the eigen values of band gap modification
+## TODO the non-diagonal terms should not carry omega. To be corrected.
 def Stark2bands1photon_Cropped_EnergyShift_polynom_numerical(eigen, Efield_AU, omega_AU, E_gap_AU, DME_AU=1):
     M         = DME_AU
     Mbar      = np.conj(DME_AU)
@@ -161,12 +164,12 @@ def Stark2bands1photon_EnergyShift_notcorrected_numerical(Efield_AU, omega_AU, E
         
     return np.unique(roots)
 
-### Solves the characteristic polynom for the eigen values of band gap modification    
+### Solves the characteristic polynom for the eigen values of band gap modification
+## TODO the non-diagonal terms should not carry omega. To be corrected.
 def Stark4bands1photon_EnergyShift_polynom_numerical(eigen, Efield_AU, omega_AU, E_gap_AU, DME_AU=1):
     M         = DME_AU
     Mbar      = np.conj(DME_AU)
-    
-    
+
     A12 = 1.
     
     A11 = -1./2.*E_gap_AU
@@ -247,6 +250,7 @@ def Stark4bands1photon_EnergyShift_notcorrected_numerical(Efield_AU, omega_AU, E
     return np.unique(roots)
 
 # We call a linear algebra library instead of using Filip solver.
+## TODO the non-diagonal terms should not carry omega. To be corrected.
 def Stark4bands1photon_EnergyShift_eigen(Efield_AU, omega_AU, E_gap_AU, DME_AU=1, Enable_A2=False):
     M         = DME_AU
     Mbar      = np.conj(DME_AU)

@@ -146,7 +146,6 @@ def Stark4bands1photon_EnergyShift_polynom_numerical(eigen, Efield_AU, omega_AU,
     M         = DME_AU
     Mbar      = np.conj(DME_AU)
     
-    
     A12 = 1.
     
     A11 = -1./2.*E_gap_AU
@@ -197,24 +196,25 @@ def Stark4bands1photon_EnergyShift_notcorrected_numerical(Efield_AU, omega_AU, E
     return np.unique(roots)
 
 # We call a linear algebra library instead of using Filip solver.
+## Corrected from omega_AU terms
 def Stark4bands1photon_EnergyShift_eigen(Efield_AU, omega_AU, E_gap_AU, DME_AU=1):
     M         = DME_AU
     Mbar      = np.conj(DME_AU)
     AMover2=Efield_AU*M/2.
     AMover2c=Efield_AU*Mbar/2.
     matrix = np.array(
-        [[E_gap_AU/2.-omega_AU, -omega_AU, -omega_AU, -omega_AU, 0, AMover2, AMover2,AMover2,0,0,0,0], 
-         [-omega_AU, E_gap_AU/2.-omega_AU,-omega_AU, -omega_AU, AMover2c, 0, AMover2, AMover2, 0, 0, 0, 0], 
-         [-omega_AU, -omega_AU, -E_gap_AU/2.-omega_AU, -omega_AU, AMover2c, AMover2c, 0.,AMover2, 0, 0, 0, 0], 
-         [-omega_AU, -omega_AU, -0.5*E_gap_AU-omega_AU, -omega_AU, AMover2c, AMover2c, AMover2c, 0, 0, 0, 0, 0], 
+        [[E_gap_AU/2.-omega_AU, 0, 0, 0, 0, AMover2, AMover2,AMover2,0,0,0,0], 
+         [0, E_gap_AU/2.-omega_AU, 0, 0,    AMover2c, 0, AMover2, AMover2, 0, 0, 0, 0], 
+         [0, 0, -E_gap_AU/2.-omega_AU, 0, AMover2c, AMover2c, 0.,AMover2, 0, 0, 0, 0], 
+         [0, 0, -0.5*E_gap_AU-omega_AU, 0, AMover2c, AMover2c, AMover2c, 0, 0, 0, 0, 0], 
          [0, AMover2, AMover2, AMover2, E_gap_AU/2., 0, 0, 0, 0, AMover2, AMover2, AMover2],
          [AMover2c, 0, AMover2, AMover2, 0, 0.5*E_gap_AU, 0, 0, AMover2c, 0, AMover2, AMover2], 
          [AMover2c, AMover2c, 0, AMover2, 0, 0, -0.5*E_gap_AU, 0, AMover2c, AMover2c, 0, AMover2],
          [AMover2c, AMover2c, AMover2c, 0, 0, 0, 0, -0.5*E_gap_AU, AMover2c, AMover2c, AMover2c, 0],
-         [0, 0, 0, 0, 0, AMover2, AMover2, AMover2, 0.5*E_gap_AU+omega_AU, omega_AU, omega_AU, omega_AU], 
-         [0, 0, 0, 0, AMover2c, 0, AMover2, AMover2, omega_AU, 0.5*E_gap_AU+omega_AU, omega_AU, omega_AU], 
-         [0, 0, 0, 0, AMover2c, AMover2c, 0, AMover2, omega_AU, omega_AU, -0.5*E_gap_AU+omega_AU, omega_AU], 
-         [0, 0, 0, 0, AMover2c, AMover2c, AMover2c, 0, omega_AU, omega_AU, omega_AU, -0.5*E_gap_AU+omega_AU]])
+         [0, 0, 0, 0, 0, AMover2, AMover2, AMover2, 0.5*E_gap_AU+omega_AU, 0, 0, 0], 
+         [0, 0, 0, 0, AMover2c, 0, AMover2, AMover2, 0, 0.5*E_gap_AU+omega_AU, 0, 0], 
+         [0, 0, 0, 0, AMover2c, AMover2c, 0, AMover2, 0, 0, -0.5*E_gap_AU+omega_AU, 0], 
+         [0, 0, 0, 0, AMover2c, AMover2c, AMover2c, 0, 0, 0, 0, -0.5*E_gap_AU+omega_AU]])
     
     #print np.size(matrix)
     
@@ -222,17 +222,18 @@ def Stark4bands1photon_EnergyShift_eigen(Efield_AU, omega_AU, E_gap_AU, DME_AU=1
     return w
 
 # We call a linear algebra library instead of using Filip solver.
+## Corrected from omega_AU
 def Stark2bands2photons_EnergyShift_eigen(Efield_AU, omega_AU, E_gap_AU, DME_AU=1):
     M         = DME_AU
     Mbar      = np.conj(DME_AU)
     AMover2=Efield_AU*M/2.
     AMover2c=Efield_AU*Mbar/2.
     matrix = np.array(
-        [[E_gap_AU/2.-2.*omega_AU, -2.*omega_AU, 0, AMover2, 0, 0, 0, 0, 0, 0], 
-         [-2.*omega_AU, -E_gap_AU/2.-2.*omega_AU, AMover2c, 0, 0, 0, 0, 0, 0, 0],
+        [[E_gap_AU/2.-2.*omega_AU, 0, 0, AMover2, 0, 0, 0, 0, 0, 0], 
+         [0, -E_gap_AU/2.-2.*omega_AU, AMover2c, 0, 0, 0, 0, 0, 0, 0],
          
-         [0, AMover2, E_gap_AU/2.-omega_AU, -omega_AU, 0, AMover2, 0, 0, 0, 0], 
-         [AMover2c, 0, -omega_AU, -0.5*E_gap_AU-omega_AU, AMover2c, 0, 0, 0, 0, 0], 
+         [0, AMover2, E_gap_AU/2.-omega_AU, 0, 0, AMover2, 0, 0, 0, 0], 
+         [AMover2c, 0, 0, -0.5*E_gap_AU-omega_AU, AMover2c, 0, 0, 0, 0, 0], 
          
          [0, 0, 0, AMover2, E_gap_AU/2., 0, 0, AMover2, 0, 0],
          [0, 0, AMover2c, 0, 0, -0.5*E_gap_AU, AMover2c, 0, 0, 0], 
